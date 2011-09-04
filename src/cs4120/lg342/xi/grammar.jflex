@@ -1,4 +1,5 @@
-/* JFlex example: part of Java language lexer specification */
+package cs4120.lg342.xi;
+
 import java.lang.RuntimeException;
 import java.util.NoSuchElementException;
 import edu.cornell.cs.cs4120.xi.lexer.*;

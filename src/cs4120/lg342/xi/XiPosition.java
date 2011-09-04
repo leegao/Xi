@@ -1,3 +1,4 @@
+package cs4120.lg342.xi;
 import edu.cornell.cs.cs4120.xi.Position;
 
 
