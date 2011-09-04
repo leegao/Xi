@@ -7,6 +7,10 @@ import edu.cornell.cs.cs4120.xi.lexer.Token;
 import junit.framework.TestCase;
 
 public class TestLexer extends TestCase {
+	public void checkTokens(Lexer lexer, Token[] tokens){
+		
+	}
+	
 	public void testLexerConstruction(){
 		Reader reader = new StringReader("int i = 3;");
 		Lexer lexer = new XiLexer(reader);
@@ -14,19 +18,20 @@ public class TestLexer extends TestCase {
 	}
 	
 	public void testLexerIterator(){
-		Reader reader = new StringReader("int i = \"asdfasf \\b\";");
+		Reader reader = new StringReader("int i = 3;");
 		Lexer lexer = new XiLexer(reader);
-		for (Token tok = lexer.next();lexer.hasNext();tok = lexer.next()){
-			//System.out.println("" + tok.type() + ", " + tok.value());
+		while(lexer.hasNext()){
+			Token tok = lexer.next();
+			assert(tok != null);
 		}
 	}
 	
 	public void testLexerComment(){
-		Reader reader = new StringReader("int i // asdf ;\n; int x, _;");
+		Reader reader = new StringReader("int // asdf ;\n;");
 		Lexer lexer = new XiLexer(reader);
-		for (Token tok = lexer.next();lexer.hasNext();tok = lexer.next()){
-			System.out.println("" + tok.type() + ", " + tok.value());
-		}
+		checkTokens(lexer, new Token[]{
+			
+		});
 	}
 	
 	public void testLexerCharacter(){
