@@ -28,4 +28,12 @@ public class TestLexer extends TestCase {
 			System.out.println("" + tok.type() + ", " + tok.value());
 		}
 	}
+	
+	public void testLexerCharacter(){
+		Reader reader = new StringReader("char x = '\\r';");
+		Lexer lexer = new XiLexer(reader);
+		for (Token tok = lexer.next();lexer.hasNext();tok = lexer.next()){
+			System.out.println("" + tok.type() + ", " + tok.value());
+		}
+	}
 }

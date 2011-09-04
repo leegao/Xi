@@ -1,6 +1,5 @@
 package cs4120.lg342.xi;
 
-import java.lang.RuntimeException;
 import java.util.NoSuchElementException;
 import edu.cornell.cs.cs4120.xi.lexer.*;
 
@@ -18,6 +17,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 %{
 	StringBuffer string = new StringBuffer();
 	private boolean isEOF = false;
+	protected String unit = "";
 	
 	@Override
 	public Token next(){
@@ -42,7 +42,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 	private Token token(TokenType type, String value){
 		int col = yycolumn, line = yyline;
 		
-		return new XiToken(value, type, "", yycolumn, col, yyline, line);
+		return new XiToken(value, type, unit, yycolumn, col, yyline, line);
 	}
 	
 	private Token token(TokenType type){
@@ -120,9 +120,12 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
   ";"                            { return token(TokenType.SEMICOLON); }
   "_"                            { return token(TokenType.UNDERSCORE); }
 
-  '.'                            { String s = yytext().substring(1,yytext().length()-1); 
+  '[^']'                            { String s = yytext().substring(1,yytext().length()-1); 
                                    return token(TokenType.CHARACTER_LITERAL, s); }
-  '\\t'                          { return token(TokenType.CHARACTER_LITERAL); }
+  '\\t'                          { return token(TokenType.CHARACTER_LITERAL, "\t"); }
+  '\\''                          { return token(TokenType.CHARACTER_LITERAL, "'"); }
+  '\\r'                          { return token(TokenType.CHARACTER_LITERAL, "\r"); }
+  '\\n'                          { return token(TokenType.CHARACTER_LITERAL, "\n"); }
   
  
   /* whitespace */
