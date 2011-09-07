@@ -17,7 +17,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 %{
 	StringBuffer string = new StringBuffer();
 	private boolean isEOF = false;
-	protected String unit = "";
+	public String unit = "";
 	
 	@Override
 	public Token next(){
@@ -120,7 +120,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
   ";"                            { return token(TokenType.SEMICOLON); }
   "_"                            { return token(TokenType.UNDERSCORE); }
 
-  '[^']'                            { String s = yytext().substring(1,yytext().length()-1); 
+  '[^']'                         { String s = yytext().substring(1,yytext().length()-1); 
                                    return token(TokenType.CHARACTER_LITERAL, s); }
   '\\t'                          { return token(TokenType.CHARACTER_LITERAL, "\t"); }
   '\\''                          { return token(TokenType.CHARACTER_LITERAL, "'"); }

@@ -4,17 +4,24 @@ import java.io.StringReader;
 
 import edu.cornell.cs.cs4120.xi.lexer.Lexer;
 import edu.cornell.cs.cs4120.xi.lexer.Token;
+import edu.cornell.cs.cs4120.xi.lexer.TokenType;
 import junit.framework.TestCase;
 
 public class TestLexer extends TestCase {
-	public void checkTokens(Lexer lexer, Token[] tokens){
-		
+	public void checkType(Lexer lexer, TokenType[] tokens){
+		// only checks type
+		for (TokenType type : tokens){
+			assertTrue(lexer.hasNext());
+			Token token = lexer.next();
+			assertNotNull(token);
+			assertTrue(token.type() == type);
+		}
 	}
 	
 	public void testLexerConstruction(){
 		Reader reader = new StringReader("int i = 3;");
 		Lexer lexer = new XiLexer(reader);
-		assert(lexer == null);
+		assert lexer != null;
 	}
 	
 	public void testLexerIterator(){
@@ -22,23 +29,20 @@ public class TestLexer extends TestCase {
 		Lexer lexer = new XiLexer(reader);
 		while(lexer.hasNext()){
 			Token tok = lexer.next();
-			assert(tok != null);
+			assertTrue(tok != null);
 		}
 	}
 	
 	public void testLexerComment(){
 		Reader reader = new StringReader("int // asdf ;\n;");
 		Lexer lexer = new XiLexer(reader);
-		checkTokens(lexer, new Token[]{
-			
+		checkType(lexer, new TokenType[]{
+			TokenType.INT, TokenType.SEMICOLON, TokenType.AND
 		});
 	}
 	
 	public void testLexerCharacter(){
-		Reader reader = new StringReader("char x = '\\r';");
+		Reader reader = new StringReader("int x = '\\r';");
 		Lexer lexer = new XiLexer(reader);
-		for (Token tok = lexer.next();lexer.hasNext();tok = lexer.next()){
-			System.out.println("" + tok.type() + ", " + tok.value());
-		}
 	}
 }
