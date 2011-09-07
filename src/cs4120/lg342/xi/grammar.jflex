@@ -18,14 +18,28 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 	StringBuffer string = new StringBuffer();
 	private boolean isEOF = false;
 	public String unit = "";
+	protected Token nextToken = null;
+	protected int yycolumn_cache = 0;
 	
 	@Override
 	public Token next(){
+		Token next;
 		try{
-			return lex();
+			if (nextToken == null){
+				next = lex();
+				if (next == null){
+					throw new NoSuchElementException();
+				}
+			}else{
+				next = nextToken;
+				nextToken = null;
+			}
 		} catch (java.io.IOException e){
-			throw new NoSuchElementException();
+			next = null;
+			e.printStackTrace();
 		}
+		nextToken = null;
+		return next;
 	}
 	
 	@Override
@@ -36,13 +50,26 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 	
 	@Override
 	public boolean hasNext() {
+		//return !isEOF;
+		try{
+			if (nextToken == null)
+				nextToken = lex();
+		} catch (java.io.IOException e){
+			return false;
+		}
 		return !isEOF;
 	}
 	
 	private Token token(TokenType type, String value){
 		int col = yycolumn, line = yyline;
+		int newlines = value.split("\n").length-1;
+		String lastline = value.split("\n")[newlines];
+		if (newlines > 0)
+			col = lastline.length();
+		else
+			col += lastline.length();
 		
-		return new XiToken(value, type, unit, yycolumn, col, yyline, line);
+		return new XiToken(value, type, unit, yycolumn, col, yyline, line+newlines);
 	}
 	
 	private Token token(TokenType type){
@@ -58,11 +85,11 @@ LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
 WhiteSpace     = {LineTerminator} | [ \t\f]
 
-Comment     = "//" {InputCharacter}* {LineTerminator}
+Comment     = "//" {InputCharacter}*
 
 Identifier = [a-zA-Z] [:jletterdigit:]*
 
-DecIntegerLiteral = 0 | [1-9][0-9]*
+DecIntegerLiteral = 0 | [0-9][0-9]*
 %state STRING
 
 %%
@@ -133,15 +160,17 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 }
 <STRING> {
   \"                             { yybegin(YYINITIAL); 
+                                   yycolumn -= yycolumn_cache + 1; // -1 for the starting "
+                                   yycolumn_cache = 0;
                                    return token(TokenType.STRING_LITERAL, 
                                    string.toString()); }
-  [^\n\r\"\\]+                   { string.append( yytext() ); }
-  \\t                            { string.append('\t'); }
-  \\n                            { string.append('\n'); }
+  [^\n\r\"\\]+                   { string.append( yytext() ); yycolumn_cache += yytext().length(); }
+  \\t                            { string.append('\t'); yycolumn_cache += 2;}
+  \\n                            { string.append('\n'); yycolumn_cache += 2;}
 
-  \\r                            { string.append('\r'); }
-  \\\"                           { string.append('\"'); }
-  \\                             { string.append('\\'); }
+  \\r                            { string.append('\r'); yycolumn_cache += 2;}
+  \\\"                           { string.append('\"'); yycolumn_cache += 2;}
+  \\                             { string.append('\\'); yycolumn_cache += 2;}
 }
  /* error fallback */
 .|\n                             { throw new Error("Illegal character <"+

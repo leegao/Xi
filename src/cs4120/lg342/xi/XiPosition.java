@@ -61,4 +61,9 @@ public class XiPosition implements Position {
 		}
 		return false;
 	}
+	
+	@Override
+	public String toString(){
+		return String.format("(%d, %d, %d, %d)", cols, cole, ls, le);
+	}
 }
