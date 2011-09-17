@@ -47,7 +47,7 @@ public class TestLexer extends TestCase {
 	}
 	
 	public void testLexerIterator(){
-		Reader reader = new StringReader("int i = 3;");
+		Reader reader = new StringReader("int i = 3;\n\n");
 		Lexer lexer = new XiLexer(reader);
 		while(lexer.hasNext()){
 			Token tok = lexer.next();
@@ -104,10 +104,10 @@ public class TestLexer extends TestCase {
 	}
 	
 	public void testLexerIntegerWithLeadingZero(){
-		Reader reader = new StringReader("int x = 01;"); // 01 should not be treated as 0 1
+		Reader reader = new StringReader("int x = 01;"); // 01 should be treated as 0 1
 		Lexer lexer = new XiLexer(reader);
 		checkType(lexer, new String[]{
-			"INT", "IDENTIFIER", "GETS", "INTEGER_LITERAL", "SEMICOLON"
+			"INT", "IDENTIFIER", "GETS", "INTEGER_LITERAL", "INTEGER_LITERAL", "SEMICOLON"
 		});
 	}
 	
@@ -160,4 +160,12 @@ public class TestLexer extends TestCase {
 		});
 	}
 	
+//	public void testLexer(){
+//		Reader reader = new StringReader("ratadd(p1:int, q1:int, p2:int, q2:int) : (int, int) {\n\tg:int = gcd(q1,q2)");
+//		Lexer lexer = new XiLexer(reader);
+//		while(lexer.hasNext()){
+//			Token token = lexer.next();
+//			System.out.println(token.type());
+//		}
+//	}
 }

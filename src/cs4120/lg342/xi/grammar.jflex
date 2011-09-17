@@ -3,9 +3,6 @@ package cs4120.lg342.xi;
 import java.util.NoSuchElementException;
 import edu.cornell.cs.cs4120.xi.lexer.*;
 
-/**
- * This class is a simple example lexer.
- */
 %%
 %class XiLexer
 %implements Lexer
@@ -44,13 +41,11 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 	
 	@Override
 	public void remove() {
-		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException();
 	}
 	
 	@Override
 	public boolean hasNext() {
-		//return !isEOF;
 		try{
 			if (nextToken == null)
 				nextToken = lex();
@@ -89,7 +84,7 @@ Comment     = "//" {InputCharacter}*
 
 Identifier = [a-zA-Z] [:jletterdigit:]*
 
-DecIntegerLiteral = 0 | [0-9][0-9]*
+DecIntegerLiteral = 0 | [1-9][0-9]*
 %state STRING
 
 %%
@@ -141,6 +136,7 @@ DecIntegerLiteral = 0 | [0-9][0-9]*
   "]"                            { return token(TokenType.CLOSE_BRACKET); }
   "("                            { return token(TokenType.OPEN_PAREN); }
   ")"                            { return token(TokenType.CLOSE_PAREN); }
+  "{"                            { return token(TokenType.OPEN_BRACE); }
   "}"                            { return token(TokenType.CLOSE_BRACE); }
   ":"                            { return token(TokenType.COLON); }
   ","                            { return token(TokenType.COMMA); }
