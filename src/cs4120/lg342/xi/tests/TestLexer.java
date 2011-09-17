@@ -1,6 +1,9 @@
-package cs4120.lg342.xi;
+package cs4120.lg342.xi.tests;
 import java.io.Reader;
 import java.io.StringReader;
+
+import cs4120.lg342.xi.XiLexer;
+import cs4120.lg342.xi.XiPosition;
 
 import edu.cornell.cs.cs4120.xi.Position;
 import edu.cornell.cs.cs4120.xi.lexer.Lexer;
