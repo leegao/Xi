@@ -1,0 +1,198 @@
+// A stub for a Xi CUP specification.
+
+package cs4120.lg342.xi;
+
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
+import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.lexer.Token;
+import edu.cornell.cs.cs4120.xi.Position;
+import cs4120.lg342.xi.ast.*;
+
+// You might want to add types to these declarations.
+terminal IDENTIFIER;
+terminal STRING_LITERAL;
+terminal CHARACTER_LITERAL;
+terminal INTEGER_LITERAL;
+terminal TRUE, FALSE;
+terminal INT, BOOL;
+
+terminal IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
+  DIVIDE, MODULO, NOT, LT, LEQ, GT, GEQ, AND, OR, EQUAL, NOT_EQUAL, GETS,
+  OPEN_BRACKET, CLOSE_BRACKET, OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE,
+  COLON, COMMA, SEMICOLON, UNDERSCORE;
+
+nonterminal AbstractSyntaxNode program;
+// expr components
+nonterminal AbstractSyntaxNode expr, op, uop, func_call, func_callargs, 
+	arr_index, arr_create, arr_elements, id;
+// statement components
+nonterminal AbstractSyntaxNode stmt, if_stmt, while_stmt, return_stmt, return_list, 
+	block, stmt_list, block_stmt, var_decl, var_inst, var_item, var_list, var_set;
+nonterminal AbstractSyntaxNode type, bracket_list;
+nonterminal AbstractSyntaxNode bool_literal;
+// Add more nonterminals here...
+
+precedence nonassoc IF;
+precedence nonassoc ELSE; // we want to shift else rather than reduce on if
+precedence left OR;
+precedence left AND;
+precedence left EQUAL, NOT_EQUAL;
+precedence left LT, LEQ, GT, GEQ;
+precedence left PLUS, MINUS;
+precedence left TIMES, DIVIDE, MODULO;
+
+
+start with program;
+
+bool_literal ::= TRUE:b {: RESULT = new BoolLiteralNode(true, ((Token)b).position()); :} 
+	| FALSE:b {: RESULT = new BoolLiteralNode(false, ((Token)b).position()); :};
+
+id ::= IDENTIFIER:o
+	{:  Token id = (Token)o;
+		RESULT = new IdNode(id.value(), id.position());:};
+
+expr ::= expr:e1 op:op expr:e2 
+	{:	RESULT = op; 
+		((BinNode)op).set(e1, e2, e1.position()); 
+		System.out.println(op.label());:}
+	
+	| uop:op expr:e
+	{:	RESULT = op; 
+		if (op instanceof UnNegNode)
+			((UnNegNode)op).set(e, e.position()); 
+		else
+			((UnNotNode)op).set(e, e.position());
+		System.out.println(op.label());:}
+	
+	| func_call:e
+	{: RESULT = e; System.out.println(e.label()); :}
+	
+	| INTEGER_LITERAL:o
+	{: 	Token tok = (Token)o;
+		int v = Integer.parseInt(tok.value());
+		Position p = tok.position();
+		RESULT = new IntegerLiteralNode(v, p); :}
+		
+	| CHARACTER_LITERAL:o
+	{: 	Token tok = (Token)o;
+		int v = (int)(tok.value().charAt(0));
+		Position p = tok.position();
+		RESULT = new IntegerLiteralNode(v, p);:}
+		
+	| STRING_LITERAL:s
+	{:	Token tok = (Token)s;
+		Position p = tok.position();
+		RESULT = new StringLiteralNode(tok.value(), p); :}
+/*	{:	Token tok = (Token)s;
+		ListNode n = new ListNode(tok.position());
+		for (byte b : tok.value().getBytes()){
+			n.add(new IntegerLiteralNode(b, null));
+		}
+		RESULT = n;
+	 :}*/
+	 
+	| bool_literal:b
+	{: RESULT = b; :}
+	
+	| arr_index:e
+	{: RESULT = e; :}
+	
+	| arr_create:e
+	{: RESULT = e; :}
+	
+	| id:e
+	{: RESULT = e; :}
+	
+	| OPEN_PAREN expr:expr CLOSE_PAREN
+	{: RESULT = expr; :};
+
+op ::= AND {: RESULT = new BinNode("AND"); :}
+	| OR {: RESULT = new BinNode("OR"); :}
+	| EQUAL {: RESULT = new BinNode("EQUAL"); :}
+	| NOT_EQUAL {: RESULT = new BinNode("NOT_EQUAL"); :}
+	| LEQ {: RESULT = new BinNode("LEQ"); :}
+	| GEQ {: RESULT = new BinNode("GEQ"); :}
+	| LT {: RESULT = new BinNode("LT"); :}
+	| GT {: RESULT = new BinNode("GT"); :}
+	| PLUS {: RESULT = new BinNode("PLUS"); :}
+	| MINUS {: RESULT = new BinNode("MINUS"); :}
+	| TIMES {: RESULT = new BinNode("TIMES"); :}
+	| DIVIDE {: RESULT = new BinNode("DIVIDE"); :}
+	| MODULO {: RESULT = new BinNode("MODULO"); :};
+
+uop ::= NOT {: RESULT = new UnNotNode(); :} | MINUS {: RESULT = new UnNegNode(); :};
+
+func_call ::= id:id OPEN_PAREN func_callargs:args CLOSE_PAREN
+	{: RESULT = new FuncCallNode((IdNode)id, (CallArgsNode)args, id.position()); :}
+	| LENGTH:len OPEN_PAREN expr:expr CLOSE_PAREN
+	{:	Token t = (Token)len;
+		RESULT = new LengthNode(expr, t.position()); :};
+func_callargs ::= 
+	| expr:expr {: CallArgsNode args = new CallArgsNode(expr.position()); args.add(expr); RESULT = args; :}
+	| func_callargs:args COMMA expr:expr
+	{: ((CallArgsNode)args).add(expr); RESULT = args; :};
+
+arr_index ::= id:id OPEN_BRACKET expr:expr CLOSE_BRACKET
+	{: RESULT = new ListIndexNode((IdNode)id, expr, id.position()); :};
+arr_create ::= OPEN_PAREN:o CLOSE_PAREN 
+	{: Token t = (Token)o; RESULT = new ListNode(t.position()); :}
+	| OPEN_PAREN:o expr:expr COMMA CLOSE_PAREN
+	{:  Token t = (Token)o; 
+		ListNode list = new ListNode(t.position()); 
+		list.add(expr);
+		RESULT = list;:}
+	| OPEN_PAREN:o expr:expr COMMA arr_elements:arr CLOSE_PAREN
+	{:  Token t = (Token)o; 
+		ListNode list = new ListNode(t.position()); 
+		list.add(expr);
+		RESULT = list;
+		ListNode tl = (ListNode)arr;
+		for (VisualizableTreeNode n : tl.children()) list.add((AbstractSyntaxNode)n);:};
+arr_elements ::= expr:expr 
+	{: ListNode list = new ListNode(expr.position()); list.add(expr); RESULT = list; :}
+	| arr_elements:arr COMMA expr:expr
+	{: ((ListNode)arr).add(expr); RESULT = arr; :};
+	
+	
+stmt ::= if_stmt
+	| while_stmt
+	| return_stmt
+	| BREAK
+	| func_call
+	| block
+	| var_decl
+	| var_inst
+	| var_set;
+
+if_stmt ::= IF OPEN_PAREN expr:e1 CLOSE_PAREN stmt
+    {: System.out.println(e1); :}
+	| IF OPEN_PAREN expr CLOSE_PAREN stmt ELSE stmt
+	{: System.out.println("else"); :}
+	;
+while_stmt ::= WHILE OPEN_PAREN expr CLOSE_PAREN stmt;
+return_stmt ::= RETURN return_list;
+
+return_list ::= expr
+	| return_list COMMA expr;
+
+block ::= OPEN_BRACE CLOSE_BRACE
+	| OPEN_BRACE stmt_list CLOSE_BRACE;
+block_stmt ::= stmt | stmt SEMICOLON;
+stmt_list ::= block_stmt | stmt_list block_stmt;
+
+type ::= INT | BOOL;
+var_decl ::= id COLON type bracket_list;
+bracket_list ::= | OPEN_BRACKET CLOSE_BRACKET bracket_list; 
+
+var_item ::= var_decl | UNDERSCORE;
+var_list ::= var_item | var_list COMMA var_item;
+
+var_inst ::= var_list GETS expr;
+
+var_set ::= id GETS expr;
+
+// Recognizes "Hello World!", but not much else.
+/*program ::= USE IDENTIFIER IDENTIFIER OPEN_PAREN INT OPEN_BRACKET CLOSE_BRACKET
+  OPEN_BRACKET CLOSE_BRACKET IDENTIFIER CLOSE_PAREN OPEN_BRACE IDENTIFIER
+  OPEN_PAREN STRING_LITERAL CLOSE_PAREN CLOSE_BRACE;*/
+program ::= stmt;
