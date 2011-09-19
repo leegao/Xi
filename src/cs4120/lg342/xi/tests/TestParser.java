@@ -51,7 +51,7 @@ public class TestParser extends TestCase {
 //	}
 	
 	public void testParserConstruction(){
-		Reader reader = new StringReader("if (x > 3) print(\"asdf\") else a = 3");
+		Reader reader = new StringReader("if (x > 3) {a:int[3][2][], _ = 3; print(\"asdf\")} else a = 3");
 		Lexer lexer = new XiLexer(reader);
 		assertNotNull(lexer);
 		Scanner cupScanner = new LexerAdapter(lexer, sym.class);

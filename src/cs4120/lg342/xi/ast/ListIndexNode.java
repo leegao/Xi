@@ -32,7 +32,7 @@ public class ListIndexNode extends ExpressionNode {
 
 	@Override
 	public String label() {
-		return id.label() + "["+index.label()+"]";
+		return "ARR-INDEX";
 	}
 
 }

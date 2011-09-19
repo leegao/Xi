@@ -6,21 +6,19 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class ListNode extends ExpressionNode {
-	
-	// primitive type
-	public static final int INT = 0;
-	public static final int BOOL = 1;
-	
-	protected Position position;
+public class InstNode implements AbstractSyntaxNode {
+
+	public Position position;
+	AbstractSyntaxNode e;
+	ArrayList<VisualizableTreeNode> list;
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 	
-	public ListNode(Position position){
+	public InstNode(ArrayList<VisualizableTreeNode> list, AbstractSyntaxNode e, Position position){
+		this.list = list;
+		this.e = e;
+		children = (ArrayList<VisualizableTreeNode>)list.clone();
+		children.add(e);
 		this.position = position;
-	}
-	
-	public void add(AbstractSyntaxNode expr){
-		children.add(expr);
 	}
 	
 	@Override
@@ -35,7 +33,7 @@ public class ListNode extends ExpressionNode {
 
 	@Override
 	public String label() {
-		return "ARRAY(" + children.size() + ")";
+		return "INST";
 	}
 
 }

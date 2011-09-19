@@ -28,7 +28,7 @@ public class IdNode extends ExpressionNode {
 
 	@Override
 	public String label() {
-		return "id("+id+")";
+		return "ID("+id+")";
 	}
 
 }

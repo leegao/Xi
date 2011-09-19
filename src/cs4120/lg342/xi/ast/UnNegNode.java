@@ -31,7 +31,7 @@ public class UnNegNode extends ExpressionNode {
 	
 	@Override
 	public String label() {
-	    return "-" + e1.label();
+	    return "UNEG";
 	}
 
 }

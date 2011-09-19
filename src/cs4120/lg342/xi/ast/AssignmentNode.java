@@ -32,7 +32,7 @@ public class AssignmentNode implements AbstractSyntaxNode {
 
 	@Override
 	public String label() {
-		return id.label() + " = "+expr.label();
+		return "ASSIGNMENT";
 	}
 
 }

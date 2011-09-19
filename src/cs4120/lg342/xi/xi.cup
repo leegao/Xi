@@ -7,6 +7,7 @@ import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.lexer.Token;
 import edu.cornell.cs.cs4120.xi.Position;
 import cs4120.lg342.xi.ast.*;
+import java.util.ArrayList;
 
 // You might want to add types to these declarations.
 terminal IDENTIFIER;
@@ -27,8 +28,10 @@ nonterminal AbstractSyntaxNode expr, op, uop, func_call, func_callargs,
 	arr_index, arr_create, arr_elements, id;
 // statement components
 nonterminal AbstractSyntaxNode stmt, if_stmt, while_stmt, return_stmt, return_list, 
-	block, stmt_list, block_stmt, var_decl, var_inst, var_item, var_list, var_set;
-nonterminal AbstractSyntaxNode type, bracket_list;
+	block, stmt_list, block_stmt, var_decl, var_inst, var_item, var_set;
+nonterminal Token type, dimension;
+nonterminal ArrayList<Integer> bracket_list;
+nonterminal ArrayList<VisualizableTreeNode> var_list;
 nonterminal AbstractSyntaxNode bool_literal;
 // Add more nonterminals here...
 
@@ -215,18 +218,38 @@ stmt_list ::= block_stmt:s
 		block.add(s);
 		RESULT = block; :};
 
-type ::= INT | BOOL;
-var_decl ::= id COLON type bracket_list;
-bracket_list ::= | OPEN_BRACKET CLOSE_BRACKET bracket_list; 
+type ::= INT:o {: RESULT = (Token)o; :} | BOOL:o {: RESULT = (Token)o; :};
+dimension ::= | INTEGER_LITERAL:o {: RESULT = (Token)o; :};
 
-var_item ::= var_decl | UNDERSCORE;
-var_list ::= var_item | var_list COMMA var_item;
+var_decl ::= id:id COLON type:t bracket_list:arr
+	{:	DeclNode decl = new DeclNode((IdNode)id, t.value(), arr, id.position()); 
+		RESULT = decl;:};
+	
+bracket_list ::= 
+	{: RESULT = new ArrayList<Integer>(); :}
+	| bracket_list:arr OPEN_BRACKET dimension:t CLOSE_BRACKET 
+	{: 	if (arr == null) arr = new ArrayList<Integer>();
+		if (t == null) arr.add(-1);
+		else arr.add(Integer.parseInt(t.value()));
+		RESULT = arr; :}; 
 
-var_inst ::= var_list GETS expr;
+var_item ::= var_decl:s {: RESULT = s; :} | UNDERSCORE:o {: Token t = (Token)o; RESULT = new UnderscoreNode(t.position()); :};
+var_list ::= var_item:s 
+	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(s);
+		RESULT = list; :}
+	| var_list:list COMMA var_item:s
+	{:	list.add(s);
+		RESULT = list; :};
+
+var_inst ::= var_list:list GETS expr:e
+	{:	// we assume that var_list cannot be empty
+		AbstractSyntaxNode n = (AbstractSyntaxNode)(list.get(0));
+		InstNode inst = new InstNode(list, e, n.position());
+		RESULT = inst;:};
 
 var_set ::= id:id GETS expr:expr
-	{:	RESULT = new AssignmentNode((IdNode)id, expr, id.position()); 
-		System.out.println(RESULT.label()); :};
+	{:	RESULT = new AssignmentNode((IdNode)id, expr, id.position()); :};
 
 
 program ::= stmt:s

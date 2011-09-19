@@ -38,7 +38,7 @@ public class BinNode extends ExpressionNode {
 	
 	@Override
 	public String label() {
-	    return e1.label() + " " + type + " " + e2.label();
+	    return "BIN("+type+")";
 	}
 
 }

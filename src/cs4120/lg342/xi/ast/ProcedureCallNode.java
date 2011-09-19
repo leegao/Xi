@@ -27,7 +27,7 @@ public class ProcedureCallNode implements AbstractSyntaxNode {
 
 	@Override
 	public String label() {
-		return call.label();
+		return "PROCEDURE";
 	}
 
 }

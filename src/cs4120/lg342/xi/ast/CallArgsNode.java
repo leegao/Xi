@@ -31,11 +31,7 @@ public class CallArgsNode implements AbstractSyntaxNode {
 
 	@Override
 	public String label() {
-		String s = "";
-		for (VisualizableTreeNode e : children){
-			s += e.label()+",";
-		}
-		return s;
+		return "ARGS(" + children.size() + ")";
 	}
 
 }

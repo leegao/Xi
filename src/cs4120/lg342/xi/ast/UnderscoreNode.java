@@ -6,18 +6,11 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class FuncCallNode extends ExpressionNode {
+public class UnderscoreNode implements AbstractSyntaxNode {
 
 	protected Position position;
-	protected AbstractSyntaxNode id, args;
-	protected ArrayList<VisualizableTreeNode> children;
-	public FuncCallNode(IdNode id, CallArgsNode args, Position position){
-		this.id = id;
-		this.args = args;
+	public UnderscoreNode(Position position){
 		this.position = position;
-		children = new ArrayList<VisualizableTreeNode>();
-		children.add(id);
-		children.add(args);
 	}
 	
 	@Override
@@ -27,12 +20,13 @@ public class FuncCallNode extends ExpressionNode {
 
 	@Override
 	public Iterable<VisualizableTreeNode> children() {
-		return children;
+		// EMPTY
+		return new ArrayList<VisualizableTreeNode>();
 	}
 
 	@Override
 	public String label() {
-		return "CALL";
+		return "UNDERSCORE";
 	}
 
 }

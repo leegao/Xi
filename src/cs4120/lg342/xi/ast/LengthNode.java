@@ -30,7 +30,7 @@ public class LengthNode extends ExpressionNode {
 
 	@Override
 	public String label() {
-		return "length("+args.label()+")";
+		return "LENGTH";
 	}
 
 }

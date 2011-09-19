@@ -26,7 +26,7 @@ public class BreakNode implements AbstractSyntaxNode {
 
 	@Override
 	public String label() {
-		return "break";
+		return "BREAK";
 	}
 
 }

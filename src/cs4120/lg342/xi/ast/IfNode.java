@@ -35,7 +35,7 @@ public class IfNode implements AbstractSyntaxNode {
 
 	@Override
 	public String label() {
-		return "IF";
+		return "IF" + (s2 == null ? "" : "-ELSE");
 	}
 
 }
