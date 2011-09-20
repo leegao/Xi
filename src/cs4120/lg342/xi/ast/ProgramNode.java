@@ -6,18 +6,17 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class FuncCallNode extends ExpressionNode {
+public class ProgramNode implements AbstractSyntaxNode {
 
-	protected Position position;
-	protected AbstractSyntaxNode id;
-	protected ArrayList<VisualizableTreeNode> children, args;
-	public FuncCallNode(IdNode id, ArrayList<VisualizableTreeNode> args, Position position){
-		this.id = id;
-		this.args = args;
+	public Position position;
+	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
+	
+	public ProgramNode(Position position){
 		this.position = position;
-		children = new ArrayList<VisualizableTreeNode>();
-		children.add(id);
-		children.addAll(args);
+	}
+	
+	public void add(AbstractSyntaxNode expr){
+		children.add(expr);
 	}
 	
 	@Override
@@ -32,7 +31,7 @@ public class FuncCallNode extends ExpressionNode {
 
 	@Override
 	public String label() {
-		return "CALL("+args.size()+")";
+		return "PROGRAM";
 	}
 
 }

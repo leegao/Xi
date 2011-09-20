@@ -12,6 +12,10 @@ public class UnNegNode extends ExpressionNode {
 	public Position position;
 	private ArrayList<VisualizableTreeNode> children; // cached so revisit won't be slow
 	
+	public UnNegNode(Position position){
+		this.position = position;
+	}
+	
 	public void set(AbstractSyntaxNode e1, Position position){
 	    this.e1 = e1;
 	    children = new ArrayList<VisualizableTreeNode>();

@@ -6,18 +6,23 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class FuncCallNode extends ExpressionNode {
+public class FuncDeclNode implements AbstractSyntaxNode {
 
-	protected Position position;
-	protected AbstractSyntaxNode id;
-	protected ArrayList<VisualizableTreeNode> children, args;
-	public FuncCallNode(IdNode id, ArrayList<VisualizableTreeNode> args, Position position){
+	public Position position;
+	public AbstractSyntaxNode id;
+	public ArrayList<VisualizableTreeNode> args;
+	protected ArrayList<VisualizableTreeNode> children;
+	BlockNode block;
+	public ArrayList<String> types;
+	public FuncDeclNode(IdNode id, ArrayList<VisualizableTreeNode> args, ArrayList<String> types, BlockNode block, Position position){
 		this.id = id;
 		this.args = args;
 		this.position = position;
+		this.block = block;
 		children = new ArrayList<VisualizableTreeNode>();
 		children.add(id);
 		children.addAll(args);
+		children.add(block);
 	}
 	
 	@Override
@@ -32,7 +37,7 @@ public class FuncCallNode extends ExpressionNode {
 
 	@Override
 	public String label() {
-		return "CALL("+args.size()+")";
+		return "FUNCDECL";
 	}
 
 }

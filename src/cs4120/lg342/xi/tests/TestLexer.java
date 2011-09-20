@@ -62,7 +62,7 @@ public class TestLexer extends TestCase {
 		Reader reader = new StringReader("int i = 3;");
 		Lexer lexer = new XiLexer(reader);
 		Position pos = lexer.next().position();
-		assertEquals(pos, new XiPosition("", 0, 3, 0, 0));
+		assertEquals(pos, new XiPosition("", 1, 4, 1, 1));
 	}
 	
 	public void testTokenPositionNotFirst(){
@@ -70,7 +70,7 @@ public class TestLexer extends TestCase {
 		Lexer lexer = new XiLexer(reader);
 		assertNotNull(lexer.next());
 		Position pos = lexer.next().position();
-		assertEquals(pos, new XiPosition("", 4, 5, 0, 0));
+		assertEquals(pos, new XiPosition("", 5, 6, 1, 1));
 	}
 	
 	public void testTokenPositionString(){
@@ -79,7 +79,7 @@ public class TestLexer extends TestCase {
 		assertNotNull(lexer.next());
 		Token tok = lexer.next();
 		Position pos = tok.position();
-		assertEquals(pos, new XiPosition("", 4, 2, 0, 1));
+		assertEquals(pos, new XiPosition("", 5, 13, 1, 1));
 	}
 	
 	public void testLexerComment(){
@@ -159,8 +159,22 @@ public class TestLexer extends TestCase {
 		Reader reader = new StringReader("[ ] ( ) } : , ; _");
 		Lexer lexer = new XiLexer(reader);
 		checkType(lexer, new String[]{
-				"OPEN_BRACKET", "CLOSE_BRACKET", "OPEN_PAREN", "CLOSE_PAREN", "CLOSE_BRACE", "COLON", "COMMA", "SEMICOLON", "UNDERSCORE"
+			"OPEN_BRACKET", "CLOSE_BRACKET", "OPEN_PAREN", "CLOSE_PAREN", "CLOSE_BRACE", "COLON", "COMMA", "SEMICOLON", "UNDERSCORE"
 		});
+	}
+	
+	public void testLexerIdentifier(){
+		Reader reader = new StringReader("ab_02'");
+		Lexer lexer = new XiLexer(reader);
+		checkType(lexer, new String[]{
+			"IDENTIFIER"
+		});
+	}
+	
+	public void testLexerNull(){
+		Reader reader = new StringReader("");
+		XiLexer lexer = new XiLexer(reader);
+		checkType(lexer, new String[]{});
 	}
 	
 //	public void testLexer(){

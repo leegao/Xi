@@ -16,6 +16,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 	private boolean isEOF = false;
 	public String unit = "";
 	protected Token nextToken = null;
+	protected Token cached_token = null;
 	protected int yycolumn_cache = 0;
 	
 	@Override
@@ -36,6 +37,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 			e.printStackTrace();
 		}
 		nextToken = null;
+		cached_token = next;
 		return next;
 	}
 	
@@ -64,7 +66,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 		else
 			col += lastline.length();
 		
-		return new XiToken(value, type, unit, yycolumn, col, yyline, line+newlines);
+		return new XiToken(value, type, unit, yycolumn+1, col+1, yyline+1, line+newlines+1);
 	}
 	
 	private Token token(TokenType type){
@@ -82,7 +84,7 @@ WhiteSpace     = {LineTerminator} | [ \t\f]
 
 Comment     = "//" {InputCharacter}*
 
-Identifier = [a-zA-Z] [:jletterdigit:]*
+Identifier = [a-zA-Z] [a-zA-Z0-9_']*
 
 DecIntegerLiteral = 0 | [1-9][0-9]*
 %state STRING
@@ -145,10 +147,10 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
   '[^']'                         { String s = yytext().substring(1,yytext().length()-1); 
                                    return token(TokenType.CHARACTER_LITERAL, s); }
-  '\\t'                          { return token(TokenType.CHARACTER_LITERAL, "\t"); }
-  '\\''                          { return token(TokenType.CHARACTER_LITERAL, "'"); }
-  '\\r'                          { return token(TokenType.CHARACTER_LITERAL, "\r"); }
-  '\\n'                          { return token(TokenType.CHARACTER_LITERAL, "\n"); }
+  '\\t'                          { return token(TokenType.CHARACTER_LITERAL, "\\t"); }
+  '\\''                          { return token(TokenType.CHARACTER_LITERAL, "\\'"); }
+  '\\r'                          { return token(TokenType.CHARACTER_LITERAL, "\\r"); }
+  '\\n'                          { return token(TokenType.CHARACTER_LITERAL, "\\n"); }
   
  
   /* whitespace */
@@ -161,12 +163,12 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
                                    return token(TokenType.STRING_LITERAL, 
                                    string.toString()); }
   [^\n\r\"\\]+                   { string.append( yytext() ); yycolumn_cache += yytext().length(); }
-  \\t                            { string.append('\t'); yycolumn_cache += 2;}
-  \\n                            { string.append('\n'); yycolumn_cache += 2;}
+  \\t                            { string.append("\\t"); yycolumn_cache += 2;}
+  \\n                            { string.append("\\n"); yycolumn_cache += 2;}
 
-  \\r                            { string.append('\r'); yycolumn_cache += 2;}
-  \\\"                           { string.append('\"'); yycolumn_cache += 2;}
-  \\                             { string.append('\\'); yycolumn_cache += 2;}
+  \\r                            { string.append("\\r"); yycolumn_cache += 2;}
+  \\\"                           { string.append("\\\""); yycolumn_cache += 2;}
+  \\                             { string.append("\\\\"); yycolumn_cache += 2;}
 }
  /* error fallback */
 .|\n                             { throw new Error("Illegal character <"+

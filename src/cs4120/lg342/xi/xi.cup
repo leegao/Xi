@@ -4,36 +4,58 @@ package cs4120.lg342.xi;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.lexer.Token;
 import edu.cornell.cs.cs4120.xi.Position;
 import cs4120.lg342.xi.ast.*;
 import java.util.ArrayList;
+import java_cup.runtime.Symbol;
+
+action code {:
+	public Position span(Position left, Position right){
+		return new XiPosition(left.unit(), left.columnStart(), right.columnEnd(), left.lineStart(), right.lineEnd());
+	}
+:};
+
+parser code {:
+	public void syntax_error(Symbol cur_token){
+		Token t = (Token)cur_token.value;
+		if (t != null)
+			throw new CompilationException("Syntax Error: Not expecting token "+t.type()+"("+t.value()+")", t.position());
+		else
+			throw new CompilationException("Syntax Error: Not expecting EOF", new XiPosition(0,0,0,0));
+	}
+:};
 
 // You might want to add types to these declarations.
-terminal IDENTIFIER;
-terminal STRING_LITERAL;
-terminal CHARACTER_LITERAL;
-terminal INTEGER_LITERAL;
-terminal TRUE, FALSE;
-terminal INT, BOOL;
+terminal Token IDENTIFIER;
+terminal Token STRING_LITERAL;
+terminal Token CHARACTER_LITERAL;
+terminal Token INTEGER_LITERAL;
+terminal Token TRUE, FALSE;
+terminal Token INT, BOOL;
+terminal UMINUS, UNOT;
 
-terminal IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
+terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
   DIVIDE, MODULO, NOT, LT, LEQ, GT, GEQ, AND, OR, EQUAL, NOT_EQUAL, GETS,
   OPEN_BRACKET, CLOSE_BRACKET, OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE,
   COLON, COMMA, SEMICOLON, UNDERSCORE;
 
 nonterminal AbstractSyntaxNode program;
 // expr components
-nonterminal AbstractSyntaxNode expr, op, uop, func_call, func_callargs, 
+nonterminal AbstractSyntaxNode expr, op, uop, func_call, 
 	arr_index, arr_create, arr_elements, id;
 // statement components
 nonterminal AbstractSyntaxNode stmt, if_stmt, while_stmt, return_stmt, return_list, 
 	block, stmt_list, block_stmt, var_decl, var_inst, var_item, var_set;
-nonterminal Token type, dimension;
+nonterminal Token dimension;
+nonterminal String type;
+nonterminal ArrayList<String> types;
 nonterminal ArrayList<Integer> bracket_list;
-nonterminal ArrayList<VisualizableTreeNode> var_list;
+nonterminal ArrayList<VisualizableTreeNode> var_list, func_list, func_callargs;
 nonterminal AbstractSyntaxNode bool_literal;
-// Add more nonterminals here...
+// top level
+nonterminal AbstractSyntaxNode func_decl, use_stmt;
 
 precedence nonassoc IF;
 precedence nonassoc ELSE; // we want to shift else rather than reduce on if
@@ -43,7 +65,7 @@ precedence left EQUAL, NOT_EQUAL;
 precedence left LT, LEQ, GT, GEQ;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODULO;
-
+precedence left UMINUS, UNOT;
 
 start with program;
 
@@ -56,19 +78,19 @@ id ::= IDENTIFIER:o
 
 expr ::= expr:e1 op:op expr:e2 
 	{:	RESULT = op; 
-		((BinNode)op).set(e1, e2, e1.position()); 
-		System.out.println(op.label());:}
+		((BinNode)op).set(e1, e2, span(e1.position(), e2.position())); 
+		:}
 	
 	| uop:op expr:e
 	{:	RESULT = op; 
 		if (op instanceof UnNegNode)
-			((UnNegNode)op).set(e, e.position()); 
+			((UnNegNode)op).set(e, span(op.position(), e.position())); 
 		else
-			((UnNotNode)op).set(e, e.position());
-		System.out.println(op.label());:}
+			((UnNotNode)op).set(e, span(op.position(), e.position()));
+		:}
 	
 	| func_call:e
-	{: RESULT = e; System.out.println(e.label()); :}
+	{: RESULT = e; :}
 	
 	| INTEGER_LITERAL:o
 	{: 	Token tok = (Token)o;
@@ -123,30 +145,35 @@ op ::= AND {: RESULT = new BinNode("AND"); :}
 	| DIVIDE {: RESULT = new BinNode("DIVIDE"); :}
 	| MODULO {: RESULT = new BinNode("MODULO"); :};
 
-uop ::= NOT {: RESULT = new UnNotNode(); :} | MINUS {: RESULT = new UnNegNode(); :};
+uop ::= NOT:t {: RESULT = new UnNotNode(t.position());  :} 
+	%prec UNOT
+	| MINUS:t {: RESULT = new UnNegNode(t.position()); :}
+	%prec UMINUS;
 
-func_call ::= id:id OPEN_PAREN func_callargs:args CLOSE_PAREN
-	{: RESULT = new FuncCallNode((IdNode)id, (CallArgsNode)args, id.position()); :}
-	| LENGTH:len OPEN_PAREN expr:expr CLOSE_PAREN
-	{:	Token t = (Token)len;
-		RESULT = new LengthNode(expr, t.position()); :};
-func_callargs ::= 
-	| expr:expr {: CallArgsNode args = new CallArgsNode(expr.position()); args.add(expr); RESULT = args; :}
+func_call ::= id:id OPEN_PAREN func_callargs:args CLOSE_PAREN:o
+	{:	Token t = (Token)o;
+		RESULT = new FuncCallNode((IdNode)id, args, span(id.position(), t.position())); :}
+	| LENGTH:len OPEN_PAREN expr:expr CLOSE_PAREN:o
+	{:	Token t1 = (Token)len, t2 = (Token)o;
+		RESULT = new LengthNode(expr, span(t1.position(), t2.position())); :};
+func_callargs ::= {: RESULT = new ArrayList<VisualizableTreeNode>(); :}
+	| expr:expr {: ArrayList<VisualizableTreeNode> args = new ArrayList<VisualizableTreeNode>(); args.add(expr); RESULT = args; :}
 	| func_callargs:args COMMA expr:expr
-	{: ((CallArgsNode)args).add(expr); RESULT = args; :};
+	{: args.add(expr); RESULT = args; :};
 
-arr_index ::= id:id OPEN_BRACKET expr:expr CLOSE_BRACKET
-	{: RESULT = new ListIndexNode((IdNode)id, expr, id.position()); :};
-arr_create ::= OPEN_PAREN:o CLOSE_PAREN 
-	{: Token t = (Token)o; RESULT = new ListNode(t.position()); :}
-	| OPEN_PAREN:o expr:expr COMMA CLOSE_PAREN
-	{:  Token t = (Token)o; 
-		ListNode list = new ListNode(t.position()); 
+arr_index ::= id:id OPEN_BRACKET expr:expr CLOSE_BRACKET:o
+	{:	Token t = (Token)o;
+		RESULT = new ListIndexNode((IdNode)id, expr, span(id.position(), t.position())); :};
+arr_create ::= OPEN_PAREN:o CLOSE_PAREN:e 
+	{: Token t = (Token)o, t2 = (Token)e; RESULT = new ListNode(span(t.position(), t2.position())); :}
+	| OPEN_PAREN:o expr:expr COMMA CLOSE_PAREN:e
+	{:  Token t = (Token)o, t2 = (Token)e; 
+		ListNode list = new ListNode(span(t.position(), t2.position())); 
 		list.add(expr);
 		RESULT = list;:}
-	| OPEN_PAREN:o expr:expr COMMA arr_elements:arr CLOSE_PAREN
-	{:  Token t = (Token)o; 
-		ListNode list = new ListNode(t.position()); 
+	| OPEN_PAREN:o expr:expr COMMA arr_elements:arr CLOSE_PAREN:e
+	{:  Token t = (Token)o, t2 = (Token)e; 
+		ListNode list = new ListNode(span(t.position(), t2.position())); 
 		list.add(expr);
 		RESULT = list;
 		ListNode tl = (ListNode)arr;
@@ -163,9 +190,8 @@ stmt ::= if_stmt:s
 	{: RESULT = s; :}
 	| return_stmt:s
 	{: RESULT = s; :}
-	| BREAK:o
-	{:	Token t = (Token)o;
-		RESULT = new BreakNode(t.position()); :}
+	| BREAK:b
+	{: RESULT = new BreakNode(b.position()); :}
 	| func_call:e
 	{: RESULT = new ProcedureCallNode(e); :}
 	| block:s
@@ -177,20 +203,16 @@ stmt ::= if_stmt:s
 	| var_set:s
 	{: RESULT = s; :};
 
-if_stmt ::= IF:o OPEN_PAREN expr:e1 CLOSE_PAREN stmt:stmt
-    {: 	Token t = (Token)o;
-    	RESULT = new IfNode(e1, stmt, null, t.position()); :}
-	| IF:o OPEN_PAREN expr:e CLOSE_PAREN stmt:s1 ELSE stmt:s2
-	{:	Token t = (Token)o;
-    	RESULT = new IfNode(e, s1, s2, t.position()); :}
+if_stmt ::= IF:t OPEN_PAREN expr:e1 CLOSE_PAREN stmt:stmt
+    {: RESULT = new IfNode(e1, stmt, null, span(t.position(), stmt.position())); :}
+	| IF:t OPEN_PAREN expr:e CLOSE_PAREN stmt:s1 ELSE stmt:s2
+	{: RESULT = new IfNode(e, s1, s2, span(t.position(), s2.position())); :}
 	;
-while_stmt ::= WHILE:o OPEN_PAREN expr:e CLOSE_PAREN stmt:s
-	{: 	Token t = (Token)o;
-    	RESULT = new WhileNode(e, s, t.position()); :};
-return_stmt ::= RETURN:o return_list:s 
-	{:	Token t = (Token)o; 
-		ReturnNode r = (ReturnNode)s; 
-		r.position = t.position(); 
+while_stmt ::= WHILE:t OPEN_PAREN expr:e CLOSE_PAREN stmt:s
+	{: RESULT = new WhileNode(e, s, span(t.position(), s.position())); :};
+return_stmt ::= RETURN:t return_list:s 
+	{:	ReturnNode r = (ReturnNode)s; 
+		r.position = span(t.position(), s.position()); 
 		RESULT = r; :};
 
 return_list ::= expr:expr
@@ -201,12 +223,11 @@ return_list ::= expr:expr
 		r.add(expr); 
 		RESULT = r; :};
 
-block ::= OPEN_BRACE:o CLOSE_BRACE
-	{: Token t = (Token)o; RESULT = new BlockNode(t.position()); :}
-	| OPEN_BRACE:o stmt_list:stmts CLOSE_BRACE
-	{:	Token t = (Token)o; 
-		BlockNode block = (BlockNode)stmts;
-		block.position = t.position(); 
+block ::= OPEN_BRACE:t CLOSE_BRACE:e
+	{: RESULT = new BlockNode(span(t.position(), e.position())); :}
+	| OPEN_BRACE:t stmt_list:stmts CLOSE_BRACE:e
+	{:	BlockNode block = (BlockNode)stmts;
+		block.position = span(t.position(), e.position()); 
 		RESULT = block; :};
 block_stmt ::= stmt:s {: RESULT = s; :} | stmt:s SEMICOLON {: RESULT = s; :};
 stmt_list ::= block_stmt:s 
@@ -218,11 +239,12 @@ stmt_list ::= block_stmt:s
 		block.add(s);
 		RESULT = block; :};
 
-type ::= INT:o {: RESULT = (Token)o; :} | BOOL:o {: RESULT = (Token)o; :};
-dimension ::= | INTEGER_LITERAL:o {: RESULT = (Token)o; :};
+type ::= INT:o {: RESULT = o.value(); :} | BOOL:o {: RESULT = o.value(); :};
+dimension ::= | INTEGER_LITERAL:o {: RESULT = o; :};
 
 var_decl ::= id:id COLON type:t bracket_list:arr
-	{:	DeclNode decl = new DeclNode((IdNode)id, t.value(), arr, id.position()); 
+	{:	// check that arr is empty
+		DeclNode decl = new DeclNode((IdNode)id, t, arr, id.position());
 		RESULT = decl;:};
 	
 bracket_list ::= 
@@ -233,7 +255,7 @@ bracket_list ::=
 		else arr.add(Integer.parseInt(t.value()));
 		RESULT = arr; :}; 
 
-var_item ::= var_decl:s {: RESULT = s; :} | UNDERSCORE:o {: Token t = (Token)o; RESULT = new UnderscoreNode(t.position()); :};
+var_item ::= var_decl:s {: RESULT = s; :} | UNDERSCORE:t {: RESULT = new UnderscoreNode(t.position()); :};
 var_list ::= var_item:s 
 	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
 		list.add(s);
@@ -245,12 +267,52 @@ var_list ::= var_item:s
 var_inst ::= var_list:list GETS expr:e
 	{:	// we assume that var_list cannot be empty
 		AbstractSyntaxNode n = (AbstractSyntaxNode)(list.get(0));
-		InstNode inst = new InstNode(list, e, n.position());
+		InstNode inst = new InstNode(list, e, span(n.position(), e.position()));
 		RESULT = inst;:};
 
 var_set ::= id:id GETS expr:expr
-	{:	RESULT = new AssignmentNode((IdNode)id, expr, id.position()); :};
+	{: RESULT = new AssignmentNode((IdNode)id, expr, span(id.position(), expr.position())); :};
 
+use_stmt ::= USE:t id:id
+	{: RESULT = new UseNode(id, span(t.position(), id.position()));:};
+	
+func_list ::= 
+	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		RESULT = list; :}
+	| var_decl:s 
+	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(s);
+		RESULT = list; :}
+	| func_list:list COMMA var_decl:s
+	{:	list.add(s);
+		RESULT = list; :};
 
-program ::= stmt:s
-	{: RESULT = s; :};
+types ::= {: RESULT = new ArrayList<String>(); :}
+	| COLON type:type
+	{: RESULT = new ArrayList<String>(); RESULT.add(type); :}
+	| types:arr COMMA type:type
+	{:	RESULT = arr;
+		arr.add(type); :}; 		
+
+func_decl ::= id:id OPEN_PAREN func_list:list CLOSE_PAREN types:types block:block
+	{:	FuncDeclNode func_decl = new FuncDeclNode((IdNode)id, list, types, (BlockNode)block, span(id.position(), block.position()));
+		RESULT = func_decl; :};
+
+program ::= use_stmt:s
+	{:	ProgramNode program = new ProgramNode(s.position());
+		program.add(s);
+		RESULT = program; :}
+	| func_decl:s
+	{:	ProgramNode program = new ProgramNode(s.position());
+		program.add(s);
+		RESULT = program; :}
+	| program:p use_stmt:s
+	{:	ProgramNode program = (ProgramNode)p;
+		program.add(s);
+		program.position = span(p.position(), s.position());
+		RESULT = program; :}
+	| program:p func_decl:s
+	{:	ProgramNode program = (ProgramNode)p;
+		program.add(s);
+		program.position = span(p.position(), s.position());
+		RESULT = program; :};
