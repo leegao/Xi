@@ -147,10 +147,10 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
   '[^']'                         { String s = yytext().substring(1,yytext().length()-1); 
                                    return token(TokenType.CHARACTER_LITERAL, s); }
-  '\\t'                          { return token(TokenType.CHARACTER_LITERAL, "\\t"); }
-  '\\''                          { return token(TokenType.CHARACTER_LITERAL, "\\'"); }
-  '\\r'                          { return token(TokenType.CHARACTER_LITERAL, "\\r"); }
-  '\\n'                          { return token(TokenType.CHARACTER_LITERAL, "\\n"); }
+  '\\t'                          { return token(TokenType.CHARACTER_LITERAL, "\t"); }
+  '\\''                          { return token(TokenType.CHARACTER_LITERAL, "\'"); }
+  '\\r'                          { return token(TokenType.CHARACTER_LITERAL, "\r"); }
+  '\\n'                          { return token(TokenType.CHARACTER_LITERAL, "\n"); }
   
  
   /* whitespace */
