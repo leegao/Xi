@@ -1,13 +1,13 @@
 // A stub for a Xi CUP specification.
 
-package cs4120.lg342.xi;
+package cs4120.der34dlc287lg342.xi;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.lexer.Token;
 import edu.cornell.cs.cs4120.xi.Position;
-import cs4120.lg342.xi.ast.*;
+import cs4120.der34dlc287lg342.xi.ast.*;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
 
@@ -188,8 +188,6 @@ stmt ::= if_stmt:s
 	{: RESULT = s; :}
 	| while_stmt:s
 	{: RESULT = s; :}
-	| return_stmt:s
-	{: RESULT = s; :}
 	| BREAK:b
 	{: RESULT = new BreakNode(b.position()); :}
 	| func_call:e
@@ -213,21 +211,37 @@ while_stmt ::= WHILE:t OPEN_PAREN expr:e CLOSE_PAREN stmt:s
 return_stmt ::= RETURN:t return_list:s 
 	{:	ReturnNode r = (ReturnNode)s; 
 		r.position = span(t.position(), s.position()); 
-		RESULT = r; :};
+		RESULT = r; :}
+	| RETURN:t 
+	{:  ReturnNode r = new ReturnNode(); 
+		r.position = t.position(); 
+		RESULT = r; :}
+	| return_stmt:s SEMICOLON {: RESULT = s; :};
 
 return_list ::= expr:expr
 	{:	ReturnNode r = new ReturnNode();
-		r.add(expr); :}
+		r.add(expr);
+		r.position = expr.position();
+		RESULT = r; :}
 	| return_list:list COMMA expr:expr
 	{:	ReturnNode r = (ReturnNode)list;
 		r.add(expr); 
+		r.position = span(r.position, expr.position());
 		RESULT = r; :};
 
 block ::= OPEN_BRACE:t CLOSE_BRACE:e
 	{: RESULT = new BlockNode(span(t.position(), e.position())); :}
+	| OPEN_BRACE:t return_stmt:s CLOSE_BRACE:e
+	{: RESULT = new BlockNode(span(t.position(), e.position())); 
+	   ((BlockNode)RESULT).add(s); :}
 	| OPEN_BRACE:t stmt_list:stmts CLOSE_BRACE:e
 	{:	BlockNode block = (BlockNode)stmts;
 		block.position = span(t.position(), e.position()); 
+		RESULT = block; :}
+	| OPEN_BRACE:t stmt_list:stmts return_stmt:s CLOSE_BRACE:e
+	{:	BlockNode block = (BlockNode)stmts;
+		block.position = span(t.position(), e.position()); 
+		block.add(s);
 		RESULT = block; :};
 block_stmt ::= stmt:s {: RESULT = s; :} | stmt:s SEMICOLON {: RESULT = s; :};
 stmt_list ::= block_stmt:s 
