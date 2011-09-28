@@ -235,4 +235,31 @@ public class TestParser extends TestCase {
 			assertEquals(e.getMessage(), "Illegal character <'>");
 		}
 	}
+	
+	public void testParserPrgmReturns(){
+		checkType(gen("use io main(){a:int, _ = f();} \nf(){return x}"), new String[]{
+			"PROGRAM","USE", "ID(io)", "FUNCDECL","ID(main)","BLOCK",
+			"INST", "DECL", "ID(a)", "UNDERSCORE", "CALL(0)", "ID(f)",
+			"FUNCDECL", "ID(f)", "BLOCK", "RETURN", "ID(x)"
+		});
+	}
+	
+	public void testParserPrgmReturnsNull(){
+		checkType(gen("use io main(){a:int, _ = f();} \nf(){return}"), new String[]{
+			"PROGRAM","USE", "ID(io)", "FUNCDECL","ID(main)","BLOCK",
+			"INST", "DECL", "ID(a)", "UNDERSCORE", "CALL(0)", "ID(f)",
+			"FUNCDECL", "ID(f)", "BLOCK", "RETURN"
+		});
+	}
+	
+	public void testParserPrgmReturnInvalid(){
+		try{
+			checkType(gen("use io main(){a:int, _ = f();} \nf(){return; print()}"), new String[]{
+			});
+			fail("Did not catch syntax error");
+		} catch (CompilationException e){
+			assertEquals(e.getMessage(), "Syntax Error: Not expecting token IDENTIFIER(print)");
+		}
+	}
+	
 }
