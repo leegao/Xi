@@ -19,4 +19,17 @@ public class XiFunctionType implements XiType {
 	public XiFunctionType(){
 		this(new ArrayList<XiPrimitiveType>(), new ArrayList<XiPrimitiveType>());
 	}
+	
+	@Override
+	public String toString(){
+		String t = "";
+		for (XiPrimitiveType arg : args){
+			t += arg + ",";
+		}
+		t += " -> ";
+		for (XiPrimitiveType r : ret){
+			t += r + ",";
+		}
+		return t;
+	}
 }

@@ -3,9 +3,9 @@ package cs4120.der34dlc287lg342.xi.typechecker;
 import java.util.HashMap;
 
 public class XiTypeContext {
-	HashMap<String, XiType> symbols;
-	XiFunctionType returnType;
-	boolean isBreakable;
+	public HashMap<String, XiType> symbols;
+	public XiFunctionType returnType;
+	public boolean isBreakable;
 	
 	public XiTypeContext(XiFunctionType r, boolean b){
 		returnType = r;

@@ -8,6 +8,7 @@ import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.lexer.Token;
 import edu.cornell.cs.cs4120.xi.Position;
 import cs4120.der34dlc287lg342.xi.ast.*;
+import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
 
@@ -50,7 +51,7 @@ nonterminal AbstractSyntaxNode stmt, if_stmt, while_stmt, return_stmt, return_li
 	block, stmt_list, block_stmt, var_decl, var_inst, var_item, var_set;
 nonterminal Token dimension;
 nonterminal String type;
-nonterminal ArrayList<String> types;
+nonterminal ArrayList<XiPrimitiveType> types;
 nonterminal ArrayList<Integer> bracket_list;
 nonterminal ArrayList<VisualizableTreeNode> var_list, func_list, func_callargs;
 nonterminal AbstractSyntaxNode bool_literal;
@@ -301,12 +302,12 @@ func_list ::=
 	{:	list.add(s);
 		RESULT = list; :};
 
-types ::= {: RESULT = new ArrayList<String>(); :}
-	| COLON type:type
-	{: RESULT = new ArrayList<String>(); RESULT.add(type); :}
-	| types:arr COMMA type:type
+types ::= {: RESULT = new ArrayList<XiPrimitiveType>(); :}
+	| COLON type:type bracket_list:dim
+	{: RESULT = new ArrayList<XiPrimitiveType>(); RESULT.add(new XiPrimitiveType(type, dim)); :}
+	| types:arr COMMA type:type bracket_list:dim
 	{:	RESULT = arr;
-		arr.add(type); :}; 		
+		arr.add(new XiPrimitiveType(type, dim)); :}; 		
 
 func_decl ::= id:id OPEN_PAREN func_list:list CLOSE_PAREN types:types block:block
 	{:	FuncDeclNode func_decl = new FuncDeclNode((IdNode)id, list, types, (BlockNode)block, span(id.position(), block.position()));

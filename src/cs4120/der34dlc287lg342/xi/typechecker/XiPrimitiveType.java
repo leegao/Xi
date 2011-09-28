@@ -14,4 +14,13 @@ public class XiPrimitiveType implements XiType {
 	public XiPrimitiveType(String type){
 		this(type, new ArrayList<Integer>());
 	}
+	
+	@Override
+	public String toString(){
+		String t = type;
+		for (int i : dimension){
+			t += "["+(i>-1?i:"")+"]";
+		}
+		return t;
+	}
 }
