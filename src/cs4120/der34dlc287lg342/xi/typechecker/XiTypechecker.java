@@ -50,9 +50,7 @@ public class XiTypechecker {
 			// either UseNode or FuncDeclNode
 			if (child instanceof FuncDeclNode){
 				FuncDeclNode func = (FuncDeclNode)child;
-
 				IdNode identifier = (IdNode)func.id;
-				
 				globalContext.add(identifier.id, func.type());
 			} else if (child instanceof UseNode){
 				UseNode use = (UseNode)child;
@@ -64,6 +62,8 @@ public class XiTypechecker {
 					throw new InvalidXiTypeException("Interface file cannot be found for "+lib.id);
 				}
 				globalContext.add(interfaces);
+			} else {
+				throw new InvalidXiTypeException("Invalid Abstract Syntax Tree");
 			}
 		}
 	}

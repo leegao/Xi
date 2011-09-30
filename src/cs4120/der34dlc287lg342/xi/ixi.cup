@@ -47,10 +47,10 @@ nonterminal AbstractSyntaxNode program;
 nonterminal AbstractSyntaxNode id;
 // statement components
 nonterminal AbstractSyntaxNode var_decl;
-nonterminal Token dimension;
+nonterminal VisualizableTreeNode dimension;
 nonterminal String type;
 nonterminal ArrayList<XiPrimitiveType> types;
-nonterminal ArrayList<Integer> bracket_list;
+nonterminal ArrayList<VisualizableTreeNode> bracket_list;
 nonterminal ArrayList<VisualizableTreeNode> func_list;
 // top level
 nonterminal AbstractSyntaxNode func_decl;
@@ -63,7 +63,9 @@ id ::= IDENTIFIER:o
 		RESULT = new IdNode(id.value(), id.position());:};
 
 type ::= INT:o {: RESULT = o.value(); :} | BOOL:o {: RESULT = o.value(); :};
-dimension ::= | INTEGER_LITERAL:o {: RESULT = o; :};
+dimension ::= | INTEGER_LITERAL:t 
+	{:	String s = t.value();
+		RESULT = new IntegerLiteralNode(Integer.parseInt(s), t.position()); :};
 
 var_decl ::= id:id COLON type:t bracket_list:arr
 	{:	// check that arr is empty
@@ -71,11 +73,10 @@ var_decl ::= id:id COLON type:t bracket_list:arr
 		RESULT = decl;:};
 	
 bracket_list ::= 
-	{: RESULT = new ArrayList<Integer>(); :}
+	{: RESULT = new ArrayList<VisualizableTreeNode>(); :}
 	| bracket_list:arr OPEN_BRACKET dimension:t CLOSE_BRACKET 
-	{: 	if (arr == null) arr = new ArrayList<Integer>();
-		if (t == null) arr.add(-1);
-		else arr.add(Integer.parseInt(t.value()));
+	{: 	if (arr == null) arr = new ArrayList<VisualizableTreeNode>();
+		arr.add(t);
 		RESULT = arr; :}; 
 
 	
