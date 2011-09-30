@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -36,6 +37,19 @@ public class FuncDeclNode implements AbstractSyntaxNode {
 	@Override
 	public Iterable<VisualizableTreeNode> children() {
 		return children;
+	}
+	
+	public XiFunctionType type(){
+		ArrayList<XiPrimitiveType> argumentList = new ArrayList<XiPrimitiveType>();
+		for (VisualizableTreeNode arg : this.args){
+			if (!(arg instanceof DeclNode)){
+				// throw something
+			}
+			DeclNode decl = (DeclNode) arg;
+			argumentList.add(new XiPrimitiveType(decl.type, decl.brackets));
+		}
+		
+		return new XiFunctionType(argumentList, this.types);
 	}
 
 	@Override

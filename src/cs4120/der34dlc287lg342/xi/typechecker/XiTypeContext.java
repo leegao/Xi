@@ -28,6 +28,12 @@ public class XiTypeContext {
 		symbols.put(id, t);
 	}
 	
+	public void add(HashMap<String, XiType> h) throws InvalidXiTypeException{
+		for (String s : h.keySet()){
+			add(s, h.get(s));
+		}
+	}
+	
 	public XiType find(String id){
 		//if (!symbols.containsKey(id)) return null;
 		return symbols.get(id);

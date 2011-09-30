@@ -10,7 +10,7 @@ public class UseNode implements AbstractSyntaxNode {
 	
 
 	protected Position position;
-	protected AbstractSyntaxNode lib;
+	public AbstractSyntaxNode lib;
 	protected ArrayList<VisualizableTreeNode> children;
 	public UseNode(AbstractSyntaxNode lib, Position position){
 		this.lib = lib;

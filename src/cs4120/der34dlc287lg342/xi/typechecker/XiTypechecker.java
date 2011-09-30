@@ -1,8 +1,12 @@
 package cs4120.der34dlc287lg342.xi.typechecker;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 
+import cs4120.der34dlc287lg342.xi.*;
 import cs4120.der34dlc287lg342.xi.ast.*;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -22,6 +26,23 @@ public class XiTypechecker {
 		stack.add(globalContext);
 	}
 	
+	// add function declarations found within interfaces into the global context
+	HashMap<String, XiType> include(String id) throws FileNotFoundException{
+		HashMap<String, XiType> interfaces = new HashMap<String, XiType>();
+		
+		FileReader reader = new FileReader(id+".ixi");
+		XiInterfaceParser parser = new XiInterfaceParser(reader);
+		
+		AbstractSyntaxNode declarations = parser.parse();
+		for (VisualizableTreeNode child : declarations.children()){
+			FuncDeclNode decl = (FuncDeclNode)child;
+			IdNode identifier = (IdNode)decl.id;
+			interfaces.put(identifier.id, decl.type());
+		}
+		
+		return interfaces;
+	}
+	
 	private void init() throws InvalidXiTypeException{
 		// first pass
 		// precondition: ast is a program node
@@ -29,22 +50,20 @@ public class XiTypechecker {
 			// either UseNode or FuncDeclNode
 			if (child instanceof FuncDeclNode){
 				FuncDeclNode func = (FuncDeclNode)child;
-				
-				// find the argument list
-				ArrayList<XiPrimitiveType> argumentList = new ArrayList<XiPrimitiveType>();
-				for (VisualizableTreeNode arg : func.args){
-					if (!(arg instanceof DeclNode)){
-						// throw something
-					}
-					DeclNode decl = (DeclNode) arg;
-					argumentList.add(new XiPrimitiveType(decl.type, decl.brackets));
-				}
-				
-				XiFunctionType current_type = new XiFunctionType(argumentList, func.types);
-				
+
 				IdNode identifier = (IdNode)func.id;
 				
-				globalContext.add(identifier.id, current_type);
+				globalContext.add(identifier.id, func.type());
+			} else if (child instanceof UseNode){
+				UseNode use = (UseNode)child;
+				IdNode lib = (IdNode)use.lib;
+				HashMap<String, XiType> interfaces;
+				try {
+					interfaces = include(lib.id);
+				} catch (FileNotFoundException e) {
+					throw new InvalidXiTypeException("Interface file cannot be found for "+lib.id);
+				}
+				globalContext.add(interfaces);
 			}
 		}
 	}
