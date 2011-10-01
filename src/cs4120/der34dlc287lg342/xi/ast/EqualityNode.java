@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
-import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
@@ -13,14 +12,14 @@ import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class BinNode extends ExpressionNode {
+public class EqualityNode extends ExpressionNode {
 
 	public AbstractSyntaxNode e1, e2;
 	public Position position;
 	private ArrayList<VisualizableTreeNode> children; // cached so revisit won't be slow
 	public String op;
 	
-	public BinNode(String op){
+	public EqualityNode(String op){
 		this.op = op;
 	}
 	
@@ -45,22 +44,13 @@ public class BinNode extends ExpressionNode {
 	
 	@Override
 	public String label() {
-	    return "BIN("+type+")";
+	    return "BOOLOP("+type+")";
 	}
 	
 	@Override
 	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
-		// typecheck e1 e2, no side affects
-		XiPrimitiveType t1 = (XiPrimitiveType)((AbstractSyntaxTree)e1).typecheck(stack);
-		XiPrimitiveType t2 = (XiPrimitiveType)((AbstractSyntaxTree)e2).typecheck(stack);
-		
-		if (t1.equals(XiPrimitiveType.INT) && t2.equals(XiPrimitiveType.INT)){
-			return XiPrimitiveType.INT;
-		} else if (t1.sameBaseType(t2) && t1.isArrayType() && t2.isArrayType()){
-			return XiPrimitiveType.array(t1);
-		} else{
-			throw new CompilationException("", position());
-		}
+		// check if both are ints
+		return type;
 	}
 
 }

@@ -132,14 +132,16 @@ expr ::= expr:e1 op:op expr:e2
 	| OPEN_PAREN expr:expr CLOSE_PAREN
 	{: RESULT = expr; :};
 
-op ::= AND {: RESULT = new BinNode("AND"); :}
-	| OR {: RESULT = new BinNode("OR"); :}
-	| EQUAL {: RESULT = new BinNode("EQUAL"); :}
-	| NOT_EQUAL {: RESULT = new BinNode("NOT_EQUAL"); :}
-	| LEQ {: RESULT = new BinNode("LEQ"); :}
-	| GEQ {: RESULT = new BinNode("GEQ"); :}
-	| LT {: RESULT = new BinNode("LT"); :}
-	| GT {: RESULT = new BinNode("GT"); :}
+op ::= AND {: RESULT = new BoolOpNode("AND"); :}
+	| OR {: RESULT = new BoolOpNode("OR"); :}
+	
+	| EQUAL {: RESULT = new EqualityNode("EQUAL"); :}
+	| NOT_EQUAL {: RESULT = new EqualityNode("NOT_EQUAL"); :}
+	| LEQ {: RESULT = new EqualityNode("LEQ"); :}
+	| GEQ {: RESULT = new EqualityNode("GEQ"); :}
+	| LT {: RESULT = new EqualityNode("LT"); :}
+	| GT {: RESULT = new EqualityNode("GT"); :}
+	
 	| PLUS {: RESULT = new BinNode("PLUS"); :}
 	| MINUS {: RESULT = new BinNode("MINUS"); :}
 	| TIMES {: RESULT = new BinNode("TIMES"); :}

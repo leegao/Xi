@@ -10,6 +10,7 @@ import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
 public class BlockNode extends AbstractSyntaxTree {
@@ -41,14 +42,14 @@ public class BlockNode extends AbstractSyntaxTree {
 	}
 	
 	@Override
-	public XiType typecheck(List<XiTypeContext> stack) throws InvalidXiTypeException{
+	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
 		// do not push new context
 		
 		for (VisualizableTreeNode child : children){
 			AbstractSyntaxTree node = (AbstractSyntaxTree)child;
 			XiType child_type = node.typecheck(stack);
 			if (!XiPrimitiveType.UNIT.equals(child_type))
-				throw new InvalidXiTypeException("Statement expected but got an expression instead in block");
+				throw new CompilationException("Statement expected but got an expression instead in block", position());
 		}
 		
 		return XiPrimitiveType.UNIT;
