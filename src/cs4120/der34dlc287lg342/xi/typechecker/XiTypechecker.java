@@ -70,12 +70,15 @@ public class XiTypechecker {
 	public void typecheck() throws CompilationException{
 		// decorate the AST
 		// only expression nodes are associated with types
-		for (VisualizableTreeNode child : ast.children()){
-			if (child instanceof FuncDeclNode){
-				FuncDeclNode func = (FuncDeclNode)child;
-				// typecheck function
-				func.typecheck(stack);
-			}
-		}
+//		for (VisualizableTreeNode child : ast.children()){
+//			if (child instanceof FuncDeclNode){
+//				FuncDeclNode func = (FuncDeclNode)child;
+//				// typecheck function
+//				func.typecheck(stack);
+//			}
+//		}
+		
+		if (!(((ProgramNode)ast).typecheck(stack)).equals(XiPrimitiveType.UNIT))
+			throw new CompilationException("Invalid program" ,ast.position());
 	}
 }
