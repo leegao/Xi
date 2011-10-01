@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
+import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
@@ -49,8 +50,18 @@ public class EqualityNode extends ExpressionNode {
 	
 	@Override
 	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
-		// check if both are ints
-		return type;
+		// typecheck e1 e2, no side affects
+		XiPrimitiveType t1 = (XiPrimitiveType)((AbstractSyntaxTree)e1).typecheck(stack);
+		XiPrimitiveType t2 = (XiPrimitiveType)((AbstractSyntaxTree)e2).typecheck(stack);
+		
+		if (t1.equals(XiPrimitiveType.INT) && t2.equals(XiPrimitiveType.INT)){
+			// all cases here
+			return XiPrimitiveType.BOOL;
+		} else if (t1.equals(XiPrimitiveType.BOOL) && t2.equals(XiPrimitiveType.BOOL) && op.equals("EQUAL") && op.equals("NOT_EQUAL")){
+			return XiPrimitiveType.BOOL;
+		} else{
+			throw new CompilationException("Cannot perform EQUAITY("+op+") on types", position());
+		}
 	}
 
 }
