@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -42,7 +43,7 @@ public class InstNode extends AbstractSyntaxTree {
 	}
 	
 	@Override
-	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException {
+	public XiType typecheck(ContextList stack) throws CompilationException {
 		if(list.size() == 1) {
 			XiType declType = ((AbstractSyntaxTree)list.get(0)).typecheck(stack);
 			XiType exprType = ((AbstractSyntaxTree)e).typecheck(stack); 
