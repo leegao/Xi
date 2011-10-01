@@ -54,13 +54,14 @@ public class InstNode extends AbstractSyntaxTree {
 				throw new CompilationException("Invalid Instantiation Type", position);
 			
 		} else if(list.size() > 1) {
-			if(((AbstractSyntaxTree)e).typecheck(stack) instanceof XiFunctionType) {
-				XiFunctionType function = (XiFunctionType)e;
+			XiType function = ((AbstractSyntaxTree)e).typecheck(stack);
+			if( function instanceof XiFunctionType) {
+				XiFunctionType functionType = (XiFunctionType)e;
 				
-				if(list.size() == function.ret.size()) {
+				if(list.size() == functionType.ret.size()) {
 					for(int index = 0; index < list.size(); index++) {
 						if(!(list.get(index) instanceof UnderscoreNode))
-							if( !((AbstractSyntaxTree)list.get(index)).typecheck(stack).equals(function.ret.get(index)) )
+							if( !((AbstractSyntaxTree)list.get(index)).typecheck(stack).equals(functionType.ret.get(index)) )
 								throw new CompilationException("Invalid type at index " + index, position);
 					}
 					
