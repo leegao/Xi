@@ -6,7 +6,7 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class ProcedureCallNode implements AbstractSyntaxNode {
+public class ProcedureCallNode extends AbstractSyntaxTree {
 
 	protected AbstractSyntaxNode call;
 	public ProcedureCallNode(AbstractSyntaxNode call){

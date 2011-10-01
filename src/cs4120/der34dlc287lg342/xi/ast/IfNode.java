@@ -6,7 +6,7 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class IfNode implements AbstractSyntaxNode {
+public class IfNode extends AbstractSyntaxTree {
 
 	protected Position position;
 	protected AbstractSyntaxNode condition, s1, s2;

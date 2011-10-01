@@ -18,10 +18,11 @@ public class TestTypechecker extends TestCase {
 	}
 	
 	public void testXiTypechecker() {
-		AbstractSyntaxNode ast = gen("use io main(a:int,b:int[][3]):int[2][]{a:int, _ = f();} \nf(){return}").parse();
+		AbstractSyntaxNode ast = gen("use io main(a:int,b:int[][3]):int[2][]{c:int, _ = f();} \nf():int,bool{return 1,true}").parse();
 		try {
 			XiTypechecker tc = new XiTypechecker(ast);
-			System.out.println(XiTypechecker.globalContext.symbols);
+			//System.out.println(XiTypechecker.globalContext.symbols);
+			tc.typecheck();
 		} catch (InvalidXiTypeException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
