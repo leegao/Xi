@@ -45,7 +45,7 @@ public class BinNode extends ExpressionNode {
 	
 	@Override
 	public String label() {
-	    return "BIN("+type+")";
+	    return "BIN("+op+")";
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ public class BinNode extends ExpressionNode {
 		} else if (t1.sameBaseType(t2) && t1.isArrayType() && t2.isArrayType()){
 			return XiPrimitiveType.array(t1);
 		} else{
-			throw new CompilationException("", position());
+			throw new CompilationException("Cannot perform BINOP("+op+") on incorrect types", position());
 		}
 	}
 
