@@ -53,13 +53,11 @@ public class IfNode extends AbstractSyntaxTree {
 		
 		if(condType.equals(XiPrimitiveType.BOOL) && s1Type.equals(XiPrimitiveType.UNIT))
 			if( s2Type != null)
-				if(s2Type.equals(XiPrimitiveType.UNIT)) {
+				if(s2Type.equals(XiPrimitiveType.UNIT)) 
 					return XiPrimitiveType.UNIT;	
 		
 		
 		throw new CompilationException("Invalid boolean expression", position);
-		
-		
+			
 	}
-
 }

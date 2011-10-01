@@ -3,6 +3,8 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 import java.util.List;
 
+import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
@@ -43,11 +45,37 @@ public class InstNode extends AbstractSyntaxTree {
 	
 	@Override
 	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException {
-		if( list.size() == 1) {
-			XiType decl = ((AbstractSyntaxTree)list.get(0)).typecheck(stack);
-		}
-		
-		return null;
+		if(list.size() == 1) {
+			XiType declType = ((AbstractSyntaxTree)list.get(0)).typecheck(stack);
+			XiType exprType = ((AbstractSyntaxTree)e).typecheck(stack); 
+			
+			if(declType.equals(exprType))
+				return XiPrimitiveType.UNIT;
+			else 
+				throw new CompilationException("Invalid Instantiation Type", position);
+			
+		} else if(list.size() > 1) {
+			if(((AbstractSyntaxTree)e).typecheck(stack) instanceof XiFunctionType) {
+				XiFunctionType function = (XiFunctionType)e;
+				
+				if(list.size() == function.ret.size()) {
+					for(int index = 0; index < list.size(); index++) {
+						if(!(list.get(index) instanceof UnderscoreNode))
+							if( !((AbstractSyntaxTree)list.get(index)).typecheck(stack).equals(function.ret.get(index)) )
+								throw new CompilationException("Invalid type at index " + index, position);
+					}
+					
+					return XiPrimitiveType.UNIT;
+					
+				} else {
+					throw new CompilationException("Invalid number of return types", position);
+				}
+			} else 
+				throw new CompilationException("Expecting a function call", position);
+		} 
+			
+		throw new CompilationException("Invalid Instantion", position);
+	
 	}
 
 }
