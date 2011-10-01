@@ -47,7 +47,7 @@ public class BlockNode extends AbstractSyntaxTree {
 		for (VisualizableTreeNode child : children){
 			AbstractSyntaxTree node = (AbstractSyntaxTree)child;
 			XiType child_type = node.typecheck(stack);
-			if (!XiPrimitiveType.UNIT.equals(child_type))
+			if (!XiPrimitiveType.UNIT.equals(child_type) && !(XiPrimitiveType.VOID.equals(child_type) && child instanceof ReturnNode))
 				throw new CompilationException("Statement expected but got an expression instead in block", position());
 		}
 		

@@ -11,8 +11,6 @@ import edu.cornell.cs.cs4120.xi.Position;
 
 public abstract class ExpressionNode extends AbstractSyntaxTree {
 
-	public XiType type = null;
-	
 	@Override
 	public Position position() {
 		// TODO Auto-generated method stub
