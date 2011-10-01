@@ -50,6 +50,7 @@ public class XiPrimitiveType implements XiType {
 	public static XiType UNIT = new XiPrimitiveType("unit");
 	public static XiType INT = new XiPrimitiveType("int");
 	public static XiType BOOL = new XiPrimitiveType("bool");
+	public static XiType VOID = new XiPrimitiveType("void");
 	
 	public static XiPrimitiveType array(XiPrimitiveType t){
 		XiPrimitiveType nt = (XiPrimitiveType)t.clone();
