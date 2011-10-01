@@ -41,5 +41,30 @@ public class XiPrimitiveType implements XiType {
 		return t;
 	}
 	
+	@Override
+	public Object clone(){
+		XiPrimitiveType t = new XiPrimitiveType(type, (ArrayList<VisualizableTreeNode>) dimension.clone());
+		return t;
+	}
+	
 	public static XiType UNIT = new XiPrimitiveType("unit");
+	public static XiType INT = new XiPrimitiveType("int");
+	public static XiType BOOL = new XiPrimitiveType("bool");
+	
+	public static XiPrimitiveType array(XiPrimitiveType t){
+		XiPrimitiveType nt = (XiPrimitiveType)t.clone();
+		nt.dimension.add(null);
+		return nt;
+	}
+	
+	public static XiType INT_ARR = array((XiPrimitiveType)INT);
+	public static XiType BOOL_ARR = array((XiPrimitiveType)INT);
+	
+	public boolean isArrayType(){
+		return dimension.isEmpty();
+	}
+	
+	public boolean sameBaseType(XiPrimitiveType t2){
+		return type.equals(t2.type);
+	}
 }

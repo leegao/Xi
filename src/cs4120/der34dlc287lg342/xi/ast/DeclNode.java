@@ -6,7 +6,7 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class DeclNode implements AbstractSyntaxNode {
+public class DeclNode extends AbstractSyntaxTree {
 
 	public Position position;
 	public IdNode id;

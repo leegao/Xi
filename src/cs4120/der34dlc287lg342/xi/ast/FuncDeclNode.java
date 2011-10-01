@@ -7,6 +7,7 @@ import cs4120.der34dlc287lg342.xi.typechecker.*;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
 public class FuncDeclNode extends AbstractSyntaxTree {
@@ -55,13 +56,17 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		return "FUNCDECL";
 	}
 
-	public XiType typecheck(List<XiTypeContext> stack) throws InvalidXiTypeException{
+	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
 		// push a new context frame onto the stack
 		XiTypeContext frame = new XiTypeContext(type);
 		for (VisualizableTreeNode arg : this.args){
 			DeclNode decl = (DeclNode) arg;
 			IdNode id = (IdNode)decl.id;
-			frame.add(id.id, new XiPrimitiveType(decl.type, decl.brackets));
+			try {
+				frame.add(id.id, new XiPrimitiveType(decl.type, decl.brackets));
+			} catch (InvalidXiTypeException e) {
+				throw new CompilationException(e.getMessage(), position());
+			}
 		}
 		stack.add(frame);
 		
