@@ -68,7 +68,7 @@ public class XiTypechecker {
 		}
 	}
 	
-	public void typecheck() throws InvalidXiTypeException{
+	public void typecheck() throws CompilationException{
 		// decorate the AST
 		// only expression nodes are associated with types
 		for (VisualizableTreeNode child : ast.children()){

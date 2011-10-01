@@ -1,9 +1,15 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
 public class WhileNode extends AbstractSyntaxTree {
@@ -33,6 +39,19 @@ public class WhileNode extends AbstractSyntaxTree {
 	@Override
 	public String label() {
 		return "WHILE";
+	}
+	
+	@Override
+	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException {
+		XiType condType = ((AbstractSyntaxTree)condition).typecheck(stack);
+		XiType stmntType = ((AbstractSyntaxTree)s).typecheck(stack);
+		
+		if(condType.equals(XiPrimitiveType.BOOL) && stmntType.equals(XiPrimitiveType.UNIT)) {
+			return XiPrimitiveType.UNIT;
+		} else {
+			throw new CompilationException("Invalid boolean expression", position);
+		}
+		}
 	}
 
 }

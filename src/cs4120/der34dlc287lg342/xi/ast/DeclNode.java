@@ -1,12 +1,17 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
-import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class DeclNode implements AbstractSyntaxNode {
+public class DeclNode extends AbstractSyntaxTree {
 
 	public Position position;
 	public IdNode id;
@@ -35,6 +40,11 @@ public class DeclNode implements AbstractSyntaxNode {
 	@Override
 	public String label() {
 		return "DECL";
+	}
+	
+	@Override
+	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException {
+		return XiPrimitiveType.UNIT;
 	}
 
 }
