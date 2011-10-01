@@ -71,6 +71,11 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		
 		block.typecheck(stack);
 		
+		try {
+			stack.pop();
+		} catch (InvalidXiTypeException e) {
+			throw new CompilationException(e.getMessage(), position());
+		}
 		return type;
 	}
 }
