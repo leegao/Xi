@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
@@ -47,7 +48,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 			if( childTree instanceof FuncDeclNode) {
 				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
 				
-				if(!childType.equals(XiPrimitiveType.UNIT))
+				if(!(childType instanceof XiFunctionType))
 					throw new CompilationException("Invalid program",position);
 			}
 		}

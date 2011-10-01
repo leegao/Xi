@@ -68,4 +68,14 @@ public class XiPrimitiveType implements XiType {
 	public boolean sameBaseType(XiPrimitiveType t2){
 		return type.equals(t2.type);
 	}
+	
+	@Override
+	public boolean equals(Object o){
+		if (o instanceof XiPrimitiveType){
+			XiPrimitiveType t = (XiPrimitiveType)o;
+			if (!sameBaseType(t)) return false;
+			return t.dimension.size() == dimension.size();
+		}
+		return false;
+	}
 }
