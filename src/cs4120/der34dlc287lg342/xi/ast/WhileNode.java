@@ -48,10 +48,9 @@ public class WhileNode extends AbstractSyntaxTree {
 		
 		if(condType.equals(XiPrimitiveType.BOOL) && stmntType.equals(XiPrimitiveType.UNIT)) {
 			return XiPrimitiveType.UNIT;
-		} else {
-			throw new CompilationException("Invalid boolean expression", position);
-		}
-		}
+		} 
+		
+		throw new CompilationException("Invalid boolean expression", position);
+		
 	}
-
 }

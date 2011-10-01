@@ -55,10 +55,9 @@ public class IfNode extends AbstractSyntaxTree {
 			if( s2Type != null)
 				if(s2Type.equals(XiPrimitiveType.UNIT)) 
 					return XiPrimitiveType.UNIT;	
-		}
-			
-			
-			throw new CompilationException("Invalid boolean expression", position);
+		
+		
+		throw new CompilationException("Invalid boolean expression", position);
 		
 		
 	}
