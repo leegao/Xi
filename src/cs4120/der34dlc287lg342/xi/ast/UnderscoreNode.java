@@ -6,7 +6,7 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class UnderscoreNode implements AbstractSyntaxNode {
+public class UnderscoreNode extends AbstractSyntaxTree {
 
 	protected Position position;
 	public UnderscoreNode(Position position){

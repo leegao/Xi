@@ -1,12 +1,18 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
+import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class BlockNode implements AbstractSyntaxNode {
+public class BlockNode extends AbstractSyntaxTree {
 
 	public Position position;
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
@@ -32,6 +38,20 @@ public class BlockNode implements AbstractSyntaxNode {
 	@Override
 	public String label() {
 		return "BLOCK";
+	}
+	
+	@Override
+	public XiType typecheck(List<XiTypeContext> stack) throws InvalidXiTypeException{
+		// do not push new context
+		
+		for (VisualizableTreeNode child : children){
+			AbstractSyntaxTree node = (AbstractSyntaxTree)child;
+			XiType child_type = node.typecheck(stack);
+			if (!XiPrimitiveType.UNIT.equals(child_type))
+				throw new InvalidXiTypeException("Statement expected but got an expression instead in block");
+		}
+		
+		return XiPrimitiveType.UNIT;
 	}
 
 }

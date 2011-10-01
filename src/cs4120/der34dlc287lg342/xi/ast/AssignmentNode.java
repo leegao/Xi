@@ -6,7 +6,7 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class AssignmentNode implements AbstractSyntaxNode {
+public class AssignmentNode extends AbstractSyntaxTree {
 
 	protected Position position;
 	protected AbstractSyntaxNode id, expr;

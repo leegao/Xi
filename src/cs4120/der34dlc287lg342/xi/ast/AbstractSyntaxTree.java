@@ -2,13 +2,12 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.List;
 
-import cs4120.der34dlc287lg342.xi.typechecker.XiType;
-import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
+import cs4120.der34dlc287lg342.xi.typechecker.*;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public abstract class ExpressionNode extends AbstractSyntaxTree {
+public class AbstractSyntaxTree implements AbstractSyntaxNode {
 
 	public XiType type = null;
 	
@@ -30,8 +29,7 @@ public abstract class ExpressionNode extends AbstractSyntaxTree {
 		return null;
 	}
 	
-	@Override
-	public XiType typecheck(List<XiTypeContext> stack){
+	public XiType typecheck(List<XiTypeContext> stack) throws InvalidXiTypeException{
 		return type;
 	}
 

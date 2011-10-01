@@ -31,13 +31,13 @@ public class XiTypechecker {
 		HashMap<String, XiType> interfaces = new HashMap<String, XiType>();
 		
 		FileReader reader = new FileReader(id+".ixi");
-		XiInterfaceParser parser = new XiInterfaceParser(reader);
+		XiInterfaceParser parser = new XiInterfaceParser(reader, id+".ixi");
 		
 		AbstractSyntaxNode declarations = parser.parse();
 		for (VisualizableTreeNode child : declarations.children()){
 			FuncDeclNode decl = (FuncDeclNode)child;
 			IdNode identifier = (IdNode)decl.id;
-			interfaces.put(identifier.id, decl.type());
+			interfaces.put(identifier.id, decl.type);
 		}
 		
 		return interfaces;
@@ -51,7 +51,7 @@ public class XiTypechecker {
 			if (child instanceof FuncDeclNode){
 				FuncDeclNode func = (FuncDeclNode)child;
 				IdNode identifier = (IdNode)func.id;
-				globalContext.add(identifier.id, func.type());
+				globalContext.add(identifier.id, func.type);
 			} else if (child instanceof UseNode){
 				UseNode use = (UseNode)child;
 				IdNode lib = (IdNode)use.lib;
@@ -64,6 +64,18 @@ public class XiTypechecker {
 				globalContext.add(interfaces);
 			} else {
 				throw new InvalidXiTypeException("Invalid Abstract Syntax Tree");
+			}
+		}
+	}
+	
+	public void typecheck() throws InvalidXiTypeException{
+		// decorate the AST
+		// only expression nodes are associated with types
+		for (VisualizableTreeNode child : ast.children()){
+			if (child instanceof FuncDeclNode){
+				FuncDeclNode func = (FuncDeclNode)child;
+				// typecheck function
+				func.typecheck(stack);
 			}
 		}
 	}

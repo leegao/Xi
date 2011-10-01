@@ -1,22 +1,25 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
-import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
+import cs4120.der34dlc287lg342.xi.typechecker.*;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.Position;
 
-public class FuncDeclNode implements AbstractSyntaxNode {
+public class FuncDeclNode extends AbstractSyntaxTree {
 
 	public Position position;
 	public AbstractSyntaxNode id;
 	public ArrayList<VisualizableTreeNode> args;
 	protected ArrayList<VisualizableTreeNode> children;
-	BlockNode block;
+	public BlockNode block;
 	public ArrayList<XiPrimitiveType> types;
+	
+	public XiFunctionType type;
+	
 	public FuncDeclNode(IdNode id, ArrayList<VisualizableTreeNode> args, ArrayList<XiPrimitiveType> types, BlockNode block, Position position){
 		this.id = id;
 		this.args = args;
@@ -27,6 +30,14 @@ public class FuncDeclNode implements AbstractSyntaxNode {
 		children.add(id);
 		children.addAll(args);
 		children.add(block);
+		
+		ArrayList<XiPrimitiveType> argumentList = new ArrayList<XiPrimitiveType>();
+		for (VisualizableTreeNode arg : this.args){
+			DeclNode decl = (DeclNode) arg;
+			argumentList.add(new XiPrimitiveType(decl.type, decl.brackets));
+		}
+		
+		this.type = new XiFunctionType(argumentList, this.types);;
 	}
 	
 	@Override
@@ -39,22 +50,23 @@ public class FuncDeclNode implements AbstractSyntaxNode {
 		return children;
 	}
 	
-	public XiFunctionType type(){
-		ArrayList<XiPrimitiveType> argumentList = new ArrayList<XiPrimitiveType>();
-		for (VisualizableTreeNode arg : this.args){
-			if (!(arg instanceof DeclNode)){
-				// throw something
-			}
-			DeclNode decl = (DeclNode) arg;
-			argumentList.add(new XiPrimitiveType(decl.type, decl.brackets));
-		}
-		
-		return new XiFunctionType(argumentList, this.types);
-	}
-
 	@Override
 	public String label() {
 		return "FUNCDECL";
 	}
 
+	public XiType typecheck(List<XiTypeContext> stack) throws InvalidXiTypeException{
+		// push a new context frame onto the stack
+		XiTypeContext frame = new XiTypeContext(type);
+		for (VisualizableTreeNode arg : this.args){
+			DeclNode decl = (DeclNode) arg;
+			IdNode id = (IdNode)decl.id;
+			frame.add(id.id, new XiPrimitiveType(decl.type, decl.brackets));
+		}
+		stack.add(frame);
+		
+		block.typecheck(stack);
+		
+		return type;
+	}
 }
