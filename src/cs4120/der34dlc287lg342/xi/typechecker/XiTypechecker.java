@@ -2,9 +2,7 @@ package cs4120.der34dlc287lg342.xi.typechecker;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 
 import cs4120.der34dlc287lg342.xi.*;
 import cs4120.der34dlc287lg342.xi.ast.*;
@@ -14,7 +12,7 @@ import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 
 public class XiTypechecker {
-	public LinkedList<XiTypeContext> stack;
+	public ContextList stack;
 	public static XiTypeContext globalContext;
 	
 	public AbstractSyntaxNode ast;
@@ -22,7 +20,7 @@ public class XiTypechecker {
 	public XiTypechecker(AbstractSyntaxNode ast) throws InvalidXiTypeException{
 		this.ast = ast;
 		globalContext = new XiTypeContext(false);
-		stack = new LinkedList<XiTypeContext>();
+		stack = new ContextList();
 		init();
 		stack.add(globalContext);
 	}

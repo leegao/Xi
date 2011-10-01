@@ -1,11 +1,10 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
-import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -45,7 +44,7 @@ public class IfNode extends AbstractSyntaxTree {
 	}
 	
 	@Override
-	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException {
+	public XiType typecheck(ContextList stack) throws CompilationException {
 		XiType condType = ((AbstractSyntaxTree)condition).typecheck(stack);
 		XiType s1Type = ((AbstractSyntaxTree)s1).typecheck(stack);
 		XiType s2Type = null;
