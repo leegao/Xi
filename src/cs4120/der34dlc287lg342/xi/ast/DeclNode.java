@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
@@ -43,7 +44,19 @@ public class DeclNode extends AbstractSyntaxTree {
 	
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
+		try {
+			stack.add_id(id.id, new XiPrimitiveType(type, brackets));
+		} catch (InvalidXiTypeException e) {
+			throw new CompilationException(e.getMessage(), position());
+		}
+		
+		int[] a = new int[3];
+		int[] b = new int[5];
+		a = b;
+		
 		return XiPrimitiveType.UNIT;
+		
+		
 	}
 
 }

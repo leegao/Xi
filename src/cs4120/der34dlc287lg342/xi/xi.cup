@@ -42,7 +42,7 @@ terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
   OPEN_BRACKET, CLOSE_BRACKET, OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE,
   COLON, COMMA, SEMICOLON, UNDERSCORE;
 
-nonterminal AbstractSyntaxNode program;
+nonterminal AbstractSyntaxNode program, use_list;
 // expr components
 nonterminal AbstractSyntaxNode expr, op, uop, func_call, 
 	arr_index, arr_create, arr_elements, id;
@@ -314,18 +314,22 @@ func_decl ::= id:id OPEN_PAREN func_list:list CLOSE_PAREN types:types block:bloc
 	{:	FuncDeclNode func_decl = new FuncDeclNode((IdNode)id, list, types, (BlockNode)block, span(id.position(), block.position()));
 		RESULT = func_decl; :};
 
-program ::= use_stmt:s
+use_list ::= use_stmt:s
 	{:	ProgramNode program = new ProgramNode(s.position());
+		program.add(s);
+		RESULT = program; :}
+	| use_list:l use_stmt:s
+	{:	ProgramNode program = (ProgramNode)l;
+		program.add(s);
+		RESULT = program; :};
+
+program ::= use_list:p func_decl:s
+	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
 		RESULT = program; :}
 	| func_decl:s
 	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
-		RESULT = program; :}
-	| program:p use_stmt:s
-	{:	ProgramNode program = (ProgramNode)p;
-		program.add(s);
-		program.position = span(p.position(), s.position());
 		RESULT = program; :}
 	| program:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;

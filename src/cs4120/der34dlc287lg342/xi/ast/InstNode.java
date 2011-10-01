@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -56,13 +57,22 @@ public class InstNode extends AbstractSyntaxTree {
 		} else if(list.size() > 1) {
 			XiType function = ((AbstractSyntaxTree)e).typecheck(stack);
 			if( function instanceof XiFunctionType) {
-				XiFunctionType functionType = (XiFunctionType)e;
+				XiFunctionType functionType = (XiFunctionType)function;
 				
 				if(list.size() == functionType.ret.size()) {
 					for(int index = 0; index < list.size(); index++) {
-						if(!(list.get(index) instanceof UnderscoreNode))
-							if( !((AbstractSyntaxTree)list.get(index)).typecheck(stack).equals(functionType.ret.get(index)) )
+						if(!(list.get(index) instanceof UnderscoreNode)){
+							XiType declType = ((AbstractSyntaxTree)list.get(index)).typecheck(stack);
+							DeclNode decl = ((DeclNode)list.get(index));
+							XiType t;
+							try {
+								t = stack.find_id(decl.id.id);
+							} catch (InvalidXiTypeException e1) {
+								throw new CompilationException(e1.getMessage(), position());
+							}
+							if( !t.equals(functionType.ret.get(index)) )
 								throw new CompilationException("Invalid type at index " + index, position);
+						}
 					}
 					
 					return XiPrimitiveType.UNIT;
