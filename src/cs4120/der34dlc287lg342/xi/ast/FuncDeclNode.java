@@ -1,7 +1,6 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import cs4120.der34dlc287lg342.xi.typechecker.*;
 
@@ -56,7 +55,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		return "FUNCDECL";
 	}
 
-	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
+	public XiType typecheck(ContextList stack) throws CompilationException{
 		// push a new context frame onto the stack
 		XiTypeContext frame = new XiTypeContext(type);
 		for (VisualizableTreeNode arg : this.args){

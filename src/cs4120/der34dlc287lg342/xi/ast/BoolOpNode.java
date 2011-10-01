@@ -1,11 +1,11 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
+import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
-import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -48,9 +48,17 @@ public class BoolOpNode extends ExpressionNode {
 	}
 	
 	@Override
-	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
-		// check if both are ints
-		return type;
+	public XiType typecheck(ContextList stack) throws CompilationException{
+		// typecheck e1 e2, no side affects
+		XiPrimitiveType t1 = (XiPrimitiveType)((AbstractSyntaxTree)e1).typecheck(stack);
+		XiPrimitiveType t2 = (XiPrimitiveType)((AbstractSyntaxTree)e2).typecheck(stack);
+		
+		if (t1.equals(XiPrimitiveType.BOOL) && t2.equals(XiPrimitiveType.BOOL)){
+			// all cases here
+			return XiPrimitiveType.BOOL;
+		} else{
+			throw new CompilationException("Cannot perform EQUAITY("+op+") on types", position());
+		}
 	}
 
 }

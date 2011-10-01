@@ -1,6 +1,5 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
-import java.util.List;
 
 import cs4120.der34dlc287lg342.xi.typechecker.*;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -30,7 +29,7 @@ public class AbstractSyntaxTree implements AbstractSyntaxNode {
 		return null;
 	}
 	
-	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
+	public XiType typecheck(ContextList stack) throws CompilationException{
 		return null;
 	}
 

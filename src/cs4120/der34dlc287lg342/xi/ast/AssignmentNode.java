@@ -1,12 +1,11 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
-import java.util.List;
 
+import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
-import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -43,7 +42,7 @@ public class AssignmentNode extends AbstractSyntaxTree {
 	}
 	
 	@Override
-	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
+	public XiType typecheck(ContextList stack) throws CompilationException{
 		// push a new context frame onto the stack
 		XiType idType = ((AbstractSyntaxTree)id).typecheck(stack);
 		XiType exprType = ((AbstractSyntaxTree)expr).typecheck(stack);
