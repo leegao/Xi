@@ -43,7 +43,7 @@ public class AssignmentNode extends AbstractSyntaxTree {
 	}
 	
 	@Override
-	public XiType typecheck(List<XiTypeContext> stack) throws InvalidXiTypeException{
+	public XiType typecheck(List<XiTypeContext> stack) throws CompilationException{
 		// push a new context frame onto the stack
 		XiType idType = ((AbstractSyntaxTree)id).typecheck(stack);
 		XiType exprType = ((AbstractSyntaxTree)expr).typecheck(stack);

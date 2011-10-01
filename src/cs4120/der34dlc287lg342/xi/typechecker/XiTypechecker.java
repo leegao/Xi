@@ -11,6 +11,7 @@ import cs4120.der34dlc287lg342.xi.ast.*;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.CompilationException;
 
 public class XiTypechecker {
 	public LinkedList<XiTypeContext> stack;

@@ -51,7 +51,7 @@ public class WhileNode extends AbstractSyntaxTree {
 		} else {
 			throw new CompilationException("Invalid boolean expression", position);
 		}
-		}
+		
 	}
 
 }
