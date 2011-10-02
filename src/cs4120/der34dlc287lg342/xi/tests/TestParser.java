@@ -251,4 +251,33 @@ public class TestParser extends TestCase {
 		}
 	}
 	
+	public void testPositionForInvalidReturnType() {
+		try {
+			gen("func() int { return 1 }").parse();
+			fail("Did not catch compilation error");
+		} catch (CompilationException e) {
+			assertEquals("((1, 8), (1, 10))",e.getPosition().toString());
+		}
+	}
+	
+	public void testInvalidDeclarationstatement() {
+		try {
+			gen("func() { a:int = b:int }").parse();
+			fail("Did not catch compilation error");
+		} catch (CompilationException e) {
+			assertEquals("((1, 19), (1, 19))", e.getPosition().toString());
+		}
+	}
+	
+	public void testInvalidUnderscoreDecalration() {
+		try {
+			gen("func() { _ = false  }").parse();
+			fail("Did not catch compilation error");
+		} catch (CompilationException e) {
+			assertEquals("((1, 10), (1, 12))", e.getPosition().toString());
+		}	
+	}
+	
+
+	
 }
