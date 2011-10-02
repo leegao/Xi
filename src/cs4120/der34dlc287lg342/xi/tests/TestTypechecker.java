@@ -42,7 +42,6 @@ public class TestTypechecker extends TestCase {
 		} catch (InvalidXiTypeException xiEx) {
 			fail();
 		}
-		
 	}
 
 }

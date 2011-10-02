@@ -97,35 +97,35 @@ public class TestParser extends TestCase {
 	public void testParserStmtWhile(){
 		checkType(gen("main(){while (1 < 2) a = 3;}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"WHILE", "BIN(LT)", "1", "2", "ASSIGNMENT", "ID(a)", "3"
+			"WHILE", "EQ(LT)", "1", "2", "ASSIGNMENT", "ID(a)", "3"
 		});
 	}
 	
 	public void testParserStmtWhileBlock(){
 		checkType(gen("main(){while (1 < 2){ a = 3;}}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"WHILE", "BIN(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3"
+			"WHILE", "EQ(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3"
 		});
 	}
 	
 	public void testParserStmtIf(){
 		checkType(gen("main(){if (1 < 2) a = 3;}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"IF", "BIN(LT)", "1", "2", "ASSIGNMENT", "ID(a)", "3"
+			"IF", "EQ(LT)", "1", "2", "ASSIGNMENT", "ID(a)", "3"
 		});
 	}
 	
 	public void testParserStmtIfBlock(){
 		checkType(gen("main(){if (1 < 2){ a = 3;}}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"IF", "BIN(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3"
+			"IF", "EQ(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3"
 		});
 	}
 	
 	public void testParserStmtIfElse(){
 		checkType(gen("main(){if (1 < 2){ a = 3;} else b = 3}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"IF-ELSE", "BIN(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3",
+			"IF-ELSE", "EQ(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3",
 			"ASSIGNMENT", "ID(b)", "3"
 		});
 	}
@@ -133,7 +133,7 @@ public class TestParser extends TestCase {
 	public void testParserStmtIfElseBreak(){
 		checkType(gen("main(){if (1 < 2){ a = 3;} else break;}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"IF-ELSE", "BIN(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3",
+			"IF-ELSE", "EQ(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3",
 			"BREAK"
 		});
 	}
@@ -211,7 +211,8 @@ public class TestParser extends TestCase {
 			});
 			fail("Did not catch syntax error");
 		} catch (CompilationException e){
-			assertEquals(e.getMessage(), "Syntax Error: Not expecting token OPEN_BRACKET([)");
+			assertEquals("Syntax Error: Not expecting EOF",e.getMessage());
+
 		}
 	}
 	
@@ -221,7 +222,7 @@ public class TestParser extends TestCase {
 			});
 			fail("Did not catch syntax error");
 		} catch (CompilationException e){
-			assertEquals(e.getMessage(), "Illegal character <'>");
+			assertEquals("Illegal character <'>",e.getMessage());
 		}
 	}
 	
@@ -247,7 +248,7 @@ public class TestParser extends TestCase {
 			});
 			fail("Did not catch syntax error");
 		} catch (CompilationException e){
-			assertEquals(e.getMessage(), "Syntax Error: Not expecting token IDENTIFIER(print)");
+			assertEquals("Syntax Error: Not expecting token IDENTIFIER(print)", e.getMessage());
 		}
 	}
 	
