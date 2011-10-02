@@ -43,7 +43,7 @@ public class BoolOpNode extends ExpressionNode {
 	
 	@Override
 	public String label() {
-	    return "BOOLOP("+type+")";
+	    return "BOOLOP("+op+")";
 	}
 	
 	@Override

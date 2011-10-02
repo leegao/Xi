@@ -43,7 +43,7 @@ public class EqualityNode extends ExpressionNode {
 	
 	@Override
 	public String label() {
-	    return "BOOLOP("+type+")";
+	    return "EQ("+op+")";
 	}
 	
 	@Override

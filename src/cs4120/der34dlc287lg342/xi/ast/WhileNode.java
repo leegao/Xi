@@ -55,8 +55,8 @@ public class WhileNode extends AbstractSyntaxTree {
 			throw new CompilationException(e.getMessage(), position());
 		}
 		
-		if(condType.equals(XiPrimitiveType.BOOL) && stmntType.equals(XiPrimitiveType.UNIT)) {
-			type = XiPrimitiveType.UNIT;
+		if(condType.equals(XiPrimitiveType.BOOL) && (stmntType.equals(XiPrimitiveType.UNIT)) || stmntType.equals(XiPrimitiveType.VOID)) {
+			type = stmntType;
 			return type;
 		} 
 		

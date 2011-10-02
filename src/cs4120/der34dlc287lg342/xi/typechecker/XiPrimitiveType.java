@@ -43,7 +43,7 @@ public class XiPrimitiveType implements XiType {
 	
 	@Override
 	public Object clone(){
-		XiPrimitiveType t = new XiPrimitiveType(type, (ArrayList<VisualizableTreeNode>) dimension.clone());
+		XiPrimitiveType t = new XiPrimitiveType(type, (ArrayList<VisualizableTreeNode>)dimension.clone());
 		return t;
 	}
 	
