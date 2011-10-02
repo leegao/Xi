@@ -7,6 +7,7 @@ import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.parser.Parser;
 import junit.framework.TestCase;
 
@@ -28,6 +29,20 @@ public class TestTypechecker extends TestCase {
 			e.printStackTrace();
 			fail();
 		}
+	}
+	
+	public void testInvalidBreakAndPosition() {
+		try {
+			AbstractSyntaxNode ast = gen("func(){ break }").parse();
+			XiTypechecker tc = new XiTypechecker(ast);
+			tc.typecheck();
+		} catch (CompilationException compEx) {
+			assertEquals("Cannot break if not in a loop",compEx.getMessage());
+			assertEquals("((1, 9), (1, 13))", compEx.getPosition().toString());
+		} catch (InvalidXiTypeException xiEx) {
+			fail();
+		}
+		
 	}
 
 }

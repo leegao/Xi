@@ -1,4 +1,4 @@
-package cs4120.lg342.xi;
+package cs4120.der34dlc287lg342.xi;
 
 import java.util.NoSuchElementException;
 import edu.cornell.cs.cs4120.xi.lexer.*;
@@ -66,7 +66,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 		else
 			col += lastline.length();
 		
-		return new XiToken(value, type, unit, yycolumn+1, col+1, yyline+1, line+newlines+1);
+		return new XiToken(value, type, unit, yycolumn+1, yycolumn+yylength(), yyline+1, line+newlines+1);
 	}
 	
 	private Token token(TokenType type){
