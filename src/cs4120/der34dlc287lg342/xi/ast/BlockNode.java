@@ -44,15 +44,19 @@ public class BlockNode extends AbstractSyntaxTree {
 		// do not push new context
 		// we can change this to a deferred context push system if naked {} are allowed
 		
+		XiType t = XiPrimitiveType.UNIT;
+		
 		for (VisualizableTreeNode child : children){
 			AbstractSyntaxTree node = (AbstractSyntaxTree)child;
 			XiType child_type = node.typecheck(stack);
 			if (!XiPrimitiveType.UNIT.equals(child_type) && 
-				!(XiPrimitiveType.VOID.equals(child_type) && child instanceof ReturnNode))
+				!(XiPrimitiveType.VOID.equals(child_type)))
 				throw new CompilationException("Statement expected but got an expression instead in block", position());
+			if (XiPrimitiveType.VOID.equals(child_type))
+				t = XiPrimitiveType.VOID;
 		}
 		
-		type = XiPrimitiveType.UNIT;
+		type = t; // do not annotate if fails
 		return type;
 	}
 

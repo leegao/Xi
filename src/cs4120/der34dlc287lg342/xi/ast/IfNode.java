@@ -68,12 +68,17 @@ public class IfNode extends AbstractSyntaxTree {
 			}
 		}
 		
-		if(condType.equals(XiPrimitiveType.BOOL) && s1Type.equals(XiPrimitiveType.UNIT))
-			if( s2Type != null)
-				if(s2Type.equals(XiPrimitiveType.UNIT)){
-					type = XiPrimitiveType.UNIT;
-					return type;	
+		if(condType.equals(XiPrimitiveType.BOOL) && (s1Type.equals(XiPrimitiveType.UNIT) || s1Type.equals(XiPrimitiveType.VOID))){
+			XiType t = XiPrimitiveType.UNIT;
+			if( s2Type != null){
+				if(s2Type.equals(XiPrimitiveType.UNIT) || s2Type.equals(XiPrimitiveType.VOID)){
+					if (s1Type.equals(XiPrimitiveType.VOID) && s2Type.equals(XiPrimitiveType.VOID))
+						t = XiPrimitiveType.VOID;
 				}
+			}
+			type = t;
+			return type;
+		}
 		
 		throw new CompilationException("Invalid boolean expression", position);
 			
