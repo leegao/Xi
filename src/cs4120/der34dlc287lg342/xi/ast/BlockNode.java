@@ -54,6 +54,10 @@ public class BlockNode extends AbstractSyntaxTree {
 				throw new CompilationException("Statement expected but got an expression instead in block", position());
 			if (XiPrimitiveType.VOID.equals(child_type))
 				t = XiPrimitiveType.VOID;
+			
+			// unreachable code
+			if (XiPrimitiveType.UNIT.equals(child_type) && XiPrimitiveType.VOID.equals(t))
+				throw new CompilationException("Unreachable code", position());
 		}
 		
 		type = t; // do not annotate if fails

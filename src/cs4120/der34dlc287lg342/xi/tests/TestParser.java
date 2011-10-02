@@ -211,8 +211,7 @@ public class TestParser extends TestCase {
 			});
 			fail("Did not catch syntax error");
 		} catch (CompilationException e){
-			assertEquals("Syntax Error: Not expecting EOF",e.getMessage());
-
+			assertEquals(e.getMessage(), "Syntax Error: Not expecting EOF");
 		}
 	}
 	
@@ -222,7 +221,7 @@ public class TestParser extends TestCase {
 			});
 			fail("Did not catch syntax error");
 		} catch (CompilationException e){
-			assertEquals("Illegal character <'>",e.getMessage());
+			assertEquals(e.getMessage(), "Illegal character <'>");
 		}
 	}
 	
@@ -248,7 +247,7 @@ public class TestParser extends TestCase {
 			});
 			fail("Did not catch syntax error");
 		} catch (CompilationException e){
-			assertEquals("Syntax Error: Not expecting token IDENTIFIER(print)", e.getMessage());
+			assertEquals(e.getMessage(), "Syntax Error: Not expecting token IDENTIFIER(print)");
 		}
 	}
 	
@@ -275,7 +274,8 @@ public class TestParser extends TestCase {
 			gen("func() { _ = false  }").parse();
 			fail("Did not catch compilation error");
 		} catch (CompilationException e) {
-			assertEquals("((1, 10), (1, 12))", e.getPosition().toString());
+			assertEquals("((1, 12), (1, 12))", e.getPosition().toString());
+			assertEquals("Syntax Error: Not expecting token GETS(=)", e.getMessage());
 		}	
 	}
 	

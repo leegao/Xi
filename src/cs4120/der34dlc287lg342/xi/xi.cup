@@ -277,8 +277,13 @@ bracket_list ::=
 		RESULT = arr; :}; 
 
 var_item ::= var_decl:s {: RESULT = s; :} | UNDERSCORE:t {: RESULT = new UnderscoreNode(t.position()); :};
-var_list ::= var_item:s 
+var_list ::= var_decl:s 
 	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(s);
+		RESULT = list; :}
+	| UNDERSCORE:t COMMA var_item:s
+	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(new UnderscoreNode(t.position()));
 		list.add(s);
 		RESULT = list; :}
 	| var_list:list COMMA var_item:s
