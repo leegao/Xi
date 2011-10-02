@@ -46,8 +46,8 @@ public class InstNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		if(list.size() == 1) {
+			XiType exprType = ((AbstractSyntaxTree)e).typecheck(stack);
 			XiType declType = ((AbstractSyntaxTree)list.get(0)).typecheck(stack);
-			XiType exprType = ((AbstractSyntaxTree)e).typecheck(stack); 
 			
 			if(declType.equals(XiPrimitiveType.UNIT)){
 				DeclNode decl = (DeclNode)list.get(0);
