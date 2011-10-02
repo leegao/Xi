@@ -80,7 +80,12 @@ id ::= IDENTIFIER:o
 
 expr ::= expr:e1 op:op expr:e2 
 	{:	RESULT = op; 
-		((BinNode)op).set(e1, e2, span(e1.position(), e2.position())); 
+		if (op instanceof BinNode) 
+			((BinNode)op).set(e1, e2, span(e1.position(), e2.position())); 
+		else if (op instanceof BoolOpNode) 
+			((BoolOpNode)op).set(e1, e2, span(e1.position(), e2.position())); 
+		else
+			((EqualityNode)op).set(e1, e2, span(e1.position(), e2.position())); 
 		:}
 	
 	| uop:op expr:e
