@@ -58,19 +58,20 @@ public class XiPrimitiveType implements XiType {
 	
 	public static XiPrimitiveType array(XiPrimitiveType t){
 		XiPrimitiveType nt = (XiPrimitiveType)t.clone();
-		nt.dimension.add(null);
+		nt.dimension.add(0, null);
 		return nt;
 	}
 	
 	public static XiType INT_ARR = array((XiPrimitiveType)INT);
 	public static XiType BOOL_ARR = array((XiPrimitiveType)INT);
+	public static XiType WILDCARD_ARR = array(new XiPrimitiveType("*"));
 	
 	public boolean isArrayType(){
 		return !dimension.isEmpty();
 	}
 	
 	public boolean sameBaseType(XiPrimitiveType t2){
-		return type.equals(t2.type);
+		return type.equals(t2.type) || type.equals("*") || t2.type.equals("*");
 	}
 	
 	@Override

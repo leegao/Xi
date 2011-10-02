@@ -57,6 +57,7 @@ public class ListIndexNode extends ExpressionNode {
 		if (!((XiPrimitiveType)index_type).equals(XiPrimitiveType.INT))
 			throw new CompilationException("Cannot use noninteger indices",position());
 		
+		type = t;
 		return t;
 	}
 
