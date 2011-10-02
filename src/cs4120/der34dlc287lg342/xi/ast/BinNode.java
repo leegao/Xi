@@ -55,7 +55,7 @@ public class BinNode extends ExpressionNode {
 		if (t1.equals(XiPrimitiveType.INT) && t2.equals(XiPrimitiveType.INT)){
 			return XiPrimitiveType.INT;
 		} else if (t1.sameBaseType(t2) && t1.isArrayType() && t2.isArrayType()){
-			return XiPrimitiveType.array(t1);
+			return t1.dominantType(t2);
 		} else{
 			throw new CompilationException("Cannot perform BINOP("+op+") on incorrect types", position());
 		}

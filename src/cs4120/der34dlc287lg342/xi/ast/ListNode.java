@@ -58,6 +58,9 @@ public class ListNode extends ExpressionNode {
 					// check t = new_t
 					if (!t.equals(new_t))
 						throw new CompilationException("List construction expected type "+t+", but got "+new_t+" instead", position());
+					if (((XiPrimitiveType)t).sameBaseType((XiPrimitiveType) XiPrimitiveType.WILDCARD_ARR)){
+						t = new_t;
+					}
 				}
 			}
 			XiPrimitiveType base = XiPrimitiveType.array((XiPrimitiveType) t);
