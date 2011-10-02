@@ -8,7 +8,6 @@ import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
-import edu.cornell.cs.cs4120.xi.lexer.Token;
 
 import junit.framework.TestCase;
 

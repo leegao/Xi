@@ -50,10 +50,6 @@ public class DeclNode extends AbstractSyntaxTree {
 			throw new CompilationException(e.getMessage(), position());
 		}
 		
-		int[] a = new int[3];
-		int[] b = new int[5];
-		a = b;
-		
 		type = XiPrimitiveType.UNIT;
 		return type;
 		

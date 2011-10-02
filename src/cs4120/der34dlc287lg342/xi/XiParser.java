@@ -5,7 +5,6 @@ import java.io.Reader;
 import java_cup.runtime.Scanner;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
-import edu.cornell.cs.cs4120.xi.lexer.Lexer;
 import edu.cornell.cs.cs4120.xi.lexer.cup.LexerAdapter;
 import edu.cornell.cs.cs4120.xi.parser.Parser;
 

@@ -4,23 +4,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 
-import java_cup.runtime.Scanner;
-
-import cs4120.der34dlc287lg342.xi.XiLexer;
 import cs4120.der34dlc287lg342.xi.XiParser;
-import cs4120.der34dlc287lg342.xi.XiPosition;
-import cs4120.der34dlc287lg342.xi.parser;
-import cs4120.der34dlc287lg342.xi.sym;
 
-import edu.cornell.cs.cs4120.util.CodeWriterTreePrinter;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
-import edu.cornell.cs.cs4120.xi.Position;
-import edu.cornell.cs.cs4120.xi.lexer.Lexer;
-import edu.cornell.cs.cs4120.xi.lexer.Token;
-import edu.cornell.cs.cs4120.xi.lexer.TokenType;
-import edu.cornell.cs.cs4120.xi.lexer.cup.LexerAdapter;
+
 import edu.cornell.cs.cs4120.xi.parser.Parser;
 
 import junit.framework.TestCase;
