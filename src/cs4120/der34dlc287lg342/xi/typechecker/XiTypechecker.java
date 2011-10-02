@@ -79,6 +79,8 @@ public class XiTypechecker {
 //		}
 		
 		if (!(((ProgramNode)ast).typecheck(stack)).equals(XiPrimitiveType.UNIT))
-			throw new CompilationException("Invalid program" ,ast.position());
+			throw new CompilationException("Invalid program return type", ast.position());
+		if (stack.size() > 1)
+			throw new CompilationException("Invalid number of context frames", ast.position());
 	}
 }

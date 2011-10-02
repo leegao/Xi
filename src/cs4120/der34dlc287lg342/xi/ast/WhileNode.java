@@ -3,8 +3,10 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -43,7 +45,15 @@ public class WhileNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		XiType condType = ((AbstractSyntaxTree)condition).typecheck(stack);
+		
+		XiTypeContext context = new XiTypeContext(true);
+		stack.push(context);
 		XiType stmntType = ((AbstractSyntaxTree)s).typecheck(stack);
+		try {
+			stack.pop();
+		} catch (InvalidXiTypeException e) {
+			throw new CompilationException(e.getMessage(), position());
+		}
 		
 		if(condType.equals(XiPrimitiveType.BOOL) && stmntType.equals(XiPrimitiveType.UNIT)) {
 			return XiPrimitiveType.UNIT;

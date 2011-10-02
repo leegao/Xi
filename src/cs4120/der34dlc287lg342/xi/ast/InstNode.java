@@ -49,9 +49,18 @@ public class InstNode extends AbstractSyntaxTree {
 			XiType declType = ((AbstractSyntaxTree)list.get(0)).typecheck(stack);
 			XiType exprType = ((AbstractSyntaxTree)e).typecheck(stack); 
 			
-			if(declType.equals(exprType))
+			if(declType.equals(XiPrimitiveType.UNIT)){
+				DeclNode decl = (DeclNode)list.get(0);
+				XiType t;
+				try {
+					t = stack.find_id(decl.id.id);
+				} catch (InvalidXiTypeException e1) {
+					throw new CompilationException(e1.getMessage(), position());
+				}
+				if (!t.equals(exprType))
+					throw new CompilationException("Invalid type in instantiation: expected "+t+", but got "+exprType+" instead", position());
 				return XiPrimitiveType.UNIT;
-			else 
+			}else 
 				throw new CompilationException("Invalid Instantiation Type", position);
 			
 		} else if(list.size() > 1) {
