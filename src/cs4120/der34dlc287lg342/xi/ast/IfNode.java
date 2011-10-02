@@ -3,8 +3,10 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -46,9 +48,25 @@ public class IfNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		XiType condType = ((AbstractSyntaxTree)condition).typecheck(stack);
+		XiTypeContext context = new XiTypeContext(false);
+		stack.push(context);
 		XiType s1Type = ((AbstractSyntaxTree)s1).typecheck(stack);
+		try {
+			stack.pop();
+		} catch (InvalidXiTypeException e) {
+			throw new CompilationException(e.getMessage(), position());
+		}
 		XiType s2Type = null;
-		if(s2 != null) s2Type = ((AbstractSyntaxTree)s2).typecheck(stack);
+		if(s2 != null) {
+			context = new XiTypeContext(false);
+			stack.push(context);
+			s2Type = ((AbstractSyntaxTree)s2).typecheck(stack);
+			try {
+				stack.pop();
+			} catch (InvalidXiTypeException e) {
+				throw new CompilationException(e.getMessage(), position());
+			}
+		}
 		
 		if(condType.equals(XiPrimitiveType.BOOL) && s1Type.equals(XiPrimitiveType.UNIT))
 			if( s2Type != null)
