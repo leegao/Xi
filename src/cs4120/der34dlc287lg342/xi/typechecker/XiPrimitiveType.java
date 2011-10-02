@@ -7,7 +7,7 @@ import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 
 public class XiPrimitiveType implements XiType {
 	public String type;
-	ArrayList<VisualizableTreeNode> dimension;
+	public ArrayList<VisualizableTreeNode> dimension;
 	
 	ArrayList<Integer> static_dimension;
 	
@@ -52,6 +52,10 @@ public class XiPrimitiveType implements XiType {
 	public static XiType INT = new XiPrimitiveType("int");
 	public static XiType BOOL = new XiPrimitiveType("bool");
 	
+	public XiType baseType(){
+		return new XiPrimitiveType(type);
+	}
+	
 	public static XiPrimitiveType array(XiPrimitiveType t){
 		XiPrimitiveType nt = (XiPrimitiveType)t.clone();
 		nt.dimension.add(null);
@@ -62,7 +66,7 @@ public class XiPrimitiveType implements XiType {
 	public static XiType BOOL_ARR = array((XiPrimitiveType)INT);
 	
 	public boolean isArrayType(){
-		return dimension.isEmpty();
+		return !dimension.isEmpty();
 	}
 	
 	public boolean sameBaseType(XiPrimitiveType t2){

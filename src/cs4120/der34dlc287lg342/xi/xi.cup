@@ -67,6 +67,7 @@ precedence left LT, LEQ, GT, GEQ;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODULO;
 precedence left UMINUS, UNOT;
+precedence nonassoc OPEN_BRACKET;
 
 start with program;
 
@@ -164,9 +165,8 @@ func_callargs ::= {: RESULT = new ArrayList<VisualizableTreeNode>(); :}
 	| func_callargs:args COMMA expr:expr
 	{: args.add(expr); RESULT = args; :};
 
-arr_index ::= id:id OPEN_BRACKET expr:expr CLOSE_BRACKET:o
-	{:	Token t = (Token)o;
-		RESULT = new ListIndexNode((IdNode)id, expr, span(id.position(), t.position())); :};
+arr_index ::= expr:expr OPEN_BRACKET expr:i CLOSE_BRACKET:t
+	{: RESULT = new ListIndexNode(expr, i, span(expr.position(), t.position())); :};
 arr_create ::= OPEN_PAREN:o CLOSE_PAREN:e 
 	{: Token t = (Token)o, t2 = (Token)e; RESULT = new ListNode(span(t.position(), t2.position())); :}
 	| OPEN_PAREN:o expr:expr COMMA CLOSE_PAREN:e
