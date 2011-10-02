@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
@@ -40,8 +41,14 @@ public class ProcedureCallNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		XiType callType = ((AbstractSyntaxTree)call).typecheck(stack);
-		if(callType.equals(XiPrimitiveType.UNIT)) return XiPrimitiveType.UNIT;
-		throw new CompilationException("Function has return type, expecting no return type", position());
+		if (callType instanceof XiFunctionType){
+			XiFunctionType func = (XiFunctionType)callType;
+			if(func.ret.isEmpty()) 
+				return XiPrimitiveType.UNIT;
+			throw new CompilationException("Procedure has return types " + func.ret + ", but is expecting no return type", position());
+		}
+		
+		throw new CompilationException("Cannot call a non-function type", position());
 	}
 
 }
