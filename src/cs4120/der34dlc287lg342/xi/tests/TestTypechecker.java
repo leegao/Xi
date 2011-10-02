@@ -18,7 +18,7 @@ public class TestTypechecker extends TestCase {
 	}
 	
 	public void testXiTypechecker() {
-		AbstractSyntaxNode ast = gen("use io main(a:int,b:int[][3]):int[2][]{c:int, d:bool = f();print(((),(2,2),(3,3,4))[1]); while (!(1 == -1)) {print((1,2,3,4,5,6,7)); a:int = (10,)[1]; break return ((1,),)}} \n f():int,bool{return 1,true}").parse();
+		AbstractSyntaxNode ast = gen("use io main(a:int,b:int[][3]):int[2][]{c:int, d:bool = f();print(((),(2,2),(3,3,4))[1]); while (!(1 == -1)) {print((1,2,3,4,5,6,7)); a:int = (10,)[1]; break return ((1,),)}} \n f():int,bool{a:bool = (true, false)[1] return 1,true}").parse();
 		try {
 			XiTypechecker tc = new XiTypechecker(ast);
 			System.out.println(XiTypechecker.globalContext.symbols);

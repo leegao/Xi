@@ -74,6 +74,11 @@ public class XiPrimitiveType implements XiType {
 		return type.equals(t2.type) || type.equals("*") || t2.type.equals("*");
 	}
 	
+	public XiType dominantType(XiPrimitiveType t){
+		if (type.equals("*")) return t;
+		return this;
+	}
+	
 	@Override
 	public boolean equals(Object o){
 		if (o instanceof XiPrimitiveType){
