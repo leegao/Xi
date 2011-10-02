@@ -67,7 +67,9 @@ public class FuncCallNode extends ExpressionNode {
 					throw new CompilationException("Expected an expression type but got "+child.label()+" instead", position());
 				}
 			}
-			return t;
+			
+			type = t;
+			return type;
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());
 		}

@@ -59,7 +59,9 @@ public class InstNode extends AbstractSyntaxTree {
 				}
 				if (!t.equals(exprType))
 					throw new CompilationException("Invalid type in instantiation: expected "+t+", but got "+exprType+" instead", position());
-				return XiPrimitiveType.UNIT;
+				
+				type = XiPrimitiveType.UNIT;
+				return type;
 			}else 
 				throw new CompilationException("Invalid Instantiation Type", position);
 			
@@ -84,7 +86,8 @@ public class InstNode extends AbstractSyntaxTree {
 						}
 					}
 					
-					return XiPrimitiveType.UNIT;
+					type = XiPrimitiveType.UNIT;
+					return type;
 					
 				} else {
 					throw new CompilationException("Invalid number of return types", position);

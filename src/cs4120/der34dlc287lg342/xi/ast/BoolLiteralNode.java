@@ -38,7 +38,7 @@ public class BoolLiteralNode extends ExpressionNode {
 	
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
-		return XiPrimitiveType.BOOL;
+		type = XiPrimitiveType.BOOL;
+		return type;
 	}
-
 }

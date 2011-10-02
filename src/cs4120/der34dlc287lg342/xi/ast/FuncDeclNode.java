@@ -18,8 +18,6 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 	public BlockNode block;
 	public ArrayList<XiPrimitiveType> types;
 	
-	public XiFunctionType type;
-	
 	public FuncDeclNode(IdNode id, ArrayList<VisualizableTreeNode> args, ArrayList<XiPrimitiveType> types, BlockNode block, Position position){
 		this.id = id;
 		this.args = args;
@@ -34,7 +32,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		ArrayList<XiPrimitiveType> argumentList = new ArrayList<XiPrimitiveType>();
 		for (VisualizableTreeNode arg : this.args){
 			DeclNode decl = (DeclNode) arg;
-			argumentList.add(new XiPrimitiveType(decl.type, decl.brackets));
+			argumentList.add(new XiPrimitiveType(decl.type_name, decl.brackets));
 		}
 		
 		this.type = new XiFunctionType(argumentList, this.types);;
@@ -57,12 +55,12 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		// push a new context frame onto the stack
-		XiTypeContext frame = new XiTypeContext(type);
+		XiTypeContext frame = new XiTypeContext((XiFunctionType) type);
 		for (VisualizableTreeNode arg : this.args){
 			DeclNode decl = (DeclNode) arg;
 			IdNode id = (IdNode)decl.id;
 			try {
-				frame.add(id.id, new XiPrimitiveType(decl.type, decl.brackets));
+				frame.add(id.id, new XiPrimitiveType(decl.type_name, decl.brackets));
 			} catch (InvalidXiTypeException e) {
 				throw new CompilationException(e.getMessage(), position());
 			}

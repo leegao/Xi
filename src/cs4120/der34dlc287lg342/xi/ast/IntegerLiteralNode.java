@@ -38,6 +38,7 @@ public class IntegerLiteralNode extends ExpressionNode {
 
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
-		return XiPrimitiveType.INT;
+		type = XiPrimitiveType.INT;
+		return type;
 	}
 }

@@ -15,13 +15,13 @@ public class DeclNode extends AbstractSyntaxTree {
 
 	public Position position;
 	public IdNode id;
-	public String type;
+	public String type_name;
 	public ArrayList<VisualizableTreeNode> brackets;
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 	
 	public DeclNode(IdNode id, String type, ArrayList<VisualizableTreeNode> brackets, Position position){
 		this.id = id;
-		this.type = type;
+		this.type_name = type;
 		this.brackets = brackets;
 		this.position = position;
 		children.add(id);
@@ -45,7 +45,7 @@ public class DeclNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		try {
-			stack.add_id(id.id, new XiPrimitiveType(type, brackets));
+			stack.add_id(id.id, new XiPrimitiveType(type_name, brackets));
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());
 		}
@@ -54,7 +54,8 @@ public class DeclNode extends AbstractSyntaxTree {
 		int[] b = new int[5];
 		a = b;
 		
-		return XiPrimitiveType.UNIT;
+		type = XiPrimitiveType.UNIT;
+		return type;
 		
 		
 	}

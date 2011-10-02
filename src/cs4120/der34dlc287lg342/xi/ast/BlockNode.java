@@ -53,7 +53,8 @@ public class BlockNode extends AbstractSyntaxTree {
 				throw new CompilationException("Statement expected but got an expression instead in block", position());
 		}
 		
-		return XiPrimitiveType.UNIT;
+		type = XiPrimitiveType.UNIT;
+		return type;
 	}
 
 }

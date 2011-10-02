@@ -41,7 +41,5 @@ public class StringLiteralNode extends ExpressionNode {
 		// integer list
 		type = XiPrimitiveType.INT_ARR;
 		return type;
-		
 	}
-
 }

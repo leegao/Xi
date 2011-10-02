@@ -41,8 +41,10 @@ public class LengthNode extends ExpressionNode {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		XiPrimitiveType t = (XiPrimitiveType)((AbstractSyntaxTree)args).typecheck(stack);
-		if (t.isArrayType())
-			return XiPrimitiveType.INT;
+		if (t.isArrayType()){
+			type = XiPrimitiveType.INT;
+			return type;
+		}
 		else
 			throw new CompilationException("Cannot apply length to non-array types", position());
 	}

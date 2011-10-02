@@ -54,7 +54,8 @@ public class ReturnNode extends AbstractSyntaxTree {
 						throw new CompilationException("Invalid return type at index " + index, position);
 				}
 				
-				return XiPrimitiveType.VOID;
+				type = XiPrimitiveType.VOID;
+				return type;
 			} else {
 				throw new CompilationException("Invalid number of return types", position);
 			}

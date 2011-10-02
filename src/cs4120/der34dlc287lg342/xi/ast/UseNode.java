@@ -39,7 +39,8 @@ public class UseNode extends AbstractSyntaxTree {
 	
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
-		return XiPrimitiveType.UNIT;
+		type = XiPrimitiveType.UNIT;
+		return type;
 	}
 
 }

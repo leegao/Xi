@@ -43,8 +43,10 @@ public class ProcedureCallNode extends AbstractSyntaxTree {
 		XiType callType = ((AbstractSyntaxTree)call).typecheck(stack);
 		if (callType instanceof XiFunctionType){
 			XiFunctionType func = (XiFunctionType)callType;
-			if(func.ret.isEmpty()) 
-				return XiPrimitiveType.UNIT;
+			if(func.ret.isEmpty()){
+				type = XiPrimitiveType.UNIT;
+				return type;
+			}
 			throw new CompilationException("Procedure has return types " + func.ret + ", but is expecting no return type", position());
 		}
 		

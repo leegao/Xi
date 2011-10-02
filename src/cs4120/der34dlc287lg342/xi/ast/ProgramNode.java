@@ -53,7 +53,8 @@ public class ProgramNode extends AbstractSyntaxTree {
 			}
 		}
 		
-		return XiPrimitiveType.UNIT;
+		type = XiPrimitiveType.UNIT;
+		return type;
 	}
 
 }

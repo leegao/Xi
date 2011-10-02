@@ -40,7 +40,8 @@ public class IdNode extends ExpressionNode {
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		try {
 			XiType t = stack.find_id(id);
-			return t;
+			type = t;
+			return type;
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());
 		}
