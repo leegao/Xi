@@ -1,0 +1,13 @@
+//test for illegal grammar: invalid if/else
+
+main():int 
+{
+	x:int = 4
+	y:int = 5
+	if( x > y )
+	else
+		false;
+
+
+	return 0;
+}

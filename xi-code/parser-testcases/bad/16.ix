@@ -1,0 +1,6 @@
+//test for illegal grammar: undefined function decl expression
+
+int main() 
+{
+	return 0
+}

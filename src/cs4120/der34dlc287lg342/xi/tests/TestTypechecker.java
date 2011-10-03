@@ -154,6 +154,9 @@ public class TestTypechecker extends TestCase {
 		try {
 			XiTypechecker tc = gen("func():int { if(true) { return 1 } else { return 2 } }");			
 			tc.typecheck();
+		} catch (CompilationException compEx) {
+			System.out.println(compEx);
+			fail();
 		} catch (Exception ex) {
 			fail();
 		}
@@ -161,6 +164,7 @@ public class TestTypechecker extends TestCase {
 	
 	//throws exception from IdNode, not FuncCallNode.java, need to change
 	// this should be correct, as func2 is unresolved at the identifier level, which bubbles up into the func call
+	//we may want to handle this differently, with a better message.
 	public void testMissingFunctionIO() {
 		try {
 			XiTypechecker tc = gen("func1() { func2(5) }");
