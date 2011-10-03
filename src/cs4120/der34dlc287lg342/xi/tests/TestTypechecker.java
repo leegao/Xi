@@ -139,7 +139,7 @@ public class TestTypechecker extends TestCase {
 		} catch (CompilationException compEx) {
 			System.out.println(compEx);
 			assertContains("Function expects return types of [int] but got no returns", compEx.getMessage());
-			assertEquals("((1, 1), (1, 4))", compEx.getPosition().toString());
+			assertEquals("((1, 1), (2, 12))", compEx.getPosition().toString());
 		} catch (InvalidXiTypeException xiEx) {
 			fail();
 		}
@@ -149,6 +149,9 @@ public class TestTypechecker extends TestCase {
 		try {
 			XiTypechecker tc = gen("func():int { if(true) { return 1 } else { return 2 } }");			
 			tc.typecheck();
+		} catch (CompilationException compEx) {
+			System.out.println(compEx);
+			fail();
 		} catch (Exception ex) {
 			fail();
 		}
