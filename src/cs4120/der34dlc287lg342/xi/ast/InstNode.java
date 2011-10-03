@@ -58,7 +58,8 @@ public class InstNode extends AbstractSyntaxTree {
 					throw new CompilationException(e1.getMessage(), position());
 				}
 				if (!t.equals(exprType))
-					throw new CompilationException("Invalid type in instantiation: expected "+t+", but got "+exprType+" instead", position());
+					throw new CompilationException("Invalid type in instantiation: expected "+t+", but got "+exprType+" instead", 
+							((AbstractSyntaxTree)e).position());
 				
 				type = XiPrimitiveType.UNIT;
 				return type;

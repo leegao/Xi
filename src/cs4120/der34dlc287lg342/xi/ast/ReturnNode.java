@@ -51,7 +51,8 @@ public class ReturnNode extends AbstractSyntaxTree {
 			{
 				for (int index = 0; index < function.ret.size(); index++) {
 					if (!((AbstractSyntaxTree)children.get(index)).typecheck(stack).equals(function.ret.get(index)))
-						throw new CompilationException("Invalid return type at index " + index, position);
+						throw new CompilationException("Invalid return type", 
+								((AbstractSyntaxTree)children.get(index)).position());
 				}
 				
 				type = XiPrimitiveType.VOID;

@@ -279,6 +279,18 @@ public class TestParser extends TestCase {
 		}	
 	}
 	
+	public void testInvalidReturnAndPosition() {
+		try {
+			gen("func(): int { \nreturn 1; a:int = 3").parse();
+			fail("Did not catch compilation error");
+		} catch (CompilationException compEx) {
+			assertEquals("((2, 11), (2, 11))", compEx.getPosition().toString());
+			System.out.println(compEx.getMessage());
+			assertEquals("Syntax Error: Not expecting token IDENTIFIER(a)", compEx.getMessage());
+		}
+	
+	}
+	
 
 	
 }

@@ -36,6 +36,7 @@ public class TestTypechecker extends TestCase {
 			AbstractSyntaxNode ast = gen("func(){ break }").parse();
 			XiTypechecker tc = new XiTypechecker(ast);
 			tc.typecheck();
+			fail("Did not catch campilation exception");
 		} catch (CompilationException compEx) {
 			assertEquals("Cannot break if not in a loop",compEx.getMessage());
 			assertEquals("((1, 9), (1, 13))", compEx.getPosition().toString());
@@ -43,5 +44,113 @@ public class TestTypechecker extends TestCase {
 			fail();
 		}
 	}
-
+	
+	public void testInvalidTypeInstantInt() {
+		try {
+			AbstractSyntaxNode ast = gen("func() { \na:int = true}").parse();
+			XiTypechecker tc = new XiTypechecker(ast);
+			tc.typecheck();
+			fail("Did not catch campilation exception");
+		} catch (CompilationException compEx) {
+			assertEquals("Invalid type in instantiation: expected int, but got bool instead", compEx.getMessage());
+			assertEquals("((2, 9), (2, 12))", compEx.getPosition().toString());
+		} catch (InvalidXiTypeException xiEx) {
+			fail();
+		}
+	}
+	
+	public void testInvalidTypeInstantBool() {
+		try {
+			AbstractSyntaxNode ast = gen("func() { a:bool = 3}").parse();
+			XiTypechecker tc = new XiTypechecker(ast);
+			tc.typecheck();
+			fail("Did not catch campilation exception");
+		} catch (CompilationException compEx) {
+			assertEquals("Invalid type in instantiation: expected bool, but got int instead", compEx.getMessage());
+			assertEquals("((1, 19), (1, 19))", compEx.getPosition().toString());
+		} catch (InvalidXiTypeException xiEx) {
+			fail();
+		}
+	}
+	
+	public void testInvalidFunctionReturnType() {
+		try {
+			AbstractSyntaxNode ast = gen("func():int { \nreturn true } ").parse();
+			XiTypechecker tc = new XiTypechecker(ast);
+			tc.typecheck();
+			fail("Did not catch campilation exception");
+		} catch (CompilationException compEx) {
+			assertEquals("((2, 8), (2, 11))", compEx.getPosition().toString());
+			assertEquals("Invalid return type", compEx.getMessage());
+		} catch (InvalidXiTypeException xiEx) {
+			fail();
+		}
+	}
+	
+	public void testInvalidNumberOfFunctionReturn() {
+		try {
+			AbstractSyntaxNode ast = gen("func():int, bool { \nreturn false }").parse();
+			XiTypechecker tc = new XiTypechecker(ast);
+			tc.typecheck();
+			fail("Did not catch compilation exception");
+		} catch (CompilationException compEx) {
+			assertEquals("Invalid number of return types", compEx.getMessage());
+			assertEquals("((2, 1), (2, 12))", compEx.getPosition().toString());
+		} catch (InvalidXiTypeException xiEx) {
+			fail();
+		}
+	}
+	
+	public void testInvalidFunctionMultipleReturnTypes() {
+		try {
+			AbstractSyntaxNode ast = gen("func():int, bool { \nreturn true, 1 }").parse();
+			XiTypechecker tc = new XiTypechecker(ast);
+			tc.typecheck();
+			fail("Did not catch compilation exception");
+		} catch (CompilationException compEx) {
+			assertEquals("Invalid return type", compEx.getMessage());
+			assertEquals("((2, 8), (2, 11))", compEx.getPosition().toString());
+		} catch (InvalidXiTypeException xiEx) {
+			fail();
+		}
+	}
+	
+	public void testInvalidFunctionIfReturn() {
+		try {
+			AbstractSyntaxNode ast = gen("func():int { if(true) { \nreturn 1 } }").parse();
+			XiTypechecker tc = new XiTypechecker(ast);
+			tc.typecheck();
+			fail("Did not catch compilation exception");
+		} catch (CompilationException compEx) {
+			assertEquals("Function expects return types of [int] but got no returns", compEx.getMessage());
+			assertEquals("((1, 1), (1, 4))", compEx.getPosition().toString());
+		} catch (InvalidXiTypeException xiEx) {
+			fail();
+		}
+	}
+	
+	public void testFunctionReturnFromElse() {
+		try {
+			AbstractSyntaxNode ast = gen("func():int { if(true) { return 1 } else { return 2 } }").parse();
+			XiTypechecker tc = new XiTypechecker(ast);			
+			tc.typecheck();
+		} catch (Exception ex) {
+			fail();
+		}
+	}
+	
+	//throws exception from IdNode, not FuncCallNode.java, need to change
+	public void testMissingFunctionIO() {
+		try {
+			AbstractSyntaxNode ast = gen("func1() { func2() }").parse();
+			XiTypechecker tc = new XiTypechecker(ast);
+			tc.typecheck();
+		} catch (CompilationException compEx) {
+			System.out.println(compEx.getMessage());
+			System.out.println(compEx.getPosition().toString());
+		} catch (InvalidXiTypeException e) {
+			fail();
+		}
+	
+	}
 }
