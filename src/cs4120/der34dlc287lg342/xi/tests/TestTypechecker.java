@@ -52,6 +52,19 @@ public class TestTypechecker extends TestCase {
 		}
 	}
 	
+	public void testXiTypecheckerArrArrIndex() {
+		try {
+			XiTypechecker tc = gen("use io main(){if (1 > 2 & true){}}");
+			tc.typecheck();
+		} catch (CompilationException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+			fail();
+		} catch (InvalidXiTypeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
 	public void testInvalidBreakAndPosition() {
 		try {
