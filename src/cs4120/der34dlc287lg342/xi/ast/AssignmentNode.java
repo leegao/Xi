@@ -16,12 +16,12 @@ public class AssignmentNode extends AbstractSyntaxTree {
 	protected Position position;
 	protected AbstractSyntaxNode id, expr;
 	protected ArrayList<VisualizableTreeNode> children;
-	public AssignmentNode(IdNode id, AbstractSyntaxNode expr, Position position){
-		this.id = id;
+	public AssignmentNode(ExpressionNode index, AbstractSyntaxNode expr, Position position){
+		this.id = index;
 		this.expr = expr;
 		this.position = position;
 		children = new ArrayList<VisualizableTreeNode>();
-		children.add(id);
+		children.add(index);
 		children.add(expr);
 	}
 	
