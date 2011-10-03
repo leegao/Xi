@@ -173,15 +173,15 @@ func_callargs ::= {: RESULT = new ArrayList<VisualizableTreeNode>(); :}
 arr_index ::= expr:expr OPEN_BRACKET expr:i CLOSE_BRACKET:t
 	{: RESULT = new ListIndexNode(expr, i, span(expr.position(), t.position())); :};
 arr_create ::= OPEN_PAREN:o CLOSE_PAREN:e 
-	{: Token t = (Token)o, t2 = (Token)e; RESULT = new ListNode(span(t.position(), t2.position())); :}
+	{: Token t = (Token)o, t2 = (Token)e; RESULT = new ListNode(span(o.position(), e.position())); :}
 	| OPEN_PAREN:o expr:expr COMMA CLOSE_PAREN:e
 	{:  Token t = (Token)o, t2 = (Token)e; 
-		ListNode list = new ListNode(span(t.position(), t2.position())); 
+		ListNode list = new ListNode(span(o.position(), e.position())); 
 		list.add(expr);
 		RESULT = list;:}
 	| OPEN_PAREN:o expr:expr COMMA arr_elements:arr CLOSE_PAREN:e
 	{:  Token t = (Token)o, t2 = (Token)e; 
-		ListNode list = new ListNode(span(t.position(), t2.position())); 
+		ListNode list = new ListNode(span(o.position(), e.position())); 
 		list.add(expr);
 		RESULT = list;
 		ListNode tl = (ListNode)arr;

@@ -58,7 +58,9 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 	}
 	
 	private Token token(TokenType type, String value){
-		int col = yycolumn, line = yyline;
+		int col = yycolumn-yycolumn_cache, line = yyline;
+		int cols = col;
+		yycolumn_cache = 0;
 		int newlines = value.split("\n").length-1;
 		String lastline = value.split("\n")[newlines];
 		if (newlines > 0)
@@ -66,7 +68,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 		else
 			col += lastline.length();
 		
-		return new XiToken(value, type, unit, yycolumn+1, yycolumn+yylength(), yyline+1, line+newlines+1);
+		return new XiToken(value, type, unit, cols+1, cols+yylength(), yyline+1, line+newlines+1);
 	}
 	
 	private Token token(TokenType type){
@@ -158,8 +160,8 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 }
 <STRING> {
   \"                             { yybegin(YYINITIAL); 
-                                   yycolumn -= yycolumn_cache + 1; // -1 for the starting "
-                                   yycolumn_cache = 0;
+                                   //yycolumn -= yycolumn_cache + 1; // -1 for the starting "
+                                   yycolumn_cache++;
                                    return token(TokenType.STRING_LITERAL, 
                                    string.toString()); }
   [^\n\r\"\\]+                   { string.append( yytext() ); yycolumn_cache += yytext().length(); }
