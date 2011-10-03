@@ -58,13 +58,13 @@ public class InstNode extends AbstractSyntaxTree {
 					throw new CompilationException(e1.getMessage(), position());
 				}
 				if (!t.equals(exprType))
-					throw new CompilationException("Invalid type in instantiation: expected "+t+", but got "+exprType+" instead", 
+					throw new CompilationException("Invalid type in instantiation: expected ["+t+"] but got ["+exprType+"] instead", 
 							((AbstractSyntaxTree)e).position());
 				
 				type = XiPrimitiveType.UNIT;
 				return type;
 			}else 
-				throw new CompilationException("Invalid Instantiation Type", position);
+				throw new CompilationException("Declaration did not typecheck", position);
 			
 		} else if(list.size() > 1) {
 			XiType function = ((AbstractSyntaxTree)e).typecheck(stack);

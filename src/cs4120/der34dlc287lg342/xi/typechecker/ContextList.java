@@ -26,7 +26,7 @@ public class ContextList extends ArrayList<XiTypeContext> {
 				return t;
 			}
 		}
-		throw new InvalidXiTypeException("Cannot find a type associated with the identifier "+id);
+		throw new InvalidXiTypeException("Attempt to use undeclared identifier "+id);
 	}
 	
 	public void push(XiTypeContext context){

@@ -48,12 +48,12 @@ public class FuncCallNode extends ExpressionNode {
 		try {
 			XiType t = stack.find_id(id.id);
 			if (!(t instanceof XiFunctionType))
-				throw new CompilationException("Cannot call a nonfunction object", position());
+				throw new CompilationException("Attempt to call a nonfunction object", position());
 			XiFunctionType func = (XiFunctionType)t;
 			// make sure that args agree
 			
 			if (func.args.size() != args.size()){
-				throw new CompilationException("Incorrect number of arguments applied to the function '"+id.id+"'", position());
+				throw new CompilationException("Incorrect number of arguments applied to the function '"+id.id+"': expected "+args.size() + " but got "+func.args.size()+" instead", position());
 			}
 			int i = 0;
 			for (VisualizableTreeNode child : args){

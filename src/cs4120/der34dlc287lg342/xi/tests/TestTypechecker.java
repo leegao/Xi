@@ -149,7 +149,7 @@ public class TestTypechecker extends TestCase {
 	}
 	
 	//throws exception from IdNode, not FuncCallNode.java, need to change
-	// this should be correct, as func2 is unresolved at the identifier level, not at the funcCall level
+	// this should be correct, as func2 is unresolved at the identifier level, which bubbles up into the func call
 	public void testMissingFunctionIO() {
 		try {
 			XiTypechecker tc = gen("func1() { func2(5) }");

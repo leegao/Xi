@@ -24,7 +24,7 @@ public class XiTypeContext {
 	
 	public void add(String id, XiType t) throws InvalidXiTypeException{
 		if (symbols.containsKey(id)) 
-			throw new InvalidXiTypeException("variable "+id+" already exists");
+			throw new InvalidXiTypeException("Variable "+id+" already exists");
 		symbols.put(id, t);
 	}
 	
