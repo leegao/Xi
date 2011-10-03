@@ -38,4 +38,13 @@ public class XiTypeContext {
 		//if (!symbols.containsKey(id)) return null;
 		return symbols.get(id);
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object clone(){
+		XiFunctionType func = (XiFunctionType) returnType.clone();
+		XiTypeContext c = new XiTypeContext(func, isBreakable);
+		c.symbols = (HashMap<String, XiType>) symbols.clone();
+		return c;
+	}
 }

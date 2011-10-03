@@ -3,7 +3,8 @@ package cs4120.der34dlc287lg342.xi.typechecker;
 import java.util.ArrayList;
 
 public class ContextList extends ArrayList<XiTypeContext> {
-	
+	private static final long serialVersionUID = 1802449172139979643L;
+
 	public XiTypeContext top() throws InvalidXiTypeException{
 		if (this.isEmpty())
 			throw new InvalidXiTypeException("Cannot find a context environment to typecheck with");
@@ -61,5 +62,16 @@ public class ContextList extends ArrayList<XiTypeContext> {
 				return t;
 		}
 		return false;
+	}
+	
+	@Override
+	public Object clone(){
+		// clones the context stack to be re-associated for each if/while/funcdecl
+		ContextList clone = new ContextList();
+		for (XiTypeContext c : this){
+			Object o = c.clone();
+			clone.add((XiTypeContext) o);
+		}
+		return clone;
 	}
 }

@@ -32,4 +32,11 @@ public class XiFunctionType implements XiType {
 		}
 		return t;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object clone(){
+		ArrayList<XiPrimitiveType> a= (ArrayList<XiPrimitiveType>) args.clone(), r = (ArrayList<XiPrimitiveType>) ret.clone();
+		return new XiFunctionType(a,r);
+	}
 }

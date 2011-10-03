@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.typechecker;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.StringReader;
 import java.util.HashMap;
 
 import cs4120.der34dlc287lg342.xi.*;
@@ -16,13 +17,19 @@ public class XiTypechecker {
 	public static XiTypeContext globalContext;
 	
 	public AbstractSyntaxNode ast;
+	public String code;
 	
-	public XiTypechecker(AbstractSyntaxNode ast) throws InvalidXiTypeException{
+	public XiTypechecker(AbstractSyntaxNode ast, String code) throws InvalidXiTypeException {
 		this.ast = ast;
+		this.code = code;
 		globalContext = new XiTypeContext(false);
 		stack = new ContextList();
 		init();
 		stack.add(globalContext);
+	}
+	
+	public XiTypechecker(AbstractSyntaxNode ast) throws InvalidXiTypeException{
+		this(ast, null);
 	}
 	
 	// add function declarations found within interfaces into the global context
@@ -67,6 +74,23 @@ public class XiTypechecker {
 		}
 	}
 	
+	public CompilationException formatException(CompilationException e){
+		String str = "";
+		str += e.getMessage();
+		if (code != null){
+			str += "\n      ";
+			for (int i = 1; i < e.getPosition().columnStart(); i++) str += " ";
+			str += "v\n";
+			String[] codes = code.split("\n");
+			for (int i = e.getPosition().lineStart()-1; i < e.getPosition().lineEnd(); i++) 
+				str += String.format("%04d", (i+1))+": " + codes[i].replace('\t', ' ') + "\n";
+			str += "      ";
+			for (int i = 1; i < e.getPosition().columnEnd(); i++) str += " ";
+			str += "^ @ position "+e.getPosition();
+		}
+		return new CompilationException(str, e.getPosition());
+	}
+	
 	public void typecheck() throws CompilationException{
 		// decorate the AST
 		// only expression nodes are associated with types
@@ -78,9 +102,13 @@ public class XiTypechecker {
 //			}
 //		}
 		
-		if (!(((ProgramNode)ast).typecheck(stack)).equals(XiPrimitiveType.UNIT))
-			throw new CompilationException("Invalid program return type", ast.position());
-		if (stack.size() > 1)
-			throw new CompilationException("Invalid number of context frames", ast.position());
+		try {
+			if (!(((ProgramNode)ast).typecheck(stack)).equals(XiPrimitiveType.UNIT))
+				throw new CompilationException("Invalid program return type", ast.position());
+			if (stack.size() != 1)
+				throw new CompilationException("Invalid number of context frames", ast.position());
+		} catch (CompilationException e) {
+			throw formatException(e);
+		}
 	}
 }
