@@ -39,14 +39,19 @@ public class TestTypechecker extends TestCase {
 	
 	public void testXiTypechecker() {
 		try {
-			XiTypechecker tc = gen("use io main(a:int,b:int[][3]):int[2][]{c:int, d:bool = f();print(((),(2,2),(3,3,4))[1]); while (!(1 == -1)) {print((1,2,3,4,5,6,7)); a:int = (10,)[1]; break; if (true) {return ((),)} else if(false) {return ((),)} else {return ((),)} }} \n f():int,bool{a:bool = (true, false)[1] return 1,true}");
+			XiTypechecker tc = gen("use io main(a:int,b:int[][3]):int[2][]{c:int, d:bool = f();print(((),(2,2),(3,3,4))[1]); while (!(1 == -1)) {print((1,2,3,4,5,6,7)); a:int = (10,)[1]; break; if (true) {return ((),)} else if(false) {return ((),)} else {return ((),)} }} \n"+
+					" f():int,bool{a:bool = (true, false)[1] return 1,true}");
 			tc.typecheck();
-		} catch (InvalidXiTypeException e) {
+		} catch (CompilationException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e);
 			fail();
+		} catch (InvalidXiTypeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
+	
 	
 	public void testInvalidBreakAndPosition() {
 		try {
@@ -139,7 +144,7 @@ public class TestTypechecker extends TestCase {
 		} catch (CompilationException compEx) {
 			System.out.println(compEx);
 			assertContains("Function expects return types of [int] but got no returns", compEx.getMessage());
-			assertEquals("((1, 1), (1, 4))", compEx.getPosition().toString());
+			assertEquals("((1, 1), (2, 12))", compEx.getPosition().toString());
 		} catch (InvalidXiTypeException xiEx) {
 			fail();
 		}
