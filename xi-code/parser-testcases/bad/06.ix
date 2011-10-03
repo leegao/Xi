@@ -1,0 +1,14 @@
+//test for illegal while statement
+
+main():int 
+{
+
+	x:int = 0
+	y:int = 0
+	while( x = 5; ) //statement not expression
+	{
+		y = y + 1
+	}
+
+	return 0
+}

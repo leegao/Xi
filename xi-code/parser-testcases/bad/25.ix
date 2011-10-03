@@ -1,0 +1,8 @@
+//test for illegal grammar: undefined gets expression 3 (the 'gets' syntax changed)
+
+main():int =
+{
+	(i:int, j:bool) = g();
+
+	return 0;
+}

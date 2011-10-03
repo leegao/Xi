@@ -1,0 +1,8 @@
+//test for illegal grammar: undefined variable declaration statement.
+
+main():int 
+{
+	int x = 1
+
+	return x
+}

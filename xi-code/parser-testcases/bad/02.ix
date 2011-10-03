@@ -1,0 +1,11 @@
+//test for illegal grammar: unexpected "else"
+
+main( a:int, b:int ):int {
+	c:int = 5
+	else
+	{
+		a = a * c;
+	}
+
+	return b
+}
