@@ -68,7 +68,7 @@ public class FuncCallNode extends ExpressionNode {
 				}
 			}
 			
-			type = t;
+			type = ((XiFunctionType)t).returns().coerce();
 			return type;
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());

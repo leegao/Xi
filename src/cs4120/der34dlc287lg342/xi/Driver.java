@@ -1,7 +1,13 @@
 package cs4120.der34dlc287lg342.xi;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
+
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 
 import edu.cornell.cs.cs4120.util.CodeWriterTreePrinter;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -16,14 +22,32 @@ public class Driver {
 		}
 		try {
 			FileReader reader = new FileReader(args[0]);
-			Parser parser = new XiParser(reader, args[0]);
+			String src = "";
+			BufferedReader input =  new BufferedReader(reader);
+			String line = null;
+			while (( line = input.readLine()) != null){
+		          src += line + "\n";
+		    }
+			Parser parser = new XiParser(new StringReader(src), args[0]);
 			AbstractSyntaxNode program = parser.parse();
+			XiTypechecker tc = new XiTypechecker(program, src);
+			
+			tc.typecheck();
+			
 			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
 			printer.print(program);
+			
+			reader.close();
 		} catch (CompilationException e){
 			System.out.println(e);
 		} catch (FileNotFoundException e) {
 			System.out.println("File not found: "+args[0]);
+		} catch (IOException e) {
+			System.out.println("Malformed file: "+args[0]);
+		} catch (InvalidXiTypeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println(e);
 		}
 	}
 }

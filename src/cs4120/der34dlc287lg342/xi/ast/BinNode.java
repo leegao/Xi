@@ -49,8 +49,16 @@ public class BinNode extends ExpressionNode {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		// typecheck e1 e2, no side affects
-		XiPrimitiveType t1 = (XiPrimitiveType)((AbstractSyntaxTree)e1).typecheck(stack);
-		XiPrimitiveType t2 = (XiPrimitiveType)((AbstractSyntaxTree)e2).typecheck(stack);
+		
+		XiType t1_ = ((AbstractSyntaxTree)e1).typecheck(stack);
+		XiType t2_ = ((AbstractSyntaxTree)e2).typecheck(stack);
+		
+		if (!(t1_ instanceof XiPrimitiveType))
+			throw new CompilationException("Cannot perform BINOP("+op+") on nonprimitive type LHS["+t1_+"]", e1.position());
+		if (!(t2_ instanceof XiPrimitiveType))
+			throw new CompilationException("Cannot perform BINOP("+op+") on nonprimitive type RHS["+t2_+"]", e2.position());
+		
+		XiPrimitiveType t1 = (XiPrimitiveType)t1_, t2 = (XiPrimitiveType)t2_;
 		
 		if (t1.equals(XiPrimitiveType.INT) && t2.equals(XiPrimitiveType.INT)){
 			return XiPrimitiveType.INT;

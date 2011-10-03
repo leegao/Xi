@@ -6,6 +6,7 @@ import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiReturnType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -68,8 +69,8 @@ public class InstNode extends AbstractSyntaxTree {
 			
 		} else if(list.size() > 1) {
 			XiType function = ((AbstractSyntaxTree)e).typecheck(stack);
-			if( function instanceof XiFunctionType) {
-				XiFunctionType functionType = (XiFunctionType)function;
+			if( function instanceof XiReturnType) {
+				XiReturnType functionType = (XiReturnType)function;
 				
 				if(list.size() == functionType.ret.size()) {
 					for(int index = 0; index < list.size(); index++) {
@@ -94,7 +95,7 @@ public class InstNode extends AbstractSyntaxTree {
 					throw new CompilationException("Invalid number of return types", position);
 				}
 			} else 
-				throw new CompilationException("Expecting a function call", position);
+				throw new CompilationException("Expecting a function call but got "+function+" instead", position);
 		} 
 			
 		throw new CompilationException("Invalid Instantion", position);
