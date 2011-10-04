@@ -32,7 +32,7 @@ public class AbstractSyntaxTree implements AbstractSyntaxNode {
 	
 	@Override
 	public String toString(){
-		return label() + "["+type+"]";
+		return label() + ((type != null) ? "["+type+"]" : "");
 	}
 	
 	public XiType typecheck(ContextList stack) throws CompilationException{

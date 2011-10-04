@@ -61,7 +61,8 @@ public class BoolOpNode extends ExpressionNode {
 
 		if (t1.equals(XiPrimitiveType.BOOL) && t2.equals(XiPrimitiveType.BOOL)){
 			// all cases here
-			return XiPrimitiveType.BOOL;
+			type = XiPrimitiveType.BOOL;
+			return type;
 		} else{
 			throw new CompilationException("Cannot perform BOOLOP("+op+") on types", position());
 		}

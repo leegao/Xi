@@ -45,33 +45,29 @@ public class FuncCallNode extends ExpressionNode {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		IdNode id = (IdNode)this.id;
-		try {
-			XiType t = stack.find_id(id.id);
-			if (!(t instanceof XiFunctionType))
-				throw new CompilationException("Attempt to call a nonfunction object", position());
-			XiFunctionType func = (XiFunctionType)t;
-			// make sure that args agree
-			
-			if (func.args.size() != args.size()){
-				throw new CompilationException("Incorrect number of arguments applied to the function '"+id.id+"': expected "+args.size() + " but got "+func.args.size()+" instead", position());
-			}
-			int i = 0;
-			for (VisualizableTreeNode child : args){
-				if (child instanceof ExpressionNode){
-					ExpressionNode expr = (ExpressionNode)child;
-					XiType arg_type = expr.typecheck(stack);
-					XiPrimitiveType expected = func.args.get(i++);
-					if (!arg_type.equals(expected))
-						throw new CompilationException("Invalid argument("+(i-1)+") of function '"+id.id+"': expected "+expected+", but got "+arg_type+" instead", position());
-				} else {
-					throw new CompilationException("Expected an expression type but got "+child.label()+" instead", position());
-				}
-			}
-			
-			type = ((XiFunctionType)t).returns().coerce();
-			return type;
-		} catch (InvalidXiTypeException e) {
-			throw new CompilationException(e.getMessage(), position());
+		XiType t = id.typecheck(stack);
+		if (!(t instanceof XiFunctionType))
+			throw new CompilationException("Attempt to call a nonfunction object", position());
+		XiFunctionType func = (XiFunctionType)t;
+		// make sure that args agree
+		
+		if (func.args.size() != args.size()){
+			throw new CompilationException("Incorrect number of arguments applied to the function '"+id.id+"': expected "+args.size() + " but got "+func.args.size()+" instead", position());
 		}
+		int i = 0;
+		for (VisualizableTreeNode child : args){
+			if (child instanceof ExpressionNode){
+				ExpressionNode expr = (ExpressionNode)child;
+				XiType arg_type = expr.typecheck(stack);
+				XiPrimitiveType expected = func.args.get(i++);
+				if (!arg_type.equals(expected))
+					throw new CompilationException("Invalid argument("+(i-1)+") of function '"+id.id+"': expected "+expected+", but got "+arg_type+" instead", position());
+			} else {
+				throw new CompilationException("Expected an expression type but got "+child.label()+" instead", position());
+			}
+		}
+		
+		type = ((XiFunctionType)t).returns().coerce();
+		return type;
 	}
 }

@@ -47,7 +47,8 @@ public class AssignmentNode extends AbstractSyntaxTree {
 		XiType exprType = ((AbstractSyntaxTree)expr).typecheck(stack);
 		
 		if( idType.equals(exprType)) {
-			return XiPrimitiveType.UNIT;
+			type = XiPrimitiveType.UNIT;
+			return type;
 		} else {
 			throw new CompilationException("Invalid assignment type",position);
 		

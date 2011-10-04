@@ -61,9 +61,11 @@ public class EqualityNode extends ExpressionNode {
 		
 		if (t1.equals(XiPrimitiveType.INT) && t2.equals(XiPrimitiveType.INT)){
 			// all cases here
-			return XiPrimitiveType.BOOL;
+			type = XiPrimitiveType.BOOL;
+			return type;
 		} else if (t1.equals(XiPrimitiveType.BOOL) && t2.equals(XiPrimitiveType.BOOL) && op.equals("EQUAL") && op.equals("NOT_EQUAL")){
-			return XiPrimitiveType.BOOL;
+			type = XiPrimitiveType.BOOL;
+			return type;
 		} else{
 			throw new CompilationException("Cannot perform EQ("+op+") on types", position());
 		}
