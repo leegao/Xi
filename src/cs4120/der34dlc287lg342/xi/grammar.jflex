@@ -153,6 +153,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
   '\\''                          { return token(TokenType.CHARACTER_LITERAL, "\'"); }
   '\\r'                          { return token(TokenType.CHARACTER_LITERAL, "\r"); }
   '\\n'                          { return token(TokenType.CHARACTER_LITERAL, "\n"); }
+  '\\\"'						 { return token(TokenType.CHARACTER_LITERAL, "\""); }
   
  
   /* whitespace */
