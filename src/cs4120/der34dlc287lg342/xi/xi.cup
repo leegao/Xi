@@ -81,9 +81,9 @@ id ::= IDENTIFIER:o
 	{:  Token id = (Token)o;
 		RESULT = new IdNode(id.value(), id.position());:};
 
-expr ::= /*or_expression:e
+/*or_expression:e
 	{: RESULT = e; :}*/
-	expr:e1 op:op expr:e2 
+	/*expr:e1 op:op expr:e2 
 	{:	RESULT = op; 
 		System.out.println(op.label());
 		if (op instanceof BinNode) 
@@ -92,7 +92,37 @@ expr ::= /*or_expression:e
 			((BoolOpNode)op).set(e1, e2, span(e1.position(), e2.position())); 
 		else
 			((EqualityNode)op).set(e1, e2, span(e1.position(), e2.position())); 
-		:}
+		:}*/
+	
+
+expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
+      ((BoolOpNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 OR expr:e2 {: RESULT = new BoolOpNode("OR");
+      ((BoolOpNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	
+	| expr:e1 EQUAL expr:e2 {: RESULT = new EqualityNode("EQUAL");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 NOT_EQUAL expr:e2 {: RESULT = new EqualityNode("NOT_EQUAL");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 LEQ expr:e2 {: RESULT = new EqualityNode("LEQ");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 GEQ expr:e2 {: RESULT = new EqualityNode("GEQ");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 LT expr:e2 {: RESULT = new EqualityNode("LT");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 GT expr:e2 {: RESULT = new EqualityNode("GT");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	
+	| expr:e1 PLUS expr:e2 {: RESULT = new BinNode("PLUS");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 MINUS expr:e2 {: RESULT = new BinNode("MINUS");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 TIMES expr:e2 {: RESULT = new BinNode("TIMES");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 DIVIDE expr:e2 {: RESULT = new BinNode("DIVIDE");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 MODULO expr:e2 {: RESULT = new BinNode("MODULO");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
 	
 	| uop:op expr:e
 	{:	RESULT = op; 

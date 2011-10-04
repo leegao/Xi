@@ -57,7 +57,7 @@ public class TestTypechecker extends TestCase {
 		try {
 //			XiTypechecker tc = gen("use io main(){if (1 > 2 & true){}}");
 //			tc.typecheck();
-			String code = "use io main(){if (true){a:int = 1+2;}}";
+			String code = "use io main(){if (1>2 & true){a:int = 2*3+1;}}";
 			Reader reader = new StringReader(code);
 			Parser p = new XiParser(reader);
 			AbstractSyntaxNode ast = p.parse();
