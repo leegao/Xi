@@ -295,7 +295,7 @@ public class TestParser extends TestCase {
 			gen("main(x: int[][]) {{return;}}").parse();
 			
 		} catch (CompilationException compEx) {
-			assertEquals("((1, 20), (1, 20))", compEx.getPosition().toString());
+			assertEquals("((1, 19), (1, 19))", compEx.getPosition().toString());
 			assertEquals("Syntax Error: Not expecting token OPEN_BRACE({)", compEx.getMessage());
 			System.out.println("exception caught");
 		}

@@ -297,7 +297,7 @@ public class TestLexer extends TestCase {
 		assertFalse(lex.hasNext());
     }
 
-    public void test_Charackter_Backslash() {
+    public void test_Character_Backslash() {
     	String input = "'\\'";
     	Lexer lex = new XiLexer(new StringReader(input));
     	
