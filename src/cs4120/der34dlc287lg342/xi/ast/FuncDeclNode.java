@@ -67,6 +67,11 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		}
 		stack.add(frame);
 		
+		// ensure that we're already on the stack
+		XiType our_type = ((AbstractSyntaxTree)id).typecheck(stack);
+		if (!our_type.equals(type))
+			throw new CompilationException("Invalid function declaration: signature doesn't match actual type", position());
+		
 		XiType t = block.typecheck(stack);
 		if (t.equals(XiPrimitiveType.UNIT)){
 			// make sure that type has no return types

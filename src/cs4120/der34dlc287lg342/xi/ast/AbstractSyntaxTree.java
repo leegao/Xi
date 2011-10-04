@@ -10,6 +10,7 @@ import edu.cornell.cs.cs4120.xi.Position;
 public class AbstractSyntaxTree implements AbstractSyntaxNode {
 
 	public XiType type = null;
+	public static boolean PA3 = false;
 	
 	@Override
 	public Position position() {
@@ -27,6 +28,11 @@ public class AbstractSyntaxTree implements AbstractSyntaxNode {
 	public String label() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+	
+	@Override
+	public String toString(){
+		return label() + "["+type+"]";
 	}
 	
 	public XiType typecheck(ContextList stack) throws CompilationException{

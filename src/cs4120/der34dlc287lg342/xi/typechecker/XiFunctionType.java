@@ -27,12 +27,23 @@ public class XiFunctionType implements XiType {
 	@Override
 	public String toString(){
 		String t = "";
-		for (XiPrimitiveType arg : args){
-			t += arg + ",";
+		if (args.isEmpty()){
+			t = "void";
+		} else {
+			for (XiPrimitiveType arg : args){
+				t += arg + ",";
+			}
+			t = t.substring(0, t.length()-1);
 		}
-		t += " -> ";
-		for (XiPrimitiveType r : ret){
-			t += r + ",";
+		
+		t += "->";
+		if (ret.isEmpty()){
+			t = "void";
+		} else {
+			for (XiPrimitiveType r : ret){
+				t += r + ",";
+			}
+			t = t.substring(0, t.length()-1);
 		}
 		return t;
 	}
