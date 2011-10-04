@@ -70,12 +70,10 @@ public class TestSourceFiles extends TestCase{
 				Reader reader = new FileReader(validFile.getPath());
 				Parser p = new XiParser(reader);
 				p.parse();
-				if( 1 < 2 & true) {
-					
-				}
-				
+				fail();
 			} catch (CompilationException compEx) {
-				
+				System.out.println(validFile.getName());
+				System.out.println("\t" + compEx + "\n");
 			} catch (FileNotFoundException e) {
 				System.out.println("File not found: " + validFile.getName() + "\n");
 				fail();
