@@ -49,7 +49,7 @@ nonterminal AbstractSyntaxNode expr, op, uop, func_call,
 	multiplicative_expression, additive_expression, relational_expression, equality_expression, and_expression, or_expression;
 // statement components
 nonterminal AbstractSyntaxNode stmt, if_stmt, while_stmt, return_stmt, return_list, 
-	block, stmt_list, block_stmt, var_decl, var_inst, var_item, var_set;
+	block, stmt_list, block_stmt, stmt_or_block, var_decl, var_inst, var_item, var_set;
 nonterminal AbstractSyntaxNode dimension;
 nonterminal String type;
 nonterminal ArrayList<XiPrimitiveType> types;
@@ -299,8 +299,6 @@ stmt ::= if_stmt:s
 	{: RESULT = new BreakNode(b.position()); :}
 	| func_call:e
 	{: RESULT = new ProcedureCallNode(e); :}
-	| block:s
-	{: RESULT = s; :}
 	| var_decl:s
 	{: RESULT = s; :}
 	| var_inst:s
@@ -308,12 +306,17 @@ stmt ::= if_stmt:s
 	| var_set:s
 	{: RESULT = s; :};
 
-if_stmt ::= IF:t OPEN_PAREN expr:e1 CLOSE_PAREN stmt:stmt
+stmt_or_block ::= stmt:stmt
+	{: RESULT = stmt; :}
+	| block:stmt
+	{: RESULT = stmt; :};
+
+if_stmt ::= IF:t OPEN_PAREN expr:e1 CLOSE_PAREN stmt_or_block:stmt
     {: RESULT = new IfNode(e1, stmt, null, span(t.position(), stmt.position())); :}
-	| IF:t OPEN_PAREN expr:e CLOSE_PAREN stmt:s1 ELSE stmt:s2
+	| IF:t OPEN_PAREN expr:e CLOSE_PAREN stmt_or_block:s1 ELSE stmt_or_block:s2
 	{: RESULT = new IfNode(e, s1, s2, span(t.position(), s2.position())); :}
 	;
-while_stmt ::= WHILE:t OPEN_PAREN expr:e CLOSE_PAREN stmt:s
+while_stmt ::= WHILE:t OPEN_PAREN expr:e CLOSE_PAREN stmt_or_block:s
 	{: RESULT = new WhileNode(e, s, span(t.position(), s.position())); :};
 return_stmt ::= RETURN:t return_list:s 
 	{:	ReturnNode r = (ReturnNode)s; 
