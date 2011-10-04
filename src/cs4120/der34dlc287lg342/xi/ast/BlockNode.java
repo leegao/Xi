@@ -61,6 +61,15 @@ public class BlockNode extends AbstractSyntaxTree {
 		}
 		
 		type = t; // do not annotate if fails
+		
+		// For PA3 only, print out symbol table
+		if (AbstractSyntaxTree.PA3){
+			System.out.println("Leaving block with stack");
+			for (int i = stack.size()-1; i >= 0; i--)
+				System.out.println("  "+i+": "+stack.get(i).symbols);
+			System.out.println();
+		}
+		
 		return type;
 	}
 
