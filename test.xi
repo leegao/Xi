@@ -1,5 +1,5 @@
 use io
-use asd
+use a
 
 func(i:int):int { 
 	a:int;

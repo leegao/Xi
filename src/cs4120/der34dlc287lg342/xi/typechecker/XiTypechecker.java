@@ -1,7 +1,9 @@
 package cs4120.der34dlc287lg342.xi.typechecker;
 
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.HashMap;
 
@@ -33,13 +35,25 @@ public class XiTypechecker {
 	}
 	
 	// add function declarations found within interfaces into the global context
-	HashMap<String, XiType> include(String id) throws FileNotFoundException{
+	HashMap<String, XiType> include(String id) throws IOException{
 		HashMap<String, XiType> interfaces = new HashMap<String, XiType>();
 		
 		FileReader reader = new FileReader(id+".ixi");
-		XiInterfaceParser parser = new XiInterfaceParser(reader, id+".ixi");
 		
-		AbstractSyntaxNode declarations = parser.parse();
+		String src = "";
+		BufferedReader input =  new BufferedReader(reader);
+		String line = null;
+		while (( line = input.readLine()) != null){
+			src += line.replace("\r", "") + "\n";
+		}
+		
+		XiInterfaceParser parser = new XiInterfaceParser(new StringReader(src), id+".ixi");
+		AbstractSyntaxNode declarations;
+		try{
+			declarations = parser.parse();
+		} catch (CompilationException e){
+			throw formatException(e, src);
+		}
 		for (VisualizableTreeNode child : declarations.children()){
 			FuncDeclNode decl = (FuncDeclNode)child;
 			IdNode identifier = (IdNode)decl.id;
@@ -49,7 +63,7 @@ public class XiTypechecker {
 		return interfaces;
 	}
 	
-	private void init() throws InvalidXiTypeException{
+	private void init() throws CompilationException{
 		// first pass
 		// precondition: ast is a program node
 		for (VisualizableTreeNode child : ast.children()){
@@ -57,7 +71,11 @@ public class XiTypechecker {
 			if (child instanceof FuncDeclNode){
 				FuncDeclNode func = (FuncDeclNode)child;
 				IdNode identifier = (IdNode)func.id;
-				globalContext.add(identifier.id, func.type);
+				try {
+					globalContext.add(identifier.id, func.type);
+				} catch (InvalidXiTypeException e) {
+					throw new CompilationException(e.getMessage(), func.position());
+				}
 			} else if (child instanceof UseNode){
 				UseNode use = (UseNode)child;
 				IdNode lib = (IdNode)use.lib;
@@ -65,16 +83,22 @@ public class XiTypechecker {
 				try {
 					interfaces = include(lib.id);
 				} catch (FileNotFoundException e) {
-					throw new InvalidXiTypeException("Interface file cannot be found for "+lib.id);
+					throw new CompilationException("Interface file cannot be found for "+lib.id, use.position());
+				} catch (IOException e) {
+					throw new CompilationException("Malformed interface file for "+lib.id, use.position());
 				}
-				globalContext.add(interfaces);
+				try {
+					globalContext.add(interfaces);
+				} catch (InvalidXiTypeException e) {
+					throw new CompilationException(e.getMessage(), use.position());
+				}
 			} else {
-				throw new InvalidXiTypeException("Invalid Abstract Syntax Tree");
+				throw new CompilationException("Invalid Abstract Syntax Tree", ((AbstractSyntaxNode)child).position());
 			}
 		}
 	}
 	
-	public CompilationException formatException(CompilationException e){
+	public CompilationException formatException(CompilationException e, String code){
 		String str = "";
 		str += e.getMessage();
 		if (code != null){
@@ -89,6 +113,10 @@ public class XiTypechecker {
 			str += "^ @ position "+e.getPosition();
 		}
 		return new CompilationException(str, e.getPosition());
+	}
+	
+	public CompilationException formatException(CompilationException e){
+		return formatException(e, code);
 	}
 	
 	public void typecheck() throws CompilationException{
