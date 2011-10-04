@@ -301,4 +301,15 @@ public class TestParser extends TestCase {
 		}
 	}
 	
+	public void testArrayDeclarationWithNonConstant() {
+		try {
+			checkType(gen("func() { \nb:int \na:int[b] }"), new String[]{
+					"PROGRAM","FUNCDECL","ID(func)","BLOCK",
+					"DECL", "ID(b)", "DECL", "ID(a)"
+				});
+		} catch (Exception ex) {
+			fail();
+		}
+	}
+	
 }

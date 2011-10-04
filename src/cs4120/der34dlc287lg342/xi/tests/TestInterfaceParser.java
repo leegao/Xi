@@ -64,11 +64,10 @@ public class TestInterfaceParser extends TestCase {
 		try{
 			genTypecheck("use asdf fun(){}");
 		} catch (CompilationException compEx) {
-			assertEquals("((1, 5), (1, 8))", compEx.getPosition().toString());
-			System.out.println(compEx.getMessage());
+			assertEquals("((1, 1), (1, 8))", compEx.getPosition().toString());
+			assertEquals("Interface file cannot be found for asdf", compEx.getMessage());
 			
 		} catch (InvalidXiTypeException e) {
-			System.out.println(e.getMessage());
 			fail();
 		}
 	}
@@ -77,12 +76,35 @@ public class TestInterfaceParser extends TestCase {
 		try {
 			genTypecheck("use invalid func(){}");
 		} catch (CompilationException compEx) {
-			assertEquals("Invalid interface file (invalid.ixi): Syntax Error: Not expecting token BOOL(bool)",
+			assertEquals("Invalid interface file (invalid.ixi): Syntax Error: Not expecting token BOOL(bool)" +
+						"\n      v" +
+						"\n0001: bool test()" +
+						"\n         ^ @ position ((1, 1), (1, 4))",
 					compEx.getMessage());
-			
-			System.out.println(compEx.getPosition().toString());
 		} catch (InvalidXiTypeException ex) {
-			System.out.println(ex.getMessage());
+			fail();
+		}
+	}
+	
+	public void testMultipleValidInterfaceFile() {
+		try {
+			genTypecheck("use io use conv use timer func() {}");
+		} catch (Exception ex) { //This typecheck should not fail
+			fail();
+		}
+	}
+	
+	public void testMultipleValidAndInvalidInterfaceFile() {
+		try {
+			genTypecheck("use io use invalid use timer func(){}");
+		}catch (CompilationException compEx) {
+			assertEquals("Invalid interface file (invalid.ixi): Syntax Error: Not expecting token BOOL(bool)" +
+					"\n      v" +
+					"\n0001: bool test()" +
+					"\n         ^ @ position ((1, 1), (1, 4))",
+				compEx.getMessage());
+		} catch (InvalidXiTypeException ex) {
+			fail();
 		}
 	}
 
