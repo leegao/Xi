@@ -6,6 +6,7 @@ import java.io.StringReader;
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
+import edu.cornell.cs.cs4120.util.CodeWriterTreePrinter;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.parser.Parser;
@@ -54,8 +55,18 @@ public class TestTypechecker extends TestCase {
 	
 	public void testXiTypecheckerArrArrIndex() {
 		try {
-			XiTypechecker tc = gen("use io main(){if (1 > 2 & true){}}");
-			tc.typecheck();
+//			XiTypechecker tc = gen("use io main(){if (1 > 2 & true){}}");
+//			tc.typecheck();
+			String code = "use io main(){if (true){a:int = 1+2;}}";
+			Reader reader = new StringReader(code);
+			Parser p = new XiParser(reader);
+			AbstractSyntaxNode ast = p.parse();
+			
+			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
+			printer.print(ast);
+			
+			XiTypechecker tc = new XiTypechecker(ast, code);
+			
 		} catch (CompilationException e) {
 			// TODO Auto-generated catch block
 			System.out.println(e);
@@ -180,7 +191,7 @@ public class TestTypechecker extends TestCase {
 	//we may want to handle this differently, with a better message.
 	public void testMissingFunctionIO() {
 		try {
-			XiTypechecker tc = gen("func1() { func2(5) }");
+			XiTypechecker tc = gen("func1() { func2:int; func2(5) }");
 			tc.typecheck();
 		} catch (CompilationException compEx) {
 			System.out.println(compEx);
