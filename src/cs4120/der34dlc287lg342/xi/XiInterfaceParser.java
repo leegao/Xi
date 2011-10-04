@@ -31,7 +31,7 @@ public class XiInterfaceParser implements Parser {
 			AbstractSyntaxNode node = (AbstractSyntaxNode) p.parse().value;
 			return node;
 		} catch (CompilationException e){
-			throw e;
+			throw new CompilationException("Invalid interface file (" + unit + "): " + e.getMessage(), e.getPosition());
 		} catch (java.lang.Error e) {
 			throw new CompilationException(e.getMessage(), lexer.cached_token != null ? lexer.cached_token.position() : new XiPosition(0,0,0,0));
 		} catch (Exception e) {
