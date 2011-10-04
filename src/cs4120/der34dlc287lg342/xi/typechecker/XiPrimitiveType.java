@@ -63,7 +63,7 @@ public class XiPrimitiveType implements XiType {
 	}
 	
 	public static XiType INT_ARR = array((XiPrimitiveType)INT);
-	public static XiType BOOL_ARR = array((XiPrimitiveType)INT);
+	public static XiType BOOL_ARR = array((XiPrimitiveType)BOOL);
 	public static XiType WILDCARD_ARR = array(new XiPrimitiveType("*"));
 	
 	public boolean isArrayType(){

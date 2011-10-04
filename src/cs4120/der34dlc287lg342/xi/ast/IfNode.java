@@ -73,10 +73,11 @@ public class IfNode extends AbstractSyntaxTree {
 				XiType t = XiPrimitiveType.UNIT;
 				if( s2Type != null){
 					if(s2Type.equals(XiPrimitiveType.UNIT) || s2Type.equals(XiPrimitiveType.VOID)){
-						if (s1Type.equals(XiPrimitiveType.VOID) && s2Type.equals(XiPrimitiveType.VOID))
+						if (s1Type.equals(XiPrimitiveType.VOID) && s2Type.equals(XiPrimitiveType.VOID)){
 							t = XiPrimitiveType.VOID;
-					}
-					throw new CompilationException("Statements must be of type unit or void, but got expression instead", s2.position());
+						}
+					} else
+						throw new CompilationException("Else statement must be of type unit or void, but got expression instead", s2.position());
 				}
 				type = t;
 				return type;
