@@ -68,14 +68,24 @@ public class IfNode extends AbstractSyntaxTree {
 			}
 		}
 		
-		if(condType.equals(XiPrimitiveType.BOOL) && s1Type.equals(XiPrimitiveType.UNIT))
-			if( s2Type != null)
-				if(s2Type.equals(XiPrimitiveType.UNIT)){
-					type = XiPrimitiveType.UNIT;
-					return type;	
+		if(condType.equals(XiPrimitiveType.BOOL)){
+			if( (s1Type.equals(XiPrimitiveType.UNIT) || s1Type.equals(XiPrimitiveType.VOID))){
+				XiType t = XiPrimitiveType.UNIT;
+				if( s2Type != null){
+					if(s2Type.equals(XiPrimitiveType.UNIT) || s2Type.equals(XiPrimitiveType.VOID)){
+						if (s1Type.equals(XiPrimitiveType.VOID) && s2Type.equals(XiPrimitiveType.VOID)){
+							t = XiPrimitiveType.VOID;
+						}
+					} else
+						throw new CompilationException("Else statement must be of type unit or void, but got expression instead", s2.position());
 				}
+				type = t;
+				return type;
+			}
+			throw new CompilationException("Statements must be of type unit or void, but got expression instead", s1.position());
+		}
 		
-		throw new CompilationException("Invalid boolean expression", position);
+		throw new CompilationException("Condition must be of boolean type, but got ["+condType+"] instead", condition.position());
 			
 	}
 }

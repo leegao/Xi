@@ -4,23 +4,12 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
 
-import java_cup.runtime.Scanner;
-
-import cs4120.der34dlc287lg342.xi.XiLexer;
 import cs4120.der34dlc287lg342.xi.XiParser;
-import cs4120.der34dlc287lg342.xi.XiPosition;
-import cs4120.der34dlc287lg342.xi.parser;
-import cs4120.der34dlc287lg342.xi.sym;
 
-import edu.cornell.cs.cs4120.util.CodeWriterTreePrinter;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
-import edu.cornell.cs.cs4120.xi.Position;
-import edu.cornell.cs.cs4120.xi.lexer.Lexer;
-import edu.cornell.cs.cs4120.xi.lexer.Token;
-import edu.cornell.cs.cs4120.xi.lexer.TokenType;
-import edu.cornell.cs.cs4120.xi.lexer.cup.LexerAdapter;
+
 import edu.cornell.cs.cs4120.xi.parser.Parser;
 
 import junit.framework.TestCase;
@@ -108,35 +97,35 @@ public class TestParser extends TestCase {
 	public void testParserStmtWhile(){
 		checkType(gen("main(){while (1 < 2) a = 3;}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"WHILE", "BIN(LT)", "1", "2", "ASSIGNMENT", "ID(a)", "3"
+			"WHILE", "EQ(LT)", "1", "2", "ASSIGNMENT", "ID(a)", "3"
 		});
 	}
 	
 	public void testParserStmtWhileBlock(){
 		checkType(gen("main(){while (1 < 2){ a = 3;}}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"WHILE", "BIN(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3"
+			"WHILE", "EQ(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3"
 		});
 	}
 	
 	public void testParserStmtIf(){
 		checkType(gen("main(){if (1 < 2) a = 3;}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"IF", "BIN(LT)", "1", "2", "ASSIGNMENT", "ID(a)", "3"
+			"IF", "EQ(LT)", "1", "2", "ASSIGNMENT", "ID(a)", "3"
 		});
 	}
 	
 	public void testParserStmtIfBlock(){
 		checkType(gen("main(){if (1 < 2){ a = 3;}}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"IF", "BIN(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3"
+			"IF", "EQ(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3"
 		});
 	}
 	
 	public void testParserStmtIfElse(){
 		checkType(gen("main(){if (1 < 2){ a = 3;} else b = 3}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"IF-ELSE", "BIN(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3",
+			"IF-ELSE", "EQ(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3",
 			"ASSIGNMENT", "ID(b)", "3"
 		});
 	}
@@ -144,7 +133,7 @@ public class TestParser extends TestCase {
 	public void testParserStmtIfElseBreak(){
 		checkType(gen("main(){if (1 < 2){ a = 3;} else break;}"), new String[]{
 			"PROGRAM","FUNCDECL","ID(main)","BLOCK",
-			"IF-ELSE", "BIN(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3",
+			"IF-ELSE", "EQ(LT)", "1", "2", "BLOCK", "ASSIGNMENT", "ID(a)", "3",
 			"BREAK"
 		});
 	}
@@ -222,7 +211,7 @@ public class TestParser extends TestCase {
 			});
 			fail("Did not catch syntax error");
 		} catch (CompilationException e){
-			assertEquals(e.getMessage(), "Syntax Error: Not expecting token OPEN_BRACKET([)");
+			assertEquals(e.getMessage(), "Syntax Error: Not expecting EOF");
 		}
 	}
 	
@@ -259,6 +248,67 @@ public class TestParser extends TestCase {
 			fail("Did not catch syntax error");
 		} catch (CompilationException e){
 			assertEquals(e.getMessage(), "Syntax Error: Not expecting token IDENTIFIER(print)");
+		}
+	}
+	
+	public void testPositionForInvalidReturnType() {
+		try {
+			gen("func() int { return 1 }").parse();
+			fail("Did not catch compilation error");
+		} catch (CompilationException e) {
+			assertEquals("((1, 8), (1, 10))",e.getPosition().toString());
+		}
+	}
+	
+	public void testInvalidDeclarationstatement() {
+		try {
+			gen("func() { a:int = b:int }").parse();
+			fail("Did not catch compilation error");
+		} catch (CompilationException e) {
+			assertEquals("((1, 19), (1, 19))", e.getPosition().toString());
+		}
+	}
+	
+	public void testInvalidUnderscoreDecalration() {
+		try {
+			gen("func() { _ = false  }").parse();
+			fail("Did not catch compilation error");
+		} catch (CompilationException e) {
+			assertEquals("((1, 12), (1, 12))", e.getPosition().toString());
+			assertEquals("Syntax Error: Not expecting token GETS(=)", e.getMessage());
+		}	
+	}
+	
+	public void testInvalidReturnAndPosition() {
+		try {
+			gen("func(): int { \nreturn 1; a:int = 3").parse();
+			fail("Did not catch compilation error");
+		} catch (CompilationException compEx) {
+			assertEquals("((2, 11), (2, 11))", compEx.getPosition().toString());
+			assertEquals("Syntax Error: Not expecting token IDENTIFIER(a)", compEx.getMessage());
+		}
+	
+	}
+	
+	public void testReturnBlockWithinBlock() {
+		try {
+			gen("main(x: int[][]) {{return;}}").parse();
+			
+		} catch (CompilationException compEx) {
+			assertEquals("((1, 19), (1, 19))", compEx.getPosition().toString());
+			assertEquals("Syntax Error: Not expecting token OPEN_BRACE({)", compEx.getMessage());
+			System.out.println("exception caught");
+		}
+	}
+	
+	public void testArrayDeclarationWithNonConstant() {
+		try {
+			checkType(gen("func() { \nb:int \na:int[b] }"), new String[]{
+					"PROGRAM","FUNCDECL","ID(func)","BLOCK",
+					"DECL", "ID(b)", "DECL", "ID(a)"
+				});
+		} catch (Exception ex) {
+			fail();
 		}
 	}
 	

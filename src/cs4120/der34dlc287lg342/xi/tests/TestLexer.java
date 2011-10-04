@@ -62,7 +62,7 @@ public class TestLexer extends TestCase {
 		Reader reader = new StringReader("int i = 3;");
 		Lexer lexer = new XiLexer(reader);
 		Position pos = lexer.next().position();
-		assertEquals(pos, new XiPosition("", 1, 4, 1, 1));
+		assertEquals(pos, new XiPosition("", 1, 3, 1, 1));
 	}
 	
 	public void testTokenPositionNotFirst(){
@@ -70,7 +70,7 @@ public class TestLexer extends TestCase {
 		Lexer lexer = new XiLexer(reader);
 		assertNotNull(lexer.next());
 		Position pos = lexer.next().position();
-		assertEquals(pos, new XiPosition("", 5, 6, 1, 1));
+		assertEquals(pos, new XiPosition("", 5, 5, 1, 1));
 	}
 	
 	public void testTokenPositionString(){
@@ -79,7 +79,7 @@ public class TestLexer extends TestCase {
 		assertNotNull(lexer.next());
 		Token tok = lexer.next();
 		Position pos = tok.position();
-		assertEquals(pos, new XiPosition("", 5, 13, 1, 1));
+		assertEquals(pos, new XiPosition("", 5, 5, 1, 1));
 	}
 	
 	public void testLexerComment(){
@@ -177,12 +177,145 @@ public class TestLexer extends TestCase {
 		checkType(lexer, new String[]{});
 	}
 	
-//	public void testLexer(){
-//		Reader reader = new StringReader("ratadd(p1:int, q1:int, p2:int, q2:int) : (int, int) {\n\tg:int = gcd(q1,q2)");
-//		Lexer lexer = new XiLexer(reader);
-//		while(lexer.hasNext()){
-//			Token token = lexer.next();
-//			System.out.println(token.type());
-//		}
-//	}
+   public void test_Escape_Double_Quote_String() {
+		String input =  "\"\\\"\""; // string = "\""
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"string_literal"});
+		assertFalse(lex.hasNext());
+   }
+		    
+    public void test_Escape_Single_Quote_String() {
+		String input =  "\"\\\'\"";
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"string_literal"});
+		assertFalse(lex.hasNext());
+	    
+    }
+
+    public void test_Escape_Tab_String() {
+		String input =  "\"\\t\""; 
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"string_literal"});
+		assertFalse(lex.hasNext());
+    
+    }
+
+    public void test_Escape_Form_Feed_String() {
+		String input =  "\"\\f\""; 
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"string_literal"});
+		assertFalse(lex.hasNext());
+    
+    }
+
+    public void test_Escape_Return_String() {
+		String input =  "\"\\r\""; 
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"string_literal"});
+		assertFalse(lex.hasNext());
+    
+    }
+
+    public void test_Escape_New_Line_String() {
+		String input = "\"\\n\"";
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"string_literal"});
+		assertFalse(lex.hasNext());
+    }
+
+    public void test_One_Double_Quote_String() {
+		String input = "\"";
+		Boolean exceptionCaught = false;
+		Lexer lex;
+		try {
+			lex = new XiLexer(new StringReader(input));
+			checkType(lex, new String[]{"string_literal"});
+		} catch (java.lang.Error ex) {
+		    exceptionCaught = true;
+		}
+	
+		assertTrue(exceptionCaught);
+    }
+
+    public void test_Escape_Double_Quote_Char() {
+		String input =  "\'\\\"\'"; // string = '\"'
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"character_literal"});
+		assertFalse(lex.hasNext());
+    }
+		    
+    public void test_Escape_Single_Quote_Char() {
+		String input =  "\'\\\'\'";
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"character_literal"});
+		assertFalse(lex.hasNext());
+    
+    }
+
+    public void test_Escape_Tab_Char() {
+		String input =  "\'\\t\'"; 
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"character_literal"});
+		assertFalse(lex.hasNext());
+    
+    }
+
+    public void test_Escape_Return_Char() {
+		String input =  "\'\\r\'"; 
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"character_literal"});
+		assertFalse(lex.hasNext());
+    
+    }
+
+    public void test_Escape_New_Line_Char() {
+		String input = "'\\n'";
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		checkType(lex, new String[]{"character_literal"});
+		assertFalse(lex.hasNext());
+    }
+
+    public void test_Character_Backslash() {
+    	String input = "'\\'";
+    	Lexer lex = new XiLexer(new StringReader(input));
+    	
+    	assertTrue(lex.hasNext());
+    	checkType(lex, new String[] {"character_literal"});
+    	assertFalse(lex.hasNext());
+    }
+
+
+    public void test_Position() {
+		String input = "\nasdf\n    asdfasdf=5";
+		Lexer lex = new XiLexer(new StringReader(input));
+		
+		assertTrue(lex.hasNext());
+		assertEquals("((2, 1), (2, 4))", lex.next().position().toString());
+		assertEquals("((3, 5), (3, 12))", lex.next().position().toString());
+		assertEquals("((3, 13), (3, 13))", lex.next().position().toString());
+		assertEquals("((3, 14), (3, 14))", lex.next().position().toString());
+		assertFalse(lex.hasNext());
+    }
 }

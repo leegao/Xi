@@ -45,10 +45,11 @@ terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
 nonterminal AbstractSyntaxNode program, use_list;
 // expr components
 nonterminal AbstractSyntaxNode expr, op, uop, func_call, 
-	arr_index, arr_create, arr_elements, id;
+	arr_index, arr_create, arr_elements, id, id_brackets,
+	multiplicative_expression, additive_expression, relational_expression, equality_expression, and_expression, or_expression;
 // statement components
 nonterminal AbstractSyntaxNode stmt, if_stmt, while_stmt, return_stmt, return_list, 
-	block, stmt_list, block_stmt, var_decl, var_inst, var_item, var_set;
+	block, stmt_list, block_stmt, stmt_or_block, var_decl, var_inst, var_item, var_set;
 nonterminal AbstractSyntaxNode dimension;
 nonterminal String type;
 nonterminal ArrayList<XiPrimitiveType> types;
@@ -60,13 +61,15 @@ nonterminal AbstractSyntaxNode func_decl, use_stmt;
 
 precedence nonassoc IF;
 precedence nonassoc ELSE; // we want to shift else rather than reduce on if
+
 precedence left OR;
 precedence left AND;
 precedence left EQUAL, NOT_EQUAL;
 precedence left LT, LEQ, GT, GEQ;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODULO;
-precedence left UMINUS, UNOT;
+precedence nonassoc UMINUS, UNOT;
+
 precedence nonassoc OPEN_BRACKET;
 
 start with program;
@@ -78,15 +81,48 @@ id ::= IDENTIFIER:o
 	{:  Token id = (Token)o;
 		RESULT = new IdNode(id.value(), id.position());:};
 
-expr ::= expr:e1 op:op expr:e2 
+/*or_expression:e
+	{: RESULT = e; :}*/
+	/*expr:e1 op:op expr:e2 
 	{:	RESULT = op; 
+		System.out.println(op.label());
 		if (op instanceof BinNode) 
 			((BinNode)op).set(e1, e2, span(e1.position(), e2.position())); 
 		else if (op instanceof BoolOpNode) 
 			((BoolOpNode)op).set(e1, e2, span(e1.position(), e2.position())); 
 		else
 			((EqualityNode)op).set(e1, e2, span(e1.position(), e2.position())); 
-		:}
+		:}*/
+	
+
+expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
+      ((BoolOpNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 OR expr:e2 {: RESULT = new BoolOpNode("OR");
+      ((BoolOpNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	
+	| expr:e1 EQUAL expr:e2 {: RESULT = new EqualityNode("EQUAL");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 NOT_EQUAL expr:e2 {: RESULT = new EqualityNode("NOT_EQUAL");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 LEQ expr:e2 {: RESULT = new EqualityNode("LEQ");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 GEQ expr:e2 {: RESULT = new EqualityNode("GEQ");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 LT expr:e2 {: RESULT = new EqualityNode("LT");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 GT expr:e2 {: RESULT = new EqualityNode("GT");
+      ((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	
+	| expr:e1 PLUS expr:e2 {: RESULT = new BinNode("PLUS");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 MINUS expr:e2 {: RESULT = new BinNode("MINUS");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 TIMES expr:e2 {: RESULT = new BinNode("TIMES");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 DIVIDE expr:e2 {: RESULT = new BinNode("DIVIDE");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	| expr:e1 MODULO expr:e2 {: RESULT = new BinNode("MODULO");
+      ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
 	
 	| uop:op expr:e
 	{:	RESULT = op; 
@@ -154,6 +190,69 @@ op ::= AND {: RESULT = new BoolOpNode("AND"); :}
 	| DIVIDE {: RESULT = new BinNode("DIVIDE"); :}
 	| MODULO {: RESULT = new BinNode("MODULO"); :};
 
+multiplicative_expression ::=
+		multiplicative_expression:e1 TIMES multiplicative_expression:e2
+		{: RESULT = new BinNode("TIMES");
+		((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position()));  :}
+	|	multiplicative_expression:e1 DIVIDE multiplicative_expression:e2
+		{: RESULT = new BinNode("DIVIDE");
+		((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	|	multiplicative_expression:e1 MODULO multiplicative_expression:e2
+		{: RESULT = new BinNode("MODULO");
+		((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	;
+additive_expression ::=
+		multiplicative_expression:e
+		{: RESULT = e; :}
+	|	additive_expression:e1 PLUS multiplicative_expression:e2
+		{: RESULT = new BinNode("PLUS");
+		((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	|	additive_expression:e1 MINUS multiplicative_expression:e2
+		{: RESULT = new BinNode("MINUS");
+		((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	;
+
+relational_expression ::=
+		additive_expression:e
+		{: RESULT = e; :}
+	|	relational_expression:e1 LT additive_expression:e2
+		{: RESULT = new EqualityNode("LT");
+		((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	|	relational_expression:e1 GT additive_expression:e2
+		{: RESULT = new EqualityNode("GT");
+		((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	|	relational_expression:e1 LEQ additive_expression:e2
+		{: RESULT = new EqualityNode("LEQ");
+		((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	|	relational_expression:e1 GEQ additive_expression:e2
+		{: RESULT = new EqualityNode("GEQ");
+		((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	;
+equality_expression ::=
+		relational_expression:e
+		{: RESULT = e; :}
+	|	equality_expression:e1 EQUAL relational_expression:e2
+		{: RESULT = new EqualityNode("EQUAL");
+		((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	|	equality_expression:e1 NOT_EQUAL relational_expression:e2
+		{: RESULT = new EqualityNode("NOT_EQUAL");
+		((EqualityNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	;
+and_expression ::=
+		equality_expression:e
+		{: RESULT = e; :}
+	|	and_expression:e1 AND equality_expression:e2
+		{: RESULT = new BoolOpNode("AND");
+		((BoolOpNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	;
+or_expression ::=
+		and_expression:e
+		{: RESULT = e; :}
+	|	or_expression:e1 OR and_expression:e2
+		{: RESULT = new BoolOpNode("OR");
+		((BoolOpNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
+	;
+
 uop ::= NOT:t {: RESULT = new UnNotNode(t.position());  :} 
 	%prec UNOT
 	| MINUS:t {: RESULT = new UnNegNode(t.position()); :}
@@ -173,15 +272,15 @@ func_callargs ::= {: RESULT = new ArrayList<VisualizableTreeNode>(); :}
 arr_index ::= expr:expr OPEN_BRACKET expr:i CLOSE_BRACKET:t
 	{: RESULT = new ListIndexNode(expr, i, span(expr.position(), t.position())); :};
 arr_create ::= OPEN_PAREN:o CLOSE_PAREN:e 
-	{: Token t = (Token)o, t2 = (Token)e; RESULT = new ListNode(span(t.position(), t2.position())); :}
+	{: Token t = (Token)o, t2 = (Token)e; RESULT = new ListNode(span(o.position(), e.position())); :}
 	| OPEN_PAREN:o expr:expr COMMA CLOSE_PAREN:e
 	{:  Token t = (Token)o, t2 = (Token)e; 
-		ListNode list = new ListNode(span(t.position(), t2.position())); 
+		ListNode list = new ListNode(span(o.position(), e.position())); 
 		list.add(expr);
 		RESULT = list;:}
 	| OPEN_PAREN:o expr:expr COMMA arr_elements:arr CLOSE_PAREN:e
 	{:  Token t = (Token)o, t2 = (Token)e; 
-		ListNode list = new ListNode(span(t.position(), t2.position())); 
+		ListNode list = new ListNode(span(o.position(), e.position())); 
 		list.add(expr);
 		RESULT = list;
 		ListNode tl = (ListNode)arr;
@@ -200,8 +299,6 @@ stmt ::= if_stmt:s
 	{: RESULT = new BreakNode(b.position()); :}
 	| func_call:e
 	{: RESULT = new ProcedureCallNode(e); :}
-	| block:s
-	{: RESULT = s; :}
 	| var_decl:s
 	{: RESULT = s; :}
 	| var_inst:s
@@ -209,12 +306,17 @@ stmt ::= if_stmt:s
 	| var_set:s
 	{: RESULT = s; :};
 
-if_stmt ::= IF:t OPEN_PAREN expr:e1 CLOSE_PAREN stmt:stmt
+stmt_or_block ::= stmt:stmt
+	{: RESULT = stmt; :}
+	| block:stmt
+	{: RESULT = stmt; :};
+
+if_stmt ::= IF:t OPEN_PAREN expr:e1 CLOSE_PAREN stmt_or_block:stmt
     {: RESULT = new IfNode(e1, stmt, null, span(t.position(), stmt.position())); :}
-	| IF:t OPEN_PAREN expr:e CLOSE_PAREN stmt:s1 ELSE stmt:s2
+	| IF:t OPEN_PAREN expr:e CLOSE_PAREN stmt_or_block:s1 ELSE stmt_or_block:s2
 	{: RESULT = new IfNode(e, s1, s2, span(t.position(), s2.position())); :}
 	;
-while_stmt ::= WHILE:t OPEN_PAREN expr:e CLOSE_PAREN stmt:s
+while_stmt ::= WHILE:t OPEN_PAREN expr:e CLOSE_PAREN stmt_or_block:s
 	{: RESULT = new WhileNode(e, s, span(t.position(), s.position())); :};
 return_stmt ::= RETURN:t return_list:s 
 	{:	ReturnNode r = (ReturnNode)s; 
@@ -277,8 +379,13 @@ bracket_list ::=
 		RESULT = arr; :}; 
 
 var_item ::= var_decl:s {: RESULT = s; :} | UNDERSCORE:t {: RESULT = new UnderscoreNode(t.position()); :};
-var_list ::= var_item:s 
+var_list ::= var_decl:s 
 	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(s);
+		RESULT = list; :}
+	| UNDERSCORE:t COMMA var_item:s
+	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(new UnderscoreNode(t.position()));
 		list.add(s);
 		RESULT = list; :}
 	| var_list:list COMMA var_item:s
@@ -291,8 +398,17 @@ var_inst ::= var_list:list GETS expr:e
 		InstNode inst = new InstNode(list, e, span(n.position(), e.position()));
 		RESULT = inst;:};
 
+id_brackets ::= id:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
+	{: RESULT = new ListIndexNode(id, i, span(id.position(), t.position())); :}
+	| id_brackets:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
+	{: ListIndexNode base = (ListIndexNode)id;
+	   RESULT = new ListIndexNode(base, i, span(base.position(), t.position())); :};
+
 var_set ::= id:id GETS expr:expr
-	{: RESULT = new AssignmentNode((IdNode)id, expr, span(id.position(), expr.position())); :};
+	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :}
+	| id_brackets:id GETS expr:expr
+	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :};
+	
 
 use_stmt ::= USE:t id:id
 	{: RESULT = new UseNode(id, span(t.position(), id.position()));:};

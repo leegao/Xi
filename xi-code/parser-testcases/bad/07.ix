@@ -1,0 +1,6 @@
+//test for illegal grammar: missing ")"
+
+main():int 
+{
+	x:int = func( (1, 2), (3, 4); //missing )
+}

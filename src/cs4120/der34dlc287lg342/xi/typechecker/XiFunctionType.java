@@ -20,16 +20,38 @@ public class XiFunctionType implements XiType {
 		this(new ArrayList<XiPrimitiveType>(), new ArrayList<XiPrimitiveType>());
 	}
 	
+	public XiReturnType returns(){
+		return new XiReturnType((ArrayList<XiPrimitiveType>) ret.clone());
+	}
+	
 	@Override
 	public String toString(){
 		String t = "";
-		for (XiPrimitiveType arg : args){
-			t += arg + ",";
+		if (args.isEmpty()){
+			t = "void";
+		} else {
+			for (XiPrimitiveType arg : args){
+				t += arg + ",";
+			}
+			t = t.substring(0, t.length()-1);
 		}
-		t += " -> ";
-		for (XiPrimitiveType r : ret){
-			t += r + ",";
+		
+		t += "->";
+		if (ret.isEmpty()){
+			t = "void";
+		} else {
+			for (XiPrimitiveType r : ret){
+				t += r + ",";
+			}
+			t = t.substring(0, t.length()-1);
 		}
 		return t;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object clone(){
+		ArrayList<XiPrimitiveType> a= (ArrayList<XiPrimitiveType>) args.clone(), r = (ArrayList<XiPrimitiveType>) ret.clone();
+		return new XiFunctionType(a,r);
 	}
 }

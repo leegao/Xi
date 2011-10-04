@@ -1,0 +1,9 @@
+//test for illegal grammar: unexpected "!"
+
+main():int 
+{
+
+	x:int = 0!
+
+	return 0
+}

@@ -1,0 +1,2 @@
+/// bad use stmt
+use 42;

@@ -1,0 +1,15 @@
+//test for illegal grammar: unexpected "else" after one matched "if-else"
+
+main():int 
+{
+	x:int = 4
+	y:int = 5
+	if( x > y )
+		x = 8
+	else
+		y = 9
+	else //no if for this else
+		x = y
+
+	return 0
+}

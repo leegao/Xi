@@ -1,0 +1,6 @@
+//test for illegal grammar: undefined gets expression
+
+main():int 
+{
+	int : x, bool : y = f()
+}

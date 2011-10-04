@@ -49,7 +49,7 @@ public class XiPrimitiveType implements XiType {
 	
 	@Override
 	public Object clone(){
-		XiPrimitiveType t = new XiPrimitiveType(type, (ArrayList<VisualizableTreeNode>) dimension.clone());
+		XiPrimitiveType t = new XiPrimitiveType(type, (ArrayList<VisualizableTreeNode>)dimension.clone());
 		return t;
 	}
 	
@@ -82,9 +82,7 @@ public class XiPrimitiveType implements XiType {
 	
 	/** Represents A primitive int array type*/
 	public static XiType INT_ARR = array((XiPrimitiveType)INT);
-	/**?? bug Represents A primitive bool array type*/
-	public static XiType BOOL_ARR = array((XiPrimitiveType)INT);
-	/**Represents An array of unknown primitive type*/
+	public static XiType BOOL_ARR = array((XiPrimitiveType)BOOL);
 	public static XiType WILDCARD_ARR = array(new XiPrimitiveType("*"));
 	
 	/** Checks if this XiPrimitiveType is an array
@@ -101,6 +99,11 @@ public class XiPrimitiveType implements XiType {
 	 * otherwise.*/
 	public boolean sameBaseType(XiPrimitiveType t2){
 		return type.equals(t2.type) || type.equals("*") || t2.type.equals("*");
+	}
+	
+	public XiType dominantType(XiPrimitiveType t){
+		if (type.equals("*")) return t;
+		return this;
 	}
 	
 	/**Checks if two XiPrimitiveTypes are equal.In addition to checking that 

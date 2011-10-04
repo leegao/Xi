@@ -1,0 +1,6 @@
+//test for illegal grammar: undefined gets expression 3
+
+main():int 
+{
+	x:int = ;
+}

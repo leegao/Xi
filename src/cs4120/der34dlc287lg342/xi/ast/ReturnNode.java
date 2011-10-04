@@ -50,14 +50,16 @@ public class ReturnNode extends AbstractSyntaxTree {
 			if (function.ret.size() == children.size())
 			{
 				for (int index = 0; index < function.ret.size(); index++) {
-					if (!((AbstractSyntaxTree)children.get(index)).typecheck(stack).equals(function.ret.get(index)))
-						throw new CompilationException("Invalid return type at index " + index, position);
+					XiType t = ((AbstractSyntaxTree)children.get(index)).typecheck(stack);
+					if (!t.equals(function.ret.get(index)))
+						throw new CompilationException("Invalid return type("+(index+1)+"): expected ["+function.ret.get(index)+"] but got ["+t+"] instead", 
+								((AbstractSyntaxTree)children.get(index)).position());
 				}
 				
 				type = XiPrimitiveType.VOID;
 				return type;
 			} else {
-				throw new CompilationException("Invalid number of return types", position);
+				throw new CompilationException("Invalid number of return types: expected ["+function.ret.size()+"] but got ["+children.size()+"] instead", position);
 			}
 		}
 		throw new CompilationException("Invalid return type", position);

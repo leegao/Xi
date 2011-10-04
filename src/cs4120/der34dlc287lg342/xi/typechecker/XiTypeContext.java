@@ -24,7 +24,7 @@ public class XiTypeContext {
 	
 	public void add(String id, XiType t) throws InvalidXiTypeException{
 		if (symbols.containsKey(id)) 
-			throw new InvalidXiTypeException("variable "+id+" already exists");
+			throw new InvalidXiTypeException("Variable "+id+" already exists");
 		symbols.put(id, t);
 	}
 	
@@ -37,5 +37,14 @@ public class XiTypeContext {
 	public XiType find(String id){
 		//if (!symbols.containsKey(id)) return null;
 		return symbols.get(id);
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public Object clone(){
+		XiFunctionType func = (XiFunctionType) returnType.clone();
+		XiTypeContext c = new XiTypeContext(func, isBreakable);
+		c.symbols = (HashMap<String, XiType>) symbols.clone();
+		return c;
 	}
 }

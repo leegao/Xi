@@ -3,7 +3,6 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
-import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
@@ -17,12 +16,12 @@ public class AssignmentNode extends AbstractSyntaxTree {
 	protected Position position;
 	protected AbstractSyntaxNode id, expr;
 	protected ArrayList<VisualizableTreeNode> children;
-	public AssignmentNode(IdNode id, AbstractSyntaxNode expr, Position position){
-		this.id = id;
+	public AssignmentNode(ExpressionNode index, AbstractSyntaxNode expr, Position position){
+		this.id = index;
 		this.expr = expr;
 		this.position = position;
 		children = new ArrayList<VisualizableTreeNode>();
-		children.add(id);
+		children.add(index);
 		children.add(expr);
 	}
 	
@@ -48,7 +47,8 @@ public class AssignmentNode extends AbstractSyntaxTree {
 		XiType exprType = ((AbstractSyntaxTree)expr).typecheck(stack);
 		
 		if( idType.equals(exprType)) {
-			return XiPrimitiveType.UNIT;
+			type = XiPrimitiveType.UNIT;
+			return type;
 		} else {
 			throw new CompilationException("Invalid assignment type",position);
 		

@@ -52,14 +52,13 @@ public class DeclNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		try {
-			stack.add_id(id.id, new XiPrimitiveType(type_name, brackets));
+			XiType t = new XiPrimitiveType(type_name, brackets);
+			stack.add_id(id.id, t);
+			if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
+				throw new CompilationException("Cannot match the type of the object to the declared type", position());
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());
 		}
-		
-		int[] a = new int[3];
-		int[] b = new int[5];
-		a = b;
 		
 		type = XiPrimitiveType.UNIT;
 		return type;
