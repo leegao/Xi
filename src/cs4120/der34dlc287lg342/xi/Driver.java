@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 
+import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 
@@ -21,6 +22,8 @@ public class Driver {
 			return;
 		}
 		try {
+			AbstractSyntaxTree.PA3 = true;
+			
 			FileReader reader = new FileReader(args[0]);
 			String src = "";
 			BufferedReader input =  new BufferedReader(reader);
@@ -34,7 +37,7 @@ public class Driver {
 			
 			tc.typecheck();
 			
-			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
+			TypeAnnotatedTreePrinter printer = new TypeAnnotatedTreePrinter(System.out);
 			printer.print(program);
 			
 			reader.close();
