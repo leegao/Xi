@@ -37,6 +37,8 @@ public class Driver {
 			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
 			printer.print(program);
 			
+			boolean a = 1 < 2 && true;
+			
 			reader.close();
 		} catch (CompilationException e){
 			System.out.println(e);

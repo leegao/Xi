@@ -330,17 +330,17 @@ public class XiLexer implements Lexer {
 	}
 	
 	private Token token(TokenType type, String value){
-		int col = yycolumn-yycolumn_cache, line = yyline;
-		int cols = col;
-		yycolumn_cache = 0;
-		int newlines = value.split("\n").length-1;
-		String lastline = value.split("\n")[newlines];
-		if (newlines > 0)
-			col = lastline.length();
-		else
-			col += lastline.length();
+		int cols = yycolumn-yycolumn_cache, line = yyline;
+		//int cols = col;
+//		yycolumn_cache = 0;
+//		int newlines = value.split("\n").length-1;
+//		String lastline = value.split("\n")[newlines];
+//		if (newlines > 0)
+//			col = lastline.length();
+//		else
+//			col += lastline.length();
 		
-		return new XiToken(value, type, unit, cols+1, cols+yylength(), yyline+1, line+newlines+1);
+		return new XiToken(value, type, unit, cols+1, cols+yylength(), yyline+1, yyline+1);
 	}
 	
 	private Token token(TokenType type){
