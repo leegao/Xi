@@ -14,6 +14,7 @@ import edu.cornell.cs.cs4120.xi.Position;
 public class BlockNode extends AbstractSyntaxTree {
 
 	public Position position;
+	/**All the chidren nodes of this block, mainly statement nodes. */
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 	
 	public BlockNode(Position position){
@@ -39,6 +40,8 @@ public class BlockNode extends AbstractSyntaxTree {
 		return "BLOCK";
 	}
 	
+	/** This function type checks a block by confirming that each
+	 * statement in the block returns a type unit or void.*/
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		// do not push new context

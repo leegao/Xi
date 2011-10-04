@@ -40,6 +40,11 @@ public class ProgramNode extends AbstractSyntaxTree {
 		return "PROGRAM";
 	}
 	
+	/** Type checks this program node. A program node type checks if
+	 * all its function declaration children type check as XiFunctionTypes.
+	 * 
+	 * @param stack The current context stack. 
+	 */
 	@Override
  	public XiType typecheck(ContextList stack) throws CompilationException {
 		for( VisualizableTreeNode childTree : children) {

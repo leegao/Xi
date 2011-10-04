@@ -10,12 +10,16 @@ import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
-
+/**Represents a variable declaration in the AST*/
 public class DeclNode extends AbstractSyntaxTree {
 
 	public Position position;
+	/**The id of this variable declaration.*/
 	public IdNode id;
+	/**The base type of this variable declaration*/
 	public String type_name;
+	/**If this represents an array declaration than this field contains any dimension
+	 * specifiers.*/
 	public ArrayList<VisualizableTreeNode> brackets;
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 	
@@ -42,6 +46,9 @@ public class DeclNode extends AbstractSyntaxTree {
 		return "DECL";
 	}
 	
+	/** This node represents a declaration with no assignment so it
+	 * always type checks as unit.
+	 */
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		try {
