@@ -86,6 +86,11 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		if (!our_type.equals(type))
 			throw new CompilationException("Invalid function declaration: signature doesn't match actual type", position());
 		
+		/*
+		 * If the block type checks we return a 
+		 * XiFuncDecType for this node, otherwise a CompilationException
+		 * is thrown.
+		 */
 		XiType t = block.typecheck(stack);
 		if (t.equals(XiPrimitiveType.UNIT)){
 			// make sure that type has no return types
@@ -93,12 +98,6 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 				throw new CompilationException("Function expects return types of " + types + " but got no returns", position());
 		}
 		
-		block.typecheck(stack);
-		/*
-		 * If the block type checks we return a 
-		 * XiFuncDecType for this node, otherwise a CompilationException
-		 * is thrown.
-		 */
 		try {
 			stack.pop();
 		} catch (InvalidXiTypeException e) {

@@ -42,7 +42,7 @@ public class XiTypechecker {
 	/**This constructor sets the AST field, creates the global context,
 	 * and pushes the global context on to the stack. 
 	 * @param ast 	The root of the AST. It should be a program node.*/
-	public XiTypechecker(AbstractSyntaxNode ast) throws InvalidXiTypeException{
+	public XiTypechecker(AbstractSyntaxNode ast, String code) throws InvalidXiTypeException{
 		this.ast = ast;
 		this.code = code;
 		globalContext = new XiTypeContext(false);
