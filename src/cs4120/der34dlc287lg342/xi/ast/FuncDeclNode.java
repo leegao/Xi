@@ -12,12 +12,22 @@ import edu.cornell.cs.cs4120.xi.Position;
 public class FuncDeclNode extends AbstractSyntaxTree {
 
 	public Position position;
+	/**The id of this function declaration represented as an 
+	 * IDNode*/
 	public AbstractSyntaxNode id;
+	/**The arguments of this function declaration represented as a list 
+	 * of variable declarations*/
 	public ArrayList<VisualizableTreeNode> args;
+	/**?? All the children of this function declaration node.*/
 	protected ArrayList<VisualizableTreeNode> children;
+	/**The block associated with this function declaration represented
+	 * as a BlockNode*/
 	public BlockNode block;
+	/**The return types of this function declaration represented as a
+	 * list of  XiPrimitiveTypes. Note this is not a Node in the AST. */
 	public ArrayList<XiPrimitiveType> types;
 	
+	/**Sets all fields including the type field which is part of the super class AbstractSyntaxTree*/
 	public FuncDeclNode(IdNode id, ArrayList<VisualizableTreeNode> args, ArrayList<XiPrimitiveType> types, BlockNode block, Position position){
 		this.id = id;
 		this.args = args;
@@ -56,7 +66,11 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		// push a new context frame onto the stack
 		XiTypeContext frame = new XiTypeContext((XiFunctionType) type);
-		for (VisualizableTreeNode arg : this.args){
+		/*
+		 * before type checking this function we need to add the arguments to the
+		 * current context
+		 */
+		for (VisualizableTreeNode arg : this.args){ 
 			DeclNode decl = (DeclNode) arg;
 			IdNode id = (IdNode)decl.id;
 			try {
@@ -68,7 +82,11 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		stack.add(frame);
 		
 		block.typecheck(stack);
-		
+		/*
+		 * If the block type checks we return a 
+		 * XiFuncDecType for this node, otherwise a CompilationException
+		 * is thrown.
+		 */
 		try {
 			stack.pop();
 		} catch (InvalidXiTypeException e) {
