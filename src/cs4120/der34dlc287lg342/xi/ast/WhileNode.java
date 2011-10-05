@@ -46,14 +46,22 @@ public class WhileNode extends AbstractSyntaxTree {
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		XiType condType = ((AbstractSyntaxTree)condition).typecheck(stack);
 		
+		boolean isBlock = s instanceof BlockNode;
+		
 		XiTypeContext context = new XiTypeContext(true);
-		stack.push(context);
+		if (isBlock)
+			((BlockNode)s).new_context = context;
+		else
+			stack.push(context);
+		
 		XiType stmntType = ((AbstractSyntaxTree)s).typecheck(stack);
-		try {
-			stack.pop();
-		} catch (InvalidXiTypeException e) {
-			throw new CompilationException(e.getMessage(), position());
-		}
+		
+		if (!isBlock) // we need to pop off context manually
+			try {
+				stack.pop();
+			} catch (InvalidXiTypeException e) {
+				throw new CompilationException(e.getMessage(), position());
+			}
 		
 		if(condType.equals(XiPrimitiveType.BOOL) && (stmntType.equals(XiPrimitiveType.UNIT)) || stmntType.equals(XiPrimitiveType.VOID)) {
 			type = stmntType;

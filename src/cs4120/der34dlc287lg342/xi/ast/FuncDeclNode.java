@@ -79,7 +79,6 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 				throw new CompilationException(e.getMessage(), position());
 			}
 		}
-		stack.add(frame);
 		
 		// ensure that we're already on the stack
 		XiType our_type = ((AbstractSyntaxTree)id).typecheck(stack);
@@ -91,18 +90,14 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		 * XiFuncDecType for this node, otherwise a CompilationException
 		 * is thrown.
 		 */
+		block.new_context = frame;
 		XiType t = block.typecheck(stack);
 		if (t.equals(XiPrimitiveType.UNIT)){
 			// make sure that type has no return types
 			if (types.size() > 0)
 				throw new CompilationException("Function expects return types of " + types + " but got no returns", position());
 		}
-		
-		try {
-			stack.pop();
-		} catch (InvalidXiTypeException e) {
-			throw new CompilationException(e.getMessage(), position());
-		}
+
 		return type;
 	}
 }

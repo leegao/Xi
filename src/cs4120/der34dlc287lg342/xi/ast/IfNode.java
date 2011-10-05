@@ -48,25 +48,10 @@ public class IfNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		XiType condType = ((AbstractSyntaxTree)condition).typecheck(stack);
-		XiTypeContext context = new XiTypeContext(false);
-		stack.push(context);
 		XiType s1Type = ((AbstractSyntaxTree)s1).typecheck(stack);
-		try {
-			stack.pop();
-		} catch (InvalidXiTypeException e) {
-			throw new CompilationException(e.getMessage(), position());
-		}
 		XiType s2Type = null;
-		if(s2 != null) {
-			context = new XiTypeContext(false);
-			stack.push(context);
+		if(s2 != null) 
 			s2Type = ((AbstractSyntaxTree)s2).typecheck(stack);
-			try {
-				stack.pop();
-			} catch (InvalidXiTypeException e) {
-				throw new CompilationException(e.getMessage(), position());
-			}
-		}
 		
 		if(condType.equals(XiPrimitiveType.BOOL)){
 			if( (s1Type.equals(XiPrimitiveType.UNIT) || s1Type.equals(XiPrimitiveType.VOID))){

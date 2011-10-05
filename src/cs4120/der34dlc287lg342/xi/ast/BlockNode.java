@@ -3,8 +3,10 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -16,6 +18,8 @@ public class BlockNode extends AbstractSyntaxTree {
 	public Position position;
 	/**All the chidren nodes of this block, mainly statement nodes. */
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
+	
+	public XiTypeContext new_context = null;
 	
 	public BlockNode(Position position){
 		this.position = position;
@@ -44,8 +48,12 @@ public class BlockNode extends AbstractSyntaxTree {
 	 * statement in the block returns a type unit or void.*/
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
-		// do not push new context
-		// we can change this to a deferred context push system if naked {} are allowed
+		// do push a new context
+		// we use deferred context push system since naked {} are allowed
+		
+		if (new_context == null)
+			new_context = new XiTypeContext(false);
+		stack.push(new_context);
 		
 		XiType t = XiPrimitiveType.UNIT;
 		
@@ -71,6 +79,12 @@ public class BlockNode extends AbstractSyntaxTree {
 			for (int i = stack.size()-1; i >= 0; i--)
 				System.out.println("  "+i+": "+stack.get(i).symbols);
 			System.out.println();
+		}
+		
+		try {
+			stack.pop(); // we want to use this later for the local variable stack allocation
+		} catch (InvalidXiTypeException e) {
+			throw new CompilationException(e.getMessage(), position());
 		}
 		
 		return type;
