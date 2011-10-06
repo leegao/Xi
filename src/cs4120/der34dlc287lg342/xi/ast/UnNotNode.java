@@ -61,10 +61,10 @@ public class UnNotNode extends ExpressionNode {
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e1).foldConstants();
 		e1 = resolve_const(0,rhs,e1);
 		
-		// if e1 is int literal node
-		if (e1 instanceof IntegerLiteralNode){
-			int value = -((IntegerLiteralNode)e1).value;
-			IntegerLiteralNode b = new IntegerLiteralNode(value, position());
+		// if e1 is bool literal node
+		if (e1 instanceof BoolLiteralNode){
+			boolean value = !((BoolLiteralNode)e1).value;
+			BoolLiteralNode b = new BoolLiteralNode(value, position());
 			b.type = type;
 			return b;
 		}
