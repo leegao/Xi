@@ -70,6 +70,10 @@ public class ListNode extends ExpressionNode {
 		return equals;
 	}
 	
+	public int length(){
+		return children.size();
+	}
+	
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		// case 1: * array of 0 elements

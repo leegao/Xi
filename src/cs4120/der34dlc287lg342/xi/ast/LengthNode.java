@@ -53,4 +53,33 @@ public class LengthNode extends ExpressionNode {
 		else
 			throw new CompilationException("Cannot apply length to non-array types", position());
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		// rhs can be a constant
+		AbstractSyntaxTree list = ((AbstractSyntaxTree)args).foldConstants();
+		args = resolve_const(list);
+		
+		// check for list's dimension
+		if (args instanceof ListNode){
+			IntegerLiteralNode i = new IntegerLiteralNode(((ListNode)args).length(), position);
+			i.type = type;
+			return i;
+		} else if (args instanceof AbstractSyntaxTree && ((AbstractSyntaxTree)args).type != null){
+			AbstractSyntaxTree tree = (AbstractSyntaxTree)args;
+			ArrayList<VisualizableTreeNode> arr = ((XiPrimitiveType)tree.type).dimension;
+			if (arr.isEmpty()){
+				return null;
+			} else {
+				VisualizableTreeNode end = arr.get(arr.size()-1);
+				if (end instanceof IntegerLiteralNode){
+					AbstractSyntaxTree i = (AbstractSyntaxTree) end;
+					if (i.type == null) i.type = type;
+					return i;
+				}
+			}
+		}
+		
+		return null;
+	}
 }

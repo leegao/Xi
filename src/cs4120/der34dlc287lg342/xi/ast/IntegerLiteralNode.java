@@ -40,4 +40,9 @@ public class IntegerLiteralNode extends ExpressionNode {
 		type = XiPrimitiveType.INT;
 		return type;
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		return null;
+	}
 }
