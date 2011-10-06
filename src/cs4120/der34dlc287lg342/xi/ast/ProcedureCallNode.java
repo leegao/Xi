@@ -51,5 +51,11 @@ public class ProcedureCallNode extends AbstractSyntaxTree {
 		
 		throw new CompilationException("Cannot call a non-procedure type ["+callType+"]", position());
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		((AbstractSyntaxTree)this.call).foldConstants();
+		return null;
+	}
 
 }

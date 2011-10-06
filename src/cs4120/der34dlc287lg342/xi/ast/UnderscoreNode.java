@@ -38,4 +38,8 @@ public class UnderscoreNode extends AbstractSyntaxTree {
 		return XiPrimitiveType.UNIT;
 	}
 
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		return null;
+	}
 }

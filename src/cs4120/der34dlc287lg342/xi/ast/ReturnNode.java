@@ -64,4 +64,14 @@ public class ReturnNode extends AbstractSyntaxTree {
 		}
 		throw new CompilationException("Invalid return type", position);
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		int i = 0;
+		for (VisualizableTreeNode c : children()){
+			AbstractSyntaxTree t = ((AbstractSyntaxTree)c).foldConstants();
+			resolve_const(i++,t);
+		}
+		return null;
+	}
 }

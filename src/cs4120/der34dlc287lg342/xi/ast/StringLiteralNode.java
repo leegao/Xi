@@ -41,4 +41,16 @@ public class StringLiteralNode extends ExpressionNode {
 		type = XiPrimitiveType.INT_ARR;
 		return type;
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		ListNode list = new ListNode(position());
+		for (int c : value.getBytes()){
+			IntegerLiteralNode n = new IntegerLiteralNode(c, position());
+			n.type = XiPrimitiveType.INT;
+			list.add(n);
+		}
+		list.type = type;
+		return list;
+	}
 }

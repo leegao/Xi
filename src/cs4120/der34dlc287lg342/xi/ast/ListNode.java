@@ -106,5 +106,13 @@ public class ListNode extends ExpressionNode {
 		}
 	}
 	
-	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		int i = 0;
+		for (VisualizableTreeNode c : children()){
+			AbstractSyntaxTree t = ((AbstractSyntaxTree)c).foldConstants();
+			resolve_const(i++,t);
+		}
+		return null;
+	}
 }
