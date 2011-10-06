@@ -61,9 +61,8 @@ public class AssignmentNode extends AbstractSyntaxTree {
 		((AbstractSyntaxTree)id).foldConstants();
 		// rhs can be a constant
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)expr).foldConstants();
-		if (rhs != null){
-			expr = rhs;
-		}
+		expr = resolve_const(1,rhs);
+		
 		return null;
 	}
 }

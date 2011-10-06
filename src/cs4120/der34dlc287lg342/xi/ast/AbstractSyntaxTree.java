@@ -1,6 +1,8 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 
+import java.util.ArrayList;
+
 import cs4120.der34dlc287lg342.xi.typechecker.*;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -66,8 +68,18 @@ public class AbstractSyntaxTree implements AbstractSyntaxNode {
 		return null;
 	}
 	
-	protected AbstractSyntaxTree resolve_const(AbstractSyntaxTree n){
-		if (n != null) return n;
+	protected AbstractSyntaxTree resolve_const(int i, AbstractSyntaxTree n){
+		if (n != null){
+			set_const(i,n);
+			return n;
+		}
 		return this;
+	}
+	
+	protected void set_const(int i, AbstractSyntaxTree n){
+		if (n != null){
+			ArrayList<VisualizableTreeNode> children = ((ArrayList<VisualizableTreeNode>)children());
+			children.set(i, n);
+		}
 	}
 }

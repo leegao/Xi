@@ -24,7 +24,7 @@ public class InstNode extends AbstractSyntaxTree {
 	public InstNode(ArrayList<VisualizableTreeNode> list, AbstractSyntaxNode e, Position position){
 		this.list = list;
 		this.e = e;
-		children = list;//(ArrayList<VisualizableTreeNode>)list.clone();
+		children = (ArrayList<VisualizableTreeNode>)list.clone();
 		children.add(e);
 		this.position = position;
 	}
@@ -107,7 +107,7 @@ public class InstNode extends AbstractSyntaxTree {
 		// lhs CANNOT be a constant
 		// rhs can be a constant
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e).foldConstants();
-		e = resolve_const(lhs);
+		e = resolve_const(list.size(),lhs);
 		
 		for (VisualizableTreeNode c : list) ((AbstractSyntaxTree)c).foldConstants();
 		

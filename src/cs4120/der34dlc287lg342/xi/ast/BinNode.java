@@ -78,8 +78,8 @@ public class BinNode extends ExpressionNode {
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
 
-		e1 = resolve_const(lhs);
-		e2 = resolve_const(rhs);
+		e1 = resolve_const(0,lhs);
+		e2 = resolve_const(1,rhs);
 		
 		// Scheme: if e1 and e2 are int literals, return int literal
 		if (e1 instanceof IntegerLiteralNode && e2 instanceof IntegerLiteralNode){

@@ -77,7 +77,7 @@ public class IfNode extends AbstractSyntaxTree {
 	@Override
 	public AbstractSyntaxTree foldConstants(){
 		AbstractSyntaxTree cond_new = ((AbstractSyntaxTree)condition).foldConstants();
-		condition = resolve_const(cond_new);
+		condition = resolve_const(0,cond_new);
 		
 		((AbstractSyntaxTree)s1).foldConstants();
 		((AbstractSyntaxTree)s2).foldConstants();

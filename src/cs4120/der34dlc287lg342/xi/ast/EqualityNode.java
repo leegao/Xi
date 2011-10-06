@@ -76,8 +76,8 @@ public class EqualityNode extends ExpressionNode {
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
 
-		e1 = resolve_const(lhs);
-		e2 = resolve_const(rhs);
+		e1 = resolve_const(0,lhs);
+		e2 = resolve_const(1,rhs);
 		
 		// Scheme: if e1 and e2 are bool literals, return bool literal
 		if (e1 instanceof BoolLiteralNode && e2 instanceof BoolLiteralNode){
