@@ -71,4 +71,14 @@ public class WhileNode extends AbstractSyntaxTree {
 		throw new CompilationException("Invalid boolean expression", position);
 		
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		AbstractSyntaxTree cond = ((AbstractSyntaxTree)condition).foldConstants();
+		condition = resolve_const(0,cond);
+		
+		((AbstractSyntaxTree)s).foldConstants();
+		
+		return null;
+	}
 }
