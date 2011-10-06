@@ -75,7 +75,7 @@ public class WhileNode extends AbstractSyntaxTree {
 	@Override
 	public AbstractSyntaxTree foldConstants(){
 		AbstractSyntaxTree cond = ((AbstractSyntaxTree)condition).foldConstants();
-		condition = resolve_const(0,cond);
+		condition = resolve_const(0,cond,condition);
 		
 		((AbstractSyntaxTree)s).foldConstants();
 		

@@ -78,13 +78,13 @@ public class BinNode extends ExpressionNode {
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
 
-		e1 = resolve_const(0,lhs);
-		e2 = resolve_const(1,rhs);
+		e1 = resolve_const(0,lhs,e1);
+		e2 = resolve_const(1,rhs,e2);
 		
 		// Scheme: if e1 and e2 are int literals, return int literal
 		if (e1 instanceof IntegerLiteralNode && e2 instanceof IntegerLiteralNode){
-			int value = ((IntegerLiteralNode)lhs).value;
-			int rvalue = ((IntegerLiteralNode)rhs).value;
+			int value = ((IntegerLiteralNode)e1).value;
+			int rvalue = ((IntegerLiteralNode)e2).value;
 			if (op.equals("PLUS")){
 				value += rvalue;
 			} else if (op.equals("MINUS")){
@@ -102,7 +102,7 @@ public class BinNode extends ExpressionNode {
 			return new_tree;
 		} else if (e1 instanceof ListNode && e2 instanceof ListNode){
 			// Scheme: if e1 and e2 are ListNodes, return ListNode
-			ListNode llist = (ListNode)lhs, rlist = (ListNode)rhs;
+			ListNode llist = (ListNode)e1, rlist = (ListNode)e2;
 			ListNode list = new ListNode(position);
 			for (VisualizableTreeNode c : llist.children())
 				list.add((AbstractSyntaxNode) c);

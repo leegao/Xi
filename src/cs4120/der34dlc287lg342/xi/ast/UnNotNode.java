@@ -59,7 +59,7 @@ public class UnNotNode extends ExpressionNode {
 	@Override
 	public AbstractSyntaxTree foldConstants(){
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e1).foldConstants();
-		e1 = resolve_const(0,rhs);
+		e1 = resolve_const(0,rhs,e1);
 		
 		// if e1 is int literal node
 		if (e1 instanceof IntegerLiteralNode){

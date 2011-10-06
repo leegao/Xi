@@ -65,15 +65,15 @@ public class ListIndexNode extends ExpressionNode {
 	public AbstractSyntaxTree foldConstants(){
 		// only if lhs is a listnode and rhs is an integer
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)expr).foldConstants();
-		expr = resolve_const(0,lhs);
+		expr = resolve_const(0,lhs,expr);
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)index).foldConstants();
-		index = resolve_const(1,rhs);
+		index = resolve_const(1,rhs,index);
 		
 		if (expr instanceof ListNode && index instanceof IntegerLiteralNode){
 			// return the i-th object from list
 			ListNode list = (ListNode)expr;
 			int i = ((IntegerLiteralNode)index).value;
-			
+			if (i >= list.children.size()) return null;
 			AbstractSyntaxTree tree = (AbstractSyntaxTree)list.children.get(i);
 			assert(tree.type == type);
 			return tree;

@@ -107,7 +107,7 @@ public class InstNode extends AbstractSyntaxTree {
 		// lhs CANNOT be a constant
 		// rhs can be a constant
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e).foldConstants();
-		e = resolve_const(list.size(),lhs);
+		e = resolve_const(list.size(),lhs,e);
 		
 		for (VisualizableTreeNode c : list) ((AbstractSyntaxTree)c).foldConstants();
 		

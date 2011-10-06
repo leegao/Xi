@@ -68,12 +68,12 @@ public class AbstractSyntaxTree implements AbstractSyntaxNode {
 		return null;
 	}
 	
-	protected AbstractSyntaxTree resolve_const(int i, AbstractSyntaxTree n){
+	protected AbstractSyntaxTree resolve_const(int i, AbstractSyntaxTree n, AbstractSyntaxNode c){
 		if (n != null){
 			set_const(i,n);
 			return n;
 		}
-		return this;
+		return (AbstractSyntaxTree) c;
 	}
 	
 	protected void set_const(int i, AbstractSyntaxTree n){

@@ -58,7 +58,7 @@ public class LengthNode extends ExpressionNode {
 	public AbstractSyntaxTree foldConstants(){
 		// rhs can be a constant
 		AbstractSyntaxTree list = ((AbstractSyntaxTree)args).foldConstants();
-		args = resolve_const(0,list);
+		args = resolve_const(0,list,args);
 		
 		// check for list's dimension
 		if (args instanceof ListNode){

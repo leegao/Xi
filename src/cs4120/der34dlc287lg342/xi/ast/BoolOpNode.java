@@ -75,13 +75,13 @@ public class BoolOpNode extends ExpressionNode {
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
 
-		e1 = resolve_const(0,lhs);
-		e2 = resolve_const(1,rhs);
+		e1 = resolve_const(0,lhs,e1);
+		e2 = resolve_const(1,rhs,e1);
 		
 		// Scheme: if e1 and e2 are int literals, return int literal
 		if (e1 instanceof BoolLiteralNode && e2 instanceof BoolLiteralNode){
-			boolean value = ((BoolLiteralNode)lhs).value;
-			boolean rvalue = ((BoolLiteralNode)rhs).value;
+			boolean value = ((BoolLiteralNode)e1).value;
+			boolean rvalue = ((BoolLiteralNode)e2).value;
 			if (op.equals("AND")){
 				value = value & rvalue;
 			} else if (op.equals("OR")){

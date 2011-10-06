@@ -76,13 +76,13 @@ public class EqualityNode extends ExpressionNode {
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
 
-		e1 = resolve_const(0,lhs);
-		e2 = resolve_const(1,rhs);
+		e1 = resolve_const(0,lhs,e1);
+		e2 = resolve_const(1,rhs,e2);
 		
 		// Scheme: if e1 and e2 are bool literals, return bool literal
 		if (e1 instanceof BoolLiteralNode && e2 instanceof BoolLiteralNode){
-			boolean value = ((BoolLiteralNode)lhs).value;
-			boolean rvalue = ((BoolLiteralNode)rhs).value;
+			boolean value = ((BoolLiteralNode)e1).value;
+			boolean rvalue = ((BoolLiteralNode)e2).value;
 			if (op.equals("EQUAL")){
 				value = value == rvalue;
 			} else if (op.equals("NOT_EQUAL")){
@@ -93,8 +93,8 @@ public class EqualityNode extends ExpressionNode {
 			new_tree.type = type;
 			return new_tree;
 		} else if (e1 instanceof ListNode && e2 instanceof ListNode){
-			ListNode lvalue = ((ListNode)lhs);
-			ListNode rvalue = ((ListNode)rhs);
+			ListNode lvalue = ((ListNode)e1);
+			ListNode rvalue = ((ListNode)e2);
 			boolean value = true;
 			
 			boolean equals = ListNode.equals_to(lvalue, rvalue);
@@ -109,8 +109,8 @@ public class EqualityNode extends ExpressionNode {
 			new_tree.type = type;
 			return new_tree;
 		} else if (e1 instanceof IntegerLiteralNode && e2 instanceof IntegerLiteralNode){
-			int lvalue = ((IntegerLiteralNode)lhs).value;
-			int rvalue = ((IntegerLiteralNode)rhs).value;
+			int lvalue = ((IntegerLiteralNode)e1).value;
+			int rvalue = ((IntegerLiteralNode)e2).value;
 			boolean value = false;
 			if (op.equals("EQUAL")){
 				value = lvalue == rvalue;

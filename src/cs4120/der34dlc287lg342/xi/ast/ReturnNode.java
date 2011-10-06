@@ -70,7 +70,7 @@ public class ReturnNode extends AbstractSyntaxTree {
 		int i = 0;
 		for (VisualizableTreeNode c : children()){
 			AbstractSyntaxTree t = ((AbstractSyntaxTree)c).foldConstants();
-			resolve_const(i++,t);
+			resolve_const(i++,t,null);
 		}
 		return null;
 	}
