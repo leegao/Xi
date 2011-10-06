@@ -55,4 +55,20 @@ public class UnNotNode extends ExpressionNode {
 		type = t;
 		return type;
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e1).foldConstants();
+		e1 = resolve_const(0,rhs);
+		
+		// if e1 is int literal node
+		if (e1 instanceof IntegerLiteralNode){
+			int value = -((IntegerLiteralNode)e1).value;
+			IntegerLiteralNode b = new IntegerLiteralNode(value, position());
+			b.type = type;
+			return b;
+		}
+		
+		return null;
+	}
 }

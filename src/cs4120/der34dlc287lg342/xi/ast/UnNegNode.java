@@ -56,4 +56,19 @@ public class UnNegNode extends ExpressionNode {
 		return type;
 	}
 
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e1).foldConstants();
+		e1 = resolve_const(0,rhs);
+		
+		// if e1 is bool literal node
+		if (e1 instanceof BoolLiteralNode){
+			boolean value = !((BoolLiteralNode)e1).value;
+			BoolLiteralNode b = new BoolLiteralNode(value, position());
+			b.type = type;
+			return b;
+		}
+		
+		return null;
+	}
 }

@@ -43,4 +43,8 @@ public class UseNode extends AbstractSyntaxTree {
 		return type;
 	}
 
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		return null;
+	}
 }
