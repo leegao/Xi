@@ -38,6 +38,38 @@ public class ListNode extends ExpressionNode {
 		return "ARRAY(" + children.size() + ")";
 	}
 	
+	// DO NOT CALL before typechecking and constant folding
+	public static boolean equals_to(ListNode lvalue, ListNode rvalue){
+		boolean equals = true;
+		if (lvalue.children.size() != rvalue.children.size())
+			equals = false;
+		else{
+			int i = 0;
+			for (VisualizableTreeNode c : lvalue.children){
+				AbstractSyntaxTree l = (AbstractSyntaxTree)c;
+				AbstractSyntaxTree r = (AbstractSyntaxTree) rvalue.children.get(i);
+				// only if they are constants
+				if (l instanceof IntegerLiteralNode && r instanceof IntegerLiteralNode){
+					if (((IntegerLiteralNode)l).value != ((IntegerLiteralNode)r).value){
+						equals = false;
+						break;
+					}
+				} else if (l instanceof BoolLiteralNode && r instanceof BoolLiteralNode){
+					if (((BoolLiteralNode)l).value != ((BoolLiteralNode)r).value){
+						equals = false;
+						break;
+					}
+				} else if (l instanceof ListNode && r instanceof ListNode){
+					if (!equals_to((ListNode)l, (ListNode)r)) {equals = false; break;}
+				}
+				
+				if (!equals) break;
+			}
+		}
+		
+		return equals;
+	}
+	
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		// case 1: * array of 0 elements
@@ -69,4 +101,6 @@ public class ListNode extends ExpressionNode {
 			return type;
 		}
 	}
+	
+	
 }

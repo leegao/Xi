@@ -50,4 +50,9 @@ public class BreakNode extends AbstractSyntaxTree {
 		type = XiPrimitiveType.UNIT;
 		return type;
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		return null;
+	}
 }

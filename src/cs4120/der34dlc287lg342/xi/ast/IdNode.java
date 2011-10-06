@@ -45,4 +45,9 @@ public class IdNode extends ExpressionNode {
 			throw new CompilationException(e.getMessage(), position());
 		}
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		return null;
+	}
 }

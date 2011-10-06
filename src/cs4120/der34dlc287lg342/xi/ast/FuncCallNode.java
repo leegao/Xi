@@ -70,4 +70,30 @@ public class FuncCallNode extends ExpressionNode {
 		type = ((XiFunctionType)t).returns().coerce();
 		return type;
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		((AbstractSyntaxTree)id).foldConstants();
+		
+		int i = 0;
+		for (VisualizableTreeNode arg : args){
+			if (arg != null){
+				AbstractSyntaxTree tree = ((AbstractSyntaxTree)arg).foldConstants();
+				if (tree != null){
+					args.set(i, tree);
+					children.set(i+1, tree); // children is id + args
+				}
+			}
+			i++;
+		}
+		
+		// see if the funcdeclnode is trivial or not
+		if (type != null && type instanceof XiPrimitiveType){
+			// funcdecl with only one child, a return const, will be inlined
+			// create a delegate class XiConstants that does a first pass over functions
+			// this is not a large optimization problem so not really necessary
+		}
+		
+		return null;
+	}
 }

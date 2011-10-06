@@ -70,5 +70,68 @@ public class EqualityNode extends ExpressionNode {
 			throw new CompilationException("Cannot perform EQ("+op+") on types", position());
 		}
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
+		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
+
+		e1 = resolve_const(lhs);
+		e2 = resolve_const(rhs);
+		
+		// Scheme: if e1 and e2 are bool literals, return bool literal
+		if (e1 instanceof BoolLiteralNode && e2 instanceof BoolLiteralNode){
+			boolean value = ((BoolLiteralNode)lhs).value;
+			boolean rvalue = ((BoolLiteralNode)rhs).value;
+			if (op.equals("EQUAL")){
+				value = value == rvalue;
+			} else if (op.equals("NOT_EQUAL")){
+				value = value != rvalue;
+			}
+
+			AbstractSyntaxTree new_tree = new BoolLiteralNode(value, position);
+			new_tree.type = type;
+			return new_tree;
+		} else if (e1 instanceof ListNode && e2 instanceof ListNode){
+			ListNode lvalue = ((ListNode)lhs);
+			ListNode rvalue = ((ListNode)rhs);
+			boolean value = true;
+			
+			boolean equals = ListNode.equals_to(lvalue, rvalue);
+			
+			if (op.equals("EQUAL")){
+				value = equals;
+			} else if (op.equals("NOT_EQUAL")){
+				value = !equals;
+			}
+
+			AbstractSyntaxTree new_tree = new BoolLiteralNode(value, position);
+			new_tree.type = type;
+			return new_tree;
+		} else if (e1 instanceof IntegerLiteralNode && e2 instanceof IntegerLiteralNode){
+			int lvalue = ((IntegerLiteralNode)lhs).value;
+			int rvalue = ((IntegerLiteralNode)rhs).value;
+			boolean value = false;
+			if (op.equals("EQUAL")){
+				value = lvalue == rvalue;
+			} else if (op.equals("NOT_EQUAL")){
+				value = lvalue != rvalue;
+			} else if (op.equals("LEQ")){
+				value = lvalue <= rvalue;
+			} else if (op.equals("GEQ")){
+				value = lvalue >= rvalue;
+			} else if (op.equals("LT")){
+				value = lvalue < rvalue;
+			} else if (op.equals("LT")){
+				value = lvalue > rvalue;
+			}
+			
+			AbstractSyntaxTree new_tree = new BoolLiteralNode(value, position);
+			new_tree.type = type;
+			return new_tree;
+		}
+		
+		return null;
+	}
 
 }

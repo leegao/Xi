@@ -54,5 +54,16 @@ public class AssignmentNode extends AbstractSyntaxTree {
 		
 		}
 	}
-
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		// lhs CANNOT be a constant
+		((AbstractSyntaxTree)id).foldConstants();
+		// rhs can be a constant
+		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)expr).foldConstants();
+		if (rhs != null){
+			expr = rhs;
+		}
+		return null;
+	}
 }

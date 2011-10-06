@@ -71,4 +71,47 @@ public class BinNode extends ExpressionNode {
 		}
 	}
 
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		// lhs CANNOT be a constant
+		// rhs can be a constant
+		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
+		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
+
+		e1 = resolve_const(lhs);
+		e2 = resolve_const(rhs);
+		
+		// Scheme: if e1 and e2 are int literals, return int literal
+		if (e1 instanceof IntegerLiteralNode && e2 instanceof IntegerLiteralNode){
+			int value = ((IntegerLiteralNode)lhs).value;
+			int rvalue = ((IntegerLiteralNode)rhs).value;
+			if (op.equals("PLUS")){
+				value += rvalue;
+			} else if (op.equals("MINUS")){
+				value -= rvalue;
+			} else if (op.equals("TIMES")){
+				value *= rvalue;
+			} else if (op.equals("DIVIDE")){
+				value /= rvalue;
+			} else if (op.equals("MODULO")){
+				value %= rvalue;
+			}
+			
+			AbstractSyntaxTree new_tree = new IntegerLiteralNode(value, position);
+			new_tree.type = type;
+			return new_tree;
+		} else if (e1 instanceof ListNode && e2 instanceof ListNode){
+			// Scheme: if e1 and e2 are ListNodes, return ListNode
+			ListNode llist = (ListNode)lhs, rlist = (ListNode)rhs;
+			ListNode list = new ListNode(position);
+			for (VisualizableTreeNode c : llist.children())
+				list.add((AbstractSyntaxNode) c);
+			for (VisualizableTreeNode c : rlist.children())
+				list.add((AbstractSyntaxNode) c);
+			list.type = type;
+			return list;
+		}
+		
+		return null;
+	}
 }

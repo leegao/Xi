@@ -40,4 +40,9 @@ public class BoolLiteralNode extends ExpressionNode {
 		type = XiPrimitiveType.BOOL;
 		return type;
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		return null;
+	}
 }

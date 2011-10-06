@@ -49,6 +49,7 @@ public class DeclNode extends AbstractSyntaxTree {
 	/** This node represents a declaration with no assignment so it
 	 * always type checks as unit.
 	 */
+	// TODO: typecheck brackets
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		try {
@@ -62,8 +63,24 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 		type = XiPrimitiveType.UNIT;
 		return type;
-		
-		
+	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		// id cannot be constant
+		((AbstractSyntaxTree)id).foldConstants();
+		// brackets can contain constant terms however
+		int i = 0;
+		for (VisualizableTreeNode brack : brackets){
+			if (brack != null){
+				AbstractSyntaxTree tree = ((AbstractSyntaxTree)brack).foldConstants();
+				if (tree != null){
+					brackets.set(i, tree);
+				}
+			}
+			i++;
+		}
+		return null;
 	}
 
 }

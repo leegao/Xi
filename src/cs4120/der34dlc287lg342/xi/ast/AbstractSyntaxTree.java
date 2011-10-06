@@ -51,4 +51,23 @@ public class AbstractSyntaxTree implements AbstractSyntaxNode {
 		return null;
 	}
 
+	// return null if not actually constant folding, return ast if expression can be folded
+	public AbstractSyntaxTree foldConstants(){
+		for (VisualizableTreeNode child : children()){
+			if (child instanceof AbstractSyntaxTree){
+				AbstractSyntaxTree node = (AbstractSyntaxTree)child;
+				AbstractSyntaxTree folded = node.foldConstants();
+				if (folded != null){
+					// do something
+					System.out.println("Constant folding " + node + " to " + folded);
+				}
+			}
+		}
+		return null;
+	}
+	
+	protected AbstractSyntaxTree resolve_const(AbstractSyntaxTree n){
+		if (n != null) return n;
+		return this;
+	}
 }

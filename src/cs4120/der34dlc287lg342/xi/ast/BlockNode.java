@@ -89,5 +89,4 @@ public class BlockNode extends AbstractSyntaxTree {
 		
 		return type;
 	}
-
 }

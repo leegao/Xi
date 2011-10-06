@@ -73,4 +73,14 @@ public class IfNode extends AbstractSyntaxTree {
 		throw new CompilationException("Condition must be of boolean type, but got ["+condType+"] instead", condition.position());
 			
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		AbstractSyntaxTree cond_new = ((AbstractSyntaxTree)condition).foldConstants();
+		condition = resolve_const(cond_new);
+		
+		((AbstractSyntaxTree)s1).foldConstants();
+		((AbstractSyntaxTree)s2).foldConstants();
+		return null;
+	}
 }

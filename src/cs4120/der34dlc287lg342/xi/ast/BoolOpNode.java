@@ -67,5 +67,33 @@ public class BoolOpNode extends ExpressionNode {
 			throw new CompilationException("Cannot perform BOOLOP("+op+") on types", position());
 		}
 	}
+	
+	@Override
+	public AbstractSyntaxTree foldConstants(){
+		// lhs CANNOT be a constant
+		// rhs can be a constant
+		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
+		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
+
+		e1 = resolve_const(lhs);
+		e2 = resolve_const(rhs);
+		
+		// Scheme: if e1 and e2 are int literals, return int literal
+		if (e1 instanceof BoolLiteralNode && e2 instanceof BoolLiteralNode){
+			boolean value = ((BoolLiteralNode)lhs).value;
+			boolean rvalue = ((BoolLiteralNode)rhs).value;
+			if (op.equals("AND")){
+				value = value & rvalue;
+			} else if (op.equals("OR")){
+				value = value | rvalue;
+			}
+
+			AbstractSyntaxTree new_tree = new BoolLiteralNode(value, position);
+			new_tree.type = type;
+			return new_tree;
+		}
+		
+		return null;
+	}
 
 }
