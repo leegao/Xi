@@ -52,6 +52,16 @@ public class DeclNode extends AbstractSyntaxTree {
 	// TODO: typecheck brackets
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
+		
+		// make sure that the expressions within the brackets are ints
+		for (VisualizableTreeNode b : brackets){
+			if (b == null) continue;
+			XiType t = ((AbstractSyntaxTree)b).typecheck(stack);
+			// make sure that t is int type
+			if (!t.equals(XiPrimitiveType.INT))
+				throw new CompilationException("Cannot declare arrays with non-integer types", position());
+		}
+		
 		try {
 			XiType t = new XiPrimitiveType(type_name, brackets);
 			stack.add_id(id.id, t);

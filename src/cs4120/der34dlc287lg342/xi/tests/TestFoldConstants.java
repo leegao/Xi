@@ -24,7 +24,7 @@ public class TestFoldConstants extends TestCase {
 	public void testConstantConstruction(){
 		XiTypechecker tc;
 		try {
-			tc = gen("use io main(){a:bool = (0,4+2,2,3)[2+(-(1*0+1))] == length((1,2,3,4,5,6))}\n");
+			tc = gen("use io main(){b:int[1+3] a:bool = (0,4+2,2,3)[2+(-(1*0+1))] == length((1,2,3,4,5,6))}\n");
 			tc.typecheck();
 			((AbstractSyntaxTree)tc.ast).foldConstants();
 			System.out.println(tc.ast);
