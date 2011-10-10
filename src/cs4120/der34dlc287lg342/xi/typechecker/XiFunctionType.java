@@ -20,6 +20,7 @@ public class XiFunctionType implements XiType {
 		this(new ArrayList<XiPrimitiveType>(), new ArrayList<XiPrimitiveType>());
 	}
 	
+	@SuppressWarnings("unchecked")
 	public XiReturnType returns(){
 		return new XiReturnType((ArrayList<XiPrimitiveType>) ret.clone());
 	}

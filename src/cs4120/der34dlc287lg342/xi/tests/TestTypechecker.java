@@ -65,7 +65,7 @@ public class TestTypechecker extends TestCase {
 			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
 			printer.print(ast);
 			
-			XiTypechecker tc = new XiTypechecker(ast, code);
+			new XiTypechecker(ast, code);
 			
 		} catch (CompilationException e) {
 			// TODO Auto-generated catch block

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
-import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiReturnType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -21,6 +20,7 @@ public class InstNode extends AbstractSyntaxTree {
 	ArrayList<VisualizableTreeNode> list;
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 	
+	@SuppressWarnings("unchecked")
 	public InstNode(ArrayList<VisualizableTreeNode> list, AbstractSyntaxNode e, Position position){
 		this.list = list;
 		this.e = e;
@@ -75,7 +75,7 @@ public class InstNode extends AbstractSyntaxTree {
 				if(list.size() == functionType.ret.size()) {
 					for(int index = 0; index < list.size(); index++) {
 						if(!(list.get(index) instanceof UnderscoreNode)){
-							XiType declType = ((AbstractSyntaxTree)list.get(index)).typecheck(stack);
+							((AbstractSyntaxTree)list.get(index)).typecheck(stack);
 							DeclNode decl = ((DeclNode)list.get(index));
 							XiType t;
 							try {

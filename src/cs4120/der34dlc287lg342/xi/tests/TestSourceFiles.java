@@ -7,9 +7,6 @@ import java.io.FileReader;
 
 
 import cs4120.der34dlc287lg342.xi.XiParser;
-import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
-import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
-import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.parser.Parser;
 import junit.framework.TestCase;

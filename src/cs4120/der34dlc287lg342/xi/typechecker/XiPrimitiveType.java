@@ -47,6 +47,7 @@ public class XiPrimitiveType implements XiType {
 		return t;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public Object clone(){
 		XiPrimitiveType t = new XiPrimitiveType(type, (ArrayList<VisualizableTreeNode>)dimension.clone());
