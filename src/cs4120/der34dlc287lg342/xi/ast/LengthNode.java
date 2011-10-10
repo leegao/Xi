@@ -64,7 +64,7 @@ public class LengthNode extends ExpressionNode {
 		if (args instanceof ListNode){
 			IntegerLiteralNode i = new IntegerLiteralNode(((ListNode)args).length(), position);
 			i.type = type;
-			return i;
+			return null; // take care of side effects, do this at MIR stage
 		} else if (args instanceof AbstractSyntaxTree && ((AbstractSyntaxTree)args).type != null){
 			AbstractSyntaxTree tree = (AbstractSyntaxTree)args;
 			ArrayList<VisualizableTreeNode> arr = ((XiPrimitiveType)tree.type).dimension;

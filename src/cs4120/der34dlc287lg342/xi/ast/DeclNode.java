@@ -59,7 +59,7 @@ public class DeclNode extends AbstractSyntaxTree {
 			XiType t = ((AbstractSyntaxTree)b).typecheck(stack);
 			// make sure that t is int type
 			if (!t.equals(XiPrimitiveType.INT))
-				throw new CompilationException("Cannot declare arrays with non-integer types", position());
+				throw new CompilationException("Cannot declare arrays with non-integer dimension", position());
 		}
 		
 		try {
