@@ -7,9 +7,11 @@ import cs4120.der34dlc287lg342.xi.ir.context.Register;
 public abstract class IRTranslationCondition extends IRTranslation {
 
 	@Override
+	public
 	abstract Stmt cond(Label t, Label f);
 
 	@Override
+	public
 	Expr expr() {
 		Register r = new Register(); // fresh
 		Label t = new Label(), f = new Label();
@@ -24,6 +26,7 @@ public abstract class IRTranslationCondition extends IRTranslation {
 	}
 
 	@Override
+	public
 	Stmt stmt() {
 		return null;
 	}

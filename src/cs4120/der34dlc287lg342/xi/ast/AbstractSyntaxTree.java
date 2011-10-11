@@ -3,6 +3,9 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Stmt;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.typechecker.*;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -81,5 +84,9 @@ public class AbstractSyntaxTree implements AbstractSyntaxNode {
 			ArrayList<VisualizableTreeNode> children = ((ArrayList<VisualizableTreeNode>)children());
 			children.set(i, n);
 		}
+	}
+	
+	public IRTranslation to_ir(IRContextStack stack){
+		return null;
 	}
 }

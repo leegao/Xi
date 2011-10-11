@@ -2,6 +2,10 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.*;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -64,5 +68,15 @@ public class AssignmentNode extends AbstractSyntaxTree {
 		expr = resolve_const(1,rhs,expr);
 		
 		return null;
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack){
+		/*
+		 * MOVE(e[lhs], e[expr])
+		 * */
+		IRTranslation e1 = ((AbstractSyntaxTree)id).to_ir(stack), e2 = ((AbstractSyntaxTree)expr).to_ir(stack);
+		Expr lhs = e1.expr(), rhs = e2.expr();
+		return new IRTranslationStmt(new Move(lhs, rhs));
 	}
 }

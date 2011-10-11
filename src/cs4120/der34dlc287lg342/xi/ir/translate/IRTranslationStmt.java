@@ -12,16 +12,19 @@ public class IRTranslationStmt extends IRTranslation {
 	}
 
 	@Override
+	public
 	Stmt cond(Label t, Label f) {
 		return null;
 	}
 
 	@Override
+	public
 	Expr expr() {
 		return null;
 	}
 
 	@Override
+	public
 	Stmt stmt() {
 		return stmt;
 	}

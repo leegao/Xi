@@ -5,7 +5,7 @@ import cs4120.der34dlc287lg342.xi.ir.Stmt;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 
 public abstract class IRTranslation {
-	abstract Expr expr();
-	abstract Stmt stmt();
-	abstract Stmt cond(Label t, Label f);
+	public abstract Expr expr();
+	public abstract Stmt stmt();
+	public abstract Stmt cond(Label t, Label f);
 }

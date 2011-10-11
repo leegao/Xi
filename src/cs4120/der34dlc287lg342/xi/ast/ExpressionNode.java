@@ -1,6 +1,10 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
 
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Stmt;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -32,4 +36,7 @@ public abstract class ExpressionNode extends AbstractSyntaxTree {
 		return type;
 	}
 
+	public IRTranslation to_ir(IRContextStack stack){
+		return null;
+	}
 }
