@@ -2,6 +2,17 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
@@ -93,4 +104,54 @@ public class DeclNode extends AbstractSyntaxTree {
 		return null;
 	}
 
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * 2 Cases:
+		 * 
+		 * Primitive only:
+		 * 	stack.register(id)
+		 * 
+		 * Array:
+		 *  stack.register(id) // reference to the 
+		 *  move(id, register(heap))
+		 *  
+		 *  if dimensions are present:
+		 *  for each bracket:
+		 *    register(heap, n+1) 
+		 */
+		String id = ((IdNode)this.id).id;
+		Register r = stack.register(id);
+		
+		// check that brackets is dimensionless
+		if (brackets.isEmpty())
+			return new IRTranslationStmt(new Seq());
+		
+		Seq seq = new Seq();
+		// go backwards from bracket
+		Expr last_r = new Temp(r);
+		for (int i = brackets.size()-1; i >= 0; i++){
+			AbstractSyntaxTree node = (AbstractSyntaxTree)brackets.get(i);
+			Register base = new Register(true); // this will be replaced later
+			Temp base_addr = new Temp(base);
+			
+			if (node == null){
+				seq.add(new Move(base_addr, new Const(-1)));
+				seq.add(new Move(last_r, new Binop(Binop.PLUS, base_addr, new Const(8))));
+				
+				break;
+			} else {
+				IRTranslation tr = node.to_ir(stack);
+				Expr n = tr.expr();
+				
+				seq.add(new Move(base_addr, n));
+				last_r = new Binop(Binop.PLUS, base_addr, new Const(8));
+				seq.add(new Move(last_r, last_r));
+				
+				// reserve those addresses
+			}
+		}
+		
+		return new IRTranslationStmt(seq);
+	}
 }

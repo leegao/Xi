@@ -45,13 +45,15 @@ public class LengthNode extends ExpressionNode {
 		if (!(t_ instanceof XiPrimitiveType))
 			throw new CompilationException("Cannot apply length to nonprimitive type ["+t_+"]", args.position());
 		
-		XiPrimitiveType t = (XiPrimitiveType)t_;
-		if (t.isArrayType()){
-			type = XiPrimitiveType.INT;
-			return type;
-		}
-		else
-			throw new CompilationException("Cannot apply length to non-array types", position());
+		return null;
+		
+//		XiPrimitiveType t = (XiPrimitiveType)t_;
+//		if (t.isArrayType()){
+//			type = XiPrimitiveType.INT;
+//			return type;
+//		}
+//		else
+//			throw new CompilationException("Cannot apply length to non-array types", position());
 	}
 	
 	@Override

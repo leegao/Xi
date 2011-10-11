@@ -3,9 +3,15 @@ package cs4120.der34dlc287lg342.xi.ir.context;
 public class Register {
 	static public int global = 0;
 	public int value;
+	public boolean heap;
+	
+	public Register(boolean heap){
+		value = global++;
+		this.heap = heap;
+	}
 	
 	public Register(){
-		value = global++;
+		this(false);
 	}
 	
 	public int value(){
