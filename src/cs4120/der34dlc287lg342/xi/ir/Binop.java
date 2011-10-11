@@ -15,6 +15,14 @@ public class Binop extends Expr {
 	public static int RSH = 9;
 	public static int ARSH = 10; // rshift preserving signedness (SAR in mnemonics)
 	
+	// relational operators
+	public static int EQ = 11;
+	public static int NE = 12;
+	public static int LT = 13;
+	public static int GT = 14;
+	public static int LE = 15;
+	public static int GE = 16;
+	
 	public static int translate(String s){
 		if (s.equals("PLUS"))
 			return PLUS;
@@ -26,7 +34,22 @@ public class Binop extends Expr {
 			return DIV;
 		else if (s.equals("MODULO"))
 			return MOD;
-		
+		else if (s.equals("AND"))
+			return AND;
+		else if (s.equals("OR"))
+			return OR;
+		else if (s.equals("EQUAL"))
+			return EQ;
+		else if (s.equals("NOT_EQUAL"))
+			return NE;
+		else if (s.equals("LT"))
+			return LT;
+		else if (s.equals("GT"))
+			return GT;
+		else if (s.equals("LEQ"))
+			return LE;
+		else if (s.equals("GEQ"))
+			return GE;
 		return -1;
 	}
 	
