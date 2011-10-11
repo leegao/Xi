@@ -2,6 +2,15 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -13,12 +22,12 @@ import edu.cornell.cs.cs4120.xi.Position;
 public class IfNode extends AbstractSyntaxTree {
 
 	protected Position position;
-	protected AbstractSyntaxNode condition, s1, s2;
+	protected AbstractSyntaxTree condition, s1, s2;
 	protected ArrayList<VisualizableTreeNode> children;
 	public IfNode(AbstractSyntaxNode condition, AbstractSyntaxNode s1, AbstractSyntaxNode s2, Position position){
-		this.condition = condition;
-		this.s1 = s1;
-		this.s2 = s2;
+		this.condition = (AbstractSyntaxTree)condition;
+		this.s1 = (AbstractSyntaxTree)s1;
+		this.s2 = (AbstractSyntaxTree)s2;
 		this.position = position;
 		children = new ArrayList<VisualizableTreeNode>();
 		children.add(condition);
@@ -79,5 +88,41 @@ public class IfNode extends AbstractSyntaxTree {
 		((AbstractSyntaxTree)s1).foldConstants();
 		((AbstractSyntaxTree)s2).foldConstants();
 		return null;
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * Seq(IRTranslation(cond).cond(a, b), Label(a), S[s1], Label(b), S[s2])
+		 */
+		
+		IRTranslation tr_cond = this.condition.to_ir(stack);
+		Label t = new Label(), f = new Label();
+		Seq seq = new Seq(tr_cond.cond(t, f), new LabelNode(t));
+		
+		// check s1 is a block
+		if (!(s1 instanceof BlockNode)){
+			// push a new context in
+			stack.push(new IRContext());
+		} 
+		IRTranslation tr1 = s1.to_ir(stack);
+		if (!(s1 instanceof BlockNode)){
+			stack.pop();
+		} 
+		seq.add(tr1.stmt());
+		seq.add(new LabelNode(f));
+		
+		// check s1 is a block
+		if (!(s2 instanceof BlockNode)){
+			// push a new context in
+			stack.push(new IRContext());
+		} 
+		IRTranslation tr2 = s1.to_ir(stack);
+		if (!(s2 instanceof BlockNode)){
+			stack.pop();
+		} 
+		seq.add(tr2.stmt());
+		
+		return new IRTranslationStmt(seq);
 	}
 }

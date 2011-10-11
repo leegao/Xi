@@ -3,7 +3,6 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
-import cs4120.der34dlc287lg342.xi.ir.Stmt;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
