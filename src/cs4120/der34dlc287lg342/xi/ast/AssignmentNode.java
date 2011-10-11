@@ -74,7 +74,7 @@ public class AssignmentNode extends AbstractSyntaxTree {
 	public IRTranslation to_ir(IRContextStack stack){
 		/*
 		 * MOVE(e[lhs], e[expr])
-		 * */
+		 */
 		IRTranslation e1 = ((AbstractSyntaxTree)id).to_ir(stack), e2 = ((AbstractSyntaxTree)expr).to_ir(stack);
 		Expr lhs = e1.expr(), rhs = e2.expr();
 		return new IRTranslationStmt(new Move(lhs, rhs));
