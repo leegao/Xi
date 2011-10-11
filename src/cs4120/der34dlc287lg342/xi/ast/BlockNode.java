@@ -2,6 +2,12 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
@@ -88,5 +94,27 @@ public class BlockNode extends AbstractSyntaxTree {
 		}
 		
 		return type;
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * SEQ(S(s1), S(s2), S(s3), ...)
+		 */
+		
+		// push a new context onto the stack
+		IRContext c = new IRContext();
+		stack.push(c);
+		
+		Seq seq = new Seq();
+		for (VisualizableTreeNode child : children()){
+			IRTranslation tr = ((AbstractSyntaxTree)child).to_ir(stack);
+			seq.add(tr.stmt());
+		}
+		
+		// pop the top context
+		stack.pop();
+		
+		return new IRTranslationStmt(seq);
 	}
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.*;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -71,7 +72,7 @@ public class AssignmentNode extends AbstractSyntaxTree {
 	}
 	
 	@Override
-	public IRTranslation to_ir(IRContextStack stack){
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
 		/*
 		 * MOVE(e[lhs], e[expr])
 		 */

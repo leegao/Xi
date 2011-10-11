@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -121,7 +122,7 @@ public class BinNode extends ExpressionNode {
 	}
 	
 	@Override
-	public IRTranslation to_ir(IRContextStack stack){
+	public IRTranslation to_ir(IRContextStack stack)  throws InvalidIRContextException{
 		/*
 		 * Binop(op, e[lhs], e[rhs])
 		 */
