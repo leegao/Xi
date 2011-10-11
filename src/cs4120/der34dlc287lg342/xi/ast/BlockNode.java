@@ -26,6 +26,7 @@ public class BlockNode extends AbstractSyntaxTree {
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 	
 	public XiTypeContext new_context = null;
+	public IRContext new_ircontext = null;
 	
 	public BlockNode(Position position){
 		this.position = position;
@@ -103,7 +104,11 @@ public class BlockNode extends AbstractSyntaxTree {
 		 */
 		
 		// push a new context onto the stack
-		IRContext c = new IRContext();
+		IRContext c;
+		if (new_ircontext != null)
+			c = new_ircontext;
+		else
+			c = new IRContext();
 		stack.push(c);
 		
 		Seq seq = new Seq();

@@ -2,10 +2,15 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.*;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
-import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
@@ -14,7 +19,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 	public Position position;
 	/**The id of this function declaration represented as an 
 	 * IDNode*/
-	public AbstractSyntaxNode id;
+	public IdNode id;
 	/**The arguments of this function declaration represented as a list 
 	 * of variable declarations*/
 	public ArrayList<VisualizableTreeNode> args;
@@ -99,5 +104,29 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		}
 
 		return type;
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * Label(fname)
+		 * S[s1]
+		 * S[s2]
+		 * ...
+		 * 
+		 * within the next context, push the symbols as args
+		 */
+		IRContext c = new IRContext();
+		int i = 0;
+		for (VisualizableTreeNode child : children()){
+			DeclNode arg = (DeclNode)child;
+			c.arg(arg.id.id, i++);
+		}
+		
+		Seq seq = new Seq(stack.find_name(id.id));
+		block.new_ircontext = c;
+		IRTranslation tr = block.to_ir(stack);
+		seq.add(tr.stmt());
+		return new IRTranslationStmt(seq);
 	}
 }

@@ -2,6 +2,9 @@ package cs4120.der34dlc287lg342.xi.ir.context;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+
 
 public class IRContextStack extends ArrayList<IRContext>{
 
@@ -13,27 +16,27 @@ public class IRContextStack extends ArrayList<IRContext>{
 		return this.get(this.size()-1);
 	}
 	
-	public Register register(String id) throws InvalidIRContextException{
+	public Expr register(String id) throws InvalidIRContextException{
 		IRContext top = top();
 		return top.register(id);
 	}
 	
-	public Label name(String name) throws InvalidIRContextException{
+	public LabelNode name(String name) throws InvalidIRContextException{
 		IRContext top = top();
 		return top.name(name);
 	}
 	
-	public Register find_register(String id) throws InvalidIRContextException{
+	public Expr find_register(String id) throws InvalidIRContextException{
 		IRContext top = top();
-		Register r = top.find_register(id);
+		Expr r = top.find_register(id);
 		if (r == null)
 			throw new InvalidIRContextException("Cannot find register associated with symbol id");
 		return r;
 	} 
 	
-	public Label find_name(String id) throws InvalidIRContextException{
+	public LabelNode find_name(String id) throws InvalidIRContextException{
 		IRContext top = top();
-		Label r = top.find_name(id);
+		LabelNode r = top.find_name(id);
 		if (r == null)
 			throw new InvalidIRContextException("Cannot find register associated with symbol id");
 		return r;

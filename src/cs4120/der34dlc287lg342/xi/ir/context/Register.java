@@ -5,6 +5,8 @@ public class Register {
 	public int value;
 	public boolean heap;
 	
+	static public Register FP = new Register();
+	
 	public Register(boolean heap){
 		value = global++;
 		this.heap = heap;

@@ -121,7 +121,7 @@ public class DeclNode extends AbstractSyntaxTree {
 		 *    register(heap, n+1) 
 		 */
 		String id = ((IdNode)this.id).id;
-		Register r = stack.register(id);
+		Expr r = stack.register(id);
 		
 		// check that brackets is dimensionless
 		if (brackets.isEmpty())
@@ -129,7 +129,7 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 		Seq seq = new Seq();
 		// go backwards from bracket
-		Expr last_r = new Temp(r);
+		Expr last_r = r;
 		for (int i = brackets.size()-1; i >= 0; i++){
 			AbstractSyntaxTree node = (AbstractSyntaxTree)brackets.get(i);
 			Register base = new Register(true); // this will be replaced later
