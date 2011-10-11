@@ -2,6 +2,14 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Call;
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Name;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
@@ -15,7 +23,7 @@ import edu.cornell.cs.cs4120.xi.Position;
 public class FuncCallNode extends ExpressionNode {
 
 	protected Position position;
-	protected AbstractSyntaxNode id;
+	protected IdNode id;
 	protected ArrayList<VisualizableTreeNode> children, args;
 	public FuncCallNode(IdNode id, ArrayList<VisualizableTreeNode> args, Position position){
 		this.id = id;
@@ -94,5 +102,23 @@ public class FuncCallNode extends ExpressionNode {
 		}
 		
 		return null;
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * Call(Name(id), args)
+		 */
+		
+		Label f = stack.find_name(id.id);
+		
+		Call call = new Call(new Name(f));
+		
+		for (VisualizableTreeNode arg : args){
+			IRTranslation tr = ((AbstractSyntaxTree)arg).to_ir(stack);
+			call.add(tr.expr());
+		}
+		
+		return new IRTranslationExpr(call);
 	}
 }
