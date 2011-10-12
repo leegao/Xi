@@ -2,6 +2,18 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Eseq;
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -114,5 +126,29 @@ public class ListNode extends ExpressionNode {
 			resolve_const(i++,t,null);
 		}
 		return null;
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * new heap r
+		 * ESEQ(Seq(
+		 *  Move(r, length),
+		 *  for each child
+		 *    Move(Add(r, 8+i*8), child)
+		 *  ), Add(r, 8)
+		 * )
+		 */
+		Register r = new Register(true);
+		Temp base = new Temp(r);
+		Seq seq = new Seq(new Move(base, new Const(children.size())));
+		int i = 1;
+		for (VisualizableTreeNode child : children()){
+			AbstractSyntaxTree c = (AbstractSyntaxTree) child;
+			IRTranslation tr = c.to_ir(stack);
+			seq.add(new Move(new Binop(Binop.PLUS, base, new Const(8*i++)), tr.expr()));
+		}
+		Expr eseq = new Eseq(new Binop(Binop.PLUS, base, new Const(8)), seq);
+		return new IRTranslationExpr(eseq);
 	}
 }
