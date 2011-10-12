@@ -15,10 +15,7 @@ public class Exp extends Stmt {
 		Eseq eseq = expr.lower();
 		Seq affects = (Seq) eseq.stmts;
 		Seq seq = new Seq();
-		for (VisualizableTreeNode c : affects.children){
-			Seq s = ((Stmt)c).lower();
-			seq.children.addAll(s.children);
-		}
+		add_and_lower(seq, affects);
 		return seq;
 	}
 }

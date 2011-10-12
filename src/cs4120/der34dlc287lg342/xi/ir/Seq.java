@@ -23,10 +23,7 @@ public class Seq extends Stmt {
 	@Override
 	public Seq lower(){
 		Seq seq = new Seq();
-		for (VisualizableTreeNode c : this.children){
-			Seq s = ((Stmt)c).lower();
-			seq.children.addAll(s.children);
-		}
+		add_and_lower(seq, this);
 		return seq;
 	}
 }

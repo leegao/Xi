@@ -19,10 +19,7 @@ public class Cjump extends Stmt {
 		Eseq eseq = cond.lower();
 		Seq affects = (Seq) eseq.stmts;
 		Seq seq = new Seq();
-		for (VisualizableTreeNode c : affects.children){
-			Seq s = ((Stmt)c).lower();
-			seq.children.addAll(s.children);
-		}
+		add_and_lower(seq, affects);
 		seq.add(new Cjump(eseq.expr, iftrue, iffalse));
 		return seq;
 	}
