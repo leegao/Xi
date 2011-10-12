@@ -2,6 +2,14 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -14,11 +22,11 @@ import edu.cornell.cs.cs4120.xi.Position;
 public class ListIndexNode extends ExpressionNode {
 
 	protected Position position;
-	protected AbstractSyntaxNode expr, index;
+	protected AbstractSyntaxTree expr, index;
 	protected ArrayList<VisualizableTreeNode> children;
 	public ListIndexNode(AbstractSyntaxNode expr, AbstractSyntaxNode index, Position position){
-		this.expr = expr;
-		this.index = index;
+		this.expr = (AbstractSyntaxTree) expr;
+		this.index = (AbstractSyntaxTree) index;
 		this.position = position;
 		children = new ArrayList<VisualizableTreeNode>();
 		children.add(expr);
@@ -81,4 +89,14 @@ public class ListIndexNode extends ExpressionNode {
 		return null;
 	}
 
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * Mem(Add(expr, Lsh(index, 3)))
+		 */
+		IRTranslation tr1 = expr.to_ir(stack), tr2 = index.to_ir(stack);
+		Expr lhs = tr1.expr(), rhs = tr2.expr();
+		Expr arr_ind = new Mem(new Binop(Binop.PLUS, lhs, new Binop(Binop.LSH, rhs, new Const(3))));
+		return new IRTranslationExpr(arr_ind);
+	}
 }
