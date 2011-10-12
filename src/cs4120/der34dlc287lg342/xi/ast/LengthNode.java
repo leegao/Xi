@@ -2,9 +2,14 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -93,7 +98,9 @@ public class LengthNode extends ExpressionNode {
 		/*
 		 * Mem(Sub(base_addr, Const(8)))
 		 */
-		
-		return null;
+		IRTranslation tr = args.to_ir(stack);
+		Expr base_addr = tr.expr();
+		Expr length = new Mem(new Binop(Binop.MINUS, base_addr, new Const(8)));
+		return new IRTranslationExpr(length);
 	}
 }
