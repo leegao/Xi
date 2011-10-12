@@ -39,7 +39,7 @@ public abstract class Stmt implements VisualizableTreeNode{
 		return s;
 	}
 	
-	public void add_and_lower(Seq dest, Seq src){
+	public static void add_and_lower(Seq dest, Seq src){
 		for (VisualizableTreeNode c : src.children){
 			Seq s = ((Stmt)c).lower();
 			dest.children.addAll(s.children);

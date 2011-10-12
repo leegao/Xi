@@ -111,4 +111,15 @@ public class Binop extends Expr {
 		}
 		return ""+op;
 	}
+	
+	@Override
+	public Eseq lower(){
+		// assumes everything to commute
+		Eseq l = left.lower(), r = right.lower();
+		Seq seq = new Seq();
+		Stmt.add_and_lower(seq, (Seq) l.stmts);
+		Stmt.add_and_lower(seq, (Seq) r.stmts);
+		Eseq eseq = new Eseq(new Binop(op, l.expr, r.expr), seq);
+		return eseq;
+	}
 }

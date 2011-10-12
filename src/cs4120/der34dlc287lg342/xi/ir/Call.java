@@ -3,6 +3,8 @@ package cs4120.der34dlc287lg342.xi.ir;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
+
 public class Call extends Expr {
 	public Expr func;
 	public ArrayList<Expr> args;
@@ -30,5 +32,20 @@ public class Call extends Expr {
 	@Override
 	public String label() {
 		return "call";
+	}
+	
+	@Override
+	public Eseq lower(){
+		Seq seq = new Seq();
+		Call call = null;
+		for (VisualizableTreeNode c : children){
+			Eseq e = ((Expr)c).lower();
+			if (call == null)
+				call = new Call(e.expr);
+			else
+				call.add(e.expr);
+			Stmt.add_and_lower(seq, (Seq) e.stmts);
+		}
+		return new Eseq(call, seq);
 	}
 }

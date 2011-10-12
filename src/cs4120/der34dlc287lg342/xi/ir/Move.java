@@ -21,13 +21,14 @@ public class Move extends Stmt {
 		Seq s1 = (Seq) rhs.stmts, s2 = (Seq) lhs.stmts;
 		Expr e = rhs.expr, d = lhs.expr;
 		
-		Temp temp = new Temp(new Register());
+		//Temp temp = new Temp(new Register());
 		
 		Seq seq = new Seq();
 		add_and_lower(seq, s1);
-		seq.add(new Move(temp, e));
+		//seq.add(new Move(temp, e));
 		add_and_lower(seq, s2);
-		seq.add(new Move(d, new Mem(temp)));
+		seq.add(new Move(d, e));
+		//seq.add(new Move(d, new Mem(temp)));
 		
 		return new Seq(this);
 	}
