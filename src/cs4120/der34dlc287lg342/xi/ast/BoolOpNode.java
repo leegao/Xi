@@ -83,7 +83,7 @@ public class BoolOpNode extends ExpressionNode {
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
 
 		e1 = resolve_const(0,lhs,e1);
-		e2 = resolve_const(1,rhs,e1);
+		e2 = resolve_const(1,rhs,e2);
 		
 		// Scheme: if e1 and e2 are int literals, return int literal
 		if (e1 instanceof BoolLiteralNode && e2 instanceof BoolLiteralNode){

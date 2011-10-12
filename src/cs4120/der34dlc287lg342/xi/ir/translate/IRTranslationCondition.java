@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir.translate;
 
 import cs4120.der34dlc287lg342.xi.ir.*;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.Register;
 
@@ -8,11 +9,11 @@ public abstract class IRTranslationCondition extends IRTranslation {
 
 	@Override
 	public
-	abstract Stmt cond(Label t, Label f);
+	abstract Stmt cond(Label t, Label f) throws InvalidIRContextException;
 
 	@Override
 	public
-	Expr expr() {
+	Expr expr() throws InvalidIRContextException {
 		Register r = new Register(); // fresh
 		Label t = new Label(), f = new Label();
 		Temp temp = new Temp(r);
@@ -27,8 +28,8 @@ public abstract class IRTranslationCondition extends IRTranslation {
 
 	@Override
 	public
-	Stmt stmt() {
-		return null;
+	Stmt stmt() throws InvalidIRContextException {
+		throw new InvalidIRContextException("Cannot translate condition into stmt");
 	}
 
 }

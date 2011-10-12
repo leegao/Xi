@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir.translate;
 
 import cs4120.der34dlc287lg342.xi.ir.*;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 
 public class IRTranslationExpr extends IRTranslation {
@@ -12,8 +13,8 @@ public class IRTranslationExpr extends IRTranslation {
 
 	@Override
 	public
-	Stmt cond(Label t, Label f) {
-		return null;
+	Stmt cond(Label t, Label f) throws InvalidIRContextException {
+		return new Cjump(expr, t,f);
 	}
 
 	@Override

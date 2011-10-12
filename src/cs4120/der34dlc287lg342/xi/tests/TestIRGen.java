@@ -3,7 +3,6 @@ package cs4120.der34dlc287lg342.xi.tests;
 import java.io.Reader;
 import java.io.StringReader;
 
-import cs4120.der34dlc287lg342.xi.TypeAnnotatedTreePrinter;
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
@@ -26,7 +25,7 @@ public class TestIRGen extends TestCase {
 	public void testIRConstruction(){
 		XiTypechecker tc;
 		try {
-			tc = gen("use io main(){b:int[1+3] a:bool = true & false}\n");
+			tc = gen("use io main(){b:bool a:bool = b & true}\n");
 			tc.typecheck();
 			((AbstractSyntaxTree)tc.ast).foldConstants();
 			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);

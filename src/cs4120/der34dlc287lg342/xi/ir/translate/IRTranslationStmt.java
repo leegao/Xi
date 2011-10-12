@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.ir.translate;
 
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.Stmt;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 
 public class IRTranslationStmt extends IRTranslation {
@@ -13,14 +14,14 @@ public class IRTranslationStmt extends IRTranslation {
 
 	@Override
 	public
-	Stmt cond(Label t, Label f) {
-		return null;
+	Stmt cond(Label t, Label f) throws InvalidIRContextException {
+		throw new InvalidIRContextException("Cannot translate stmt to cond");
 	}
 
 	@Override
 	public
-	Expr expr() {
-		return null;
+	Expr expr() throws InvalidIRContextException {
+		throw new InvalidIRContextException("Cannot translate stmt to expr");
 	}
 
 	@Override

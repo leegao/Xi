@@ -24,6 +24,7 @@ public class Call extends Expr {
 	
 	public void add(Expr arg){
 		args.add(arg);
+		children.add(arg);
 	}
 
 	@Override
