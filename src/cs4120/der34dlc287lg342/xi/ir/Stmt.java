@@ -38,4 +38,8 @@ public abstract class Stmt implements VisualizableTreeNode{
 		}
 		return s;
 	}
+	
+	public Seq lower(){
+		return new Seq(this);
+	}
 }

@@ -31,7 +31,7 @@ public class TestIRGen extends TestCase {
 			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
 			
 			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
-			printer.print(tr.stmt());
+			printer.print(tr.stmt().lower());
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

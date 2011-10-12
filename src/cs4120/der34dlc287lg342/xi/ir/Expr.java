@@ -38,4 +38,8 @@ public abstract class Expr implements VisualizableTreeNode {
 		}
 		return s;
 	}
+	
+	public Eseq lower(){
+		return new Eseq(this, new Seq());
+	}
 }
