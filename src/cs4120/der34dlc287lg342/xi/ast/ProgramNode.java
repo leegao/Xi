@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.XiInterfaceParser;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
@@ -104,6 +105,9 @@ public class ProgramNode extends AbstractSyntaxTree {
 		 */
 		
 		// First pass: build context
+		IRContext global = new IRContext();
+		stack.push(global);
+		
 		for (VisualizableTreeNode child : children()){
 			if (child instanceof UseNode){
 				UseNode use = (UseNode) child;

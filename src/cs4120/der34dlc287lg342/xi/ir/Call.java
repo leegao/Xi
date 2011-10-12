@@ -8,10 +8,13 @@ public class Call extends Expr {
 	public ArrayList<Expr> args;
 	
 	public Call(Expr func, Expr... args_arr){
+		super();
 		this.func = func;
 		args = new ArrayList<Expr>();
 		for (Expr e : args_arr)
 			args.add(e);
+		children.add(func);
+		children.addAll(args);
 	}
 	
 	public Call(Expr func, List<Expr> args){
@@ -21,5 +24,10 @@ public class Call extends Expr {
 	
 	public void add(Expr arg){
 		args.add(arg);
+	}
+
+	@Override
+	public String label() {
+		return "call";
 	}
 }

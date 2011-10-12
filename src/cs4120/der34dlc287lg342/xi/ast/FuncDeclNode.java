@@ -118,7 +118,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		 */
 		IRContext c = new IRContext();
 		int i = 0;
-		for (VisualizableTreeNode child : children()){
+		for (VisualizableTreeNode child : args){
 			DeclNode arg = (DeclNode)child;
 			c.arg(arg.id.id, i++);
 		}

@@ -53,15 +53,13 @@ public class LengthNode extends ExpressionNode {
 		if (!(t_ instanceof XiPrimitiveType))
 			throw new CompilationException("Cannot apply length to nonprimitive type ["+t_+"]", args.position());
 		
-		return null;
-		
-//		XiPrimitiveType t = (XiPrimitiveType)t_;
-//		if (t.isArrayType()){
-//			type = XiPrimitiveType.INT;
-//			return type;
-//		}
-//		else
-//			throw new CompilationException("Cannot apply length to non-array types", position());
+		XiPrimitiveType t = (XiPrimitiveType)t_;
+		if (t.isArrayType()){
+			type = XiPrimitiveType.INT;
+			return type;
+		}
+		else
+			throw new CompilationException("Cannot apply length to non-array types", position());
 	}
 	
 	@Override
@@ -71,24 +69,24 @@ public class LengthNode extends ExpressionNode {
 		args = resolve_const(0,list,args);
 		
 		// check for list's dimension
-		if (args instanceof ListNode){
-			IntegerLiteralNode i = new IntegerLiteralNode(((ListNode)args).length(), position);
-			i.type = type;
-			return null; // take care of side effects, do this at MIR stage
-		} else if (args instanceof AbstractSyntaxTree && ((AbstractSyntaxTree)args).type != null){
-			AbstractSyntaxTree tree = (AbstractSyntaxTree)args;
-			ArrayList<VisualizableTreeNode> arr = ((XiPrimitiveType)tree.type).dimension;
-			if (arr.isEmpty()){
-				return null;
-			} else {
-				VisualizableTreeNode end = arr.get(arr.size()-1);
-				if (end instanceof IntegerLiteralNode){
-					AbstractSyntaxTree i = (AbstractSyntaxTree) end;
-					if (i.type == null) i.type = type;
-					return i;
-				}
-			}
-		}
+//		if (args instanceof ListNode){
+//			IntegerLiteralNode i = new IntegerLiteralNode(((ListNode)args).length(), position);
+//			i.type = type;
+//			return null; // take care of side effects, do this at MIR stage
+//		} else if (args instanceof AbstractSyntaxTree && ((AbstractSyntaxTree)args).type != null){
+//			AbstractSyntaxTree tree = (AbstractSyntaxTree)args;
+//			ArrayList<VisualizableTreeNode> arr = ((XiPrimitiveType)tree.type).dimension;
+//			if (arr.isEmpty()){
+//				return null;
+//			} else {
+//				VisualizableTreeNode end = arr.get(arr.size()-1);
+//				if (end instanceof IntegerLiteralNode){
+//					AbstractSyntaxTree i = (AbstractSyntaxTree) end;
+//					if (i.type == null) i.type = type;
+//					return i;
+//				}
+//			}
+//		}
 		
 		return null;
 	}

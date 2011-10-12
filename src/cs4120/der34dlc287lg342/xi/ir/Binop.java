@@ -1,5 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
+
 public class Binop extends Expr {
 	public static int PLUS = 0;
 	public static int MINUS = 1;
@@ -57,12 +59,25 @@ public class Binop extends Expr {
 	public int op;
 	
 	public Binop(int op, Expr left, Expr right){
+		super();
 		this.op = op;
 		this.left = left;
 		this.right = right;
+		children.add(left);
+		children.add(right);
 	}
 	
 	public Binop(String op, Expr left, Expr right){
 		this(translate(op), left, right);
+	}
+
+	@Override
+	public Iterable<VisualizableTreeNode> children() {
+		return children;
+	}
+
+	@Override
+	public String label() {
+		return "binop";
 	}
 }
