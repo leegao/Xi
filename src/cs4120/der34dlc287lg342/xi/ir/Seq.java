@@ -7,9 +7,11 @@ public class Seq extends Stmt {
 	public ArrayList<Stmt> stmts;
 	
 	public Seq(Stmt... seq){
+		super();
 		stmts = new ArrayList<Stmt>();
 		for (Stmt e : seq)
 			stmts.add(e);
+		children.addAll(stmts);
 	}
 	
 	public Seq(List<Stmt> seq){
@@ -18,5 +20,6 @@ public class Seq extends Stmt {
 	
 	public void add(Stmt stmt){
 		stmts.add(stmt);
+		children.add(stmt);
 	}
 }

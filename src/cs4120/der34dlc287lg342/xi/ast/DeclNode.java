@@ -146,7 +146,7 @@ public class DeclNode extends AbstractSyntaxTree {
 				
 				seq.add(new Move(base_addr, n));
 				last_r = new Binop(Binop.PLUS, base_addr, new Const(8));
-				seq.add(new Move(last_r, last_r));
+				//seq.add(new Move(last_r, last_r));
 				
 				// reserve those addresses
 			}

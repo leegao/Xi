@@ -5,7 +5,10 @@ public class Eseq extends Expr {
 	public Expr expr;
 	
 	public Eseq(Expr expr, Stmt seq){
+		super();
 		this.expr = expr;
 		this.stmts = seq;
+		children.add(seq);
+		children.add(expr);
 	}
 }

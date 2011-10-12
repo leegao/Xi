@@ -20,7 +20,7 @@ public class IRContext {
 	}
 	
 	public Expr register(String id){
-		Temp r = new Temp(new Register()); // on stack
+		Temp r = new Temp(new Register(id)); // on stack
 		symbols.put(id, r);
 		return r;
 	}
@@ -32,7 +32,7 @@ public class IRContext {
 	}
 	
 	public LabelNode name(String name){
-		LabelNode l = new LabelNode(new Label());
+		LabelNode l = new LabelNode(new Label(name));
 		names.put(name, l);
 		return l;
 	}

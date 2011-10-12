@@ -6,8 +6,10 @@ public class Cjump extends Stmt {
 	public Expr cond;
 	public Label iftrue, iffalse;
 	public Cjump(Expr cond, Label iftrue, Label iffalse){
+		super();
 		this.cond = cond;
 		this.iftrue = iftrue;
 		this.iffalse = iffalse;
+		children.add(cond);
 	}
 }
