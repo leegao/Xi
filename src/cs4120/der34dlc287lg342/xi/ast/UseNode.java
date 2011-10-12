@@ -13,10 +13,10 @@ import edu.cornell.cs.cs4120.xi.Position;
 
 public class UseNode extends AbstractSyntaxTree {
 	protected Position position;
-	public AbstractSyntaxNode lib;
+	public IdNode lib;
 	protected ArrayList<VisualizableTreeNode> children;
 	public UseNode(AbstractSyntaxNode lib, Position position){
-		this.lib = lib;
+		this.lib = (IdNode) lib;
 		this.position = position;
 		children = new ArrayList<VisualizableTreeNode>();
 		children.add(lib);

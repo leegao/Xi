@@ -1,7 +1,17 @@
 package cs4120.der34dlc287lg342.xi.ast;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.XiInterfaceParser;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
@@ -60,4 +70,64 @@ public class ProgramNode extends AbstractSyntaxTree {
 		return type;
 	}
 
+	// add function declarations found within interfaces into the global context
+	// TODO: refactor into a single pass
+	void include(String id, IRContextStack stack) throws IOException, InvalidIRContextException{
+		FileReader reader = new FileReader(id+".ixi");
+		
+		String src = "";
+		BufferedReader input =  new BufferedReader(reader);
+		String line = null;
+		while (( line = input.readLine()) != null){
+			src += line.replace("\r", "") + "\n";
+		}
+		
+		XiInterfaceParser parser = new XiInterfaceParser(new StringReader(src), id+".ixi");
+		AbstractSyntaxNode declarations;
+		try{
+			declarations = parser.parse();
+		} catch (CompilationException e){
+			throw new InvalidIRContextException(e.getMessage());
+		}
+		for (VisualizableTreeNode child : declarations.children()){
+			FuncDeclNode decl = (FuncDeclNode)child;
+			stack.name(decl.id.id);
+		}
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * 2 passes
+		 * first one builds the context with globals
+		 * second one addes a sequence of funcdecls
+		 */
+		
+		// First pass: build context
+		for (VisualizableTreeNode child : children()){
+			if (child instanceof UseNode){
+				UseNode use = (UseNode) child;
+				try {
+					include(use.lib.id, stack);
+				} catch (IOException e) {
+					throw new InvalidIRContextException(e.getMessage());
+				}
+			} else if (child instanceof FuncDeclNode){
+				FuncDeclNode func = (FuncDeclNode) child;
+				stack.name(func.id.id);
+			}
+		}
+		
+		// Second pass: build translation rules
+		Seq seq = new Seq();
+		for (VisualizableTreeNode child : children()){
+			if (child instanceof FuncDeclNode){
+				FuncDeclNode func = (FuncDeclNode) child;
+				IRTranslation tr = func.to_ir(stack);
+				seq.add(tr.stmt());
+			}
+		}
+		
+		return new IRTranslationStmt(seq);
+	}
 }
