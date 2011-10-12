@@ -11,4 +11,13 @@ public class Eseq extends Expr {
 		children.add(seq);
 		children.add(expr);
 	}
+	
+	@Override
+	public Eseq lower(){
+		Eseq eseq = expr.lower();
+		Seq seq = new Seq();
+		Stmt.add_and_lower(seq, (Seq) eseq.stmts);
+		Stmt.add_and_lower(seq, (Seq) stmts);
+		return new Eseq(eseq.expr, seq);
+	}
 }

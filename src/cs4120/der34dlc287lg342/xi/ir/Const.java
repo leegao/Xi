@@ -5,4 +5,9 @@ public class Const extends Expr {
 	public Const(int value){
 		this.value = value;
 	}
+	
+	@Override
+	public Eseq lower(){
+		return new Eseq(this, new Seq());
+	}
 }
