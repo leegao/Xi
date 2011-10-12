@@ -2,6 +2,15 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Return;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
@@ -72,6 +81,29 @@ public class ReturnNode extends AbstractSyntaxTree {
 			AbstractSyntaxTree t = ((AbstractSyntaxTree)c).foldConstants();
 			resolve_const(i++,t,null);
 		}
+		return null;
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * only do primitive types right now
+		 * Move(RV, expr)
+		 * Return
+		 */
+		
+		if (children.isEmpty())
+			return new IRTranslationStmt(new Return());
+		
+		if (children.size() == 1){
+			AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(0);
+			IRTranslation tr = e.to_ir(stack);
+			Seq seq = new Seq(new Move(new Temp(Register.RV), tr.expr()));
+			return new IRTranslationStmt(seq);
+		} else {
+			
+		}
+		
 		return null;
 	}
 }

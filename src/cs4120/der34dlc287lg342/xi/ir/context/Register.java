@@ -5,7 +5,8 @@ public class Register {
 	public int value;
 	public boolean heap;
 	
-	static public Register FP = new Register();
+	static public Register FP = new Register(); // frame pointer, rsp
+	static public Register RV = new Register(); // return value register, rax
 	
 	public Register(boolean heap){
 		value = global++;

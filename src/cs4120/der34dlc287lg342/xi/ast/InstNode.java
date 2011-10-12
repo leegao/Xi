@@ -129,7 +129,7 @@ public class InstNode extends AbstractSyntaxTree {
 			 * list's decl is vardecl
 			 */
 			DeclNode decl = (DeclNode)list.get(0);
-			IRTranslation tr = decl.to_ir(stack); // if decl declares an array type, discard it
+			decl.to_ir(stack); // if decl declares an array type, discard it
 			IRTranslation tr2 = e.to_ir(stack);
 			Expr expr = tr2.expr();
 			Seq seq = new Seq(new Move(stack.find_register(decl.id.id), expr));
