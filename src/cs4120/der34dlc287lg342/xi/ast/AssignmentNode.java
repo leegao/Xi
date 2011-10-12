@@ -78,6 +78,11 @@ public class AssignmentNode extends AbstractSyntaxTree {
 		 */
 		IRTranslation e1 = ((AbstractSyntaxTree)id).to_ir(stack), e2 = ((AbstractSyntaxTree)expr).to_ir(stack);
 		Expr lhs = e1.expr(), rhs = e2.expr();
+		
+		// if lhs is a mem type, remove the first one
+		if (lhs instanceof Mem)
+			lhs = ((Mem)lhs).expr;
+
 		return new IRTranslationStmt(new Move(lhs, rhs));
 	}
 }
