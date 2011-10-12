@@ -2,6 +2,10 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiReturnType;
@@ -14,9 +18,9 @@ import edu.cornell.cs.cs4120.xi.Position;
 
 public class ProcedureCallNode extends AbstractSyntaxTree {
 
-	protected AbstractSyntaxNode call;
+	protected AbstractSyntaxTree call;
 	public ProcedureCallNode(AbstractSyntaxNode call){
-		this.call = call;
+		this.call = (AbstractSyntaxTree) call;
 	}
 	
 	@Override
@@ -57,4 +61,9 @@ public class ProcedureCallNode extends AbstractSyntaxTree {
 		return null;
 	}
 
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		IRTranslation tr = call.to_ir(stack);
+		return new IRTranslationStmt(tr.stmt()); // reinforce for instanceof during validation
+	}
 }
