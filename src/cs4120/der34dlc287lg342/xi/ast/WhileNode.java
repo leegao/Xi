@@ -2,6 +2,15 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Jump;
+import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
@@ -16,11 +25,11 @@ import edu.cornell.cs.cs4120.xi.Position;
 public class WhileNode extends AbstractSyntaxTree {
 
 	protected Position position;
-	protected AbstractSyntaxNode condition, s;
+	protected AbstractSyntaxTree condition, s;
 	protected ArrayList<VisualizableTreeNode> children;
 	public WhileNode(AbstractSyntaxNode condition, AbstractSyntaxNode s, Position position){
-		this.condition = condition;
-		this.s = s;
+		this.condition = (AbstractSyntaxTree) condition;
+		this.s = (AbstractSyntaxTree) s;
 		this.position = position;
 		children = new ArrayList<VisualizableTreeNode>();
 		children.add(condition);
@@ -80,5 +89,42 @@ public class WhileNode extends AbstractSyntaxTree {
 		((AbstractSyntaxTree)s).foldConstants();
 		
 		return null;
+	}
+	
+	@Override
+	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+		/*
+		 * add end into break_to
+		 * Seq(
+		 *   label(head),
+		 *   cond.to_ir(stack).cond(body, end),
+		 *   label(body),
+		 *   s.to_ir(stack).stmt(),
+		 *   jump(head),
+		 *   label(end) <- resolve using stack
+		 * )
+		 */
+		Label head = new Label(), body = new Label(), end = new Label();
+		IRContext c = new IRContext();
+		c.break_to = end;
+		
+		Seq seq = new Seq(
+			new LabelNode(head),
+			condition.to_ir(stack).cond(body, end),
+			new LabelNode(body)
+		); // make sure evaluation order is not unspecified in java as it is in C
+		
+		if (!(s instanceof BlockNode))
+			stack.push(c);
+		
+		seq.add(s.to_ir(stack).stmt()); // add in the body of IR
+		
+		if (!(s instanceof BlockNode))
+			stack.pop();
+		
+		seq.add(new Jump(head));
+		seq.add(new LabelNode(end));
+		
+		return new IRTranslationStmt(seq);
 	}
 }
