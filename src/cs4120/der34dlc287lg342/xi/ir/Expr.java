@@ -39,6 +39,11 @@ public abstract class Expr implements VisualizableTreeNode {
 		return s;
 	}
 	
+	@Override
+	public String toString(){
+		return label();
+	}
+	
 	public Eseq lower(){
 		return new Eseq(this, new Seq());
 	}

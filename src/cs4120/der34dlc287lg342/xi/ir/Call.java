@@ -3,6 +3,8 @@ package cs4120.der34dlc287lg342.xi.ir;
 import java.util.ArrayList;
 import java.util.List;
 
+import cs4120.der34dlc287lg342.xi.ir.context.Register;
+
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public class Call extends Expr {
@@ -46,6 +48,8 @@ public class Call extends Expr {
 				call.add(e.expr);
 			Stmt.add_and_lower(seq, (Seq) e.stmts);
 		}
-		return new Eseq(call, seq);
+		Temp t = new Temp(new Register()); // fresh
+		seq.add(new Move(t, call, true));
+		return new Eseq(t, seq);
 	}
 }

@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Return;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
@@ -127,6 +128,12 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		block.new_ircontext = c;
 		IRTranslation tr = block.to_ir(stack);
 		seq.add(tr.stmt());
+		
+		// add a return
+		if (block.type.equals(XiPrimitiveType.UNIT)){
+			seq.add(new Return());
+		}
+		
 		return new IRTranslationStmt(seq);
 	}
 }

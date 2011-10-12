@@ -7,4 +7,12 @@ public class Mem extends Expr {
 		this.expr = expr;
 		children.add(expr);
 	}
+	
+	@Override
+	public Eseq lower(){
+		Eseq eseq = expr.lower();
+		Seq seq = new Seq();
+		Stmt.add_and_lower(seq, (Seq) eseq.stmts);
+		return new Eseq(eseq.expr, seq);
+	}
 }

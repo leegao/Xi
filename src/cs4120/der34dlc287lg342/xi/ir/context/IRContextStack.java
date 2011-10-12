@@ -27,19 +27,25 @@ public class IRContextStack extends ArrayList<IRContext>{
 	}
 	
 	public Expr find_register(String id) throws InvalidIRContextException{
-		IRContext top = top();
-		Expr r = top.find_register(id);
-		if (r == null)
-			throw new InvalidIRContextException("Cannot find register associated with symbol id");
-		return r;
+		if (this.isEmpty())
+			throw new InvalidIRContextException("Cannot find a context frame to work with");
+		for (int i = this.size()-1; i >= 0; i--){
+			Expr r = get(i).find_register(id);
+			if (r != null)
+				return r;
+		}
+		throw new InvalidIRContextException("Cannot find register associated with symbol id");
 	} 
 	
 	public LabelNode find_name(String id) throws InvalidIRContextException{
-		IRContext top = top();
-		LabelNode r = top.find_name(id);
-		if (r == null)
-			throw new InvalidIRContextException("Cannot find register associated with symbol id");
-		return r;
+		if (this.isEmpty())
+			throw new InvalidIRContextException("Cannot find a context frame to work with");
+		for (int i = this.size()-1; i >= 0; i--){
+			LabelNode r = get(i).find_name(id);
+			if (r != null)
+				return r;
+		}
+		throw new InvalidIRContextException("Cannot find register associated with symbol id");
 	} 
 	
 	public Label set_break() throws InvalidIRContextException{

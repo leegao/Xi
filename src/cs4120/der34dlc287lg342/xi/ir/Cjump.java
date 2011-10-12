@@ -1,7 +1,6 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
-import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public class Cjump extends Stmt {
 	public Expr cond;

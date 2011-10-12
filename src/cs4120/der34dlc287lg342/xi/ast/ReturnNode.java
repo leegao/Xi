@@ -98,7 +98,7 @@ public class ReturnNode extends AbstractSyntaxTree {
 		if (children.size() == 1){
 			AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(0);
 			IRTranslation tr = e.to_ir(stack);
-			Seq seq = new Seq(new Move(new Temp(Register.RV), tr.expr()));
+			Seq seq = new Seq(new Move(new Temp(Register.RV), tr.expr()), new Return());
 			return new IRTranslationStmt(seq);
 		} else {
 			

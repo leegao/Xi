@@ -1,19 +1,26 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
-
 public class Move extends Stmt {
 	public Expr dest, src;
-	public Move(Expr dest, Expr src){
+	boolean primitive;
+	public Move(Expr dest, Expr src, boolean primitive){
 		super();
 		this.dest = dest;
 		this.src = src;
+		this.primitive = primitive;
 		children.add(dest);
 		children.add(src);
 	}
 	
+	public Move(Expr dest, Expr src){
+		this(dest, src, false);
+	}
+	
 	@Override
 	public Seq lower(){
+		if (primitive)
+			return new Seq(this);
+		
 		// Assume never commutes (not strictly true, will refactor later)
 		Eseq rhs = src.lower();
 		Eseq lhs = dest.lower();
@@ -30,6 +37,6 @@ public class Move extends Stmt {
 		seq.add(new Move(d, e));
 		//seq.add(new Move(d, new Mem(temp)));
 		
-		return new Seq(this);
+		return seq;
 	}
 }

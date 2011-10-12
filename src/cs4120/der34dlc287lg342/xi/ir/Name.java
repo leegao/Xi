@@ -7,4 +7,9 @@ public class Name extends Expr {
 	public Name(Label label){
 		this.label = label;
 	}
+	
+	@Override
+	public Eseq lower(){
+		return new Eseq(this, new Seq());
+	}
 }

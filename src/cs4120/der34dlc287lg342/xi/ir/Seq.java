@@ -26,4 +26,12 @@ public class Seq extends Stmt {
 		add_and_lower(seq, this);
 		return seq;
 	}
+	
+	public String toString(){
+		String str = "";
+		for (VisualizableTreeNode child : children){
+			str += child.toString() + "\n";
+		}
+		return str;
+	}
 }

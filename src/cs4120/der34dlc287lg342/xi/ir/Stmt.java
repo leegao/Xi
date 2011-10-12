@@ -49,4 +49,27 @@ public abstract class Stmt implements VisualizableTreeNode{
 	public Seq lower(){
 		return new Seq(this);
 	}
+	
+	@Override
+	public String toString(){
+		String s = this.getClass().getSimpleName();
+		for (Field f : this.getClass().getDeclaredFields()){
+			Object o;
+			s += "["+f.getName();
+			try {
+				o = f.get(this);
+				if (!(o instanceof ArrayList)){
+					s += ":"+o.toString() + "]";
+				} else 
+					s += "]";
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return s;
+	}
 }

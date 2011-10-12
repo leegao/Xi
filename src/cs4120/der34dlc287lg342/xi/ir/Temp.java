@@ -7,4 +7,9 @@ public class Temp extends Expr {
 	public Temp(Register temp){
 		this.temp = temp;
 	}
+	
+	@Override
+	public Eseq lower(){
+		return new Eseq(this, new Seq());
+	}
 }

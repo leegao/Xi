@@ -1,7 +1,5 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
-import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
-
 public class Binop extends Expr {
 	final public static int PLUS = 0;
 	final public static int MINUS = 1;
@@ -110,6 +108,11 @@ public class Binop extends Expr {
 			return ">=";
 		}
 		return ""+op;
+	}
+	
+	@Override
+	public String toString(){
+		return left.toString() + " "+label()+" " + right.toString();
 	}
 	
 	@Override

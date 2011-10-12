@@ -25,13 +25,13 @@ public class TestIRGen extends TestCase {
 	public void testIRConstruction(){
 		XiTypechecker tc;
 		try {
-			tc = gen("use io main(){b:bool a:bool = b & true}\n");
+			tc = gen("use io main(){b:int a:int = b+f()} f():int{print(\"asdf\");return 3}\n");
 			tc.typecheck();
 			((AbstractSyntaxTree)tc.ast).foldConstants();
 			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
 			
 			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
-			printer.print(tr.stmt().lower());
+			System.out.println(tr.stmt().lower());
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
