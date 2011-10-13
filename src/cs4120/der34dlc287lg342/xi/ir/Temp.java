@@ -12,4 +12,9 @@ public class Temp extends Expr {
 	public Eseq lower(){
 		return new Eseq(this, new Seq());
 	}
+	
+	@Override
+	public String label(){
+		return ""+temp;
+	}
 }

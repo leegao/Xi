@@ -139,16 +139,16 @@ public class ListNode extends ExpressionNode {
 		 *  ), Add(r, 8)
 		 * )
 		 */
-		Register r = new Register(true);
-		Temp base = new Temp(r);
-		Seq seq = new Seq(new Move(base, new Const(children.size())));
-		int i = 1;
+		Expr base = new Temp(new Register());
+		Seq seq = Register.init_array(base, new Const(children.size()));
+
+		int i = 0;
 		for (VisualizableTreeNode child : children()){
 			AbstractSyntaxTree c = (AbstractSyntaxTree) child;
 			IRTranslation tr = c.to_ir(stack);
 			seq.add(new Move(new Binop(Binop.PLUS, base, new Const(8*i++)), tr.expr()));
 		}
-		Expr eseq = new Eseq(new Binop(Binop.PLUS, base, new Const(8)), seq);
+		Expr eseq = new Eseq(base, seq);
 		return new IRTranslationExpr(eseq);
 	}
 }

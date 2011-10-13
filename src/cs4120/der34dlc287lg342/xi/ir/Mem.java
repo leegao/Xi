@@ -13,6 +13,6 @@ public class Mem extends Expr {
 		Eseq eseq = expr.lower();
 		Seq seq = new Seq();
 		Stmt.add_and_lower(seq, (Seq) eseq.stmts);
-		return new Eseq(eseq.expr, seq);
+		return new Eseq(new Mem(eseq.expr), seq);
 	}
 }

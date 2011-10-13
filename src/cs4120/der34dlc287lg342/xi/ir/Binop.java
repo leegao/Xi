@@ -112,7 +112,7 @@ public class Binop extends Expr {
 	
 	@Override
 	public String toString(){
-		return left.toString() + " "+label()+" " + right.toString();
+		return "("+left.toString() + " "+label()+" " + right.toString()+")";
 	}
 	
 	@Override

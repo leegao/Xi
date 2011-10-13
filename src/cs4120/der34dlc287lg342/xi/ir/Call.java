@@ -33,7 +33,7 @@ public class Call extends Expr {
 
 	@Override
 	public String label() {
-		return "call";
+		return "call["+func+"="+ args + "]";
 	}
 	
 	@Override

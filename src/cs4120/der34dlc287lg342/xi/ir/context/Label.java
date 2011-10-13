@@ -5,6 +5,8 @@ public class Label {
 	public int value;
 	public String name;
 	
+	final public static Label alloc = new Label("_I_alloc_i");
+	
 	public Label(String name){
 		value = global++;
 		this.name = name;

@@ -116,7 +116,7 @@ public class IfNode extends AbstractSyntaxTree {
 			// push a new context in
 			stack.push(new IRContext());
 		} 
-		IRTranslation tr2 = s1.to_ir(stack);
+		IRTranslation tr2 = s2.to_ir(stack);
 		if (!(s2 instanceof BlockNode)){
 			stack.pop();
 		} 
