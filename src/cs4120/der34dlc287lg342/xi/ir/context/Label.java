@@ -6,6 +6,7 @@ public class Label {
 	public String name;
 	
 	final public static Label alloc = new Label("_I_alloc_i");
+	final public static Label outOfBounds = new Label("_I_outOfBounds_p");
 	
 	public Label(String name){
 		value = global++;

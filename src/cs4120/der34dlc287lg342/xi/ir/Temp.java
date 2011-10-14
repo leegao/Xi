@@ -17,4 +17,12 @@ public class Temp extends Expr {
 	public String label(){
 		return ""+temp;
 	}
+	
+	@Override
+	public boolean equals(Object that){
+		if (that instanceof Temp){
+			return ((Temp)that).temp == temp;
+		}
+		return false;
+	}
 }

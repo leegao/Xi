@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Jump;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
@@ -85,7 +86,8 @@ public class IfNode extends AbstractSyntaxTree {
 		condition = resolve_const(0,cond_new,condition);
 		
 		((AbstractSyntaxTree)s1).foldConstants();
-		((AbstractSyntaxTree)s2).foldConstants();
+		if (s2 != null)
+			((AbstractSyntaxTree)s2).foldConstants();
 		return null;
 	}
 	
@@ -96,7 +98,7 @@ public class IfNode extends AbstractSyntaxTree {
 		 */
 		
 		IRTranslation tr_cond = this.condition.to_ir(stack);
-		Label t = new Label(), f = new Label();
+		Label t = new Label(), f = new Label(), epilog = null;
 		Seq seq = new Seq(tr_cond.cond(t, f), new LabelNode(t));
 		
 		// check s1 is a block
@@ -109,19 +111,26 @@ public class IfNode extends AbstractSyntaxTree {
 			stack.pop();
 		} 
 		seq.add(tr1.stmt());
+		if (s2 != null){
+			// add jump to epilog
+			epilog = new Label();
+			seq.add(new Jump(epilog));
+		}
 		seq.add(new LabelNode(f));
 		
-		// check s1 is a block
-		if (!(s2 instanceof BlockNode)){
-			// push a new context in
-			stack.push(new IRContext());
-		} 
-		IRTranslation tr2 = s2.to_ir(stack);
-		if (!(s2 instanceof BlockNode)){
-			stack.pop();
-		} 
-		seq.add(tr2.stmt());
-		
+		// check s2 is a block
+		if (s2 != null){
+			if (!(s2 instanceof BlockNode)){
+				// push a new context in
+				stack.push(new IRContext());
+			} 
+			IRTranslation tr2 = s2.to_ir(stack);
+			if (!(s2 instanceof BlockNode)){
+				stack.pop();
+			} 
+			seq.add(tr2.stmt());
+			seq.add(new LabelNode(epilog));
+		}
 		return new IRTranslationStmt(seq);
 	}
 }

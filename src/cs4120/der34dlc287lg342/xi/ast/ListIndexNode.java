@@ -3,11 +3,22 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Call;
+import cs4120.der34dlc287lg342.xi.ir.Cjump;
 import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Eseq;
+import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Name;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.context.Register;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -94,9 +105,29 @@ public class ListIndexNode extends ExpressionNode {
 		/*
 		 * Mem(Add(expr, Lsh(index, 3)))
 		 */
+		
+		// first check that expr is not null
+		
 		IRTranslation tr1 = expr.to_ir(stack), tr2 = index.to_ir(stack);
 		Expr lhs = tr1.expr(), rhs = tr2.expr();
-		Expr arr_ind = new Mem(new Binop(Binop.PLUS, lhs, new Binop(Binop.LSH, rhs, new Const(3))));
-		return new IRTranslationExpr(arr_ind);
+		
+		Temp base = new Temp(new Register()), ind = new Temp(new Register());
+		Seq seq = new Seq(new Move(base, lhs), new Move(ind, rhs));
+		
+		Eseq size_eseq = Register.size_of(base);
+		seq.add(size_eseq.stmts);
+		Temp size = (Temp) size_eseq.expr;
+		
+		// next check that index is within bounds
+		Label iftrue = new Label(), iffalse = new Label();
+		seq.add(new Cjump(new Binop(Binop.LT, ind, size), iftrue, iffalse));
+		seq.add(new LabelNode(iftrue));
+		seq.add(new Exp(new Call(new Name(Label.outOfBounds))));
+		seq.add(new LabelNode(iffalse));
+		
+		Temp r = new Temp(new Register());
+		Expr arr_ind = new Mem(new Binop(Binop.PLUS, base, new Binop(Binop.LSH, ind, new Const(3))));
+		//seq.add(new Move(r, arr_ind));
+		return new IRTranslationExpr(new Eseq(arr_ind, seq));
 	}
 }
