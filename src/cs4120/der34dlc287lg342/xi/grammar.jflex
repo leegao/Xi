@@ -58,17 +58,11 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 	}
 	
 	private Token token(TokenType type, String value){
-		int col = yycolumn-yycolumn_cache, line = yyline;
-		int cols = col;
+		int cols = yycolumn-yycolumn_cache;
+		int cole = yycolumn + yylength();
+		Token tok = new XiToken(value, type, unit, cols+1, cole, yyline+1, yyline+1);
 		yycolumn_cache = 0;
-		int newlines = value.split("\n").length-1;
-		String lastline = value.split("\n")[newlines];
-		if (newlines > 0)
-			col = lastline.length();
-		else
-			col += lastline.length();
-		
-		return new XiToken(value, type, unit, cols+1, cols+yylength(), yyline+1, line+newlines+1);
+		return tok;
 	}
 	
 	private Token token(TokenType type){
@@ -160,18 +154,12 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
   {WhiteSpace}                   { /* ignore */ }
 }
 <STRING> {
-  \"                             { yybegin(YYINITIAL); 
-                                   //yycolumn -= yycolumn_cache + 1; // -1 for the starting "
+  \"                               { yybegin(YYINITIAL);
                                    yycolumn_cache++;
                                    return token(TokenType.STRING_LITERAL, 
                                    string.toString()); }
-  [^\n\r\"\\]+                   { string.append( yytext() ); yycolumn_cache += yytext().length(); }
-  \\t                            { string.append("\\t"); yycolumn_cache += 2;}
-  \\n                            { string.append("\\n"); yycolumn_cache += 2;}
-
-  \\r                            { string.append("\\r"); yycolumn_cache += 2;}
-  \\\"                           { string.append("\\\""); yycolumn_cache += 2;}
-  \\                             { string.append("\\\\"); yycolumn_cache += 2;}
+  [^\n\r\"\\]+                     { string.append( yytext() ); yycolumn_cache += yylength(); }
+  \\n|\\\"|\\'|\\r|\\\\|\\t        { string.append( yytext() ); yycolumn_cache += yylength(); }
 }
  /* error fallback */
 .|\n                             { throw new Error("Illegal character <"+

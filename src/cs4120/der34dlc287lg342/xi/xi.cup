@@ -318,6 +318,8 @@ var_set ::= id:id GETS expr:expr
 	
 
 use_stmt ::= USE:t id:id
+	{: RESULT = new UseNode(id, span(t.position(), id.position()));:}
+	| USE:t id:id SEMICOLON
 	{: RESULT = new UseNode(id, span(t.position(), id.position()));:};
 	
 func_list ::= 

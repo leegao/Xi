@@ -101,7 +101,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		if (t.equals(XiPrimitiveType.UNIT)){
 			// make sure that type has no return types
 			if (types.size() > 0)
-				throw new CompilationException("Function expects return types of " + types + " but got no returns", position());
+				throw new CompilationException("Function cannot be guaranteed to return, expects return types of " + types + "", position());
 		}
 
 		return type;

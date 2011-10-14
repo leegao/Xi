@@ -30,5 +30,14 @@ public class XiToken implements Token {
 	public String value() {
 		return value_;
 	}
+	
+	@Override
+	public boolean equals(Object that){
+		if (that instanceof Token){
+			Token tok = (Token)that;
+			return tok.value().equals(value()) && tok.type().equals(type()) && tok.position().equals(tok.position());
+		}
+		return false;
+	}
 
 }

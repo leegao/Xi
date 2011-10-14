@@ -130,15 +130,14 @@ public class DeclNode extends AbstractSyntaxTree {
 		Seq seq = new Seq();
 		// go backwards from bracket
 		Expr last_r = r;
-		for (int i = brackets.size()-1; i >= 0; i--){
+		for (int i = 0; i < brackets.size(); i++){
 			AbstractSyntaxTree node = (AbstractSyntaxTree)brackets.get(i);
 			Register base = new Register(true); // this will be replaced later
 			Temp base_addr = new Temp(base);
 			
 			if (node == null){
-				seq.add(new Move(base_addr, new Const(-1)));
-				seq.add(new Move(last_r, new Binop(Binop.PLUS, base_addr, new Const(8))));
-				
+				int n = 0;
+				seq.add(new Move(last_r, new Temp(Register.Null)));
 				break;
 			} else {
 				IRTranslation tr = node.to_ir(stack);

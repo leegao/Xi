@@ -28,7 +28,7 @@ public class Driver {
 			BufferedReader input =  new BufferedReader(reader);
 			String line = null;
 			while (( line = input.readLine()) != null){
-		          src += line.replace("\r", "") + "\n";
+		          src += line + "\n";
 		    }
 			Parser parser = new XiParser(new StringReader(src), args[0]);
 			AbstractSyntaxNode program = parser.parse();

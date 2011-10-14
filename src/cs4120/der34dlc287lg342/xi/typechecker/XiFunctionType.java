@@ -29,7 +29,7 @@ public class XiFunctionType implements XiType {
 	public String toString(){
 		String t = "";
 		if (args.isEmpty()){
-			t = "void";
+			t += "void";
 		} else {
 			for (XiPrimitiveType arg : args){
 				t += arg + ",";
@@ -39,7 +39,7 @@ public class XiFunctionType implements XiType {
 		
 		t += "->";
 		if (ret.isEmpty()){
-			t = "void";
+			t += "void";
 		} else {
 			for (XiPrimitiveType r : ret){
 				t += r + ",";

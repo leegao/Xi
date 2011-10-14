@@ -25,7 +25,7 @@ public class TestIRGen extends TestCase {
 	public void testIRConstruction(){
 		XiTypechecker tc;
 		try {
-			tc = gen("use io main(){b:int[] a:int = b[f()]} f():int{print(\"asdf\");return 3}\n ");
+			tc = gen("use io main(){b:int[2][] a:int = b[f()][1]} f():int{print(\"asdf\");return 3}\n ");
 			tc.typecheck();
 			((AbstractSyntaxTree)tc.ast).foldConstants();
 			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);

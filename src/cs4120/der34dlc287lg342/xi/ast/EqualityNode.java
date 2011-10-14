@@ -69,11 +69,14 @@ public class EqualityNode extends ExpressionNode {
 			// all cases here
 			type = XiPrimitiveType.BOOL;
 			return type;
-		} else if (t1.equals(XiPrimitiveType.BOOL) && t2.equals(XiPrimitiveType.BOOL) && op.equals("EQUAL") && op.equals("NOT_EQUAL")){
+		} else if (t1.equals(XiPrimitiveType.BOOL) && t2.equals(XiPrimitiveType.BOOL) && (op.equals("EQUAL") || op.equals("NOT_EQUAL"))){
 			type = XiPrimitiveType.BOOL;
 			return type;
-		} else{
-			throw new CompilationException("Cannot perform EQ("+op+") on types", position());
+		} else if (t1.isArrayType() && t2.isArrayType() && t1.sameBaseType(t2) && t1.dimension.size() == t2.dimension.size()){
+			type = XiPrimitiveType.BOOL;
+			return type;
+		} else {
+			throw new CompilationException("Cannot perform EQ("+op+") between ["+t1+"] and ["+t2+"]", position());
 		}
 	}
 	

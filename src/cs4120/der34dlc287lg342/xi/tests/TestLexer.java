@@ -79,7 +79,7 @@ public class TestLexer extends TestCase {
 		assertNotNull(lexer.next());
 		Token tok = lexer.next();
 		Position pos = tok.position();
-		assertEquals(pos, new XiPosition("", 5, 5, 1, 1));
+		assertEquals(pos, new XiPosition("", 5, 14, 1, 1));
 	}
 	
 	public void testLexerComment(){

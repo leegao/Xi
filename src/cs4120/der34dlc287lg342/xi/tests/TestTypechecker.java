@@ -167,7 +167,7 @@ public class TestTypechecker extends TestCase {
 			fail("Did not catch compilation exception");
 		} catch (CompilationException compEx) {
 			System.out.println(compEx);
-			assertContains("Function expects return types of [int] but got no returns", compEx.getMessage());
+			assertContains("Function cannot be guaranteed to return, expects return types of [int]", compEx.getMessage());
 			assertEquals("((1, 1), (2, 12))", compEx.getPosition().toString());
 		} catch (InvalidXiTypeException xiEx) {
 			fail();
@@ -196,5 +196,26 @@ public class TestTypechecker extends TestCase {
 			fail();
 		}
 	
+	}
+	
+	public void testBool() {
+			XiTypechecker tc;
+			try {
+				tc = gen("func1() {a: bool; b: bool; c: bool = a == b; }");
+				tc.typecheck();
+			} catch (Exception e) {
+				System.out.println(e);
+			}
+			
+	}
+	
+	public void testArray() {
+		XiTypechecker tc;
+		try {
+			tc = gen("use io; func1(d:int) {a: bool; b: bool; c: bool = () == (2,3,4); e:int[] = ((),)}");
+			tc.typecheck();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 	}
 }
