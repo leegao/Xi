@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.ir.context;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 
@@ -21,7 +22,7 @@ public class IRContextStack extends ArrayList<IRContext>{
 		return top.register(id);
 	}
 	
-	public LabelNode name(String name) throws InvalidIRContextException{
+	public LabelNode name(FuncDeclNode name) throws InvalidIRContextException{
 		IRContext top = top();
 		return top.name(name);
 	}

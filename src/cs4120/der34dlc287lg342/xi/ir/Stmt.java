@@ -54,6 +54,8 @@ public abstract class Stmt implements VisualizableTreeNode{
 	public String toString(){
 		String s = this.getClass().getSimpleName();
 		for (Field f : this.getClass().getDeclaredFields()){
+			if (f.getName().equals("primitive"))
+				continue;
 			Object o;
 			s += "["+f.getName();
 			try {

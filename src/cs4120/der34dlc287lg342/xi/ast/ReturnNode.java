@@ -2,12 +2,19 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Call;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Return;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.Register;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
@@ -95,15 +102,36 @@ public class ReturnNode extends AbstractSyntaxTree {
 		if (children.isEmpty())
 			return new IRTranslationStmt(new Return());
 		
-		if (children.size() == 1){
+		Seq seq = new Seq();
+		
+		if (children.size() >= 1){
 			AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(0);
 			IRTranslation tr = e.to_ir(stack);
-			Seq seq = new Seq(new Move(new Temp(Register.RV), tr.expr()), new Return());
-			return new IRTranslationStmt(seq);
-		} else {
-			
+			seq = new Seq(new Move(new Temp(Register.RV), tr.expr()));
+		} 
+		if (children.size() > 1){
+			int i;
+			for (i = 0; i < children.size()-1;i++){
+				AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(i+1);
+				IRTranslation tr = e.to_ir(stack);
+				Expr return_register;
+				if (i < Register.free_registers.length -1 ){
+					Register r = Register.free_registers[i];
+					return_register = new Temp(r);
+					seq.add(new Move(return_register, tr.expr()));
+				} else {
+					return_register = new Temp(Register.R9);
+					if (i == Register.free_registers.length -1){
+						// allocate heap here
+						seq.add(new Move(return_register, new Call(new Name(Label.alloc), new Const(8*(children.size()-1-i)))));
+					}
+					// put it on the heap
+					seq.add(new Move(new Binop(Binop.PLUS, new Mem(return_register), new Const(8*(i-(Register.free_registers.length-1)))), tr.expr()));
+				}
+			}
 		}
 		
-		return null;
+		seq.add(new Return());
+		return new IRTranslationStmt(seq);
 	}
 }

@@ -2,11 +2,17 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Register;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -134,8 +140,43 @@ public class InstNode extends AbstractSyntaxTree {
 			Expr expr = tr2.expr();
 			Seq seq = new Seq(new Move(stack.find_register(decl.id.id), expr));
 			return new IRTranslationStmt(seq);
-		} else {
+		} else if (list.size() > 1) {
 			// find a way to represent tuples
+			AbstractSyntaxTree t = (AbstractSyntaxTree) list.get(0);
+			DeclNode decl = null;
+			if (t instanceof DeclNode){
+				decl = (DeclNode)list.get(0);
+				decl.to_ir(stack); // if decl declares an array type, discard it
+			}
+			IRTranslation tr2 = e.to_ir(stack);
+			Expr expr = tr2.expr();
+			
+			Seq seq;
+			
+			if (decl != null)
+				seq = new Seq(new Move(stack.find_register(decl.id.id), expr)); // call expr always uses rax
+			else
+				seq = new Seq(new Exp(expr)); // underscore
+			
+			for (int i = 0; i < list.size()-1; i++){
+				AbstractSyntaxTree tree = (AbstractSyntaxTree) list.get(i+1);
+				if (!(tree instanceof DeclNode)) continue; // underscore
+				DeclNode d = (DeclNode)tree;
+				d.to_ir(stack);
+				if (i < Register.free_registers.length - 1){
+					Register r = Register.free_registers[i];
+					seq.add(new Move(stack.find_register(d.id.id), new Temp(r)));
+				} else {
+					Expr heap_addr = new Mem(new Temp(Register.R9));
+					seq.add(new Move(
+						stack.find_register(d.id.id), 
+						new Mem(new Binop(Binop.PLUS, 
+							heap_addr, 
+							new Const(8*(i-(Register.free_registers.length-1)))))));
+				}
+			}
+			
+			return new IRTranslationStmt(seq);
 		}
 		
 		return null;

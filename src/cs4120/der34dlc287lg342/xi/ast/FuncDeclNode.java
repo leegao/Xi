@@ -136,4 +136,8 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		
 		return new IRTranslationStmt(seq);
 	}
+	
+	public XiFunctionType type(){
+		return (XiFunctionType)type;
+	}
 }

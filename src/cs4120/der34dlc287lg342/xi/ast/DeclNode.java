@@ -132,7 +132,7 @@ public class DeclNode extends AbstractSyntaxTree {
 		Expr last_r = r;
 		for (int i = 0; i < brackets.size(); i++){
 			AbstractSyntaxTree node = (AbstractSyntaxTree)brackets.get(i);
-			Register base = new Register(true); // this will be replaced later
+			Register base = new Register(); // this will be replaced later
 			Temp base_addr = new Temp(base);
 			
 			if (node == null){

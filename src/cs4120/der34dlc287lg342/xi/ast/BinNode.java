@@ -128,6 +128,8 @@ public class BinNode extends ExpressionNode {
 		 */
 		IRTranslation tr1 = ((AbstractSyntaxTree)e1).to_ir(stack), tr2 = ((AbstractSyntaxTree)e2).to_ir(stack);
 		Expr lhs = tr1.expr(), rhs = tr2.expr();
+		
+		// TODO: handle case for lists
 		return new IRTranslationExpr(
 			new Binop(this.op, lhs, rhs)
 		);

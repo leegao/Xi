@@ -22,19 +22,23 @@ public class Register {
 	static public Register Null = new Register("Null");
 	static public Register FP = new Register("fp"); // frame pointer, rsp
 	static public Register RV = new Register("rv"); // return value register, rax
+	static public Register RDI = new Register("rdi"); 
+	static public Register RSI = new Register("rsi"); 
+	static public Register RDX = new Register("rdx"); 
+	static public Register RCX = new Register("rcx"); 
+	static public Register R8 = new Register("r8"); 
+	static public Register R9 = new Register("r9"); 
 	
-	public Register(boolean heap){
+	static public Register[] free_registers = new Register[]{RDI, RSI, RDX, RCX, R8, R9};
+	
+	public Register(){
 		value = global++;
 		this.name = "" + value;
 	}
 	
 	public Register(String name){
-		this(false);
+		this();
 		this.name = name;
-	}
-	
-	public Register(){
-		this(false);
 	}
 	
 	public int value(){

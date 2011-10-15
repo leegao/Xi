@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.ir.context;
 
 import java.util.HashMap;
 
+import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
@@ -31,9 +32,9 @@ public class IRContext {
 		return arg;
 	}
 	
-	public LabelNode name(String name){
-		LabelNode l = new LabelNode(new Label(name));
-		names.put(name, l);
+	public LabelNode name(FuncDeclNode decl){
+		LabelNode l = new LabelNode(new Label(decl.type().mangle(decl.id.id)));
+		names.put(decl.id.id, l);
 		return l;
 	}
 	

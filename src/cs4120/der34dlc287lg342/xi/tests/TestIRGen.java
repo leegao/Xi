@@ -25,10 +25,10 @@ public class TestIRGen extends TestCase {
 	public void testIRConstruction(){
 		XiTypechecker tc;
 		try {
-			tc = gen("use io main(){b:int[][]; n:int; n = b[0][n];}\n error(){}");
+			tc = gen("use io main(){j:int[][] = ((0,0,0), (0,0,0)) a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:bool = func(1)} func(a:int):int,int,int,int,int,int,int,bool{return 1,2,3,4,5,6,7,(true)}");
 			tc.typecheck();
 			((AbstractSyntaxTree)tc.ast).foldConstants();
-			CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
+			//CodeWriterTreePrinter printer = new CodeWriterTreePrinter(System.out);
 			
 			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
 			System.out.println(tr.stmt().lower());

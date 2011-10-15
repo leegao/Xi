@@ -80,14 +80,14 @@ public class AssignmentNode extends AbstractSyntaxTree {
 		Expr lhs = e1.expr(), rhs = e2.expr();
 		
 		// if lhs is a mem type, remove the first one
-		if (lhs instanceof Mem)
-			lhs = ((Mem)lhs).expr;
-		else if (lhs instanceof Eseq){
-			Eseq eseq = (Eseq)lhs;
-			if (eseq.expr instanceof Mem){
-				eseq.expr = ((Mem)eseq.expr).expr;
-			}
-		}
+//		if (lhs instanceof Mem)
+//			lhs = ((Mem)lhs).expr;
+//		else if (lhs instanceof Eseq){
+//			Eseq eseq = (Eseq)lhs;
+//			if (eseq.expr instanceof Mem){
+//				eseq.expr = ((Mem)eseq.expr).expr;
+//			}
+//		}
 
 		return new IRTranslationStmt(new Move(lhs, rhs));
 	}

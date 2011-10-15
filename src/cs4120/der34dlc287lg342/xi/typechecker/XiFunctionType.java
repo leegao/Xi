@@ -55,4 +55,33 @@ public class XiFunctionType implements XiType {
 		ArrayList<XiPrimitiveType> a= (ArrayList<XiPrimitiveType>) args.clone(), r = (ArrayList<XiPrimitiveType>) ret.clone();
 		return new XiFunctionType(a,r);
 	}
+	
+	public String str_of_primitive(XiPrimitiveType t){
+		String str = t.type.equals("int") ? "i" : "b";
+		for (int i = 0; i < t.dimension.size(); i++)
+			str = "a"+str;
+		return str;
+	}
+	
+	public String mangle(String id){
+		String str = "_I"+id+"_";
+		
+		// encode return
+		if (ret.isEmpty())
+			str += "p";
+		else if (ret.size() == 1){
+			str += str_of_primitive(ret.get(0));
+		} else {
+			str += "t"+ret.size();
+			for (XiPrimitiveType t : ret)
+				str += str_of_primitive(t);
+		}
+		
+		// encode args
+		for (XiPrimitiveType t : args){
+			str += str_of_primitive(t);
+		}
+		
+		return str;
+	}
 }

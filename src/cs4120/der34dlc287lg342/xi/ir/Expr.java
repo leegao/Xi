@@ -41,7 +41,25 @@ public abstract class Expr implements VisualizableTreeNode {
 	
 	@Override
 	public String toString(){
-		return label();
+		String s = this.getClass().getSimpleName();
+		for (Field f : this.getClass().getDeclaredFields()){
+			Object o;
+			s += "["+f.getName();
+			try {
+				o = f.get(this);
+				if (!(o instanceof ArrayList || o == null)){
+					s += ":"+o.toString() + "]";
+				} else 
+					s += "]";
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return s;
 	}
 	
 	public Eseq lower(){
