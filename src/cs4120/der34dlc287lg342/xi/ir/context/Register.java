@@ -20,7 +20,7 @@ public class Register {
 	public String name;
 	
 	static public Register Null = new Register("Null");
-	static public Register FP = new Register("fp"); // frame pointer, rsp
+	static public Register FP = new Register("fp"); // frame pointer, rsp (dereferences to location on stack)
 	static public Register RV = new Register("rv"); // return value register, rax
 	static public Register RDI = new Register("rdi"); 
 	static public Register RSI = new Register("rsi"); 
@@ -53,10 +53,10 @@ public class Register {
 		Temp p = new Temp(new Register());
 		Call ptr = new Call(new Name(Label.alloc), new Binop(Binop.LSH, new Binop(Binop.PLUS, n, new Const(1)), new Const(3)));
 		
-		return new Seq(new Move(p, ptr), new Move(p, n), new Move(base, new Binop(Binop.PLUS, p, new Const(8))));
+		return new Seq(new Move(p, ptr), new Move(new Mem(p), n), new Move(base, new Binop(Binop.PLUS, p, new Const(8))));
 	}
 	
-	public static Eseq size_of(Expr base_expr){
+	public static Expr size_of(Expr base_expr){
 		/*
 		 * Cjump[cond:(base == null)][iftrue:8][iffalse:9]
 		 * LabelNode[label:8]
@@ -67,14 +67,15 @@ public class Register {
 		Label iftrue = new Label(), iffalse = new Label();
 		Temp size = new Temp(new Register()), base = new Temp(new Register());
 		Seq seq = new Seq(
-			
-			new Cjump(new Binop(Binop.EQ, base, new Temp(null)), iftrue, iffalse),
-			new LabelNode(iftrue),
-			new Exp(new Call(new Name(Label.outOfBounds))),
-			new LabelNode(iffalse),
-			new Move(size, new Mem(new Binop(Binop.MINUS, base, new Const(8))))
+//			new Move(base, base_expr),
+//			new Cjump(new Binop(Binop.EQ, base, new Temp(Register.Null)), iftrue, iffalse),
+//			new LabelNode(iffalse),
+			new Move(size, new Mem(new Binop(Binop.MINUS, base_expr, new Const(8))))
+//			new LabelNode(iftrue),
+//			new Exp(new Call(new Name(Label.outOfBounds)))
 		);
 		
-		return new Eseq(size, seq);
+		//return new Eseq(size, seq);
+		return new Mem(new Binop(Binop.MINUS, base_expr, new Const(8)));
 	}
 }

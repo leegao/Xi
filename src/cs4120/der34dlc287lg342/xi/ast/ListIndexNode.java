@@ -114,18 +114,18 @@ public class ListIndexNode extends ExpressionNode {
 		Temp base = new Temp(new Register()), ind = new Temp(new Register());
 		Seq seq = new Seq(new Move(base, lhs), new Move(ind, rhs));
 		
-		Eseq size_eseq = Register.size_of(base);
-		seq.add(size_eseq.stmts);
-		Temp size = (Temp) size_eseq.expr;
+		Expr size = Register.size_of(base);
+		//seq.add(size_eseq.stmts);
+		//Temp size = (Temp) size_eseq.expr;
 		
 		// next check that index is within bounds
 		Label iftrue = new Label(), iffalse = new Label();
-		seq.add(new Cjump(new Binop(Binop.LT, ind, size), iftrue, iffalse));
-		seq.add(new LabelNode(iftrue));
-		seq.add(new Exp(new Call(new Name(Label.outOfBounds))));
+		seq.add(new Cjump(new Binop(Binop.GE, ind, size), iftrue, iffalse));
 		seq.add(new LabelNode(iffalse));
+		seq.add(new Exp(new Call(new Name(Label.outOfBounds))));
+		seq.add(new LabelNode(iftrue));
 		
-		Temp r = new Temp(new Register());
+		//Temp r = new Temp(new Register());
 		Expr arr_ind = new Mem(new Binop(Binop.PLUS, base, new Binop(Binop.LSH, ind, new Const(3))));
 		//seq.add(new Move(r, arr_ind));
 		return new IRTranslationExpr(new Eseq(arr_ind, seq));

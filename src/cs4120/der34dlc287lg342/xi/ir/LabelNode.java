@@ -13,4 +13,13 @@ public class LabelNode extends Stmt {
 	public Seq lower(){
 		return new Seq(this);
 	}
+	
+	@Override
+	public boolean equals(Object that){
+		if (that instanceof LabelNode){
+			LabelNode other = (LabelNode)that;
+			return label == other.label;
+		}
+		return false;
+	}
 }

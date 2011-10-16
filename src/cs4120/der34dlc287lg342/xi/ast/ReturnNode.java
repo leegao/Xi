@@ -126,7 +126,7 @@ public class ReturnNode extends AbstractSyntaxTree {
 						seq.add(new Move(return_register, new Call(new Name(Label.alloc), new Const(8*(children.size()-1-i)))));
 					}
 					// put it on the heap
-					seq.add(new Move(new Binop(Binop.PLUS, new Mem(return_register), new Const(8*(i-(Register.free_registers.length-1)))), tr.expr()));
+					seq.add(new Move(new Mem(new Binop(Binop.PLUS, return_register, new Const(8*(i-(Register.free_registers.length-1))))), tr.expr()));
 				}
 			}
 		}

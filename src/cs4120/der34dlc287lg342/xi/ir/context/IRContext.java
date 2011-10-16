@@ -7,6 +7,7 @@ import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 
 public class IRContext {
@@ -27,7 +28,7 @@ public class IRContext {
 	}
 	
 	public Expr arg(String id, int i){
-		Expr arg = new Binop(Binop.PLUS, new Temp(Register.FP), new Const(i*8+8));
+		Expr arg = new Mem(new Binop(Binop.PLUS, new Temp(Register.FP), new Const(i*8+8)));
 		symbols.put(id, arg);
 		return arg;
 	}

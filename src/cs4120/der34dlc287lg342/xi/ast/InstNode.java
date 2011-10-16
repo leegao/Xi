@@ -167,7 +167,7 @@ public class InstNode extends AbstractSyntaxTree {
 					Register r = Register.free_registers[i];
 					seq.add(new Move(stack.find_register(d.id.id), new Temp(r)));
 				} else {
-					Expr heap_addr = new Mem(new Temp(Register.R9));
+					Expr heap_addr = new Temp(Register.R9);
 					seq.add(new Move(
 						stack.find_register(d.id.id), 
 						new Mem(new Binop(Binop.PLUS, 

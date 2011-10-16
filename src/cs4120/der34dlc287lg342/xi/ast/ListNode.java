@@ -6,6 +6,7 @@ import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Eseq;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
@@ -146,7 +147,7 @@ public class ListNode extends ExpressionNode {
 		for (VisualizableTreeNode child : children()){
 			AbstractSyntaxTree c = (AbstractSyntaxTree) child;
 			IRTranslation tr = c.to_ir(stack);
-			seq.add(new Move(new Binop(Binop.PLUS, base, new Const(8*i++)), tr.expr()));
+			seq.add(new Move(new Mem(new Binop(Binop.PLUS, base, new Const(8*i++))), tr.expr()));
 		}
 		Expr eseq = new Eseq(base, seq);
 		return new IRTranslationExpr(eseq);
