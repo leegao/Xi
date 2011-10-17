@@ -28,7 +28,12 @@ public class IRContext {
 	}
 	
 	public Expr add_arg(String id, int i){
-		Expr arg = new Mem(new Binop(Binop.PLUS, new Temp(Register.FP), new Const(i*8+8)));
+		Expr arg;
+		if (i < Register.free_registers.length){
+			arg = new Temp(Register.free_registers[i]);
+		} else{
+			arg = new Mem(new Binop(Binop.PLUS, new Temp(Register.FP), new Const((i-Register.free_registers.length)*8+8)));
+		}
 		symbols.put(id, arg);
 		return arg;
 	}

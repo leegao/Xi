@@ -92,7 +92,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 		}
 		for (VisualizableTreeNode child : declarations.children()){
 			FuncDeclNode decl = (FuncDeclNode)child;
-			stack.name(decl);
+			stack.add_name(decl);
 		}
 	}
 	
@@ -118,7 +118,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 				}
 			} else if (child instanceof FuncDeclNode){
 				FuncDeclNode func = (FuncDeclNode) child;
-				stack.name(func);
+				stack.add_name(func);
 			}
 		}
 		

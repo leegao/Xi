@@ -121,7 +121,7 @@ public class DeclNode extends AbstractSyntaxTree {
 		 *    register(heap, n+1) 
 		 */
 		String id = ((IdNode)this.id).id;
-		Expr r = stack.register(id);
+		Expr r = stack.add_register(id);
 		
 		// check that brackets is dimensionless
 		if (brackets.isEmpty())
