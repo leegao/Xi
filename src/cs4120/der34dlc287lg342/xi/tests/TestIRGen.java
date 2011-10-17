@@ -777,4 +777,38 @@ public class TestIRGen extends TestCase {
 			ret
 		));
 	}
+	
+	public void testIRGenWhile(){
+		Seq stmt = gen("main(){while(true){a:int = 3}}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new LabelNode(label("157")),
+			new Cjump(new Binop(Binop.XOR,new Const(1),new Const(1)),label("159"),label("158")),
+			new LabelNode(label("158")),
+			new Move(reg("a"),new Const(3)),
+			new Jump(label("157")),
+			new LabelNode(label("159")),
+			ret
+		));
+	}
+	
+	public void testIRGenWhileBreak(){
+		Seq stmt = gen("main(){while(true){a:int = 3 if (a == 3) break}}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new LabelNode(label("162")),
+			new Cjump(new Binop(Binop.XOR,new Const(1),new Const(1)),label("164"),label("163")),
+			new LabelNode(label("163")),
+			new Move(reg("a"),new Const(3)),
+			new Cjump(new Binop(Binop.NE,reg("a"),new Const(3)),label("166"),label("165")),
+			new LabelNode(label("165")),
+			new Jump(label("164")),
+			new LabelNode(label("166")),
+			new Jump(label("162")),
+			new LabelNode(label("164")),
+			ret
+		));
+	}
 }

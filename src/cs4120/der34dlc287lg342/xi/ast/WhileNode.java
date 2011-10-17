@@ -114,8 +114,11 @@ public class WhileNode extends AbstractSyntaxTree {
 			new LabelNode(body)
 		); // make sure evaluation order is not unspecified in java as it is in C
 		
-		if (!(s instanceof BlockNode))
+		if (!(s instanceof BlockNode)){
 			stack.push(c);
+		} else {
+			((BlockNode)s).new_ircontext = c;
+		}
 		
 		seq.add(s.to_ir(stack).stmt()); // add in the body of IR
 		
