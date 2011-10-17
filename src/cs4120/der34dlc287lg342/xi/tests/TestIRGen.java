@@ -836,4 +836,34 @@ public class TestIRGen extends TestCase {
 			ret
 		));
 	}
+	
+	public void testIRGenIfStmts(){
+		Seq stmt = gen("f():int{if (true) {return 1} else {return 2}}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_If_i")),
+			new Cjump(new Binop(Binop.XOR,new Const(1),new Const(1)),label("179"),label("178")),
+			new LabelNode(label("178")),
+			new Move(reg("rv"),new Const(1)),
+			ret,
+			new Jump(label("180")),
+			new LabelNode(label("179")),
+			new Move(reg("rv"),new Const(2)),
+			ret,
+			new LabelNode(label("180"))
+		));
+		
+		stmt = gen("f():int{if (true) {return 1} return 2}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_If_i")),
+			new Cjump(new Binop(Binop.XOR,new Const(1),new Const(1)),label("179"),label("178")),
+			new LabelNode(label("178")),
+			new Move(reg("rv"),new Const(1)),
+			ret,
+			new LabelNode(label("179")),
+			new Move(reg("rv"),new Const(2)),
+			ret
+		));
+	}
 }
