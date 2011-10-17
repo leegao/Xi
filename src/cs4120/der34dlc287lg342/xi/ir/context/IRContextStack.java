@@ -17,12 +17,12 @@ public class IRContextStack extends ArrayList<IRContext>{
 		return this.get(this.size()-1);
 	}
 	
-	public Expr register(String id) throws InvalidIRContextException{
+	public Expr add_register(String id) throws InvalidIRContextException{
 		IRContext top = top();
 		return top.add_register(id);
 	}
 	
-	public LabelNode name(FuncDeclNode name) throws InvalidIRContextException{
+	public LabelNode add_name(FuncDeclNode name) throws InvalidIRContextException{
 		IRContext top = top();
 		return top.add_name(name);
 	}
