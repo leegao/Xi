@@ -957,4 +957,30 @@ public class TestIRGen extends TestCase {
 			ret
 		));
 	}
+
+	public void testIRGenArguments(){
+		Seq stmt = gen("func(a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:int):int,int,int,int,int,int,int{return a,b,c,d,e,a+b,f}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Ifunc_t7iiiiiiiiiiiiiii")),
+			new Move(reg("a"),reg("rdi")),
+			new Move(reg("b"),reg("rsi")),
+			new Move(reg("c"),reg("rdx")),
+			new Move(reg("d"),reg("rcx")),
+			new Move(reg("e"),reg("r8")),
+			new Move(reg("f"),reg("r9")),
+			new Move(reg("g"),new Mem(new Binop(Binop.PLUS,reg("fp"),new Const(24)))),
+			new Move(reg("h"),new Mem(new Binop(Binop.PLUS,reg("fp"),new Const(16)))),
+			new Move(reg("rv"),reg("a")),
+			new Move(reg("rdi"),reg("b")),
+			new Move(reg("rsi"),reg("c")),
+			new Move(reg("rdx"),reg("d")),
+			new Move(reg("rcx"),reg("e")),
+			new Move(reg("r8"),new Binop(Binop.PLUS,reg("a"),reg("b"))),
+			new Move(reg(440),new Call(new Name(label("_I_alloc_i")),new Const(8))),
+			new Move(reg("r9"),reg(440)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(0))),reg("f")),
+			ret
+		));
+	}
 }
