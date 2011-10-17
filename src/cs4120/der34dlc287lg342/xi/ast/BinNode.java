@@ -159,12 +159,14 @@ public class BinNode extends ExpressionNode {
 			 * }
 			 */
 			Temp i = new Temp(new Register()), n1 = new Temp(new Register()), n2 = new Temp(new Register()), arr = new Temp(new Register());
+			Temp l = new Temp(new Register()), r = new Temp(new Register());
 			LabelNode a = new LabelNode(new Label()), b = new LabelNode(new Label()), c = new LabelNode(new Label());
 			LabelNode a_ = new LabelNode(new Label()), b_ = new LabelNode(new Label()), c_ = new LabelNode(new Label());
 			Seq seq = new Seq(
 				new Move(i, new Const(0)),
-				new Move(n1, Register.size_of(lhs)),
-				new Move(n2, new Binop(Binop.PLUS, n1, Register.size_of(rhs))),
+				new Move(l, lhs), new Move(r, rhs),
+				new Move(n1, Register.size_of(l)),
+				new Move(n2, new Binop(Binop.PLUS, n1, Register.size_of(r))),
 				new Move(arr, new Call(new Name(Label.alloc), n2)),
 				
 				a, // check cond
@@ -172,7 +174,7 @@ public class BinNode extends ExpressionNode {
 				b, // body
 				new Move(
 					new Mem(new Binop(Binop.PLUS, arr, new Binop(Binop.LSH, i, new Const(3)))), 
-					new Mem(new Binop(Binop.PLUS, lhs, new Binop(Binop.LSH, i, new Const(3))))
+					new Mem(new Binop(Binop.PLUS, l, new Binop(Binop.LSH, i, new Const(3))))
 				), // arr[i] = lhs[i]
 				new Move(i, new Binop(Binop.PLUS, i, new Const(1))),
 				new Jump(a.label),
@@ -183,7 +185,7 @@ public class BinNode extends ExpressionNode {
 				b_, // body
 				new Move(
 					new Mem(new Binop(Binop.PLUS, arr, new Binop(Binop.LSH, i, new Const(3)))), 
-					new Mem(new Binop(Binop.PLUS, rhs, new Binop(Binop.LSH, new Binop(Binop.MINUS, i, n1), new Const(3))))
+					new Mem(new Binop(Binop.PLUS, r, new Binop(Binop.LSH, new Binop(Binop.MINUS, i, n1), new Const(3))))
 				), // arr[i] = rhs[i-n1]
 				new Move(i, new Binop(Binop.PLUS, i, new Const(1))),
 				new Jump(a_.label),

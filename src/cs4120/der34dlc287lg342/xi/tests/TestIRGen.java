@@ -337,31 +337,32 @@ public class TestIRGen extends TestCase {
 	
 	public void testIRConstruction(){
 		Seq stmt = gen("use io main(){j:int[][] = ((0,0,0), (0,0,0)) a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:bool = func(1)} func(a:int):int,int,int,int,int,int,int,bool{return 1,2,3,4,5,6,7,(true)}");
+		System.out.println(islike(stmt));
 		lookslike(stmt, new Seq(
 			new LabelNode(label("_Imain_p")),
-			new Move(reg(29),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(2),new Const(1)),new Const(3)))),
-			new Move(reg(16),reg(29)),
-			new Move(new Mem(reg(16)),new Const(2)),
-			new Move(reg(15),new Binop(Binop.PLUS,reg(16),new Const(8))),
-			new Move(reg(30),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(3),new Const(1)),new Const(3)))),
-			new Move(reg(18),reg(30)),
-			new Move(new Mem(reg(18)),new Const(3)),
-			new Move(reg(17),new Binop(Binop.PLUS,reg(18),new Const(8))),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(17),new Const(0))),new Const(0)),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(17),new Const(8))),new Const(0)),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(17),new Const(16))),new Const(0)),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(15),new Const(0))),reg(17)),
-			new Move(reg(31),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(3),new Const(1)),new Const(3)))),
-			new Move(reg(20),reg(31)),
-			new Move(new Mem(reg(20)),new Const(3)),
-			new Move(reg(19),new Binop(Binop.PLUS,reg(20),new Const(8))),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(19),new Const(0))),new Const(0)),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(19),new Const(8))),new Const(0)),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(19),new Const(16))),new Const(0)),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(15),new Const(8))),reg(19)),
-			new Move(reg("j"),reg(15)),
-			new Move(reg(32),new Call(new Name(label("_Ifunc_t8iiiiiiibi")),new Const(1))),
-			new Move(reg("a"),reg(32)),
+			new Move(reg(31),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(2),new Const(1)),new Const(3)))),
+			new Move(reg(17),reg(31)),
+			new Move(new Mem(reg(17)),new Const(2)),
+			new Move(reg(16),new Binop(Binop.PLUS,reg(17),new Const(8))),
+			new Move(reg(32),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(3),new Const(1)),new Const(3)))),
+			new Move(reg(19),reg(32)),
+			new Move(new Mem(reg(19)),new Const(3)),
+			new Move(reg(18),new Binop(Binop.PLUS,reg(19),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(18),new Const(0))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(18),new Const(8))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(18),new Const(16))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(16),new Const(0))),reg(18)),
+			new Move(reg(33),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(3),new Const(1)),new Const(3)))),
+			new Move(reg(21),reg(33)),
+			new Move(new Mem(reg(21)),new Const(3)),
+			new Move(reg(20),new Binop(Binop.PLUS,reg(21),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(20),new Const(0))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(20),new Const(8))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(20),new Const(16))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(16),new Const(8))),reg(20)),
+			new Move(reg("j"),reg(16)),
+			new Move(reg(34),new Call(new Name(label("_Ifunc_t8iiiiiiibi")),new Const(1))),
+			new Move(reg("a"),reg(34)),
 			new Move(reg("b"),reg("rdi")),
 			new Move(reg("c"),reg("rsi")),
 			new Move(reg("d"),reg("rdx")),
@@ -371,14 +372,15 @@ public class TestIRGen extends TestCase {
 			new Move(reg("h"),new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(8)))),
 			ret,
 			new LabelNode(label("_Ifunc_t8iiiiiiibi")),
+			new Move(reg("a"),reg("rdi")),
 			new Move(reg("rv"),new Const(1)),
 			new Move(reg("rdi"),new Const(2)),
 			new Move(reg("rsi"),new Const(3)),
 			new Move(reg("rdx"),new Const(4)),
 			new Move(reg("rcx"),new Const(5)),
 			new Move(reg("r8"),new Const(6)),
-			new Move(reg(33),new Call(new Name(label("_I_alloc_i")),new Const(16))),
-			new Move(reg("r9"),reg(33)),
+			new Move(reg(35),new Call(new Name(label("_I_alloc_i")),new Const(16))),
+			new Move(reg("r9"),reg(35)),
 			new Move(new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(0))),new Const(7)),
 			new Move(new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(8))),new Const(1)),
 			ret
@@ -442,6 +444,25 @@ public class TestIRGen extends TestCase {
 		));
 	}
 	
+	public void testIRGenTupleAssignment(){
+		Seq stmt = gen("main(){a:int, b:int = f(1,2)} f(a:int, b:int):int,int{return a+b, a-b}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(89),new Call(new Name(label("_If_t2iiii")),new Const(1),new Const(2))),
+			new Move(reg("a"),reg(89)),
+			new Move(reg("b"),reg("rdi")),
+			ret,
+			new LabelNode(label("_If_t2iiii")),
+			new Move(reg("a"),reg("rdi")),
+			new Move(reg("b"),reg("rsi")),
+			new Move(reg("rv"),new Binop(Binop.PLUS,reg("a"),reg("b"))),
+			new Move(reg("rdi"),new Binop(Binop.MINUS,reg("a"),reg("b"))),
+			ret
+		));
+	}
+	
+	
 	public void testIRGenListAdd(){
 		Seq stmt = gen("use io main(){a:int[]; b:int[] c:int[] = a + b}");
 		lookslike(stmt, new Seq(
@@ -449,6 +470,7 @@ public class TestIRGen extends TestCase {
 			new Move(reg("a"),reg("null"),false),
 			new Move(reg("b"),reg("null"),false),
 			new Move(reg(60),new Const(0),false),
+			new Move(reg, reg), new Move(reg, reg),
 			new Move(reg(61),new Mem(new Binop(Binop.MINUS,reg("a"),new Const(8))),false),
 			new Move(reg(62),new Binop(Binop.PLUS,reg(61),new Mem(new Binop(Binop.MINUS,reg("b"),new Const(8)))),false),
 			new Move(reg(68),new Call(new Name(label("_I_alloc_i")),reg(62)),true),

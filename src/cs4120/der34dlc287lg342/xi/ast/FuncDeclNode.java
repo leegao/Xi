@@ -119,12 +119,13 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		 */
 		IRContext c = new IRContext();
 		int i = 0;
+		Seq seq = new Seq(stack.find_name(id.id));
 		for (VisualizableTreeNode child : args){
 			DeclNode arg = (DeclNode)child;
-			c.add_arg(arg.id.id, i++, args.size());
+			seq.add(c.add_arg(arg.id.id, i++, args.size()));
 		}
 		
-		Seq seq = new Seq(stack.find_name(id.id));
+		
 		block.new_ircontext = c;
 		IRTranslation tr = block.to_ir(stack);
 		seq.add(tr.stmt());
