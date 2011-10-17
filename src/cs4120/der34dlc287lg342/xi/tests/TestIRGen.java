@@ -538,7 +538,7 @@ public class TestIRGen extends TestCase {
 	
 	public void testIRGenIndexAssignmentList(){
 		Seq stmt = gen("main(){a:int[][] b:int  a[b] = ()}");
-		System.out.println(islike(stmt));
+		//System.out.println(islike(stmt));
 		lookslike(stmt, new Seq(
 			new LabelNode(label("_Imain_p")),
 			new Move(reg("a"),reg("null")),
@@ -553,6 +553,24 @@ public class TestIRGen extends TestCase {
 			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
 			new LabelNode(label("85")),
 			new Move(new Mem(new Binop(Binop.PLUS,reg(183),new Binop(Binop.LSH,reg(184),new Const(3)))),reg(187)),
+			ret
+		));
+	}
+	
+	public void testIRGenRecurGCD(){
+		Seq stmt = gen("gcd(a:int, b:int):int{if (b == 0){return a} return gcd(b, a % b)}");
+		System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Igcd_iii")),
+			new Move(reg("a"),reg("rdi")),
+			new Move(reg("b"),reg("rsi")),
+			new Cjump(new Binop(Binop.NE,reg("b"),new Const(0)),label("90"),label("89")),
+			new LabelNode(label("89")),
+			new Move(reg("rv"),reg("a")),
+			ret,
+			new LabelNode(label("90")),
+			new Move(reg(199),new Call(new Name(label("_Igcd_iii")),reg("b"),new Binop(Binop.MOD,reg("a"),reg("b")))),
+			new Move(reg("rv"),reg(199)),
 			ret
 		));
 	}
