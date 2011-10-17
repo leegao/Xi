@@ -24,7 +24,7 @@ public abstract class Expr implements VisualizableTreeNode {
 			s += "["+f.getName();
 			try {
 				o = f.get(this);
-				if (!(o instanceof ArrayList || o instanceof VisualizableTreeNode)){
+				if (!(o instanceof ArrayList<?> || o instanceof VisualizableTreeNode)){
 					s += ":"+o.toString() + "]";
 				} else 
 					s += "]";
@@ -47,7 +47,7 @@ public abstract class Expr implements VisualizableTreeNode {
 			s += "["+f.getName();
 			try {
 				o = f.get(this);
-				if (!(o instanceof ArrayList || o == null)){
+				if (!(o instanceof ArrayList<?> || o == null)){
 					s += ":"+o.toString() + "]";
 				} else 
 					s += "]";

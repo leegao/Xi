@@ -2,12 +2,8 @@ package cs4120.der34dlc287lg342.xi.ir.context;
 
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Call;
-import cs4120.der34dlc287lg342.xi.ir.Cjump;
 import cs4120.der34dlc287lg342.xi.ir.Const;
-import cs4120.der34dlc287lg342.xi.ir.Eseq;
-import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
-import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
@@ -64,16 +60,16 @@ public class Register {
 		 * LabelNode[label:9]
 		 * Move[dest:r(#)][src:Mem[(base - 8)]]
 		 */
-		Label iftrue = new Label(), iffalse = new Label();
-		Temp size = new Temp(new Register()), base = new Temp(new Register());
-		Seq seq = new Seq(
+		//Label iftrue = new Label(), iffalse = new Label();
+//		Temp size = new Temp(new Register()), base = new Temp(new Register());
+//		Seq seq = new Seq(
 //			new Move(base, base_expr),
 //			new Cjump(new Binop(Binop.EQ, base, new Temp(Register.Null)), iftrue, iffalse),
 //			new LabelNode(iffalse),
-			new Move(size, new Mem(new Binop(Binop.MINUS, base_expr, new Const(8))))
+//			new Move(size, new Mem(new Binop(Binop.MINUS, base_expr, new Const(8))))
 //			new LabelNode(iftrue),
 //			new Exp(new Call(new Name(Label.outOfBounds)))
-		);
+//		);
 		
 		//return new Eseq(size, seq);
 		return new Mem(new Binop(Binop.MINUS, base_expr, new Const(8)));

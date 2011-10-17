@@ -136,7 +136,6 @@ public class DeclNode extends AbstractSyntaxTree {
 			Temp base_addr = new Temp(base);
 			
 			if (node == null){
-				int n = 0;
 				seq.add(new Move(last_r, new Temp(Register.Null)));
 				break;
 			} else {

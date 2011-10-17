@@ -1,8 +1,6 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import cs4120.der34dlc287lg342.xi.ir.context.Register;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;

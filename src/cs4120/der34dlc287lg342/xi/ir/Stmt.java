@@ -24,7 +24,7 @@ public abstract class Stmt implements VisualizableTreeNode{
 			s += "["+f.getName();
 			try {
 				o = f.get(this);
-				if (!(o instanceof ArrayList || o instanceof VisualizableTreeNode)){
+				if (!(o instanceof ArrayList<?> || o instanceof VisualizableTreeNode)){
 					s += ":"+o.toString() + "]";
 				} else 
 					s += "]";
@@ -60,7 +60,7 @@ public abstract class Stmt implements VisualizableTreeNode{
 			s += "["+f.getName();
 			try {
 				o = f.get(this);
-				if (!(o instanceof ArrayList)){
+				if (!(o instanceof ArrayList<?>)){
 					s += ":"+o.toString() + "]";
 				} else 
 					s += "]";

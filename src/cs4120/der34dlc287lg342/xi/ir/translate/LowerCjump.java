@@ -15,7 +15,6 @@ public class LowerCjump {
 	public Seq translate(){
 		Seq ret = new Seq();
 		// Go through the seq
-		ArrayList<VisualizableTreeNode> arr = (ArrayList<VisualizableTreeNode>)ret.children();
 		ArrayList<VisualizableTreeNode> children = (ArrayList<VisualizableTreeNode>)seq.children();
 		for (int i = 0; i < children.size(); i++){
 			Stmt child = (Stmt)children.get(i);

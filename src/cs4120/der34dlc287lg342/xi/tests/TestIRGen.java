@@ -179,12 +179,12 @@ public class TestIRGen extends TestCase {
 				if (o2 == null)
 					fail("The impossible happened");
 				
-				ArrayList<Expr> a1 = (ArrayList<Expr>)o, a2 = (ArrayList<Expr>)o2;
+				ArrayList<?> a1 = (ArrayList<?>)o, a2 = (ArrayList<?>)o2;
 				
 				int i = 0, n = a2.size();
-				for (Expr child : a1){
+				for (Object child : a1){
 					try{
-						lookslike(child, a2.get(i++));
+						lookslike((Expr)child, (Expr)a2.get(i++));
 					} catch (IndexOutOfBoundsException e){
 						fail(e.getMessage());
 					}
@@ -980,6 +980,32 @@ public class TestIRGen extends TestCase {
 			new Move(reg(440),new Call(new Name(label("_I_alloc_i")),new Const(8))),
 			new Move(reg("r9"),reg(440)),
 			new Move(new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(0))),reg("f")),
+			ret
+		));
+	}
+	
+	public void testIRGenFuncCalls(){
+		Seq stmt = gen("main(){a:int = f()} f():int{return 3}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(451),new Call(new Name(label("_If_i")))),
+			new Move(reg("a"),reg(451)),
+			ret,
+			new LabelNode(label("_If_i")),
+			new Move(reg("rv"),new Const(3)),
+			ret
+		));
+	}
+	
+	public void testIRGenProcedures(){
+		Seq stmt = gen("main(){f()} f(){}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Exp(new Call(new Name(label("_If_p")))),
+			ret,
+			new LabelNode(label("_If_p")),
 			ret
 		));
 	}
