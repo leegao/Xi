@@ -9,7 +9,9 @@ import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Call;
+import cs4120.der34dlc287lg342.xi.ir.Cjump;
 import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
@@ -24,6 +26,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.Register;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -77,7 +80,7 @@ public class TestIRGen extends TestCase {
 	
 	public void lookslike(Stmt stmt, Stmt expected){
 		Field[] fields = stmt.getClass().getDeclaredFields();
-		assertEquals((expected).getClass().getSimpleName(), stmt.getClass().getSimpleName());
+		assertEquals(""+stmt, (expected).getClass().getSimpleName(), stmt.getClass().getSimpleName());
 		for (Field field : fields){
 			field.setAccessible(true);
 			Object o = null;
@@ -183,6 +186,13 @@ public class TestIRGen extends TestCase {
 		//System.out.println(stmt);
 	}
 	
+	public void testIRCjumpLowering(){
+		Seq stmt = gen("use io main(){a:bool b:bool; if (a | b){a = true} else {a = false}}");
+		//System.out.println(stmt);
+		LowerCjump lcj = new LowerCjump(stmt);
+		//System.out.println(lcj.translate());
+	}
+	
 	public void testIRAssignmentPrimitive(){
 		Seq stmt = gen("use io main(){a:int; a = 3}");
 		lookslike(stmt, new Seq(label, new Move(temp, c), ret));
@@ -206,17 +216,19 @@ public class TestIRGen extends TestCase {
 		));
 		
 		stmt = gen("use io main(){a:int[] b:int b = a[1]}");
-		System.out.println(stmt);
 		lookslike(stmt, new Seq(label,
 			new Move(temp, temp), // decl a
 			new Move(temp, temp), // rebase a to a temporary
 			new Move(temp, c), // rebase index 1 to a new temp
+			new Cjump(new Binop(Binop.GE, temp, new Mem(new Binop(Binop.MINUS, temp, c))), l, l),
+			label, new Exp(new Call(name)), // out of bounds
+			label, new Move(temp, new Mem(new Binop(Binop.PLUS, temp, new Binop(Binop.LSH, temp, c)))),
 			ret
 		));
 		
 		stmt = gen("use io main(){a:int; a = f()} f():int{return 1}");
 		lookslike(stmt, new Seq(
-			label, new Move(temp, new Call(name)), ret, // main(){a - f()}
+			label, new Move(temp, new Call(name)), new Move(temp, temp), ret, // main(){a - f()}
 			label, new Move(temp, c), ret // f(){return 1}
 		));
 	}
