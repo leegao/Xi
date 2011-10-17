@@ -645,6 +645,102 @@ public class TestIRGen extends TestCase {
 		));
 	}
 	
+	public void testIRGenBoolOps(){
+		Seq stmt = gen("main(){a:bool b:bool a = a|b}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(257),new Const(1)),
+			new Cjump(reg("a"),label("105"),label("107")),
+			new LabelNode(label("107")),
+			new Cjump(reg("b"),label("105"),label("106")),
+			new LabelNode(label("106")),
+			new Move(reg(257),new Const(0)),
+			new LabelNode(label("105")),
+			new Move(reg("a"),reg(257)),
+			ret
+		));
+		
+		stmt = gen("main(){a:bool b:bool if(a|b){a = true}}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Cjump(reg("a"),label("109"),label("111")),
+			new LabelNode(label("111")),
+			new Cjump(new Binop(Binop.XOR,reg("b"),new Const(1)),label("110"),label("109")),
+			new LabelNode(label("109")),
+			new Move(reg("a"),new Const(1)),
+			new LabelNode(label("110")),
+			ret
+		));
+		
+		stmt = gen("main(){a:bool if(a|f()){a = true}} f():bool{return true}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Cjump(reg("a"),label("114"),label("116")),
+			new LabelNode(label("116")),
+			new Move(reg(267),new Call(new Name(label("_If_b")))),
+			new Cjump(new Binop(Binop.XOR,reg(267),new Const(1)),label("115"),label("114")),
+			new LabelNode(label("114")),
+			new Move(reg("a"),new Const(1)),
+			new LabelNode(label("115")),
+			ret,
+			new LabelNode(label("_If_b")),
+			new Move(reg("rv"),new Const(1)),
+			ret
+		));
+		
+		stmt = gen("main(){a:bool b:bool[] if(a|b[1]){a = true}}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("b"),reg("null")),
+			new Cjump(reg("a"),label("122"),label("124")),
+			new LabelNode(label("124")),
+			new Move(reg(274),reg("b")),
+			new Move(reg(275),new Const(1)),
+			new Cjump(new Binop(Binop.GE,reg(275),new Mem(new Binop(Binop.MINUS,reg(274),new Const(8)))),label("120"),label("121")),
+			new LabelNode(label("121")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("120")),
+			new Cjump(new Binop(Binop.XOR,new Mem(new Binop(Binop.PLUS,reg(274),new Binop(Binop.LSH,reg(275),new Const(3)))),new Const(1)),label("123"),label("122")),
+			new LabelNode(label("122")),
+			new Move(reg("a"),new Const(1)),
+			new LabelNode(label("123")),
+			ret
+		));
+	}
+	
+	public void testIRGenListEq(){
+		Seq stmt = gen("use io main(){a:int[]; b:int[] c:bool = a == b}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),reg("null")),
+			new Move(reg("b"),reg("null")),
+			new Move(reg("c"),new Binop(Binop.EQ,reg("a"),reg("b"))),
+			ret
+		));
+		
+		stmt = gen("use io main(){a:int[] c:bool = a == f()} f():int[]{return ()}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),reg("null")),
+			new Move(reg(303),new Call(new Name(label("_If_ai")))),
+			new Move(reg("c"),new Binop(Binop.EQ,reg("a"),reg(303))),
+			ret,
+			new LabelNode(label("_If_ai")),
+			new Move(reg(304),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(0),new Const(1)),new Const(3)))),
+			new Move(reg(302),reg(304)),
+			new Move(new Mem(reg(302)),new Const(0)),
+			new Move(reg(301),new Binop(Binop.PLUS,reg(302),new Const(8))),
+			new Move(reg("rv"),reg(301)),
+			ret
+		));
+	}
+	
 	public void testIRGenListAdd(){
 		Seq stmt = gen("use io main(){a:int[]; b:int[] c:int[] = a + b}");
 		lookslike(stmt, new Seq(
