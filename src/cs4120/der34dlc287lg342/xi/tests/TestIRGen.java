@@ -195,58 +195,6 @@ public class TestIRGen extends TestCase {
 		}
 	}
 
-	public void testIRConstruction(){
-		Stmt stmt = gen("use io main(){j:int[][] = ((0,0,0), (0,0,0)) a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:bool = func(1)} func(a:int):int,int,int,int,int,int,int,bool{return 1,2,3,4,5,6,7,(true)}");
-		//System.out.println(stmt);
-	}
-	
-	public void testIRCjumpLowering(){
-		Seq stmt = gen("use io main(){a:bool b:bool; if (a | b){a = true} else {a = false}}");
-		//System.out.println(stmt);
-		LowerCjump lcj = new LowerCjump(stmt);
-		//System.out.println(lcj.translate());
-	}
-	
-	public void testIRAssignmentPrimitive(){
-		Seq stmt = gen("use io main(){a:int; a = 3}");
-		lookslike(stmt, new Seq(label, new Move(temp, c), ret));
-		
-		stmt = gen("use io main(){a:bool; a = true}");
-		lookslike(stmt, new Seq(label, new Move(temp, c), ret));
-		
-		stmt = gen("use io main(){a:int[]; a = (1,2,3)}");
-		lookslike(stmt, new Seq(
-			label, new Move(temp, temp), // init a
-			new Move(temp, new Call(name, new Binop(Binop.LSH, new Binop(0, c, c), c))), // call alloc
-			new Move(temp, temp),
-			new Move(new Mem(temp), c), // put size into base-1
-			new Move(temp, new Binop(Binop.PLUS, temp, c)), // put base-addr of the array into temp
-			// add the elements into the array
-			new Move(new Mem(new Binop(Binop.PLUS, temp, c)), c),
-			new Move(new Mem(new Binop(Binop.PLUS, temp, c)), c),
-			new Move(new Mem(new Binop(Binop.PLUS, temp, c)), c),
-			new Move(temp, temp),
-			ret
-		));
-		
-		stmt = gen("use io main(){a:int[] b:int b = a[1]}");
-		lookslike(stmt, new Seq(label,
-			new Move(temp, temp), // decl a
-			new Move(temp, temp), // rebase a to a temporary
-			new Move(temp, c), // rebase index 1 to a new temp
-			new Cjump(new Binop(Binop.GE, temp, new Mem(new Binop(Binop.MINUS, temp, c))), l, l),
-			label, new Exp(new Call(name)), // out of bounds
-			label, new Move(temp, new Mem(new Binop(Binop.PLUS, temp, new Binop(Binop.LSH, temp, c)))),
-			ret
-		));
-		
-		stmt = gen("use io main(){a:int; a = f()} f():int{return 1}");
-		lookslike(stmt, new Seq(
-			label, new Move(temp, new Call(name)), new Move(temp, temp), ret, // main(){a - f()}
-			label, new Move(temp, c), ret // f(){return 1}
-		));
-	}
-	
 	public String islike(Seq stmt){
 		String seq = "new Seq(\n";
 		for (VisualizableTreeNode child : stmt.children()){
@@ -266,16 +214,18 @@ public class TestIRGen extends TestCase {
 		ArrayList<Field> fields = new ArrayList<Field>();
 		for (Field f_ : f) fields.add(f_);
 		Constructor<?>[] cs = stmt.getClass().getConstructors();
-		Class[] args = {}; int n = 0;
+		Class<?>[] args = {};
 		for (Constructor<?> c : cs){
-			Class[] args_ = c.getParameterTypes();
+			Class<?>[] args_ = c.getParameterTypes();
 			if (args_.length > args.length)
 				args = args_;
 		}
 		//System.out.println(stmt);
 		String s = "new "+stmt.getClass().getSimpleName()+"(";
-		for (Class arg : args){
+		for (Class<?> arg : args){
 			for (Field field : fields){
+				if (field.getName().equals("primitive"))
+					continue;
 				if (arg == field.getType()){
 					//System.out.println(arg.getSimpleName() +": "+ field.getName());
 					fields.remove(field);
@@ -328,15 +278,13 @@ public class TestIRGen extends TestCase {
 		if (expr instanceof Binop)
 			return islike((Binop)expr);
 		
-		
-		
 		Field[] f = expr.getClass().getDeclaredFields();
 		ArrayList<Field> fields = new ArrayList<Field>();
 		for (Field f_ : f) fields.add(f_);
 		Constructor<?>[] cs = expr.getClass().getConstructors();
-		Class[] args = {}; int n = 0;
+		Class<?>[] args = {};
 		for (Constructor<?> c : cs){
-			Class[] args_ = c.getParameterTypes();
+			Class<?>[] args_ = c.getParameterTypes();
 			if (args_.length > args.length && !c.isVarArgs())
 				args = args_;
 		}
@@ -345,7 +293,7 @@ public class TestIRGen extends TestCase {
 		if (expr instanceof Temp)
 			s = "reg";
 		
-		for (Class arg : args){
+		for (Class<?> arg : args){
 			for (Field field : fields){
 				//System.out.println(arg.getSimpleName() +": "+ field.getName());
 				if (arg == field.getType()){
@@ -370,9 +318,9 @@ public class TestIRGen extends TestCase {
 						s += r.name.equals(""+r.value)? "("+r.name+")" : "(\""+r.name+"\")";
 						return s;
 					} else if (o instanceof ArrayList<?>) {
-						ArrayList<Expr> r = (ArrayList<Expr>)o;
-						for (Expr e : r)
-							s += islike(e)+",";
+						ArrayList<?> r = (ArrayList<?>)o;
+						for (Object e : r)
+							s += islike((Expr)e)+",";
 						s = s.substring(0, s.length()-1);
 					} else{
 						System.out.println(arg.getSimpleName() +": "+ field.getName());
@@ -386,11 +334,116 @@ public class TestIRGen extends TestCase {
 		
 		return s.substring(0,s.length()-1)+")";
 	}
-
+	
+	public void testIRConstruction(){
+		Seq stmt = gen("use io main(){j:int[][] = ((0,0,0), (0,0,0)) a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:bool = func(1)} func(a:int):int,int,int,int,int,int,int,bool{return 1,2,3,4,5,6,7,(true)}");
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(29),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(2),new Const(1)),new Const(3)))),
+			new Move(reg(16),reg(29)),
+			new Move(new Mem(reg(16)),new Const(2)),
+			new Move(reg(15),new Binop(Binop.PLUS,reg(16),new Const(8))),
+			new Move(reg(30),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(3),new Const(1)),new Const(3)))),
+			new Move(reg(18),reg(30)),
+			new Move(new Mem(reg(18)),new Const(3)),
+			new Move(reg(17),new Binop(Binop.PLUS,reg(18),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(17),new Const(0))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(17),new Const(8))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(17),new Const(16))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(15),new Const(0))),reg(17)),
+			new Move(reg(31),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(3),new Const(1)),new Const(3)))),
+			new Move(reg(20),reg(31)),
+			new Move(new Mem(reg(20)),new Const(3)),
+			new Move(reg(19),new Binop(Binop.PLUS,reg(20),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(19),new Const(0))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(19),new Const(8))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(19),new Const(16))),new Const(0)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(15),new Const(8))),reg(19)),
+			new Move(reg("j"),reg(15)),
+			new Move(reg(32),new Call(new Name(label("_Ifunc_t8iiiiiiibi")),new Const(1))),
+			new Move(reg("a"),reg(32)),
+			new Move(reg("b"),reg("rdi")),
+			new Move(reg("c"),reg("rsi")),
+			new Move(reg("d"),reg("rdx")),
+			new Move(reg("e"),reg("rcx")),
+			new Move(reg("f"),reg("r8")),
+			new Move(reg("g"),new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(0)))),
+			new Move(reg("h"),new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(8)))),
+			ret,
+			new LabelNode(label("_Ifunc_t8iiiiiiibi")),
+			new Move(reg("rv"),new Const(1)),
+			new Move(reg("rdi"),new Const(2)),
+			new Move(reg("rsi"),new Const(3)),
+			new Move(reg("rdx"),new Const(4)),
+			new Move(reg("rcx"),new Const(5)),
+			new Move(reg("r8"),new Const(6)),
+			new Move(reg(33),new Call(new Name(label("_I_alloc_i")),new Const(16))),
+			new Move(reg("r9"),reg(33)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(0))),new Const(7)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg("r9"),new Const(8))),new Const(1)),
+			ret
+		));
+	}
+	
+	public void testIRCjumpLowering(){
+		Seq stmt = gen("use io main(){a:bool b:bool; if (a | b){a = true} else {a = false}}");
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Cjump(reg("a"),label("19"),label("21")),
+			new LabelNode(label("21")),
+			new Cjump(new Binop(Binop.XOR,reg("b"),new Const(1)),label("20"),label("19")),
+			new LabelNode(label("19")),
+			new Move(reg("a"),new Const(1)),
+			new Jump(label("22")),
+			new LabelNode(label("20")),
+			new Move(reg("a"),new Const(0)),
+			new LabelNode(label("22")),
+			ret
+		));
+	}
+	
+	public void testIRAssignmentPrimitive(){
+		Seq stmt = gen("use io main(){a:int; a = 3}");
+		lookslike(stmt, new Seq(label, new Move(temp, c), ret));
+		
+		stmt = gen("use io main(){a:bool; a = true}");
+		lookslike(stmt, new Seq(label, new Move(temp, c), ret));
+		
+		stmt = gen("use io main(){a:int[]; a = (1,2,3)}");
+		lookslike(stmt, new Seq(
+			label, new Move(temp, temp), // init a
+			new Move(temp, new Call(name, new Binop(Binop.LSH, new Binop(0, c, c), c))), // call alloc
+			new Move(temp, temp),
+			new Move(new Mem(temp), c), // put size into base-1
+			new Move(temp, new Binop(Binop.PLUS, temp, c)), // put base-addr of the array into temp
+			// add the elements into the array
+			new Move(new Mem(new Binop(Binop.PLUS, temp, c)), c),
+			new Move(new Mem(new Binop(Binop.PLUS, temp, c)), c),
+			new Move(new Mem(new Binop(Binop.PLUS, temp, c)), c),
+			new Move(temp, temp),
+			ret
+		));
+		
+		stmt = gen("use io main(){a:int[] b:int b = a[1]}");
+		lookslike(stmt, new Seq(label,
+			new Move(temp, temp), // decl a
+			new Move(temp, temp), // rebase a to a temporary
+			new Move(temp, c), // rebase index 1 to a new temp
+			new Cjump(new Binop(Binop.GE, temp, new Mem(new Binop(Binop.MINUS, temp, c))), l, l),
+			label, new Exp(new Call(name)), // out of bounds
+			label, new Move(temp, new Mem(new Binop(Binop.PLUS, temp, new Binop(Binop.LSH, temp, c)))),
+			ret
+		));
+		
+		stmt = gen("use io main(){a:int; a = f()} f():int{return 1}");
+		lookslike(stmt, new Seq(
+			label, new Move(temp, new Call(name)), new Move(temp, temp), ret, // main(){a - f()}
+			label, new Move(temp, c), ret // f(){return 1}
+		));
+	}
 	
 	public void testIRGenListAdd(){
 		Seq stmt = gen("use io main(){a:int[]; b:int[] c:int[] = a + b}");
-		System.out.println(islike(stmt));
 		lookslike(stmt, new Seq(
 			new LabelNode(label("_Imain_p")),
 			new Move(reg("a"),reg("null"),false),
@@ -403,14 +456,20 @@ public class TestIRGen extends TestCase {
 			new LabelNode(label("64")),
 			new Cjump(new Binop(Binop.GE,reg(60),reg(61)),label("66"),label("65")),
 			new LabelNode(label("65")),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(63),new Binop(Binop.LSH,reg(60),new Const(3)))),new Mem(new Binop(Binop.PLUS,reg("a"),new Binop(Binop.LSH,reg(60),new Const(3)))),false),
+			new Move(
+				new Mem(new Binop(Binop.PLUS,reg(63),new Binop(Binop.LSH,reg(60),new Const(3)))),
+				new Mem(new Binop(Binop.PLUS,reg("a"),new Binop(Binop.LSH,reg(60),new Const(3))))),
 			new Move(reg(60),new Binop(Binop.PLUS,reg(60),new Const(1)),false),
 			new Jump(label("64")),
 			new LabelNode(label("66")),
 			new LabelNode(label("67")),
 			new Cjump(new Binop(Binop.GE,reg(60),reg(62)),label("69"),label("68")),
 			new LabelNode(label("68")),
-			new Move(new Mem(new Binop(Binop.PLUS,reg(63),new Binop(Binop.LSH,reg(60),new Const(3)))),new Mem(new Binop(Binop.PLUS,reg("b"),new Binop(Binop.LSH,new Binop(Binop.MINUS,reg(60),reg(61)),new Const(3)))),false),
+			new Move(
+				new Mem(new Binop(Binop.PLUS,reg(63),new Binop(Binop.LSH,reg(60),new Const(3)))),
+				new Mem(
+					new Binop(Binop.PLUS,reg("b"),
+						new Binop(Binop.LSH,new Binop(Binop.MINUS,reg(60),reg(61)),new Const(3))))),
 			new Move(reg(60),new Binop(Binop.PLUS,reg(60),new Const(1)),false),
 			new Jump(label("67")),
 			new LabelNode(label("69")),
