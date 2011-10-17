@@ -632,6 +632,19 @@ public class TestIRGen extends TestCase {
 		));
 	}
 	
+	public void testIRGenNestedBlocks(){
+		Seq stmt = gen("gcd(a:int, b:int):int{{{{a:int = 3 return a}}}}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Igcd_iii")),
+			new Move(reg("a(245)"),reg("rdi")),
+			new Move(reg("b"),reg("rsi")),
+			new Move(reg("a(249)"),new Const(3)), // this reg has a diff register id
+			new Move(reg("rv"),reg("a(249)")),
+			ret
+		));
+	}
+	
 	public void testIRGenListAdd(){
 		Seq stmt = gen("use io main(){a:int[]; b:int[] c:int[] = a + b}");
 		lookslike(stmt, new Seq(
