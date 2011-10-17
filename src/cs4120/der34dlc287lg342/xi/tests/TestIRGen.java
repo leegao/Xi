@@ -557,9 +557,66 @@ public class TestIRGen extends TestCase {
 		));
 	}
 	
+	public void testIRGenBinop(){
+		Seq stmt = gen("main(){a:int b:int  a = a + b}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),new Binop(Binop.PLUS,reg("a"),reg("b"))),
+			ret
+		));
+		
+		stmt = gen("main(){a:int b:int  a = a * b}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),new Binop(Binop.MUL,reg("a"),reg("b"))),
+			ret
+		));
+		
+		stmt = gen("main(){a:int b:int  a = -b}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),new Binop(Binop.PLUS,new Const(0),reg("b"))),
+			ret
+		));
+		
+		stmt = gen("main(){a:int b:int c:bool  c = a > b}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("c"),new Binop(Binop.GT,reg("a"),reg("b"))),
+			ret
+		));
+		
+		stmt = gen("main(){a:bool b:bool c:bool  c = a & b}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq( // short circuited behavior
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(221),new Const(1)),
+			new Cjump(new Binop(Binop.XOR,reg("a"),new Const(1)),label("95"),label("96")),
+			new LabelNode(label("96")),
+			new Cjump(reg("b"),label("94"),label("95")),
+			new LabelNode(label("95")),
+			new Move(reg(221),new Const(0)),
+			new LabelNode(label("94")),
+			new Move(reg("c"),reg(221)),
+			ret
+		));
+		
+		stmt = gen("main(){a:bool c:bool  c = !a}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("c"),new Binop(Binop.XOR,reg("a"),new Const(1))),
+			ret
+		));
+	}
+	
 	public void testIRGenRecurGCD(){
 		Seq stmt = gen("gcd(a:int, b:int):int{if (b == 0){return a} return gcd(b, a % b)}");
-		System.out.println(islike(stmt));
+		//System.out.println(islike(stmt));
 		lookslike(stmt, new Seq(
 			new LabelNode(label("_Igcd_iii")),
 			new Move(reg("a"),reg("rdi")),
