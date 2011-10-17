@@ -513,6 +513,48 @@ public class TestIRGen extends TestCase {
 			new Move(new Mem(new Binop(Binop.PLUS,reg(109),new Binop(Binop.LSH,reg(110),new Const(3)))),new Const(3)),
 			ret
 		));
+		
+		stmt = gen("main(){a:int[][] b:int  a[b][1] = 3}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),reg("null")),
+			new Move(reg(162),reg("a")),
+			new Move(reg(163),reg("b")),
+			new Cjump(new Binop(Binop.GE,reg(163),new Mem(new Binop(Binop.MINUS,reg(162),new Const(8)))),label("75"),label("76")),
+			new LabelNode(label("76")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("75")),
+			new Move(reg(166),new Mem(new Binop(Binop.PLUS,reg(162),new Binop(Binop.LSH,reg(163),new Const(3))))),
+			new Move(reg(167),new Const(1)),
+			new Cjump(new Binop(Binop.GE,reg(167),new Mem(new Binop(Binop.MINUS,reg(166),new Const(8)))),label("79"),label("80")),
+			new LabelNode(label("80")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("79")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(166),new Binop(Binop.LSH,reg(167),new Const(3)))),new Const(3)),
+			ret
+		));
+	}
+	
+	public void testIRGenIndexAssignmentList(){
+		Seq stmt = gen("main(){a:int[][] b:int  a[b] = ()}");
+		System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),reg("null")),
+			new Move(reg(189),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(0),new Const(1)),new Const(3)))),
+			new Move(reg(188),reg(189)),
+			new Move(new Mem(reg(188)),new Const(0)),
+			new Move(reg(187),new Binop(Binop.PLUS,reg(188),new Const(8))),
+			new Move(reg(183),reg("a")),
+			new Move(reg(184),reg("b")),
+			new Cjump(new Binop(Binop.GE,reg(184),new Mem(new Binop(Binop.MINUS,reg(183),new Const(8)))),label("85"),label("86")),
+			new LabelNode(label("86")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("85")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(183),new Binop(Binop.LSH,reg(184),new Const(3)))),reg(187)),
+			ret
+		));
 	}
 	
 	public void testIRGenListAdd(){
