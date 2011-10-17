@@ -337,7 +337,7 @@ public class TestIRGen extends TestCase {
 	
 	public void testIRConstruction(){
 		Seq stmt = gen("use io main(){j:int[][] = ((0,0,0), (0,0,0)) a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:bool = func(1)} func(a:int):int,int,int,int,int,int,int,bool{return 1,2,3,4,5,6,7,(true)}");
-		System.out.println(islike(stmt));
+		//System.out.println(islike(stmt));
 		lookslike(stmt, new Seq(
 			new LabelNode(label("_Imain_p")),
 			new Move(reg(31),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(2),new Const(1)),new Const(3)))),
@@ -462,6 +462,58 @@ public class TestIRGen extends TestCase {
 		));
 	}
 	
+	public void testIRGenTupleAssignmentUnderscore(){
+		Seq stmt = gen("main(){a:int, _, b:int = f(1,2)} f(a:int, b:int):int,int,int{return a+b, a-b, 1}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(111),new Call(new Name(label("_If_t3iiiii")),new Const(1),new Const(2))),
+			new Move(reg("a"),reg(111)),
+			new Move(reg("b"),reg("rsi")),
+			ret,
+			new LabelNode(label("_If_t3iiiii")),
+			new Move(reg("a"),reg("rdi")),
+			new Move(reg("b"),reg("rsi")),
+			new Move(reg("rv"),new Binop(Binop.PLUS,reg("a"),reg("b"))),
+			new Move(reg("rdi"),new Binop(Binop.MINUS,reg("a"),reg("b"))),
+			new Move(reg("rsi"),new Const(1)),
+			ret
+		));
+		
+		stmt = gen("main(){_, a:int, b:int = f(1,2)} f(a:int, b:int):int,int,int{return a+b, a-b, 1}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Exp(new Call(new Name(label("_If_t3iiiii")),new Const(1),new Const(2))),
+			new Move(reg("a"),reg("rdi")),
+			new Move(reg("b"),reg("rsi")),
+			ret,
+			new LabelNode(label("_If_t3iiiii")),
+			new Move(reg("a"),reg("rdi")),
+			new Move(reg("b"),reg("rsi")),
+			new Move(reg("rv"),new Binop(Binop.PLUS,reg("a"),reg("b"))),
+			new Move(reg("rdi"),new Binop(Binop.MINUS,reg("a"),reg("b"))),
+			new Move(reg("rsi"),new Const(1)),
+			ret
+		));
+	}
+	
+	public void testIRGenIndexAssignment(){
+		Seq stmt = gen("main(){a:int[] b:int  a[b] = 3}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),reg("null")),
+			new Move(reg(109),reg("a")),
+			new Move(reg(110),reg("b")),
+			new Cjump(new Binop(Binop.GE,reg(110),new Mem(new Binop(Binop.MINUS,reg(109),new Const(8)))),label("65"),label("66")),
+			new LabelNode(label("66")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("65")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(109),new Binop(Binop.LSH,reg(110),new Const(3)))),new Const(3)),
+			ret
+		));
+	}
 	
 	public void testIRGenListAdd(){
 		Seq stmt = gen("use io main(){a:int[]; b:int[] c:int[] = a + b}");
