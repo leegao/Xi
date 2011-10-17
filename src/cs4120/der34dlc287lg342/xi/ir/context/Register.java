@@ -19,7 +19,7 @@ public class Register {
 	public int value;
 	public String name;
 	
-	static public Register Null = new Register("Null");
+	static public Register Null = new Register("null");
 	static public Register FP = new Register("fp"); // frame pointer, rsp (dereferences to location on stack)
 	static public Register RV = new Register("rv"); // return value register, rax
 	static public Register RDI = new Register("rdi"); 

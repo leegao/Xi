@@ -3,9 +3,22 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Call;
+import cs4120.der34dlc287lg342.xi.ir.Cjump;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Eseq;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Jump;
+import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Name;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.context.Register;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -130,6 +143,56 @@ public class BinNode extends ExpressionNode {
 		Expr lhs = tr1.expr(), rhs = tr2.expr();
 		
 		// TODO: handle case for lists
+		if (((XiPrimitiveType)((AbstractSyntaxTree)e1).type).isArrayType() && ((XiPrimitiveType)((AbstractSyntaxTree)e2).type).isArrayType()){
+			/* 
+			 * i:int = 0
+			 * n1:int = length(lhs)
+			 * n2:int = n1 + length(rhs)
+			 * arr:*[n2]
+			 * while (i < n1){
+			 *   arr[i] = lhs[i]
+			 *   i = i + 1
+			 * }
+			 * while (i < n2){
+			 *   arr[i] = rhs[i-n1]
+			 *   i = i + 1
+			 * }
+			 */
+			Temp i = new Temp(new Register()), n1 = new Temp(new Register()), n2 = new Temp(new Register()), arr = new Temp(new Register());
+			LabelNode a = new LabelNode(new Label()), b = new LabelNode(new Label()), c = new LabelNode(new Label());
+			LabelNode a_ = new LabelNode(new Label()), b_ = new LabelNode(new Label()), c_ = new LabelNode(new Label());
+			Seq seq = new Seq(
+				new Move(i, new Const(0)),
+				new Move(n1, Register.size_of(lhs)),
+				new Move(n2, new Binop(Binop.PLUS, n1, Register.size_of(rhs))),
+				new Move(arr, new Call(new Name(Label.alloc), n2)),
+				
+				a, // check cond
+				new Cjump(new Binop(Binop.LT, i, n1), b.label, c.label),
+				b, // body
+				new Move(
+					new Mem(new Binop(Binop.PLUS, arr, new Binop(Binop.LSH, i, new Const(3)))), 
+					new Mem(new Binop(Binop.PLUS, lhs, new Binop(Binop.LSH, i, new Const(3))))
+				), // arr[i] = lhs[i]
+				new Move(i, new Binop(Binop.PLUS, i, new Const(1))),
+				new Jump(a.label),
+				c, // end
+				
+				a_, // check cond
+				new Cjump(new Binop(Binop.LT, i, n2), b_.label, c_.label),
+				b_, // body
+				new Move(
+					new Mem(new Binop(Binop.PLUS, arr, new Binop(Binop.LSH, i, new Const(3)))), 
+					new Mem(new Binop(Binop.PLUS, rhs, new Binop(Binop.LSH, new Binop(Binop.MINUS, i, n1), new Const(3))))
+				), // arr[i] = rhs[i-n1]
+				new Move(i, new Binop(Binop.PLUS, i, new Const(1))),
+				new Jump(a_.label),
+				c_ // end
+			);
+			
+			return new IRTranslationExpr(new Eseq(arr, seq));
+		}
+		
 		return new IRTranslationExpr(
 			new Binop(this.op, lhs, rhs)
 		);

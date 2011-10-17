@@ -2,7 +2,9 @@ package cs4120.der34dlc287lg342.xi.tests;
 
 import java.io.Reader;
 import java.io.StringReader;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.XiParser;
@@ -13,6 +15,7 @@ import cs4120.der34dlc287lg342.xi.ir.Cjump;
 import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Jump;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
@@ -42,6 +45,16 @@ public class TestIRGen extends TestCase {
 	public Return ret = new Return();
 	public Const c = new Const(0);
 	public Name name = new Name(l);
+	public Temp reg = temp;
+	public Temp reg(String s){
+		return new Temp(new Register(s));
+	}
+	public Temp reg(int s){
+		return temp;
+	}
+	public Label label(String s){
+		return l;
+	}
 	
 	public Seq gen(String code){
 		Reader reader = new StringReader(code);
@@ -58,7 +71,8 @@ public class TestIRGen extends TestCase {
 		((AbstractSyntaxTree)tc.ast).foldConstants();
 		try {
 			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
-			return tr.stmt().lower();
+			LowerCjump lcj = new LowerCjump(tr.stmt().lower());
+			return lcj.translate();
 		} catch (InvalidIRContextException e) {
 			fail(e.getMessage());
 		}
@@ -233,5 +247,175 @@ public class TestIRGen extends TestCase {
 		));
 	}
 	
+	public String islike(Seq stmt){
+		String seq = "new Seq(\n";
+		for (VisualizableTreeNode child : stmt.children()){
+			try{
+				seq += "\t"+islike((Stmt)child)+",\n";
+			} catch (IndexOutOfBoundsException e){
+				fail(e.getMessage());
+			}
+		}
+		return seq.substring(0, seq.length()-2)+"\n)";
+	}
 	
+	public String islike(Stmt stmt){
+		if (stmt instanceof Return)
+			return "ret";
+		Field[] f = stmt.getClass().getDeclaredFields();
+		ArrayList<Field> fields = new ArrayList<Field>();
+		for (Field f_ : f) fields.add(f_);
+		Constructor<?>[] cs = stmt.getClass().getConstructors();
+		Class[] args = {}; int n = 0;
+		for (Constructor<?> c : cs){
+			Class[] args_ = c.getParameterTypes();
+			if (args_.length > args.length)
+				args = args_;
+		}
+		//System.out.println(stmt);
+		String s = "new "+stmt.getClass().getSimpleName()+"(";
+		for (Class arg : args){
+			for (Field field : fields){
+				if (arg == field.getType()){
+					//System.out.println(arg.getSimpleName() +": "+ field.getName());
+					fields.remove(field);
+					field.setAccessible(true);
+					Object o = null;
+					try {
+						o = field.get(stmt);
+					} catch (Exception e) {}
+					if (o instanceof Stmt){
+						s += islike((Stmt)o);
+					} else if (o instanceof Expr){
+						s += islike((Expr)o);
+					} else if (o instanceof Integer || o instanceof Boolean) {
+						s += o;
+					} else if (o instanceof Label) {
+						Label l = ((Label)o);
+						s += "label(\""+l.name+"\")";
+					} else if (o instanceof Register) {
+						s += "new Register(\""+((Register)o).name+"\")";
+					} else{
+						System.out.println(arg.getSimpleName() +": "+ field.getName());
+					}
+					s += ",";
+					break;
+				}
+			}
+			
+		}
+		return s.substring(0,s.length()-1)+")";
+	}
+	
+	private String islike(Binop op){
+		String s = "new Binop(Binop.";
+		Field[] fields = op.getClass().getDeclaredFields();
+		for (Field f : fields){
+			if (Modifier.isStatic(f.getModifiers())){
+				try {
+					Object o = f.get(op);
+					if (o.equals(op.op)){
+						s += f.getName()+",";
+					}
+				} catch (Exception e) {}
+			}
+		}
+		s += islike(op.left)+","+islike(op.right)+")";
+		return s;
+	}
+	
+	private String islike(Expr expr) {
+		if (expr instanceof Binop)
+			return islike((Binop)expr);
+		
+		
+		
+		Field[] f = expr.getClass().getDeclaredFields();
+		ArrayList<Field> fields = new ArrayList<Field>();
+		for (Field f_ : f) fields.add(f_);
+		Constructor<?>[] cs = expr.getClass().getConstructors();
+		Class[] args = {}; int n = 0;
+		for (Constructor<?> c : cs){
+			Class[] args_ = c.getParameterTypes();
+			if (args_.length > args.length && !c.isVarArgs())
+				args = args_;
+		}
+		//System.out.println(expr);
+		String s = "new "+expr.getClass().getSimpleName()+"(";
+		if (expr instanceof Temp)
+			s = "reg";
+		
+		for (Class arg : args){
+			for (Field field : fields){
+				//System.out.println(arg.getSimpleName() +": "+ field.getName());
+				if (arg == field.getType()){
+					//System.out.println(arg.getSimpleName() +": "+ field.getName());
+					fields.remove(field);
+					field.setAccessible(true);
+					Object o = null;
+					try {
+						o = field.get(expr);
+					} catch (Exception e) {e.printStackTrace();}
+					if (o instanceof Stmt){
+						s += islike((Stmt)o);
+					} else if (o instanceof Expr){
+						s += islike((Expr)o);
+					} else if (o instanceof Integer || o instanceof Boolean) {
+						s += o;
+					} else if (o instanceof Label) {
+						Label l = ((Label)o);
+						s += "label(\""+l.name+"\")";
+					} else if (o instanceof Register) {
+						Register r = ((Register)o);
+						s += r.name.equals(""+r.value)? "("+r.name+")" : "(\""+r.name+"\")";
+						return s;
+					} else if (o instanceof ArrayList<?>) {
+						ArrayList<Expr> r = (ArrayList<Expr>)o;
+						for (Expr e : r)
+							s += islike(e)+",";
+						s = s.substring(0, s.length()-1);
+					} else{
+						System.out.println(arg.getSimpleName() +": "+ field.getName());
+					}
+					s += ",";
+					break;
+				}
+			}
+			
+		}
+		
+		return s.substring(0,s.length()-1)+")";
+	}
+
+	
+	public void testIRGenListAdd(){
+		Seq stmt = gen("use io main(){a:int[]; b:int[] c:int[] = a + b}");
+		System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),reg("null"),false),
+			new Move(reg("b"),reg("null"),false),
+			new Move(reg(60),new Const(0),false),
+			new Move(reg(61),new Mem(new Binop(Binop.MINUS,reg("a"),new Const(8))),false),
+			new Move(reg(62),new Binop(Binop.PLUS,reg(61),new Mem(new Binop(Binop.MINUS,reg("b"),new Const(8)))),false),
+			new Move(reg(68),new Call(new Name(label("_I_alloc_i")),reg(62)),true),
+			new Move(reg(63),reg(68),false),
+			new LabelNode(label("64")),
+			new Cjump(new Binop(Binop.GE,reg(60),reg(61)),label("66"),label("65")),
+			new LabelNode(label("65")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(63),new Binop(Binop.LSH,reg(60),new Const(3)))),new Mem(new Binop(Binop.PLUS,reg("a"),new Binop(Binop.LSH,reg(60),new Const(3)))),false),
+			new Move(reg(60),new Binop(Binop.PLUS,reg(60),new Const(1)),false),
+			new Jump(label("64")),
+			new LabelNode(label("66")),
+			new LabelNode(label("67")),
+			new Cjump(new Binop(Binop.GE,reg(60),reg(62)),label("69"),label("68")),
+			new LabelNode(label("68")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(63),new Binop(Binop.LSH,reg(60),new Const(3)))),new Mem(new Binop(Binop.PLUS,reg("b"),new Binop(Binop.LSH,new Binop(Binop.MINUS,reg(60),reg(61)),new Const(3)))),false),
+			new Move(reg(60),new Binop(Binop.PLUS,reg(60),new Const(1)),false),
+			new Jump(label("67")),
+			new LabelNode(label("69")),
+			new Move(reg("c"),reg(63),false),
+			ret
+		));
+	}
 }

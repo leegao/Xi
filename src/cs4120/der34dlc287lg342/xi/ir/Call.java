@@ -21,7 +21,7 @@ public class Call extends Expr {
 		children.addAll(args);
 	}
 	
-	public Call(Expr func, List<Expr> args){
+	public Call(Expr func, ArrayList<Expr> args){
 		this.func = func;
 		this.args.addAll(args);
 	}
