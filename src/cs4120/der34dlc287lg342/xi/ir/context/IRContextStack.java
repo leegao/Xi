@@ -19,12 +19,12 @@ public class IRContextStack extends ArrayList<IRContext>{
 	
 	public Expr register(String id) throws InvalidIRContextException{
 		IRContext top = top();
-		return top.register(id);
+		return top.add_register(id);
 	}
 	
 	public LabelNode name(FuncDeclNode name) throws InvalidIRContextException{
 		IRContext top = top();
-		return top.name(name);
+		return top.add_name(name);
 	}
 	
 	public Expr find_register(String id) throws InvalidIRContextException{

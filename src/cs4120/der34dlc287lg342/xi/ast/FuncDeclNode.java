@@ -121,7 +121,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		int i = 0;
 		for (VisualizableTreeNode child : args){
 			DeclNode arg = (DeclNode)child;
-			c.arg(arg.id.id, i++);
+			c.add_arg(arg.id.id, i++);
 		}
 		
 		Seq seq = new Seq(stack.find_name(id.id));

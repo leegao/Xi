@@ -21,19 +21,19 @@ public class IRContext {
 		break_to = null;
 	}
 	
-	public Expr register(String id){
+	public Expr add_register(String id){
 		Temp r = new Temp(new Register(id)); // on stack
 		symbols.put(id, r);
 		return r;
 	}
 	
-	public Expr arg(String id, int i){
+	public Expr add_arg(String id, int i){
 		Expr arg = new Mem(new Binop(Binop.PLUS, new Temp(Register.FP), new Const(i*8+8)));
 		symbols.put(id, arg);
 		return arg;
 	}
 	
-	public LabelNode name(FuncDeclNode decl){
+	public LabelNode add_name(FuncDeclNode decl){
 		LabelNode l = new LabelNode(new Label(decl.type().mangle(decl.id.id)));
 		names.put(decl.id.id, l);
 		return l;
