@@ -811,4 +811,29 @@ public class TestIRGen extends TestCase {
 			ret
 		));
 	}
+	
+	public void testIRGenMean(){
+		Seq stmt = gen("mean(list:int[]):int{sum:int = 0 i:int = 0 while (i < length(list)) sum = sum + list[i]; return sum/length(list)}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imean_iai")),
+			new Move(reg("list"),reg("rdi")),
+			new Move(reg("sum"),new Const(0)),
+			new Move(reg("i"),new Const(0)),
+			new LabelNode(label("169")),
+			new Cjump(new Binop(Binop.GE,reg("i"),new Mem(new Binop(Binop.MINUS,reg("list"),new Const(8)))),label("171"),label("170")),
+			new LabelNode(label("170")),
+			new Move(reg(347),reg("list")),
+			new Move(reg(348),reg("i")),
+			new Cjump(new Binop(Binop.GE,reg(348),new Mem(new Binop(Binop.MINUS,reg(347),new Const(8)))),label("174"),label("175")),
+			new LabelNode(label("175")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("174")),
+			new Move(reg("sum"),new Binop(Binop.PLUS,reg("sum"),new Mem(new Binop(Binop.PLUS,reg(347),new Binop(Binop.LSH,reg(348),new Const(3)))))),
+			new Jump(label("169")),
+			new LabelNode(label("171")),
+			new Move(reg("rv"),new Binop(Binop.DIV,reg("sum"),new Mem(new Binop(Binop.MINUS,reg("list"),new Const(8))))),
+			ret
+		));
+	}
 }
