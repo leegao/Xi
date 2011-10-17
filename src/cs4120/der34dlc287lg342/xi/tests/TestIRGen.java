@@ -1009,4 +1009,30 @@ public class TestIRGen extends TestCase {
 			ret
 		));
 	}
+	
+	public void testIRGenString(){
+		Seq stmt = gen("use io main(){print(\"Hello World!\")}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(459),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(12),new Const(1)),new Const(3)))),
+			new Move(reg(458),reg(459)),
+			new Move(new Mem(reg(458)),new Const(12)),
+			new Move(reg(457),new Binop(Binop.PLUS,reg(458),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(0))),new Const(72)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(8))),new Const(101)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(16))),new Const(108)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(24))),new Const(108)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(32))),new Const(111)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(40))),new Const(32)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(48))),new Const(87)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(56))),new Const(111)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(64))),new Const(114)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(72))),new Const(108)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(80))),new Const(100)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(457),new Const(88))),new Const(33)),
+			new Exp(new Call(new Name(label("_Iprint_pai")),reg(457))),
+			ret
+		));
+	}
 }
