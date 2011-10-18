@@ -135,7 +135,6 @@ public class ConstantFolding {
 		}
 		
 		if (left instanceof Const && right instanceof Binop){
-			// plus plus commutes
 			int l = ((Const)left).value;
 			Binop bin  = ((Binop)right);
 			if (bin.left instanceof Const || bin.right instanceof Const){
@@ -155,8 +154,10 @@ public class ConstantFolding {
 				if (expr.op == Binop.PLUS && bin.op == Binop.PLUS){
 					return new Binop(Binop.PLUS, new Const(l+r), e);
 				} else if (expr.op == Binop.MINUS && bin.op == Binop.MINUS){
-					// leftside = true -> l-(r-e) -> (l-r)+e
-					// else -> l-(e-r) -> (l+r)-e
+					// leftside && left1 = true -> l-(r-e) -> (l-r)+e
+					// leftside && else -> (r-e)-l -> (r-l)-e
+					// else && left1-> l-(e-r) -> (l+r)-e
+					// else -> (e-r)-l -> e-(r+l)
 					if (leftside){
 						if (left1)
 							return new Binop(Binop.MINUS, e, new Const(r-l));
