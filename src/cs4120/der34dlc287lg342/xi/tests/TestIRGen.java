@@ -1104,6 +1104,83 @@ public class TestIRGen extends TestCase {
 		stmt = new Seq(new Move(temp, 
 			new Binop(Binop.PLUS, new Binop(Binop.MUL, new Const(3), temp), new Const(1))));
 		stmt = ConstantFolding.foldConstants(stmt);
-		System.out.println(islike(stmt));
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.PLUS,new Binop(Binop.MUL,new Const(3),reg(33)),new Const(1)))
+		));
+		
+		// minus
+		// 1-(r-3) -> 4-r
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.MINUS, new Const(1), new Binop(Binop.MINUS, temp, new Const(3)))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.MINUS,new Const(4),reg(33)))
+		));
+		// (r-3)-1 -> r-4
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.MINUS, new Binop(Binop.MINUS, temp, new Const(3)), new Const(1))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.MINUS,reg(33),new Const(4)))
+		));
+		
+		// (3-r)-1 -> 2-r
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.MINUS, new Binop(Binop.MINUS, new Const(3), temp), new Const(1))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.MINUS,new Const(2),reg(33)))
+		));
+		
+		// 1-(3-r) -> r-2
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.MINUS, new Const(1), new Binop(Binop.MINUS, new Const(3), temp))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.MINUS,reg(33),new Const(2)))
+		));
+		
+		
+		// div
+		// (r/2)/10 -> r/20
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.DIV, new Binop(Binop.DIV, temp, new Const(2)), new Const(10))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.DIV,reg(33),new Const(20)))
+		));
+		
+		// 10/(r/2) -> 20/r
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.DIV, new Const(10), new Binop(Binop.DIV, temp, new Const(2)))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.DIV,new Const(20),reg(33)))
+		));
+		
+		// 10/(2/r) -? 5r
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.DIV, new Const(10), new Binop(Binop.DIV, new Const(2), temp))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.MUL,new Const(5),reg(33)))
+		));
+		
+		// (10/r)/2 -> 5/r
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.DIV, new Binop(Binop.DIV, new Const(10), temp), new Const(2))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.DIV,new Const(5),reg(33)))
+		));
 	}
 }

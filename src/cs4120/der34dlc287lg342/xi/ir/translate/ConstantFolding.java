@@ -126,10 +126,12 @@ public class ConstantFolding {
 			}
 		}
 		
+		boolean left1 = true;
 		if (left instanceof Binop && right instanceof Const){
 			Expr temp = right;
 			right = left;
 			left = temp;
+			left1 = false;
 		}
 		
 		if (left instanceof Const && right instanceof Binop){
@@ -139,19 +141,49 @@ public class ConstantFolding {
 			if (bin.left instanceof Const || bin.right instanceof Const){
 				int r;
 				Expr e;
-				boolean left_side = true;
+				boolean leftside = true;
 				if (bin.left instanceof Const){
 					r = ((Const)bin.left).value;
 					e = bin.right;
 				} else {
 					r = ((Const)bin.right).value;
 					e = bin.left;
-					left_side = false;
+					leftside = false;
 				}
 				
 				// Cases where the operations commute
 				if (expr.op == Binop.PLUS && bin.op == Binop.PLUS){
 					return new Binop(Binop.PLUS, new Const(l+r), e);
+				} else if (expr.op == Binop.MINUS && bin.op == Binop.MINUS){
+					// leftside = true -> l-(r-e) -> (l-r)+e
+					// else -> l-(e-r) -> (l+r)-e
+					if (leftside){
+						if (left1)
+							return new Binop(Binop.MINUS, e, new Const(r-l));
+						else 
+							return new Binop(Binop.MINUS, new Const(r-l), e);
+					} else {
+						if (left1)
+							return new Binop(Binop.MINUS, new Const(l+r), e);
+						else
+							return new Binop(Binop.MINUS, e, new Const(r+l));
+					}
+				} else if (expr.op == Binop.MUL && bin.op == Binop.MUL){
+					return new Binop(Binop.MUL, new Const(l*r), e);
+				} else if (expr.op == Binop.DIV && bin.op == Binop.DIV){
+					// leftside = true -> l/(r/e) -> (l/r)*e
+					// else -> l/(e/r) -> (l*r)/e
+					if (leftside){
+						if (left1)
+							return new Binop(Binop.MUL, new Const(l/r), e);
+						else 
+							return new Binop(Binop.DIV, new Const(r/l), e);
+					} else {
+						if (left1)
+							return new Binop(Binop.DIV, new Const(l*r), e);
+						else
+							return new Binop(Binop.DIV, e, new Const(r*l));
+					}
 				}
 			}
 		}
