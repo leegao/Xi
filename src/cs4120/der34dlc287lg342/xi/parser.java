@@ -543,6 +543,7 @@ public class parser extends java_cup.runtime.lr_parser {
     }
 
   /** Invoke a user supplied parse action. */
+  @SuppressWarnings("rawtypes")
   public java_cup.runtime.Symbol do_action(
     int                        act_num,
     java_cup.runtime.lr_parser parser,
@@ -593,6 +594,7 @@ class CUP$parser$actions {
   }
 
   /** Method with the actual generated action code. */
+  @SuppressWarnings("all")
   public final java_cup.runtime.Symbol CUP$parser$do_action(
     int                        CUP$parser$act_num,
     java_cup.runtime.lr_parser CUP$parser$parser,

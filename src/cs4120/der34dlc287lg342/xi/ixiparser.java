@@ -102,6 +102,7 @@ public class ixiparser extends java_cup.runtime.lr_parser {
     }
 
   /** Invoke a user supplied parse action. */
+  @SuppressWarnings("rawtypes")
   public java_cup.runtime.Symbol do_action(
     int                        act_num,
     java_cup.runtime.lr_parser parser,
@@ -152,6 +153,7 @@ class CUP$ixiparser$actions {
   }
 
   /** Method with the actual generated action code. */
+  @SuppressWarnings("all")
   public final java_cup.runtime.Symbol CUP$ixiparser$do_action(
     int                        CUP$ixiparser$act_num,
     java_cup.runtime.lr_parser CUP$ixiparser$parser,
