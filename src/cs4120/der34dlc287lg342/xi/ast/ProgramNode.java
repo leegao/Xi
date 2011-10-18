@@ -132,6 +132,8 @@ public class ProgramNode extends AbstractSyntaxTree {
 			}
 		}
 		
+		// Add in auxiliary functions
+		
 		return new IRTranslationStmt(seq);
 	}
 }

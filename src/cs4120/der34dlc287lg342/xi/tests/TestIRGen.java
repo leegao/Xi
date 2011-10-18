@@ -1035,4 +1035,28 @@ public class TestIRGen extends TestCase {
 			ret
 		));
 	}
+	
+	public void testIRGenFuncCallIndexAssign(){
+		Seq stmt = gen("main(){f()[1] = 2} f():int[]{return ()}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(466),new Call(new Name(label("_If_ai")))),
+			new Move(reg(462),reg(466)),
+			new Move(reg(463),new Const(1)),
+			new Cjump(new Binop(Binop.GE,reg(463),new Mem(new Binop(Binop.MINUS,reg(462),new Const(8)))),label("196"),label("197")),
+			new LabelNode(label("197")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("196")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(462),new Binop(Binop.LSH,reg(463),new Const(3)))),new Const(2)),
+			ret,
+			new LabelNode(label("_If_ai")),
+			new Move(reg(469),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.LSH,new Binop(Binop.PLUS,new Const(0),new Const(1)),new Const(3)))),
+			new Move(reg(465),reg(469)),
+			new Move(new Mem(reg(465)),new Const(0)),
+			new Move(reg(464),new Binop(Binop.PLUS,reg(465),new Const(8))),
+			new Move(reg("rv"),reg(464)),
+			ret
+		));
+	}
 }
