@@ -28,6 +28,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
@@ -1058,5 +1059,17 @@ public class TestIRGen extends TestCase {
 			new Move(reg("rv"),reg(464)),
 			ret
 		));
+	}
+	
+	public void testIRGenConstantFold(){
+		Seq stmt = gen("main(){a:int[] a = (1,2,3)}");
+		System.out.println(islike(stmt));
+		stmt = ConstantFolding.foldConstants(stmt);
+		System.out.println(islike(stmt));
+		
+		stmt = new Seq(new Move(temp, new Binop(Binop.PLUS, new Const(1), new Binop(Binop.PLUS, temp, new Const(3)))));
+		System.out.println(islike(stmt));
+		stmt = ConstantFolding.foldConstants(stmt);
+		System.out.println(islike(stmt));
 	}
 }

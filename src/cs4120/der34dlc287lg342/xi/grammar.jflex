@@ -159,7 +159,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
                                    return token(TokenType.STRING_LITERAL, 
                                    string.toString()); }
   [^\n\r\"\\]+                     { string.append( yytext() ); yycolumn_cache += yylength(); }
-  \\n|\\\"|\\'|\\r|\\\\|\\t        { string.append( yytext() ); yycolumn_cache += yylength(); }
+  \\n|\\\"|\\'|\\r|\\\\|\\t|\\f        { string.append( yytext() ); yycolumn_cache += yylength(); }
 }
  /* error fallback */
 .|\n                             { throw new Error("Illegal character <"+
