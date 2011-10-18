@@ -1063,12 +1063,46 @@ public class TestIRGen extends TestCase {
 	
 	public void testIRGenConstantFold(){
 		Seq stmt = gen("main(){a:int[] a = (1,2,3)}");
-		System.out.println(islike(stmt));
 		stmt = ConstantFolding.foldConstants(stmt);
-		System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),reg("null")),
+			new Move(reg(476),new Call(new Name(label("_I_alloc_i")),new Const(32))),
+			new Move(reg(475),reg(476)),
+			new Move(new Mem(reg(475)),new Const(3)),
+			new Move(reg(474),new Binop(Binop.PLUS,reg(475),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(474),new Const(0))),new Const(1)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(474),new Const(8))),new Const(2)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(474),new Const(16))),new Const(3)),
+			new Move(reg("a"),reg(474)),
+			ret
+		));
 		
-		stmt = new Seq(new Move(temp, new Binop(Binop.PLUS, new Const(1), new Binop(Binop.PLUS, temp, new Const(3)))));
-		System.out.println(islike(stmt));
+		// operators that commute will also be folded
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.PLUS, new Const(1), new Binop(Binop.PLUS, temp, new Const(3)))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.PLUS,new Const(4),reg(33)))
+		));
+		
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.PLUS, new Binop(Binop.PLUS, temp, new Const(3)), new Const(1))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.PLUS,new Const(4),reg(33)))
+		));
+		
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.PLUS, new Binop(Binop.PLUS, new Const(3), temp), new Const(1))));
+		stmt = ConstantFolding.foldConstants(stmt);
+		lookslike(stmt, new Seq(
+			new Move(reg(33),new Binop(Binop.PLUS,new Const(4),reg(33)))
+		));
+		
+		// plus and multiplication do not commute
+		stmt = new Seq(new Move(temp, 
+			new Binop(Binop.PLUS, new Binop(Binop.MUL, new Const(3), temp), new Const(1))));
 		stmt = ConstantFolding.foldConstants(stmt);
 		System.out.println(islike(stmt));
 	}

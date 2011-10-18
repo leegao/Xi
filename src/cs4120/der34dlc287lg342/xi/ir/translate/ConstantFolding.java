@@ -125,6 +125,37 @@ public class ConstantFolding {
 				return new Const(l>=r?1:0);
 			}
 		}
+		
+		if (left instanceof Binop && right instanceof Const){
+			Expr temp = right;
+			right = left;
+			left = temp;
+		}
+		
+		if (left instanceof Const && right instanceof Binop){
+			// plus plus commutes
+			int l = ((Const)left).value;
+			Binop bin  = ((Binop)right);
+			if (bin.left instanceof Const || bin.right instanceof Const){
+				int r;
+				Expr e;
+				boolean left_side = true;
+				if (bin.left instanceof Const){
+					r = ((Const)bin.left).value;
+					e = bin.right;
+				} else {
+					r = ((Const)bin.right).value;
+					e = bin.left;
+					left_side = false;
+				}
+				
+				// Cases where the operations commute
+				if (expr.op == Binop.PLUS && bin.op == Binop.PLUS){
+					return new Binop(Binop.PLUS, new Const(l+r), e);
+				}
+			}
+		}
+		
 		return expr;
 	}
 }
