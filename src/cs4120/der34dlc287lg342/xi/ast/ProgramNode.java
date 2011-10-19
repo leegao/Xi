@@ -133,6 +133,9 @@ public class ProgramNode extends AbstractSyntaxTree {
 		}
 		
 		// Add in auxiliary functions
+		if (stack.dynamic_allocation){
+			
+		}
 		
 		return new IRTranslationStmt(seq);
 	}

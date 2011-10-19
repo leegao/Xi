@@ -1077,9 +1077,11 @@ public class TestIRGen extends TestCase {
 			new Move(reg("a"),reg(474)),
 			ret
 		));
-		
+	}
+	
+	public void testIRGenConstantFoldPlus(){
 		// operators that commute will also be folded
-		stmt = new Seq(new Move(temp, 
+		Seq stmt = new Seq(new Move(temp, 
 			new Binop(Binop.PLUS, new Const(1), new Binop(Binop.PLUS, temp, new Const(3)))));
 		stmt = ConstantFolding.foldConstants(stmt);
 		lookslike(stmt, new Seq(
@@ -1108,10 +1110,12 @@ public class TestIRGen extends TestCase {
 		lookslike(stmt, new Seq(
 			new Move(reg(33),new Binop(Binop.PLUS,new Binop(Binop.MUL,new Const(3),reg(33)),new Const(1)))
 		));
-		
+	}
+	
+	public void testIRGenConstantFoldMinus(){
 		// minus
 		// 1-(r-3) -> 4-r
-		stmt = new Seq(new Move(temp, 
+		Seq stmt = new Seq(new Move(temp, 
 			new Binop(Binop.MINUS, new Const(1), new Binop(Binop.MINUS, temp, new Const(3)))));
 		stmt = ConstantFolding.foldConstants(stmt);
 		//System.out.println(islike(stmt));
@@ -1144,11 +1148,13 @@ public class TestIRGen extends TestCase {
 		lookslike(stmt, new Seq(
 			new Move(reg(33),new Binop(Binop.MINUS,reg(33),new Const(2)))
 		));
-		
-		
+	}
+	
+	
+	public void testIRGenConstantFoldDiv(){	
 		// div
 		// (r/2)/10 -> r/20
-		stmt = new Seq(new Move(temp, 
+		Seq stmt = new Seq(new Move(temp, 
 			new Binop(Binop.DIV, new Binop(Binop.DIV, temp, new Const(2)), new Const(10))));
 		stmt = ConstantFolding.foldConstants(stmt);
 		//System.out.println(islike(stmt));
@@ -1182,5 +1188,95 @@ public class TestIRGen extends TestCase {
 		lookslike(stmt, new Seq(
 			new Move(reg(33),new Binop(Binop.DIV,new Const(5),reg(33)))
 		));
+	}
+	
+	public void testIRGenArrayDecl(){
+		Seq stmt = gen("main(){a:int[][][]}");
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("a"),reg("null")),
+			ret
+		));
+		
+		stmt = gen("main(){a:int[1][2][]}");
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(477),new Call(new Name(label("_I_alloc_i")),new Const(16))),
+			new Move(reg(474),reg(477)),
+			new Move(new Mem(reg(474)),new Const(1)),
+			new Move(reg(473),new Binop(Binop.PLUS,reg(474),new Const(8))),
+			new Move(reg(478),new Call(new Name(label("_I_alloc_i")),new Const(24))),
+			new Move(reg(476),reg(478)),
+			new Move(new Mem(reg(476)),new Const(2)),
+			new Move(reg(475),new Binop(Binop.PLUS,reg(476),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(475),new Const(0))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(475),new Const(8))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(473),new Const(0))),reg(475)),
+			new Move(reg("a"),reg(473)),
+			ret
+		));
+		
+		stmt = gen("main(){a:int[2][2][3]}");
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(497),new Call(new Name(label("_I_alloc_i")),new Const(24))),
+			new Move(reg(484),reg(497)),
+			new Move(new Mem(reg(484)),new Const(2)),
+			new Move(reg(483),new Binop(Binop.PLUS,reg(484),new Const(8))),
+			new Move(reg(498),new Call(new Name(label("_I_alloc_i")),new Const(24))),
+			new Move(reg(486),reg(498)),
+			new Move(new Mem(reg(486)),new Const(2)),
+			new Move(reg(485),new Binop(Binop.PLUS,reg(486),new Const(8))),
+			new Move(reg(499),new Call(new Name(label("_I_alloc_i")),new Const(32))),
+			new Move(reg(488),reg(499)),
+			new Move(new Mem(reg(488)),new Const(3)),
+			new Move(reg(487),new Binop(Binop.PLUS,reg(488),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(487),new Const(0))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(487),new Const(8))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(487),new Const(16))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(485),new Const(0))),reg(487)),
+			new Move(reg(500),new Call(new Name(label("_I_alloc_i")),new Const(32))),
+			new Move(reg(490),reg(500)),
+			new Move(new Mem(reg(490)),new Const(3)),
+			new Move(reg(489),new Binop(Binop.PLUS,reg(490),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(489),new Const(0))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(489),new Const(8))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(489),new Const(16))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(485),new Const(8))),reg(489)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(483),new Const(0))),reg(485)),
+			new Move(reg(501),new Call(new Name(label("_I_alloc_i")),new Const(24))),
+			new Move(reg(492),reg(501)),
+			new Move(new Mem(reg(492)),new Const(2)),
+			new Move(reg(491),new Binop(Binop.PLUS,reg(492),new Const(8))),
+			new Move(reg(502),new Call(new Name(label("_I_alloc_i")),new Const(32))),
+			new Move(reg(494),reg(502)),
+			new Move(new Mem(reg(494)),new Const(3)),
+			new Move(reg(493),new Binop(Binop.PLUS,reg(494),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(493),new Const(0))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(493),new Const(8))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(493),new Const(16))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(491),new Const(0))),reg(493)),
+			new Move(reg(503),new Call(new Name(label("_I_alloc_i")),new Const(32))),
+			new Move(reg(496),reg(503)),
+			new Move(new Mem(reg(496)),new Const(3)),
+			new Move(reg(495),new Binop(Binop.PLUS,reg(496),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(495),new Const(0))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(495),new Const(8))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(495),new Const(16))),reg("null")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(491),new Const(8))),reg(495)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(483),new Const(8))),reg(491)),
+			new Move(reg("a"),reg(483)),
+			ret
+		));
+	}
+	
+	public void testIRGenArrayDeclAmbiguous(){
+		Seq stmt = gen("main(){n:int a:int[1][n][]}");
+		System.out.println(islike(stmt));
 	}
 }

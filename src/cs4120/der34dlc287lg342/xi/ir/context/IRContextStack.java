@@ -10,6 +10,7 @@ import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 public class IRContextStack extends ArrayList<IRContext>{
 
 	private static final long serialVersionUID = 3696771296698086996L;
+	public boolean dynamic_allocation = false;
 
 	public IRContext top() throws InvalidIRContextException{
 		if (this.isEmpty())

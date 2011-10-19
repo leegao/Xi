@@ -3,13 +3,18 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Call;
 import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Eseq;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.Register;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
@@ -127,29 +132,67 @@ public class DeclNode extends AbstractSyntaxTree {
 		if (brackets.isEmpty())
 			return new IRTranslationStmt(new Seq());
 		
+		// check that our dimensions are not undefined
+		if (brackets.get(0) == null){
+			return new IRTranslationStmt(new Seq(new Move(r, new Temp(Register.Null))));
+		}
+		
 		Seq seq = new Seq();
-		// go backwards from bracket
-		Expr last_r = r;
+		ArrayList<Expr> exprs = new ArrayList<Expr>();
+		boolean static_array = true;
+		
 		for (int i = 0; i < brackets.size(); i++){
 			AbstractSyntaxTree node = (AbstractSyntaxTree)brackets.get(i);
-			Register base = new Register(); // this will be replaced later
-			Temp base_addr = new Temp(base);
 			
 			if (node == null){
-				seq.add(new Move(last_r, new Temp(Register.Null)));
 				break;
 			} else {
 				IRTranslation tr = node.to_ir(stack);
 				Expr n = tr.expr();
 				
-				seq.add(new Move(base_addr, n));
-				last_r = new Binop(Binop.PLUS, base_addr, new Const(8));
-				//seq.add(new Move(last_r, last_r));
+				exprs.add(n);
+				if (!(n instanceof Const))
+					static_array = false;
+				else if (((Const)n).value > 10)
+					static_array = false;
 				
-				// reserve those addresses
 			}
 		}
 		
+		if (static_array){
+			Expr arr = generate_array(exprs);
+			seq.add(new Move(r, arr));
+		} else {
+			// pass
+			stack.dynamic_allocation = true;
+			int n = exprs.size();
+			Expr[] args = new Expr[n+1];
+			args[0] = new Const(n);
+			for (int i = 0; i < n; i++)
+				args[i+1] = exprs.get(i);
+			seq.add(new Move(r, new Call(new Name(new Label("_I_c_dynamalloc_iai")), args)));
+		}
+		
 		return new IRTranslationStmt(seq);
+	}
+
+	private Expr generate_array(ArrayList<Expr> exprs) {
+		if (exprs.isEmpty())
+			return new Temp(Register.Null);
+		Expr hd = exprs.remove(0);
+		if (!(hd instanceof Const))
+			return new Temp(Register.Null);
+		
+		int n = ((Const)hd).value;
+		Expr base = new Temp(new Register());
+		Seq seq = Register.init_array(base,hd);
+		for (int i = 0; i < n; i++){
+			ArrayList<Expr> clone = new ArrayList<Expr>();
+			clone.addAll(exprs);
+			Expr child = generate_array(clone);
+			seq.add(new Move(new Mem(new Binop(Binop.PLUS, base, new Const(8*i))), child));
+		}
+		
+		return new Eseq(base, seq);
 	}
 }
