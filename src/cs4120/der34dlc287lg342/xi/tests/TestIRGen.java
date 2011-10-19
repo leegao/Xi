@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
+import cs4120.der34dlc287lg342.xi.ast.ProgramNode;
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Call;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
@@ -135,7 +136,7 @@ public class TestIRGen extends TestCase {
 	
 	private void lookslike(Expr expr, Expr expected) {
 		Field[] fields = expr.getClass().getDeclaredFields();
-		assertEquals((expected).getClass().getSimpleName(), expr.getClass().getSimpleName());
+		assertEquals(expr.toString(), (expected).getClass().getSimpleName(), expr.getClass().getSimpleName());
 		for (Field field : fields){
 			field.setAccessible(true);
 			Object o = null;
@@ -1278,32 +1279,181 @@ public class TestIRGen extends TestCase {
 	public void testIRGenArrayDeclAmbiguous(){
 		Seq stmt = gen("main(){n:int a:int[1][n][]}");
 		stmt = ConstantFolding.foldConstants(stmt);
-		System.out.println(islike(stmt));
-		try{
-		stmt = gen(
-			"dynamalloc(arr:int[]):int[]{" +
-			"	n:int = length(arr) i:int = 1" +
-			"   if (n == 0) {return ()}" +
-			"	tl:int[] = alloca(n+1)" +
-			"	while (i<n){" +
-			"		tl[i-1] = arr[i]" +
-			"	}" +
-			"	i = arr[0]" +
-			"	list:int[] = alloca(i+1)" +
-			"	while (i > 0){" +
-			"		i = i - 1" +
-			"		a:int[] = dynamalloc(tl) a':int" +
-			"		list[i] = a'" +
-			"	}"+
-			"	return list;" +
-			"} " +
-			"alloca(n:int):int[]{return ()}"
-		);}
-		catch (Exception e){
-			System.out.println(e);
-			fail();
-		}
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg(543),new Call(new Name(label("_I_alloc_i")),new Const(24))),
+			new Move(reg(521),reg(543)),
+			new Move(new Mem(reg(521)),new Const(2)),
+			new Move(reg(520),new Binop(Binop.PLUS,reg(521),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(520),new Const(0))),new Const(1)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(520),new Const(8))),reg("n")),
+			new Move(reg(544),new Call(new Name(label("_I_c_dynamalloc_aiai")),reg(520))),
+			new Move(reg("a"),reg(544)),
+			ret,
+			new LabelNode(label("_I_c_dynamalloc_aiai")),
+			new Move(reg("arr"),reg("rdi")),
+			new Move(reg("n"),new Mem(new Binop(Binop.MINUS,reg("arr"),new Const(8)))),
+			new Move(reg("i"),new Const(1)),
+			new Cjump(new Binop(Binop.NE,reg("n"),new Const(0)),label("213"),label("212")),
+			new LabelNode(label("212")),
+			new Move(reg("rv"),new Const(0)),
+			ret,
+			new LabelNode(label("213")),
+			new Move(reg(545),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.PLUS,reg("n"),new Const(1)))),
+			new Move(reg(526),reg(545)),
+			new Move(new Mem(reg(526)),reg("n")),
+			new Move(reg(527),new Binop(Binop.PLUS,reg(526),new Const(8))),
+			new Move(reg("tl"),reg(527)),
+			new LabelNode(label("214")),
+			new Cjump(new Binop(Binop.GE,reg("i"),reg("n")),label("216"),label("215")),
+			new LabelNode(label("215")),
+			new Move(reg(529),reg("arr")),
+			new Move(reg(530),reg("i")),
+			new Cjump(new Binop(Binop.GE,reg(530),new Mem(new Binop(Binop.MINUS,reg(529),new Const(8)))),label("219"),label("220")),
+			new LabelNode(label("220")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("219")),
+			new Move(reg(531),reg("tl")),
+			new Move(reg(532),new Binop(Binop.MINUS,reg("i"),new Const(1))),
+			new Cjump(new Binop(Binop.GE,reg(532),new Mem(new Binop(Binop.MINUS,reg(531),new Const(8)))),label("217"),label("218")),
+			new LabelNode(label("218")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("217")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(531),new Binop(Binop.LSH,reg(532),new Const(3)))),new Mem(new Binop(Binop.PLUS,reg(529),new Binop(Binop.LSH,reg(530),new Const(3))))),
+			new Jump(label("214")),
+			new LabelNode(label("216")),
+			new Move(reg(533),reg("arr")),
+			new Move(reg(534),new Const(0)),
+			new Cjump(new Binop(Binop.GE,reg(534),new Mem(new Binop(Binop.MINUS,reg(533),new Const(8)))),label("221"),label("222")),
+			new LabelNode(label("222")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("221")),
+			new Move(reg("i"),new Mem(new Binop(Binop.PLUS,reg(533),new Binop(Binop.LSH,reg(534),new Const(3))))),
+			new Move(reg(549),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.PLUS,reg("i"),new Const(1)))),
+			new Move(reg(535),reg(549)),
+			new Move(new Mem(reg(535)),reg("i")),
+			new Move(reg(536),new Binop(Binop.PLUS,reg(535),new Const(8))),
+			new Move(reg("list"),reg(536)),
+			new LabelNode(label("223")),
+			new Cjump(new Binop(Binop.LE,reg("i"),new Const(0)),label("225"),label("224")),
+			new LabelNode(label("224")),
+			new Move(reg("i"),new Binop(Binop.MINUS,reg("i"),new Const(1))),
+			new Move(reg(550),new Call(new Name(label("_I_c_dynamalloc_aiai")),reg("tl"))),
+			new Move(reg(538),reg(550)),
+			new Move(reg("a"),reg(538)),
+			new Move(reg(540),reg("list")),
+			new Move(reg(541),reg("i")),
+			new Cjump(new Binop(Binop.GE,reg(541),new Mem(new Binop(Binop.MINUS,reg(540),new Const(8)))),label("226"),label("227")),
+			new LabelNode(label("227")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("226")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(540),new Binop(Binop.LSH,reg(541),new Const(3)))),reg("a'")),
+			new Jump(label("223")),
+			new LabelNode(label("225")),
+			new Move(reg("rv"),reg("list")),
+			ret
+		));
+	}
+	
+	public void testIRGenArrayDeclAmbiguousAssign(){
+		Seq stmt = gen("main(){n:int = 2 a:int[1][n][3] a[1][2] = (3,1,2)}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		//System.out.println(islike(stmt));
+		lookslike(stmt, new Seq(
+			new LabelNode(label("_Imain_p")),
+			new Move(reg("n"),new Const(2)),
+			new Move(reg(596),new Call(new Name(label("_I_alloc_i")),new Const(32))),
+			new Move(reg(589),reg(596)),
+			new Move(new Mem(reg(589)),new Const(3)),
+			new Move(reg(588),new Binop(Binop.PLUS,reg(589),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(588),new Const(0))),new Const(1)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(588),new Const(8))),reg("n")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(588),new Const(16))),new Const(3)),
+			new Move(reg(597),new Call(new Name(label("_I_c_dynamalloc_aiai")),reg(588))),
+			new Move(reg("a"),reg(597)),
+			new Move(reg(598),new Call(new Name(label("_I_alloc_i")),new Const(32))),
+			new Move(reg(595),reg(598)),
+			new Move(new Mem(reg(595)),new Const(3)),
+			new Move(reg(594),new Binop(Binop.PLUS,reg(595),new Const(8))),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(594),new Const(0))),new Const(3)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(594),new Const(8))),new Const(1)),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(594),new Const(16))),new Const(2)),
+			new Move(reg(590),reg("a")),
+			new Move(reg(591),new Const(1)),
+			new Cjump(new Binop(Binop.GE,reg(591),new Mem(new Binop(Binop.MINUS,reg(590),new Const(8)))),label("230"),label("231")),
+			new LabelNode(label("231")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("230")),
+			new Move(reg(592),new Mem(new Binop(Binop.PLUS,reg(590),new Binop(Binop.LSH,reg(591),new Const(3))))),
+			new Move(reg(593),new Const(2)),
+			new Cjump(new Binop(Binop.GE,reg(593),new Mem(new Binop(Binop.MINUS,reg(592),new Const(8)))),label("232"),label("233")),
+			new LabelNode(label("233")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("232")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(592),new Binop(Binop.LSH,reg(593),new Const(3)))),reg(594)),
+			ret,
+			new LabelNode(label("_I_c_dynamalloc_aiai")),
+			new Move(reg("arr"),reg("rdi")),
+			new Move(reg("n"),new Mem(new Binop(Binop.MINUS,reg("arr"),new Const(8)))),
+			new Move(reg("i"),new Const(1)),
+			new Cjump(new Binop(Binop.NE,reg("n"),new Const(0)),label("213"),label("212")),
+			new LabelNode(label("212")),
+			new Move(reg("rv"),new Const(0)),
+			ret,
+			new LabelNode(label("213")),
+			new Move(reg(604),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.PLUS,reg("n"),new Const(1)))),
+			new Move(reg(527),reg(604)),
+			new Move(new Mem(reg(527)),reg("n")),
+			new Move(reg(528),new Binop(Binop.PLUS,reg(527),new Const(8))),
+			new Move(reg("tl"),reg(528)),
+			new LabelNode(label("214")),
+			new Cjump(new Binop(Binop.GE,reg("i"),reg("n")),label("216"),label("215")),
+			new LabelNode(label("215")),
+			new Move(reg(530),reg("arr")),
+			new Move(reg(531),reg("i")),
+			new Cjump(new Binop(Binop.GE,reg(531),new Mem(new Binop(Binop.MINUS,reg(530),new Const(8)))),label("219"),label("220")),
+			new LabelNode(label("220")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("219")),
+			new Move(reg(532),reg("tl")),
+			new Move(reg(533),new Binop(Binop.MINUS,reg("i"),new Const(1))),
+			new Cjump(new Binop(Binop.GE,reg(533),new Mem(new Binop(Binop.MINUS,reg(532),new Const(8)))),label("217"),label("218")),
+			new LabelNode(label("218")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("217")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(532),new Binop(Binop.LSH,reg(533),new Const(3)))),new Mem(new Binop(Binop.PLUS,reg(530),new Binop(Binop.LSH,reg(531),new Const(3))))),
+			new Jump(label("214")),
+			new LabelNode(label("216")),
+			new Move(reg(534),reg("arr")),
+			new Move(reg(535),new Const(0)),
+			new Cjump(new Binop(Binop.GE,reg(535),new Mem(new Binop(Binop.MINUS,reg(534),new Const(8)))),label("221"),label("222")),
+			new LabelNode(label("222")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("221")),
+			new Move(reg("i"),new Mem(new Binop(Binop.PLUS,reg(534),new Binop(Binop.LSH,reg(535),new Const(3))))),
+			new Move(reg(608),new Call(new Name(label("_I_alloc_i")),new Binop(Binop.PLUS,reg("i"),new Const(1)))),
+			new Move(reg(536),reg(608)),
+			new Move(new Mem(reg(536)),reg("i")),
+			new Move(reg(537),new Binop(Binop.PLUS,reg(536),new Const(8))),
+			new Move(reg("list"),reg(537)),
+			new LabelNode(label("223")),
+			new Cjump(new Binop(Binop.LE,reg("i"),new Const(0)),label("225"),label("224")),
+			new LabelNode(label("224")),
+			new Move(reg("i"),new Binop(Binop.MINUS,reg("i"),new Const(1))),
+			new Move(reg(609),new Call(new Name(label("_I_c_dynamalloc_aiai")),reg("tl"))),
+			new Move(reg(539),reg(609)),
+			new Move(reg("a"),reg(539)),
+			new Move(reg(541),reg("list")),
+			new Move(reg(542),reg("i")),
+			new Cjump(new Binop(Binop.GE,reg(542),new Mem(new Binop(Binop.MINUS,reg(541),new Const(8)))),label("226"),label("227")),
+			new LabelNode(label("227")),
+			new Exp(new Call(new Name(label("_I_outOfBounds_p")))),
+			new LabelNode(label("226")),
+			new Move(new Mem(new Binop(Binop.PLUS,reg(541),new Binop(Binop.LSH,reg(542),new Const(3)))),reg("a'")),
+			new Jump(label("223")),
+			new LabelNode(label("225")),
+			new Move(reg("rv"),reg("list")),
+			ret
+		));
 	}
 }

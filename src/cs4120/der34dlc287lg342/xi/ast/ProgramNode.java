@@ -175,7 +175,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 					new Move(reg("i"),new Const(1)),
 					new Cjump(new Binop(Binop.NE,reg("n"),new Const(0)),label("213"),label("212")),
 					new LabelNode(label("212")),
-					new Move(reg("rv"),new Temp(Register.Null)),
+					new Move(reg("rv"),new Const(0)), // equivalent to null as well
 					ret,
 					new LabelNode(label("213")),
 					new Move(reg(5450),new Call(new Name(Label.alloc),new Binop(Binop.PLUS, reg("n"), new Const(1)))),

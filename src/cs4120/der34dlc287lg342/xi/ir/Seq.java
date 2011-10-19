@@ -20,6 +20,10 @@ public class Seq extends Stmt {
 		children.add(stmt);
 	}
 	
+	public void addAll(Seq seq){
+		children.addAll(seq.children);
+	}
+	
 	@Override
 	public Seq lower(){
 		Seq seq = new Seq();
