@@ -17,7 +17,6 @@ import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.Register;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
-import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
@@ -166,7 +165,6 @@ public class DeclNode extends AbstractSyntaxTree {
 		} else {
 			// pass
 			stack.dynamic_allocation = true;
-			int n = exprs.size();
 			Expr args = create_args(exprs);
 			seq.add(new Move(r, new Call(new Name(new Label("_I_c_dynamalloc_aiai")), args)));
 		}
