@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
+import cs4120.der34dlc287lg342.xi.ast.BlockNode;
 
 import polyglot.util.CodeWriter;
 import polyglot.util.OptimalCodeWriter;
@@ -69,6 +70,19 @@ public class TypeAnnotatedTreePrinter implements TreePrinter {
       writer.end();
     }
     writer.write(")");
+    if (node instanceof BlockNode){
+    	BlockNode block = (BlockNode)node;
+    	writer.write(" left block with context stack:");
+    	for(String s : block.pa3_symboltable){
+    		writer.allowBreak(4);
+    		writer.begin(4);
+    		writer.write(s);
+    		writer.end();
+    	}
+    	
+    }
+    
+    
     writer.allowBreak(0);
   }
 }

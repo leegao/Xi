@@ -27,6 +27,7 @@ public class BlockNode extends AbstractSyntaxTree {
 	
 	public XiTypeContext new_context = null;
 	public IRContext new_ircontext = null;
+	public String[] pa3_symboltable = null;
 	
 	public BlockNode(Position position){
 		this.position = position;
@@ -82,10 +83,11 @@ public class BlockNode extends AbstractSyntaxTree {
 		
 		// For PA3 only, print out symbol table
 		if (AbstractSyntaxTree.PA3){
-			System.out.println("Leaving block with stack");
+			String s[] = new String[stack.size()];
+			int n = 0;
 			for (int i = stack.size()-1; i >= 0; i--)
-				System.out.println("  "+i+": "+stack.get(i).symbols);
-			System.out.println();
+				s[n++]=("  "+i+": "+stack.get(i).symbols+"\n");
+			pa3_symboltable = s;
 		}
 		
 		try {
