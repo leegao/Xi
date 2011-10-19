@@ -17,6 +17,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.Register;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
@@ -166,16 +167,25 @@ public class DeclNode extends AbstractSyntaxTree {
 			// pass
 			stack.dynamic_allocation = true;
 			int n = exprs.size();
-			Expr[] args = new Expr[n+1];
-			args[0] = new Const(n);
-			for (int i = 0; i < n; i++)
-				args[i+1] = exprs.get(i);
-			seq.add(new Move(r, new Call(new Name(new Label("_I_c_dynamalloc_iai")), args)));
+			Expr args = create_args(exprs);
+			seq.add(new Move(r, new Call(new Name(new Label("_I_c_dynamalloc_aiai")), args)));
 		}
 		
 		return new IRTranslationStmt(seq);
 	}
 
+	private Expr create_args(ArrayList<Expr> exprs){
+		Expr base = new Temp(new Register());
+		Seq seq = Register.init_array(base, new Const(exprs.size()));
+
+		int i = 0;
+		for (Expr child : exprs){
+			seq.add(new Move(new Mem(new Binop(Binop.PLUS, base, new Const(8*i++))), child));
+		}
+		Expr eseq = new Eseq(base, seq);
+		return eseq;
+	}
+	
 	private Expr generate_array(ArrayList<Expr> exprs) {
 		if (exprs.isEmpty())
 			return new Temp(Register.Null);

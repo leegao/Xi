@@ -7,6 +7,7 @@ public class Label {
 	
 	final public static Label alloc = new Label("_I_alloc_i");
 	final public static Label outOfBounds = new Label("_I_outOfBounds_p");
+	final public static Label dynamalloc = new Label("_I_c_dynamalloc_aiai");
 	
 	public Label(String name){
 		value = global++;

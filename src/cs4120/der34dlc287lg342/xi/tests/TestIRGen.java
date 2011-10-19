@@ -1277,6 +1277,33 @@ public class TestIRGen extends TestCase {
 	
 	public void testIRGenArrayDeclAmbiguous(){
 		Seq stmt = gen("main(){n:int a:int[1][n][]}");
+		stmt = ConstantFolding.foldConstants(stmt);
 		System.out.println(islike(stmt));
+		try{
+		stmt = gen(
+			"dynamalloc(arr:int[]):int[]{" +
+			"	n:int = length(arr) i:int = 1" +
+			"   if (n == 0) {return ()}" +
+			"	tl:int[] = alloca(n+1)" +
+			"	while (i<n){" +
+			"		tl[i-1] = arr[i]" +
+			"	}" +
+			"	i = arr[0]" +
+			"	list:int[] = alloca(i+1)" +
+			"	while (i > 0){" +
+			"		i = i - 1" +
+			"		a:int[] = dynamalloc(tl) a':int" +
+			"		list[i] = a'" +
+			"	}"+
+			"	return list;" +
+			"} " +
+			"alloca(n:int):int[]{return ()}"
+		);}
+		catch (Exception e){
+			System.out.println(e);
+			fail();
+		}
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
 	}
 }
