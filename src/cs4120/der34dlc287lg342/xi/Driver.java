@@ -54,7 +54,7 @@ public class Driver {
 			while (( line = input.readLine()) != null){
 		          src += line + "\n";
 		    }
-			Parser parser = new XiParser(new StringReader(src), args[0]);
+			Parser parser = new XiParser(new StringReader(src), file);
 			AbstractSyntaxNode program = parser.parse();
 			XiTypechecker tc = new XiTypechecker(program, src);
 			
@@ -83,9 +83,10 @@ public class Driver {
 		} catch (CompilationException e){
 			System.out.println(e);
 		} catch (FileNotFoundException e) {
-			System.out.println("File not found: "+args[0]);
+			e.printStackTrace();
+			System.out.println("File not found: "+file);
 		} catch (IOException e) {
-			System.out.println("Malformed file: "+args[0]);
+			System.out.println("Malformed file: "+file);
 		} catch (InvalidXiTypeException e) {
 			e.printStackTrace();
 			System.out.println(e);
