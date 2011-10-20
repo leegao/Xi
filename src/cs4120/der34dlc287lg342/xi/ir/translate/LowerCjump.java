@@ -21,7 +21,7 @@ public class LowerCjump {
 			if (child instanceof Cjump && i < children.size()-1){
 				// get the label of the Cjump to reorder blocks
 				Cjump cjump = (Cjump)child;
-				Label iffalse = cjump.iffalse, iftrue = cjump.iftrue;
+				Label iffalse = cjump.iffalse, iftrue = cjump.to;
 				ret.add(child);
 				// peek at the next label
 				if (children.get(i+1) instanceof LabelNode){
@@ -32,8 +32,8 @@ public class LowerCjump {
 						//i++;
 					} else if (label.label.equals(iftrue)){
 						// Case 2: switch label and negate the condition
-						if (cjump.cond instanceof Binop){
-							Binop op = (Binop)cjump.cond;
+						if (cjump.condition instanceof Binop){
+							Binop op = (Binop)cjump.condition;
 							switch (op.op){
 							case Binop.LT:
 								op.op = Binop.GE;
@@ -54,15 +54,15 @@ public class LowerCjump {
 								op.op = Binop.EQ;
 								break;
 							default:
-								cjump.cond = new Binop(Binop.XOR, cjump.cond, new Const(1));
+								cjump.condition = new Binop(Binop.XOR, cjump.condition, new Const(1));
 							}
 						} else {
-							cjump.cond = new Binop(Binop.XOR, cjump.cond, new Const(1));
+							cjump.condition = new Binop(Binop.XOR, cjump.condition, new Const(1));
 						}
 						//ret.add(new LabelNode(iffalse));
 						//i++;
 						cjump.iffalse = iftrue;
-						cjump.iftrue = iffalse;
+						cjump.to = iffalse;
 					}
 				} else {
 					// Case 3: Create a new false label lf and rewrite the cjump as

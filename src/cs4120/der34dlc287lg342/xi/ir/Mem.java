@@ -15,4 +15,8 @@ public class Mem extends Expr {
 		Stmt.add_and_lower(seq, (Seq) eseq.stmts);
 		return new Eseq(new Mem(eseq.expr), seq);
 	}
+	
+	public String prettyPrint(){
+		return "Mem("+expr.prettyPrint()+")";
+	}
 }

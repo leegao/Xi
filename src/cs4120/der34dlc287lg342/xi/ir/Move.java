@@ -1,12 +1,12 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
 public class Move extends Stmt {
-	public Expr dest, src;
+	public Expr dest, val;
 	boolean primitive;
 	public Move(Expr dest, Expr src, boolean primitive){
 		super();
 		this.dest = dest;
-		this.src = src;
+		this.val = src;
 		this.primitive = primitive;
 		children.add(dest);
 		children.add(src);
@@ -22,7 +22,7 @@ public class Move extends Stmt {
 			return new Seq(this);
 		
 		// Assume never commutes (not strictly true, will refactor later)
-		Eseq rhs = src.lower();
+		Eseq rhs = val.lower();
 		Eseq lhs = dest.lower();
 		
 		Seq s1 = (Seq) rhs.stmts, s2 = (Seq) lhs.stmts;

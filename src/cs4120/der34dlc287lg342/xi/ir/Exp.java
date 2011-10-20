@@ -21,7 +21,7 @@ public class Exp extends Stmt {
 			// replace the last stmt
 			int i = seq.children.size()-1; // assumed to be nonzero
 			Move mov = (Move) seq.children.get(i);
-			seq.children.set(i, new Exp(mov.src));
+			seq.children.set(i, new Exp(mov.val));
 		}
 		
 		return seq;

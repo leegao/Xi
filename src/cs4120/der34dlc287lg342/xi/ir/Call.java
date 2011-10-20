@@ -50,4 +50,12 @@ public class Call extends Expr {
 		seq.add(new Move(t, call, true));
 		return new Eseq(t, seq);
 	}
+	
+	public String prettyPrint(){
+		String s = "Call("+func.prettyPrint()+", ";
+		for (Expr e : args){
+			s += e.prettyPrint()+", ";
+		}
+		return s.substring(0, s.length()-2)+")";
+	}
 }

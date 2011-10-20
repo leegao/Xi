@@ -38,4 +38,12 @@ public class Seq extends Stmt {
 		}
 		return str;
 	}
+	
+	public String prettyPrint(){
+		String str = "";
+		for (VisualizableTreeNode child : children){
+			str += ((Stmt)child).prettyPrint() + "\n";
+		}
+		return str;
+	}
 }

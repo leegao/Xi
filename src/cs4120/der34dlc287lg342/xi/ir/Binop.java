@@ -1,5 +1,8 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+
 public class Binop extends Expr {
 	final public static int PLUS = 0;
 	final public static int MINUS = 1;
@@ -113,6 +116,21 @@ public class Binop extends Expr {
 	@Override
 	public String toString(){
 		return "("+left.toString() + " "+label()+" " + right.toString()+")";
+	}
+	
+	public String prettyPrint(){
+		for (Field f : this.getClass().getDeclaredFields()){
+			if (Modifier.isStatic(f.getModifiers())){
+				try {
+					if (f.getInt(null) == op){
+						return f.getName()+"("+left.prettyPrint()+", "+right.prettyPrint()+")";
+					}
+				} catch (Exception e) {
+					return "";
+				}
+			}
+		}
+		return null;
 	}
 	
 	@Override

@@ -54,7 +54,7 @@ public abstract class Stmt implements VisualizableTreeNode{
 	public String toString(){
 		String s = this.getClass().getSimpleName();
 		for (Field f : this.getClass().getDeclaredFields()){
-			if (f.getName().equals("primitive"))
+			if (f.getName().equals("primitive") || f.getName().equals("iffalse"))
 				continue;
 			Object o;
 			s += "["+f.getName();
@@ -72,6 +72,31 @@ public abstract class Stmt implements VisualizableTreeNode{
 				e.printStackTrace();
 			}
 		}
+		return s;
+	}
+	
+	public String prettyPrint(){
+		String s = "["+this.getClass().getSimpleName()+"]";
+		if (s.equals("[LabelNode]"))
+			s = "[Label]";
+		for (Field f : this.getClass().getDeclaredFields()){
+			if (f.getName().equals("primitive") || f.getName().equals("iffalse"))
+				continue;
+			Object o;
+			try {
+				o = f.get(this);
+				if (!(o instanceof ArrayList<?>)){
+					if (o instanceof Expr)
+						s += " "+f.getName()+":"+((Expr) o).prettyPrint() + ",";
+					else if (o instanceof Stmt)
+						s += " "+f.getName()+":"+((Stmt) o).prettyPrint() + ",";
+					else
+						s += " "+f.getName()+":"+o.toString() + ",";
+				}
+			} catch (Exception e) {}
+		}
+		if (this.getClass().getDeclaredFields().length>0)
+			s = s.substring(0, s.length()-1);
 		return s;
 	}
 }
