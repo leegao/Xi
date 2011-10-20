@@ -5,6 +5,7 @@ mean(list:int[]):int{
 	i:int = 0 
 	while (i < length(list)) 
 		sum = sum + list[i]; 
+	x:int = binary_search(list, i)
 	return sum/length(list)
 }
 

@@ -41,10 +41,14 @@ public class XiFunctionType implements XiType {
 		if (ret.isEmpty()){
 			t += "void";
 		} else {
+			if (ret.size() > 1)
+				t += "(";
 			for (XiPrimitiveType r : ret){
 				t += r + ",";
 			}
 			t = t.substring(0, t.length()-1);
+			if (ret.size() > 1)
+				t += ")";
 		}
 		return t;
 	}

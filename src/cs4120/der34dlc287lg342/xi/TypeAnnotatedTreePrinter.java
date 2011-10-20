@@ -72,12 +72,14 @@ public class TypeAnnotatedTreePrinter implements TreePrinter {
     writer.write(")");
     if (node instanceof BlockNode){
     	BlockNode block = (BlockNode)node;
-    	writer.write(" left block with context stack:");
-    	for(String s : block.pa3_symboltable){
-    		writer.allowBreak(4);
-    		writer.begin(4);
-    		writer.write(s);
-    		writer.end();
+    	if (block.pa3_symboltable != null){
+	    	writer.write(" left block with context stack:");
+	    	for(String s : block.pa3_symboltable){
+	    		writer.allowBreak(4);
+	    		writer.begin(4);
+	    		writer.write(s);
+	    		writer.end();
+	    	}
     	}
     	
     }

@@ -312,4 +312,15 @@ public class TestParser extends TestCase {
 		}
 	}
 	
+	public void testNestedBlocks(){
+		checkType(gen("func(){{return}}"), new String[]{
+			"PROGRAM","FUNCDECL","ID(func)","BLOCK",
+			"BLOCK", "RETURN"});
+	}
+	
+	public void testUseSemi(){
+		checkType(gen("use io; func(){{return}}"), new String[]{
+			"PROGRAM","USE", "ID(io)", "FUNCDECL","ID(func)","BLOCK",
+			"BLOCK", "RETURN"});
+	}
 }

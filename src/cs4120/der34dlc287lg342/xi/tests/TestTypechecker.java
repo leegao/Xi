@@ -218,4 +218,32 @@ public class TestTypechecker extends TestCase {
 			System.out.println(e);
 		}
 	}
+	
+	public void testArrayEquality(){
+		try {
+			XiTypechecker tc = gen("main(){a:int[] b:int[] c:bool = a==b}");
+			tc.typecheck();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void testAssignRelops(){
+		try {
+			XiTypechecker tc = gen("main(){a:bool b:bool c:bool = a!=b}");
+			tc.typecheck();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
+	
+	public void testBracket(){
+		try {
+			XiTypechecker tc = gen("main(){a:int[true]}");
+			tc.typecheck();
+			fail();
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+	}
 }
