@@ -61,11 +61,13 @@ public class Driver {
 			tc.typecheck();
 			((AbstractSyntaxTree)(tc.ast)).foldConstants();
 			if (AbstractSyntaxTree.PA3){
+				System.out.println("Printing out the AST\n");
 				TypeAnnotatedTreePrinter printer = new TypeAnnotatedTreePrinter(System.out);
 				printer.print(program);
 			}
 			
 			if (PA4){
+				System.out.println("Printing out the IR code\n");
 				IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
 				Seq program_ir = tr.stmt().lower();
 				LowerCjump lcj = new LowerCjump(program_ir);
