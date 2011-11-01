@@ -68,6 +68,17 @@ public class IRContextStack extends ArrayList<IRContext>{
 		throw new InvalidIRContextException("No breaks found within the context stack");
 	}
 	
+	public Label return_to() throws InvalidIRContextException{
+		if (this.isEmpty())
+			throw new InvalidIRContextException("Cannot find a context frame to work with");
+		for (int i = this.size()-1; i >= 0; i--){
+			Label return_to = get(i).return_to;
+			if (return_to != null)
+				return return_to;
+		}
+		throw new InvalidIRContextException("No breaks found within the context stack");
+	}
+	
 	public void break_pop() throws InvalidIRContextException{
 		// pass for now
 	}
