@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir.context;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
@@ -11,7 +12,13 @@ public class IRContextStack extends ArrayList<IRContext>{
 
 	private static final long serialVersionUID = 3696771296698086996L;
 	public boolean dynamic_allocation = false;
+	public boolean strdup = false;
+	public HashMap<Label, byte[]> ro_data;
 
+	public IRContextStack(){
+		ro_data = new HashMap<Label, byte[]>();
+	}
+	
 	public IRContext top() throws InvalidIRContextException{
 		if (this.isEmpty())
 			throw new InvalidIRContextException("Cannot find a context environment to generate IR with");

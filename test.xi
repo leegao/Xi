@@ -1,6 +1,7 @@
 use io
 
 mean(list:int[]):int{
+	print("hello world!")
 	sum:int = 0 
 	i:int = 0 
 	while (i < length(list)) 

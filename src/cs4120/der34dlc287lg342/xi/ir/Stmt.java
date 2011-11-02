@@ -97,6 +97,9 @@ public abstract class Stmt implements VisualizableTreeNode{
 						s += " "+f.getName()+":"+((Stmt) o).prettyPrint() + ",";
 					else
 						s += " "+f.getName()+":"+o.toString() + ",";
+				} else {
+					ArrayList<Integer> i = (ArrayList<Integer>)o;
+					s += " "+f.getName()+":"+i.toString()+",";
 				}
 			} catch (Exception e) {}
 		}
