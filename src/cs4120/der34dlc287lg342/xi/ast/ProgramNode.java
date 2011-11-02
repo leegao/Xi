@@ -6,13 +6,16 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import cs4120.der34dlc287lg342.xi.XiInterfaceParser;
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Call;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
 import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Dseq_ro;
 import cs4120.der34dlc287lg342.xi.ir.Exp;
+import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.Jump;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
@@ -168,8 +171,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 				"	return list;" +
 				"} "
 				 */
-				dynamalloc_method = new Seq(
-					new LabelNode(Label.dynamalloc),
+				dynamalloc_method = new Func(Label.dynamalloc,
 					new Move(reg("arr"),new Temp(Register.RDI)),
 					new Move(reg("n"),new Mem(new Binop(Binop.MINUS,reg("arr"),new Const(8)))),
 					new Move(reg("i"),new Const(1)),
@@ -234,10 +236,49 @@ public class ProgramNode extends AbstractSyntaxTree {
 
 		}
 		
+		if (stack.strdup){
+			if (strdup == null){
+				/*
+				 * SEQ(
+			         DECL_REG(REG0), 
+			         MOVE(TEMP(p0), TEMP(REG0)), 
+			         MOVE(TEMP(t10), MEM(TEMP(p0))), 
+			         MOVE(TEMP(t27), CALL(NAME(_I_alloc_i), ADD(AR_LSHIFT(TEMP(t10), 
+			           CONST(3)), CONST(8)))), 
+			         LABEL(.L9), 
+			         MOVE(MEM(ADD(TEMP(t27), AR_LSHIFT(TEMP(t10), 
+			           CONST(3)))), MEM(ADD(TEMP(p0), AR_LSHIFT(TEMP(t10), CONST(3))))), 
+			         MOVE(TEMP(t10), SUB(TEMP(t10), CONST(1))), 
+			         CJUMP(GE(TEMP(t10), CONST(0)), .L9, <none>), 
+			         MOVE(TEMP(RV), ADD(TEMP(t27), CONST(8)))
+			      )
+				 * */
+				strdup = new Func(Label.internal_strdup, 
+					new Move(reg("reg0"),new Temp(Register.RDI)),
+					new Move(reg("p0"), reg("reg0")),
+					new Move(reg("t10"), new Mem(reg("p0"))),
+					new Move(reg("t27"), new Call(new Name(Label.alloc), new Binop(Binop.PLUS, new Binop(Binop.LSH, reg("t10"), new Const(3)), new Const(8)))),
+					new LabelNode(label(".L9")),
+					new Move(new Mem(new Binop(Binop.PLUS, reg("t27"), new Binop(Binop.LSH, reg("t10"), new Const(3)))), 
+							 new Mem(new Binop(Binop.PLUS, reg("p0"), new Binop(Binop.LSH, reg("t10"), new Const(3))))),
+					new Move(reg("t10"), new Binop(Binop.MINUS, reg("t10"), new Const(1))),
+					new Cjump(new Binop(Binop.GE, reg("t10"), new Const(0)), label(".L9"), null),
+					new Move(new Temp(Register.RV), new Binop(Binop.PLUS, reg("t27"), new Const(8)))
+				);
+			}
+			seq.add(strdup);
+		}
+		
+		
+		for (Entry<Label, byte[]> e : stack.ro_data.entrySet()){
+			seq.add(new Dseq_ro(e.getKey(), e.getValue()));
+		}
+		
 		return new IRTranslationStmt(seq);
 	}
 	
 	public static Seq dynamalloc_method = null;
+	public static Seq strdup = null;
 	
 	// temporary context
 	public static HashMap<String, Temp> reg_s = new HashMap<String, Temp>();

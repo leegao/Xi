@@ -42,7 +42,12 @@ public abstract class Stmt implements VisualizableTreeNode{
 	public static void add_and_lower(Seq dest, Seq src){
 		for (VisualizableTreeNode c : src.children){
 			Seq s = ((Stmt)c).lower();
-			dest.children.addAll(s.children);
+			if (c instanceof Func){
+				Func f = new Func(((Func)c).name);
+				f.addAll(s);
+				dest.children.add(f);
+			}else 
+				dest.children.addAll(s.children);
 		}
 	}
 	
@@ -92,6 +97,9 @@ public abstract class Stmt implements VisualizableTreeNode{
 						s += " "+f.getName()+":"+((Stmt) o).prettyPrint() + ",";
 					else
 						s += " "+f.getName()+":"+o.toString() + ",";
+				} else {
+					ArrayList<Integer> i = (ArrayList<Integer>)o;
+					s += " "+f.getName()+":"+i.toString()+",";
 				}
 			} catch (Exception e) {}
 		}

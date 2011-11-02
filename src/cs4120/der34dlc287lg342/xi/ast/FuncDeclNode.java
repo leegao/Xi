@@ -2,11 +2,14 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Func;
+import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Return;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.*;
@@ -118,22 +121,21 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		 * within the next context, push the symbols as args
 		 */
 		IRContext c = new IRContext();
+		Label return_to = new Label();
+		c.return_to = return_to;
 		int i = 0;
-		Seq seq = new Seq(stack.find_name(id.id));
+		Func seq = new Func(stack.find_name(id.id).label);
 		for (VisualizableTreeNode child : args){
 			DeclNode arg = (DeclNode)child;
 			seq.add(c.add_arg(arg.id.id, i++, args.size()));
 		}
 		
-		
 		block.new_ircontext = c;
 		IRTranslation tr = block.to_ir(stack);
 		seq.add(tr.stmt());
 		
-		// add a return
-		if (block.type.equals(XiPrimitiveType.UNIT)){
-			seq.add(new Return());
-		}
+		// add a return label
+		seq.add(new LabelNode(return_to));
 		
 		return new IRTranslationStmt(seq);
 	}

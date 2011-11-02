@@ -6,6 +6,7 @@ import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Call;
 import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Jump;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
@@ -100,7 +101,7 @@ public class ReturnNode extends AbstractSyntaxTree {
 		 */
 		
 		if (children.isEmpty())
-			return new IRTranslationStmt(new Return());
+			return new IRTranslationStmt(new Jump(stack.return_to()));
 		
 		Seq seq = new Seq();
 		
@@ -131,7 +132,7 @@ public class ReturnNode extends AbstractSyntaxTree {
 			}
 		}
 		
-		seq.add(new Return());
+		seq.add(new Jump(stack.return_to()));
 		return new IRTranslationStmt(seq);
 	}
 }

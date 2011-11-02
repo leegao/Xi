@@ -140,6 +140,7 @@ public class ListNode extends ExpressionNode {
 		 *  ), Add(r, 8)
 		 * )
 		 */
+
 		Expr base = new Temp(new Register());
 		Seq seq = Register.init_array(base, new Const(children.size()));
 
