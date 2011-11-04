@@ -8,6 +8,7 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public class ConstantFolding {
 	public static Seq foldConstants(Seq stmts){
+		int i = 0;
 		for (VisualizableTreeNode child : stmts.children()){
 			Stmt stmt = (Stmt)child;
 			ArrayList<VisualizableTreeNode> arr = (ArrayList<VisualizableTreeNode>)stmt.children();
@@ -32,12 +33,33 @@ public class ConstantFolding {
 						} catch (IllegalAccessException e) {
 							e.printStackTrace();
 						}
-						int i = arr.indexOf(expr);
-						if (i > -1)
-							arr.set(i, new_expr);
+						int j = arr.indexOf(expr);
+						if (j > -1)
+							arr.set(j, new_expr);
 					}
 				} 
 			}
+			
+			// check special cases
+			if (stmt instanceof Cjump){
+				Cjump cjump = (Cjump)stmt;
+				if (cjump.condition instanceof Const){
+					int v = ((Const)cjump.condition).value;
+					if (v == 0){
+						// if false 
+						// replace with jump(iffalse)
+						Jump jump = new Jump(cjump.iffalse);
+						stmts.children.set(i, jump);
+					}else{
+						// if true 
+						// replace with jump(true)
+						Jump jump = new Jump(cjump.to);
+						stmts.children.set(i, jump);
+					}
+				}
+			}
+			
+			i++;
 		}
 		return stmts;
 	}
