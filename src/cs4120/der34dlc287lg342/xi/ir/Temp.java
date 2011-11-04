@@ -1,10 +1,10 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class Temp extends Expr {
-	public Register temp;
-	public Temp(Register temp){
+	public TempRegister temp;
+	public Temp(TempRegister temp){
 		this.temp = temp;
 	}
 	

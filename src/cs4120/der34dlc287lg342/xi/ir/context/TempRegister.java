@@ -10,29 +10,29 @@ import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 
-public class Register {
+public class TempRegister {
 	static public int global = 0;
 	public int value;
 	public String name;
 	
-	static public Register Null = new Register("null");
-	static public Register FP = new Register("fp"); // frame pointer, rsp (dereferences to location on stack)
-	static public Register RV = new Register("rv"); // return value register, rax
-	static public Register RDI = new Register("rdi"); 
-	static public Register RSI = new Register("rsi"); 
-	static public Register RDX = new Register("rdx"); 
-	static public Register RCX = new Register("rcx"); 
-	static public Register R8 = new Register("r8"); 
-	static public Register R9 = new Register("r9"); 
+	static public TempRegister Null = new TempRegister("null");
+	static public TempRegister FP = new TempRegister("fp"); // frame pointer, rsp (dereferences to location on stack)
+	static public TempRegister RV = new TempRegister("rv"); // return value register, rax
+	static public TempRegister RDI = new TempRegister("rdi"); 
+	static public TempRegister RSI = new TempRegister("rsi"); 
+	static public TempRegister RDX = new TempRegister("rdx"); 
+	static public TempRegister RCX = new TempRegister("rcx"); 
+	static public TempRegister R8 = new TempRegister("r8"); 
+	static public TempRegister R9 = new TempRegister("r9"); 
 	
-	static public Register[] free_registers = new Register[]{RDI, RSI, RDX, RCX, R8, R9};
+	static public TempRegister[] free_registers = new TempRegister[]{RDI, RSI, RDX, RCX, R8, R9};
 	
-	public Register(){
+	public TempRegister(){
 		value = global++;
 		this.name = "" + value;
 	}
 	
-	public Register(String name){
+	public TempRegister(String name){
 		this();
 		this.name = name;
 	}
@@ -46,7 +46,7 @@ public class Register {
 	}
 	
 	public static Seq init_array(Expr base, Expr n){
-		Temp p = new Temp(new Register());
+		Temp p = new Temp(new TempRegister());
 		Call ptr = new Call(new Name(Label.alloc), new Binop(Binop.LSH, new Binop(Binop.PLUS, n, new Const(1)), new Const(3)));
 		
 		return new Seq(new Move(p, ptr), new Move(new Mem(p), n), new Move(base, new Binop(Binop.PLUS, p, new Const(8))));

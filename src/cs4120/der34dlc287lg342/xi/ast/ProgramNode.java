@@ -28,7 +28,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -172,7 +172,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 				"} "
 				 */
 				dynamalloc_method = new Func(Label.dynamalloc,
-					new Move(reg("arr"),new Temp(Register.RDI)),
+					new Move(reg("arr"),new Temp(TempRegister.RDI)),
 					new Move(reg("n"),new Mem(new Binop(Binop.MINUS,reg("arr"),new Const(8)))),
 					new Move(reg("i"),new Const(1)),
 					new Cjump(new Binop(Binop.NE,reg("n"),new Const(0)),label("213"),label("212")),
@@ -229,7 +229,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 					new Move(new Mem(new Binop(Binop.PLUS,reg(539),new Binop(Binop.LSH,reg(540),new Const(3)))),reg("a'")),
 					new Jump(label("223")),
 					new LabelNode(label("225")),
-					new Move(new Temp(Register.RV),reg("list")),
+					new Move(new Temp(TempRegister.RV),reg("list")),
 					ret
 				);
 			seq.add(dynamalloc_method);
@@ -254,7 +254,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 			      )
 				 * */
 				strdup = new Func(Label.internal_strdup, 
-					new Move(reg("reg0"),new Temp(Register.RDI)),
+					new Move(reg("reg0"),new Temp(TempRegister.RDI)),
 					new Move(reg("p0"), reg("reg0")),
 					new Move(reg("t10"), new Mem(reg("p0"))),
 					new Move(reg("t27"), new Call(new Name(Label.alloc), new Binop(Binop.PLUS, new Binop(Binop.LSH, reg("t10"), new Const(3)), new Const(8)))),
@@ -263,7 +263,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 							 new Mem(new Binop(Binop.PLUS, reg("p0"), new Binop(Binop.LSH, reg("t10"), new Const(3))))),
 					new Move(reg("t10"), new Binop(Binop.MINUS, reg("t10"), new Const(1))),
 					new Cjump(new Binop(Binop.GE, reg("t10"), new Const(0)), label(".L9"), null),
-					new Move(new Temp(Register.RV), new Binop(Binop.PLUS, reg("t27"), new Const(8)))
+					new Move(new Temp(TempRegister.RV), new Binop(Binop.PLUS, reg("t27"), new Const(8)))
 				);
 			}
 			seq.add(strdup);
@@ -288,7 +288,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 		if (reg_s.containsKey(s))
 			return reg_s.get(s);
 		
-		Temp t = new Temp(new Register(s));
+		Temp t = new Temp(new TempRegister(s));
 		reg_s.put(s, t);
 		return t;
 	}
@@ -296,7 +296,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 		if (reg_i.containsKey(s))
 			return reg_i.get(s);
 		
-		Temp t = new Temp(new Register());
+		Temp t = new Temp(new TempRegister());
 		reg_i.put(s, t);
 		return t;
 	}

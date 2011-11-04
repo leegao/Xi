@@ -18,7 +18,7 @@ import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -158,15 +158,15 @@ public class BinNode extends ExpressionNode {
 			 *   i = i + 1
 			 * }
 			 */
-			Temp i = new Temp(new Register()), n1 = new Temp(new Register()), n2 = new Temp(new Register()), arr = new Temp(new Register());
-			Temp l = new Temp(new Register()), r = new Temp(new Register());
+			Temp i = new Temp(new TempRegister()), n1 = new Temp(new TempRegister()), n2 = new Temp(new TempRegister()), arr = new Temp(new TempRegister());
+			Temp l = new Temp(new TempRegister()), r = new Temp(new TempRegister());
 			LabelNode a = new LabelNode(new Label()), b = new LabelNode(new Label()), c = new LabelNode(new Label());
 			LabelNode a_ = new LabelNode(new Label()), b_ = new LabelNode(new Label()), c_ = new LabelNode(new Label());
 			Seq seq = new Seq(
 				new Move(i, new Const(0)),
 				new Move(l, lhs), new Move(r, rhs),
-				new Move(n1, Register.size_of(l)),
-				new Move(n2, new Binop(Binop.PLUS, n1, Register.size_of(r))),
+				new Move(n1, TempRegister.size_of(l)),
+				new Move(n2, new Binop(Binop.PLUS, n1, TempRegister.size_of(r))),
 				new Move(arr, new Call(new Name(Label.alloc), n2)),
 				
 				a, // check cond

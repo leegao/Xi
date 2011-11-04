@@ -12,7 +12,7 @@ import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -141,8 +141,8 @@ public class ListNode extends ExpressionNode {
 		 * )
 		 */
 
-		Expr base = new Temp(new Register());
-		Seq seq = Register.init_array(base, new Const(children.size()));
+		Expr base = new Temp(new TempRegister());
+		Seq seq = TempRegister.init_array(base, new Const(children.size()));
 
 		int i = 0;
 		for (VisualizableTreeNode child : children()){

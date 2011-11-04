@@ -28,7 +28,7 @@ import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
@@ -42,14 +42,14 @@ import junit.framework.TestCase;
 public class TestIRGen extends TestCase {
 	public Label l = new Label();
 	public LabelNode label = new LabelNode(l);
-	public Register r = new Register();
+	public TempRegister r = new TempRegister();
 	public Temp temp = new Temp(r); 
 	public Return ret = new Return();
 	public Const c = new Const(0);
 	public Name name = new Name(l);
 	public Temp reg = temp;
 	public Temp reg(String s){
-		return new Temp(new Register(s));
+		return new Temp(new TempRegister(s));
 	}
 	public Temp reg(int s){
 		return temp;
@@ -260,8 +260,8 @@ public class TestIRGen extends TestCase {
 					} else if (o instanceof Label) {
 						Label l = ((Label)o);
 						s += "label(\""+l.name+"\")";
-					} else if (o instanceof Register) {
-						s += "new Register(\""+((Register)o).name+"\")";
+					} else if (o instanceof TempRegister) {
+						s += "new Register(\""+((TempRegister)o).name+"\")";
 					} else{
 						System.out.println(arg.getSimpleName() +": "+ field.getName());
 					}
@@ -330,8 +330,8 @@ public class TestIRGen extends TestCase {
 					} else if (o instanceof Label) {
 						Label l = ((Label)o);
 						s += "label(\""+l.name+"\")";
-					} else if (o instanceof Register) {
-						Register r = ((Register)o);
+					} else if (o instanceof TempRegister) {
+						TempRegister r = ((TempRegister)o);
 						s += r.name.equals(""+r.value)? "("+r.name+")" : "(\""+r.name+"\")";
 						return s;
 					} else if (o instanceof ArrayList<?>) {

@@ -3,7 +3,7 @@ package cs4120.der34dlc287lg342.xi.ir.translate;
 import cs4120.der34dlc287lg342.xi.ir.*;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public abstract class IRTranslationCondition extends IRTranslation {
 
@@ -14,7 +14,7 @@ public abstract class IRTranslationCondition extends IRTranslation {
 	@Override
 	public
 	Expr expr() throws InvalidIRContextException {
-		Register r = new Register(); // fresh
+		TempRegister r = new TempRegister(); // fresh
 		Label t = new Label(), f = new Label();
 		Temp temp = new Temp(r);
 		return new Eseq(temp, new Seq(

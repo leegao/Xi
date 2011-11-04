@@ -1,6 +1,6 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Move extends Stmt {
@@ -44,16 +44,16 @@ public class Move extends Stmt {
 	}
 	
 	public Tile munch() {
-		// Move(Mem(Temp), Const)
+		// Move (Mem(Temp), Const)
 		if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Const) {
-			Register output = ((Temp)((Mem)dest).expr).temp;
-			return new Tile(output);
+			TempRegister output = ((Temp)((Mem)dest).expr).temp;
+			return new Tile("movq", output);
 		} 
 		// Move (Mem(Temp), Mem(Temp))
 		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && 
 				val instanceof Mem && ((Mem)val).expr instanceof Mem ) {
-			Register output = ((Temp)((Mem)dest).expr).temp;
-			return new Tile(output);
+			TempRegister output = ((Temp)((Mem)dest).expr).temp;
+			return new Tile("movq", output);
 		}
 		
 		

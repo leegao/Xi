@@ -15,7 +15,7 @@ import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -134,7 +134,7 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 		// check that our dimensions are not undefined
 		if (brackets.get(0) == null){
-			return new IRTranslationStmt(new Seq(new Move(r, new Temp(Register.Null))));
+			return new IRTranslationStmt(new Seq(new Move(r, new Temp(TempRegister.Null))));
 		}
 		
 		Seq seq = new Seq();
@@ -173,8 +173,8 @@ public class DeclNode extends AbstractSyntaxTree {
 	}
 
 	private Expr create_args(ArrayList<Expr> exprs){
-		Expr base = new Temp(new Register());
-		Seq seq = Register.init_array(base, new Const(exprs.size()));
+		Expr base = new Temp(new TempRegister());
+		Seq seq = TempRegister.init_array(base, new Const(exprs.size()));
 
 		int i = 0;
 		for (Expr child : exprs){
@@ -186,14 +186,14 @@ public class DeclNode extends AbstractSyntaxTree {
 	
 	private Expr generate_array(ArrayList<Expr> exprs) {
 		if (exprs.isEmpty())
-			return new Temp(Register.Null);
+			return new Temp(TempRegister.Null);
 		Expr hd = exprs.remove(0);
 		if (!(hd instanceof Const))
-			return new Temp(Register.Null);
+			return new Temp(TempRegister.Null);
 		
 		int n = ((Const)hd).value;
-		Expr base = new Temp(new Register());
-		Seq seq = Register.init_array(base,hd);
+		Expr base = new Temp(new TempRegister());
+		Seq seq = TempRegister.init_array(base,hd);
 		for (int i = 0; i < n; i++){
 			ArrayList<Expr> clone = new ArrayList<Expr>();
 			clone.addAll(exprs);

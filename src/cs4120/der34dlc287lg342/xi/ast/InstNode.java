@@ -12,7 +12,7 @@ import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -163,16 +163,16 @@ public class InstNode extends AbstractSyntaxTree {
 				if (!(tree instanceof DeclNode)) continue; // underscore
 				DeclNode d = (DeclNode)tree;
 				d.to_ir(stack);
-				if (i < Register.free_registers.length - 1){
-					Register r = Register.free_registers[i];
+				if (i < TempRegister.free_registers.length - 1){
+					TempRegister r = TempRegister.free_registers[i];
 					seq.add(new Move(stack.find_register(d.id.id), new Temp(r)));
 				} else {
-					Expr heap_addr = new Temp(Register.R9);
+					Expr heap_addr = new Temp(TempRegister.R9);
 					seq.add(new Move(
 						stack.find_register(d.id.id), 
 						new Mem(new Binop(Binop.PLUS, 
 							heap_addr, 
-							new Const(8*(i-(Register.free_registers.length-1)))))));
+							new Const(8*(i-(TempRegister.free_registers.length-1)))))));
 				}
 			}
 			

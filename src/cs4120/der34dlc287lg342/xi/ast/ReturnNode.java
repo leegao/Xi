@@ -16,7 +16,7 @@ import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -108,7 +108,7 @@ public class ReturnNode extends AbstractSyntaxTree {
 		if (children.size() >= 1){
 			AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(0);
 			IRTranslation tr = e.to_ir(stack);
-			seq = new Seq(new Move(new Temp(Register.RV), tr.expr()));
+			seq = new Seq(new Move(new Temp(TempRegister.RV), tr.expr()));
 		} 
 		if (children.size() > 1){
 			int i;
@@ -116,18 +116,18 @@ public class ReturnNode extends AbstractSyntaxTree {
 				AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(i+1);
 				IRTranslation tr = e.to_ir(stack);
 				Expr return_register;
-				if (i < Register.free_registers.length -1 ){
-					Register r = Register.free_registers[i];
+				if (i < TempRegister.free_registers.length -1 ){
+					TempRegister r = TempRegister.free_registers[i];
 					return_register = new Temp(r);
 					seq.add(new Move(return_register, tr.expr()));
 				} else {
-					return_register = new Temp(Register.R9);
-					if (i == Register.free_registers.length -1){
+					return_register = new Temp(TempRegister.R9);
+					if (i == TempRegister.free_registers.length -1){
 						// allocate heap here
 						seq.add(new Move(return_register, new Call(new Name(Label.alloc), new Const(8*(children.size()-1-i)))));
 					}
 					// put it on the heap
-					seq.add(new Move(new Mem(new Binop(Binop.PLUS, return_register, new Const(8*(i-(Register.free_registers.length-1))))), tr.expr()));
+					seq.add(new Move(new Mem(new Binop(Binop.PLUS, return_register, new Const(8*(i-(TempRegister.free_registers.length-1))))), tr.expr()));
 				}
 			}
 		}

@@ -18,7 +18,7 @@ import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
-import cs4120.der34dlc287lg342.xi.ir.context.Register;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -111,10 +111,10 @@ public class ListIndexNode extends ExpressionNode {
 		IRTranslation tr1 = expr.to_ir(stack), tr2 = index.to_ir(stack);
 		Expr lhs = tr1.expr(), rhs = tr2.expr();
 		
-		Temp base = new Temp(new Register()), ind = new Temp(new Register());
+		Temp base = new Temp(new TempRegister()), ind = new Temp(new TempRegister());
 		Seq seq = new Seq(new Move(base, lhs), new Move(ind, rhs));
 		
-		Expr size = Register.size_of(base);
+		Expr size = TempRegister.size_of(base);
 		//seq.add(size_eseq.stmts);
 		//Temp size = (Temp) size_eseq.expr;
 		

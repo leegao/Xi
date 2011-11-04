@@ -25,19 +25,19 @@ public class IRContext {
 	}
 	
 	public Expr add_register(String id){
-		Temp r = new Temp(new Register(id)); // on stack
+		Temp r = new Temp(new TempRegister(id)); // on stack
 		symbols.put(id, r);
 		return r;
 	}
 	
 	public Stmt add_arg(String id, int i, int n){
 		Expr arg;
-		if (i < Register.free_registers.length){
-			arg = new Temp(Register.free_registers[i]);
+		if (i < TempRegister.free_registers.length){
+			arg = new Temp(TempRegister.free_registers[i]);
 		} else{
-			arg = new Mem(new Binop(Binop.PLUS, new Temp(Register.FP), new Const((n-i)*8+8)));
+			arg = new Mem(new Binop(Binop.PLUS, new Temp(TempRegister.FP), new Const((n-i)*8+8)));
 		}
-		Temp temp = new Temp(new Register(id));
+		Temp temp = new Temp(new TempRegister(id));
 		symbols.put(id, temp);
 		return new Move(temp, arg);
 	}
