@@ -14,6 +14,7 @@ public class IRContextStack extends ArrayList<IRContext>{
 	public boolean dynamic_allocation = false;
 	public boolean strdup = false;
 	public HashMap<Label, byte[]> ro_data;
+	public boolean abort = false;
 
 	public IRContextStack(){
 		ro_data = new HashMap<Label, byte[]>();

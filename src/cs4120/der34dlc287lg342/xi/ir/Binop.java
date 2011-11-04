@@ -23,6 +23,7 @@ public class Binop extends Expr {
 	final public static int NE = 12;
 	final public static int LT = 13;
 	final public static int GT = 14;
+	final public static int UGT = 17;
 	final public static int LE = 15;
 	final public static int GE = 16;
 	

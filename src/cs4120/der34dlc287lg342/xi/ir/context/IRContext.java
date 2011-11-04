@@ -3,12 +3,14 @@ package cs4120.der34dlc287lg342.xi.ir.context;
 import java.util.HashMap;
 
 import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
+import cs4120.der34dlc287lg342.xi.ir.Arg;
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Stmt;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 
@@ -31,15 +33,19 @@ public class IRContext {
 	}
 	
 	public Stmt add_arg(String id, int i, int n){
-		Expr arg;
-		if (i < TempRegister.free_registers.length){
-			arg = new Temp(TempRegister.free_registers[i]);
-		} else{
-			arg = new Mem(new Binop(Binop.PLUS, new Temp(TempRegister.FP), new Const((n-i)*8+8)));
-		}
 		Temp temp = new Temp(new TempRegister(id));
 		symbols.put(id, temp);
-		return new Move(temp, arg);
+		
+		if (i < 6){
+			TempRegister r = new TempRegister();
+			Expr arg = new Temp(r);
+			return new Seq(new Arg(r), new Move(temp, arg));
+		} else{
+			Expr arg = new Mem(new Binop(Binop.PLUS, new Temp(TempRegister.FP), new Const((n-i)*8+8)));
+			return new Move(temp, arg);
+		}
+		
+		
 	}
 	
 	public LabelNode add_name(FuncDeclNode decl){

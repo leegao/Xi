@@ -269,9 +269,13 @@ public class ProgramNode extends AbstractSyntaxTree {
 			seq.add(strdup);
 		}
 		
-		
 		for (Entry<Label, byte[]> e : stack.ro_data.entrySet()){
 			seq.add(new Dseq_ro(e.getKey(), e.getValue()));
+		}
+		
+		if (stack.abort){
+			seq.add(new LabelNode(Label.outofbounds_jump));
+			seq.add(new Exp(new Call(new Name(Label.outOfBounds))));
 		}
 		
 		return new IRTranslationStmt(seq);

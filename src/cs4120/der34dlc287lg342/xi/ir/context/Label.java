@@ -9,6 +9,12 @@ public class Label {
 	final public static Label outOfBounds = new Label("_I_outOfBounds_p");
 	final public static Label dynamalloc = new Label("_I_c_dynamalloc_aiai");
 	final public static Label internal_strdup = new Label("_I_c_internal_strdup_aii");
+	final public static Label outofbounds_jump = new Label("error_outofbounds");
+	
+	public static Label get_outofbounds(IRContextStack stack){
+		stack.abort = true;
+		return outofbounds_jump;
+	}
 	
 	public Label(String name){
 		value = global++;

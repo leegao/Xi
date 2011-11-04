@@ -8,7 +8,7 @@ import cs4120.der34dlc287lg342.xi.tiles.Tile;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public abstract class Stmt implements VisualizableTreeNode{
-	ArrayList<VisualizableTreeNode> children;
+	public ArrayList<VisualizableTreeNode> children;
 	public Stmt(){
 		children = new ArrayList<VisualizableTreeNode>();
 	}
