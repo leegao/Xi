@@ -3,6 +3,8 @@ package cs4120.der34dlc287lg342.xi.ir;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
+
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public abstract class Stmt implements VisualizableTreeNode{
@@ -106,5 +108,9 @@ public abstract class Stmt implements VisualizableTreeNode{
 		if (this.getClass().getDeclaredFields().length>0)
 			s = s.substring(0, s.length()-1);
 		return s;
+	}
+	
+	public Tile munch() {
+		return null;
 	}
 }

@@ -3,6 +3,8 @@ package cs4120.der34dlc287lg342.xi.ir;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
+
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public abstract class Expr implements VisualizableTreeNode {
@@ -69,4 +71,10 @@ public abstract class Expr implements VisualizableTreeNode {
 	public Eseq lower(){
 		return new Eseq(this, new Seq());
 	}
+	
+	public Tile munch() {
+		return null;
+	}
+	
+	
 }
