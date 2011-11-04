@@ -105,30 +105,20 @@ public class ReturnNode extends AbstractSyntaxTree {
 		
 		Seq seq = new Seq();
 		
-		if (children.size() >= 1){
+		if (children.size() == 1){
 			AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(0);
 			IRTranslation tr = e.to_ir(stack);
 			seq = new Seq(new Move(new Temp(TempRegister.RV), tr.expr()));
-		} 
-		if (children.size() > 1){
-			int i;
-			for (i = 0; i < children.size()-1;i++){
+		} else if (children.size() > 1){
+			Expr return_register = new Temp(TempRegister.RV);
+			// allocate heap here
+			seq.add(new Move(return_register, new Call(new Name(Label.alloc), new Const(8*children.size()))));
+			for (int i = 0; i < children.size()-1;i++){
 				AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(i+1);
 				IRTranslation tr = e.to_ir(stack);
-				Expr return_register;
-				if (i < TempRegister.free_registers.length -1 ){
-					TempRegister r = TempRegister.free_registers[i];
-					return_register = new Temp(r);
-					seq.add(new Move(return_register, tr.expr()));
-				} else {
-					return_register = new Temp(TempRegister.R9);
-					if (i == TempRegister.free_registers.length -1){
-						// allocate heap here
-						seq.add(new Move(return_register, new Call(new Name(Label.alloc), new Const(8*(children.size()-1-i)))));
-					}
-					// put it on the heap
-					seq.add(new Move(new Mem(new Binop(Binop.PLUS, return_register, new Const(8*(i-(TempRegister.free_registers.length-1))))), tr.expr()));
-				}
+				
+				// put it on the heap
+				seq.add(new Move(new Mem(new Binop(Binop.PLUS, return_register, new Const(8*i))), tr.expr()));
 			}
 		}
 		

@@ -120,10 +120,10 @@ public class ListIndexNode extends ExpressionNode {
 		
 		// next check that index is within bounds
 		Label iftrue = new Label(), iffalse = new Label();
-		seq.add(new Cjump(new Binop(Binop.LT, ind, size), iftrue, iffalse));
-		seq.add(new LabelNode(iffalse));
-		seq.add(new Exp(new Call(new Name(Label.outOfBounds))));
-		seq.add(new LabelNode(iftrue));
+		seq.add(new Cjump(new Binop(Binop.UGT, size, ind), Label.get_outofbounds(stack), iffalse));
+		//seq.add(new LabelNode(iftrue));
+		//seq.add(new Exp(new Call(new Name(Label.outOfBounds))));
+		//seq.add(new LabelNode(iffalse));
 		
 		//Temp r = new Temp(new Register());
 		Expr arr_ind = new Mem(new Binop(Binop.PLUS, base, new Binop(Binop.LSH, ind, new Const(3))));

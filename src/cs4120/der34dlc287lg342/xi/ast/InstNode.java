@@ -153,29 +153,24 @@ public class InstNode extends AbstractSyntaxTree {
 			
 			Seq seq;
 			
-			if (decl != null)
-				seq = new Seq(new Move(stack.find_register(decl.id.id), expr)); // call expr always uses rax
-			else
+			if (decl == null)
 				seq = new Seq(new Exp(expr)); // underscore
-			
-			for (int i = 0; i < list.size()-1; i++){
-				AbstractSyntaxTree tree = (AbstractSyntaxTree) list.get(i+1);
-				if (!(tree instanceof DeclNode)) continue; // underscore
-				DeclNode d = (DeclNode)tree;
-				d.to_ir(stack);
-				if (i < TempRegister.free_registers.length - 1){
-					TempRegister r = TempRegister.free_registers[i];
-					seq.add(new Move(stack.find_register(d.id.id), new Temp(r)));
-				} else {
-					Expr heap_addr = new Temp(TempRegister.R9);
+			else{
+				seq = new Seq();
+				for (int i = 0; i < list.size(); i++){
+					AbstractSyntaxTree tree = (AbstractSyntaxTree) list.get(i);
+					if (!(tree instanceof DeclNode)) continue; // underscore
+					DeclNode d = (DeclNode)tree;
+					d.to_ir(stack);
+					
+					Expr heap_addr = new Temp(TempRegister.RV);
 					seq.add(new Move(
 						stack.find_register(d.id.id), 
 						new Mem(new Binop(Binop.PLUS, 
 							heap_addr, 
-							new Const(8*(i-(TempRegister.free_registers.length-1)))))));
+							new Const(8*i)))));
 				}
 			}
-			
 			return new IRTranslationStmt(seq);
 		}
 		
