@@ -56,14 +56,20 @@ public class Move extends Stmt {
 			destTile = new TempTile(((Temp)dest).temp);
 			srcTile = new TempTile(((Temp)val).temp);
 		}
-		
-		
+		// Move (Mem( Add(Temp,Const) ), Temp)  => mov k(%r), %r
+		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Binop && 
+				((Binop)((Mem)dest).expr).op == Binop.PLUS && 
+				((Binop)((Mem)dest).expr).left instanceof Temp &&
+				((Binop)((Mem)dest).expr).left instanceof Const && 
+				val instanceof Temp) {
+				
+		}
 		
 		// Move (Mem(*), Mem(*))
 		// This operation is not allowed, this will have to translate to:
 		// 		MOV reg, [address1]
 		//		MOV [address2], reg
-		if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Mem) {
+		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Mem) {
 			destTile = new MemTile((((Mem)dest).expr).munch());
 			srcTile = new MemTile((((Mem)val).expr).munch());
 		}
