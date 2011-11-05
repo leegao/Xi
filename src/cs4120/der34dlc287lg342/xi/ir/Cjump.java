@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.tiles.CjumpTile;
 
 public class Cjump extends Stmt {
 	public Expr condition;
@@ -21,5 +22,10 @@ public class Cjump extends Stmt {
 		add_and_lower(seq, affects);
 		seq.add(new Cjump(eseq.expr, to, iffalse));
 		return seq;
+	}
+	
+	@Override 
+	public CjumpTile munch() {
+		
 	}
 }

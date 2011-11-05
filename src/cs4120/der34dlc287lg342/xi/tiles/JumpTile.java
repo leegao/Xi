@@ -1,5 +1,11 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
-public class JumpTile extends Tile {
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
 
+public class JumpTile extends Tile {
+	public Label label;
+	
+	public JumpTile(Label label) {
+		this.label = label;
+	}
 }

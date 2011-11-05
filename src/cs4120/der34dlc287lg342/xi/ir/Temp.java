@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
+import cs4120.der34dlc287lg342.xi.tiles.TempTile;
 
 public class Temp extends Expr {
 	public TempRegister temp;
@@ -25,6 +26,10 @@ public class Temp extends Expr {
 		}
 		return false;
 	}
-	
+
+	@Override
+	public TempTile munch() {
+		return new TempTile(temp);
+	}
 	
 }

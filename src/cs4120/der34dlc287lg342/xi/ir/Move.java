@@ -47,32 +47,31 @@ public class Move extends Stmt {
 	}
 	
 	@Override
-	public Tile munch() {
+	public MoveTile munch() {
 		Tile destTile = null;
 		Tile srcTile = null;
 		
-		// Move (Mem(Temp), Const)
-		if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Const) {
-			destTile = new MemTile(new TempTile(((Temp)((Mem)dest).expr).temp));
-			srcTile = new ConstTile(((Const)val).value);
-		} 
-		// Move (Mem(Temp), Mem(Temp))
-		// MOve (Mem(Temp), Mem(*))
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && 
-				//val instanceof Mem && ((Mem)val).expr instanceof Temp) {
-				val instanceof Mem) {
-			destTile = new MemTile(new TempTile(((Temp)((Mem)dest).expr).temp));
-			//srcTile = new MemTile(new TempTile(((Temp)((Mem)val).expr).temp));
+		// Move (Mem(*), Mem(*))
+		// This operation is not allowed, this will have to translate to:
+		// 		MOV reg, [address1]
+		//		MOV [address2], reg
+		if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Mem) {
+			destTile = new MemTile((((Mem)dest).expr).munch());
 			srcTile = new MemTile((((Mem)val).expr).munch());
 		}
-		// Move (Mem(Temp), Temp))
+		// Move (Mem(*), Const)
+		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Const) {
+			destTile = new MemTile((((Mem)dest).expr).munch());
+			srcTile = new ConstTile(((Const)val).value);
+		} 
+		// Move (Mem(*), Temp))
 		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Temp) {
-			destTile = new MemTile(new TempTile(((Temp)((Mem)dest).expr).temp));
+			destTile = new MemTile((((Mem)dest).expr).munch());
 			srcTile = new TempTile(((Temp)val).temp);
 		}
-		// Move (Mem(Temp), Expr))
+		// Move (Mem(*), Expr))
 		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp) {
-			destTile = new MemTile(new TempTile(((Temp)((Mem)dest).expr).temp));
+			destTile = new MemTile((((Mem)dest).expr).munch());
 			srcTile = val.munch();
 		}
 		// Move (Mem(Expr), Const)
@@ -80,12 +79,6 @@ public class Move extends Stmt {
 			destTile = ((Mem)dest).expr.munch();
 			srcTile = new ConstTile(((Const)val).value);
 		} 
-		// Move (Mem(Expr), Mem(Temp)) 
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Expr && 
-				val instanceof Mem && ((Mem)val).expr instanceof Mem ) {
-			destTile = ((Mem)dest).expr.munch();
-			srcTile = new MemTile(new TempTile(((Temp)((Mem)val).expr).temp));
-		}
 		// Move (Mem(Expr), Temp))
 		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Expr && val instanceof Temp) {
 			destTile = ((Mem)dest).expr.munch();
@@ -101,10 +94,10 @@ public class Move extends Stmt {
 			destTile = new TempTile(((Temp)dest).temp);
 			srcTile = new ConstTile(((Const)val).value);
 		}
-		// Move (Temp, Mem(Temp))
-		else if (dest instanceof Temp && val instanceof Mem && ((Mem)val).expr instanceof Temp) {
+		// Move (Temp, Mem(*))
+		else if (dest instanceof Temp && val instanceof Mem) {
 			destTile = new TempTile(((Temp)dest).temp);
-			srcTile = new MemTile(new TempTile(((Temp)((Mem)val).expr).temp));
+			srcTile = new MemTile((((Mem)val).expr).munch());
 		}
 		// Move (Temp, Temp)
 		else if (dest instanceof Temp && val instanceof Temp) {
@@ -115,6 +108,21 @@ public class Move extends Stmt {
 		else if (dest instanceof Temp) {
 			destTile = new TempTile(((Temp)dest).temp);
 			srcTile = val.munch();
+		}
+		// Move (Expr, Const)
+		else if (val instanceof Const) {
+			destTile = dest.munch();
+			srcTile = new ConstTile(((Const)val).value);
+		}
+		// Move (Expr, Mem(*))
+		else if (val instanceof Mem) {
+			destTile = dest.munch();
+			srcTile = new MemTile(val.munch());
+		}
+		// Move (Expr, Temp)
+		else if (val instanceof Temp) {
+			destTile = dest.munch();
+			srcTile = new TempTile(((Temp)val).temp);
 		}
 		// Move (Expr, Expr) 
 		else {
