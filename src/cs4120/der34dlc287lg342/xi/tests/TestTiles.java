@@ -11,6 +11,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
 import cs4120.der34dlc287lg342.xi.tiles.*;
+import cs4120.der34dlc287lg342.xi.tiles.naive_asm.Assemble;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -28,8 +29,8 @@ public class TestTiles extends TestCase{
 		assertTrue(tile instanceof MoveTile);
 		MoveTile moveTile = (MoveTile)tile;
 		if( moveTile.dest instanceof TempTile && moveTile.src instanceof TempTile) {
-			assertEquals( "r(9)", ((TempTile)(moveTile.dest)).register.toString());
-			assertEquals( "r(10)", ((TempTile)(moveTile.src)).register.toString());
+			assertEquals( "r(9)", ((TempTile)(moveTile.dest)).out.toString());
+			assertEquals( "r(10)", ((TempTile)(moveTile.src)).out.toString());
 		} else {
 			fail();
 		}
@@ -50,8 +51,7 @@ public class TestTiles extends TestCase{
 		((AbstractSyntaxTree)tc.ast).foldConstants();
 		try {
 			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
-			LowerCjump lcj = new LowerCjump(tr.stmt().lower());
-			return lcj.translate();
+			return LowerCjump.translate(tr.stmt().lower());
 		} catch (InvalidIRContextException e) {
 			fail(e.getMessage());
 		}
@@ -64,6 +64,8 @@ public class TestTiles extends TestCase{
 		System.out.println(testirgen.islike(stmt));
 		SeqTile main = (SeqTile) stmt.munch();
 		SeqTile func = (SeqTile) main.tiles.get(0);
-		System.out.println(func.tiles);
+		//System.out.println(stmt.prettyPrint());
+		
+		System.out.println(func.att());
 	}
 }

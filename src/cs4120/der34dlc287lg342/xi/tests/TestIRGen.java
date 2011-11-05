@@ -73,8 +73,7 @@ public class TestIRGen extends TestCase {
 		((AbstractSyntaxTree)tc.ast).foldConstants();
 		try {
 			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
-			LowerCjump lcj = new LowerCjump(tr.stmt().lower());
-			return lcj.translate();
+			return LowerCjump.translate(tr.stmt().lower());
 		} catch (InvalidIRContextException e) {
 			fail(e.getMessage());
 		}

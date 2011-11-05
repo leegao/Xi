@@ -8,4 +8,11 @@ public class MoveTile extends Tile {
 		this.src = src;
 	}
 	
+	public String att(){
+		String asm = "";
+		asm += this.dest.att();
+		asm += this.src.att();
+		asm += "movq "+src.out+", "+dest.out;
+		return asm;
+	}
 }

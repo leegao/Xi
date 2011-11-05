@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.ir;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.tiles.FuncTile;
 import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -24,7 +25,7 @@ public class Func extends Seq {
 	
 	@Override
 	public Tile munch(){
-		SeqTile tiles = new SeqTile();
+		FuncTile tiles = new FuncTile(name);
 		
 		for (VisualizableTreeNode s : children){
 			Stmt stmt = (Stmt)s;

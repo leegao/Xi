@@ -70,8 +70,7 @@ public class Driver {
 				System.out.println("Printing out the IR code\n");
 				IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
 				Seq program_ir = tr.stmt().lower();
-				LowerCjump lcj = new LowerCjump(program_ir);
-				program_ir = lcj.translate();
+				program_ir = LowerCjump.translate(program_ir);
 				if (optimization){
 					program_ir = ConstantFolding.foldConstants(program_ir);
 				}

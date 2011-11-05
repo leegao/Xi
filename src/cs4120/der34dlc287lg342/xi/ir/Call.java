@@ -62,6 +62,11 @@ public class Call extends Expr {
 	
 	@Override
 	public CallTile munch() {
-		return new CallTile();
+		Name name = (Name)func;
+		CallTile tile = new CallTile(name.label);
+		for (Expr arg : args){
+			tile.add(arg.munch());
+		}
+		return tile;
 	}
 }
