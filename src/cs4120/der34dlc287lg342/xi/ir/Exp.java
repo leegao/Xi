@@ -1,5 +1,11 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
+import cs4120.der34dlc287lg342.xi.tiles.ExpTile;
+
+/**
+ * Used only for function calls
+ */
+
 public class Exp extends Stmt {
 	public Expr expr;
 	public Exp(Expr expr){
@@ -25,5 +31,10 @@ public class Exp extends Stmt {
 		}
 		
 		return seq;
+	}
+	
+	@Override
+	public ExpTile munch() {
+		return new ExpTile();
 	}
 }

@@ -3,6 +3,9 @@ package cs4120.der34dlc287lg342.xi.ir;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import cs4120.der34dlc287lg342.xi.tiles.BinopTile;
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
+
 public class Binop extends Expr {
 	final public static int PLUS = 0;
 	final public static int MINUS = 1;
@@ -143,5 +146,10 @@ public class Binop extends Expr {
 		Stmt.add_and_lower(seq, (Seq) r.stmts);
 		Eseq eseq = new Eseq(new Binop(op, l.expr, r.expr), seq);
 		return eseq;
+	}
+	
+	@Override
+	public BinopTile munch() {
+		return new BinopTile();
 	}
 }
