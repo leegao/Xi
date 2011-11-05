@@ -26,7 +26,7 @@ public class Binop extends Expr {
 	final public static int NE = 12;
 	final public static int LT = 13;
 	final public static int GT = 14;
-	final public static int UGT = 17;
+	final public static int UGE = 17;
 	final public static int LE = 15;
 	final public static int GE = 16;
 	
@@ -150,6 +150,33 @@ public class Binop extends Expr {
 	
 	@Override
 	public BinopTile munch() {
-		return new BinopTile();
+		Tile left = this.left.munch();
+		Tile right = this.right.munch();
+		switch (op){
+		case PLUS:
+			return new AddTile(left, right);
+		case MINUS:
+			return new SubTile(left, right);
+		case MUL:
+			return new MulTile(left, right);
+		case DIV:
+			return new DivTile(left, right);
+		case MOD:
+			return new ModTile(left, right);
+		case AND:
+			return new AndTile(left, right);
+		case OR:
+			return new OrTile(left, right);
+		case XOR:
+			return new XorTile(left, right);
+		case LSH:
+			return new LshTile(left, right);
+		case RSH:
+			return new RshTile(left, right);
+		case UGE:
+			return new UgeTile(left, right);
+		}
+		System.out.println(label());
+		return null;
 	}
 }
