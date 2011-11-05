@@ -1,0 +1,22 @@
+COMPUNIT(
+   FUNC _Imain_paai(
+      SEQ(
+         DECL_REG(REG0), 
+         MOVE(TEMP(_args), TEMP(REG0)), 
+         MOVE(TEMP(t4), MEM_I(SUB(TEMP(_args), CONST(8)))), 
+         MOVE(TEMP(_i), CONST(0)), 
+         LABEL(.L0), 
+         CJUMP(GE(TEMP(_i), TEMP(t4)), .L2, <none>), 
+         CJUMP(UGE(TEMP(_i), TEMP(t4)), __internal_call_abort, <none>), 
+         MOVE(TEMP(t2), MEM(ADD(TEMP(_args), AR_LSHIFT(TEMP(_i), CONST(3))))), 
+         MOVE(TEMP(t1), CALL(NAME(_Iprintln_pai), TEMP(t2))), 
+         MOVE(TEMP(_i), ADD(TEMP(_i), CONST(1))), 
+         JUMP(NAME(.L0)), 
+         LABEL(.L2)
+      )
+   ), 
+   SEQ(
+      LABEL(__internal_call_abort), 
+      MOVE(TEMP(t3), CALL(NAME(_I_outOfBounds_p)))
+   )
+)

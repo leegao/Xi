@@ -51,6 +51,14 @@ public class Move extends Stmt {
 		Tile destTile = null;
 		Tile srcTile = null;
 		
+		// Move (Temp, Temp)
+		if (dest instanceof Temp && val instanceof Temp) {
+			destTile = new TempTile(((Temp)dest).temp);
+			srcTile = new TempTile(((Temp)val).temp);
+		}
+		
+		
+		
 		// Move (Mem(*), Mem(*))
 		// This operation is not allowed, this will have to translate to:
 		// 		MOV reg, [address1]
@@ -99,11 +107,7 @@ public class Move extends Stmt {
 			destTile = new TempTile(((Temp)dest).temp);
 			srcTile = new MemTile((((Mem)val).expr).munch());
 		}
-		// Move (Temp, Temp)
-		else if (dest instanceof Temp && val instanceof Temp) {
-			destTile = new TempTile(((Temp)dest).temp);
-			srcTile = new TempTile(((Temp)val).temp);
-		}
+
 		// Move (Temp, Expr)
 		else if (dest instanceof Temp) {
 			destTile = new TempTile(((Temp)dest).temp);

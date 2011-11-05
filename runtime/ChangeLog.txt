@@ -1,0 +1,3 @@
+Version 1, Oct 10, 2011
+----------------------------
+- Initial release of libxi (based on the 32-bit library libi9)
