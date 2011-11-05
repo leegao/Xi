@@ -3,8 +3,19 @@ package cs4120.der34dlc287lg342.xi.ir;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
+import cs4120.der34dlc287lg342.xi.tiles.AddTile;
+import cs4120.der34dlc287lg342.xi.tiles.AndTile;
 import cs4120.der34dlc287lg342.xi.tiles.BinopTile;
+import cs4120.der34dlc287lg342.xi.tiles.DivTile;
+import cs4120.der34dlc287lg342.xi.tiles.LshTile;
+import cs4120.der34dlc287lg342.xi.tiles.ModTile;
+import cs4120.der34dlc287lg342.xi.tiles.MulTile;
+import cs4120.der34dlc287lg342.xi.tiles.OrTile;
+import cs4120.der34dlc287lg342.xi.tiles.RshTile;
+import cs4120.der34dlc287lg342.xi.tiles.SubTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
+import cs4120.der34dlc287lg342.xi.tiles.UgeTile;
+import cs4120.der34dlc287lg342.xi.tiles.XorTile;
 
 public class Binop extends Expr {
 	final public static int PLUS = 0;

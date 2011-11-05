@@ -1,8 +1,6 @@
-package cs4120.der34dlc287lg342.xi.ir;
+package cs4120.der34dlc287lg342.xi.tiles;
 
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
-import cs4120.der34dlc287lg342.xi.tiles.BinopTile;
-import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class DivTile extends BinopTile {
 	public DivTile(Tile left, Tile right){

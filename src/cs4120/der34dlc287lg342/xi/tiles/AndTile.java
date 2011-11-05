@@ -1,11 +1,9 @@
-package cs4120.der34dlc287lg342.xi.ir;
+package cs4120.der34dlc287lg342.xi.tiles;
 
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
-import cs4120.der34dlc287lg342.xi.tiles.BinopTile;
-import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
-public class UgeTile extends BinopTile {
-	public UgeTile(Tile left, Tile right){
+public class AndTile extends BinopTile {
+	public AndTile(Tile left, Tile right){
 		super(left, right);
 	}
 	
