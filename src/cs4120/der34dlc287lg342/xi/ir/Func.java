@@ -1,6 +1,10 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
+import java.util.ArrayList;
+
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public class Func extends Seq {
@@ -16,5 +20,16 @@ public class Func extends Seq {
 			str += ((Stmt)child).prettyPrint() + "\n";
 		}
 		return str;
+	}
+	
+	@Override
+	public Tile munch(){
+		SeqTile tiles = new SeqTile();
+		
+		for (VisualizableTreeNode s : children){
+			Stmt stmt = (Stmt)s;
+			tiles.add(stmt.munch());
+		}
+		return tiles;
 	}
 }
