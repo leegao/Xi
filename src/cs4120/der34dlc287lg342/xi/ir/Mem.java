@@ -1,5 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
+import cs4120.der34dlc287lg342.xi.tiles.MemTile;
+
 public class Mem extends Expr {
 	public Expr expr;
 	public Mem(Expr expr){
@@ -18,5 +20,10 @@ public class Mem extends Expr {
 	
 	public String prettyPrint(){
 		return "Mem("+expr.prettyPrint()+")";
+	}
+	
+	@Override 
+	public MemTile munch() {
+		return null;
 	}
 }
