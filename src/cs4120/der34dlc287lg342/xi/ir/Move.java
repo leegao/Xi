@@ -2,12 +2,14 @@ package cs4120.der34dlc287lg342.xi.ir;
 
 
 import cs4120.der34dlc287lg342.xi.tiles.MoveTile;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Dec_Mem_Expr;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Dec_Reg;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Expr_Mem_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Inc_Reg;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Add_Const_Expr_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Mem_Expr;
-import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Inc_Expr;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Inc_Mem_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Move extends Stmt {
@@ -87,7 +89,7 @@ public class Move extends Stmt {
 				((Binop)val).left instanceof Mem &&  
 				((Mem)((Binop)val).left).equals(((Mem)dest).expr) &&
 				((Binop)val).right instanceof Const && ((Const)((Binop)val).right).value == 1) {
-			return new Move_Mem_Inc_Expr(((Mem)dest).munch());
+			return new Move_Inc_Mem_Expr(((Mem)dest).munch());
 		}
 		
 		// Mem(expr) = 1 + Mem(expr)
@@ -97,11 +99,46 @@ public class Move extends Stmt {
 				((Binop)val).right instanceof Mem &&  
 				((Mem)((Binop)val).right).equals(((Mem)dest).expr) &&
 				((Binop)val).left instanceof Const && ((Const)((Binop)val).left).value == 1) {
-			return new Move_Mem_Inc_Expr(((Mem)dest).munch());
+			return new Move_Inc_Mem_Expr(((Mem)dest).munch());
 		}
-				
 		
-		// Move (Mem(*), Mem(*))
+		// %r = %r - 1
+		// assembly = dec %r
+		else if (dest instanceof Temp && val instanceof Binop && ((Binop)val).op == Binop.MINUS && 
+				((Binop)val).left instanceof Temp && ((Temp)((Binop)val).left).temp.equals(((Temp)dest).temp) &&
+				((Binop)val).right instanceof Const && ((Const)((Binop)val).right).value == 1) {
+			return new Move_Dec_Reg(((Temp)dest).temp);
+		}
+		
+		// %r = 1 - %r
+		// assembly = dec %r
+		else if (dest instanceof Temp && val instanceof Binop && ((Binop)val).op == Binop.MINUS && 
+				((Binop)val).right instanceof Temp && ((Temp)((Binop)val).right).temp.equals(((Temp)dest).temp) &&
+				((Binop)val).left instanceof Const && ((Const)((Binop)val).left).value == 1) {
+			return new Move_Dec_Reg(((Temp)dest).temp);
+		}
+		
+		// Mem(expr) = Mem(expr) - 1
+		// assembly = inc (expr)
+		else if (dest instanceof Mem &&  
+				val instanceof Binop && ((Binop)val).op == Binop.MINUS && 
+				((Binop)val).left instanceof Mem &&  
+				((Mem)((Binop)val).left).equals(((Mem)dest).expr) &&
+				((Binop)val).right instanceof Const && ((Const)((Binop)val).right).value == 1) {
+			return new Move_Dec_Mem_Expr(((Mem)dest).munch());
+		}
+		
+		// Mem(expr) = 1 - Mem(expr)
+		// assembly = inc (expr)
+		else if (dest instanceof Mem &&  
+				val instanceof Binop && ((Binop)val).op == Binop.MINUS && 
+				((Binop)val).right instanceof Mem &&  
+				((Mem)((Binop)val).right).equals(((Mem)dest).expr) &&
+				((Binop)val).left instanceof Const && ((Const)((Binop)val).left).value == 1) {
+			return new Move_Dec_Mem_Expr(((Mem)dest).munch());
+		}
+		
+		// Move Mem(expr), Mem(expr)
 		// This operation is not allowed, this will have to translate to:
 		// 		MOV reg, [address1]
 		//		MOV [address2], reg
@@ -120,6 +157,7 @@ public class Move extends Stmt {
 		// dest = Mem(Expr)
 		// assembly = movq expr, Mem(expr)
 		else if (dest instanceof Mem) {
+			System.out.println("munching movq expr, Mem(expr)");
 			return new Move_Expr_Mem_Expr(val.munch(), (((Mem)dest).expr).munch());
 		}
 		
