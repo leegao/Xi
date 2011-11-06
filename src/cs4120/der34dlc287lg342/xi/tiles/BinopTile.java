@@ -12,6 +12,7 @@ public class BinopTile extends Tile{
 	
 	public String before(){
 		String asm = "";
+		System.out.println(this.right);
 		asm += left.att();
 		asm += right.att();
 		asm += "movq "+left.out+", %r15\n";

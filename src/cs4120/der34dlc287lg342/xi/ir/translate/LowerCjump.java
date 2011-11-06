@@ -70,7 +70,7 @@ public class LowerCjump {
 						cjump.iffalse = iftrue;
 						cjump.to = iffalse;
 					}
-				} else {
+				} else if (cjump.condition instanceof Binop && ((Binop)cjump.condition).op != Binop.UGE) {
 					// Case 3: Create a new false label lf and rewrite the cjump as
 					// cjump(expr, a, b, iftrue)
 					// jump(iffalse)

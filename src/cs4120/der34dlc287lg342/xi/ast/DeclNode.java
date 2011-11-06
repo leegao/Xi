@@ -134,7 +134,7 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 		// check that our dimensions are not undefined
 		if (brackets.get(0) == null){
-			return new IRTranslationStmt(new Seq(new Move(r, new Temp(TempRegister.Null))));
+			return new IRTranslationStmt(new Seq(new Move(r, new Const(0))));
 		}
 		
 		Seq seq = new Seq();
@@ -186,10 +186,12 @@ public class DeclNode extends AbstractSyntaxTree {
 	
 	private Expr generate_array(ArrayList<Expr> exprs) {
 		if (exprs.isEmpty())
-			return new Temp(TempRegister.Null);
+			//return new Temp(TempRegister.Null);
+			return new Const(0);
 		Expr hd = exprs.remove(0);
 		if (!(hd instanceof Const))
-			return new Temp(TempRegister.Null);
+			//return new Temp(TempRegister.Null);
+			return new Const(0);
 		
 		int n = ((Const)hd).value;
 		Expr base = new Temp(new TempRegister());

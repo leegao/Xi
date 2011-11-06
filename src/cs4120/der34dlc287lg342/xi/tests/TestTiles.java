@@ -59,7 +59,7 @@ public class TestTiles extends TestCase{
 	}
 	
 	public void testProgTile(){
-		Seq stmt = gen("main(){a:bool = true if(a){a = true}}");
+		Seq stmt = gen("main(){a:int[] b:int = a[3]}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		System.out.println(testirgen.islike(stmt));
 		SeqTile main = (SeqTile) stmt.munch();

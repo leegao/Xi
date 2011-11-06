@@ -8,4 +8,8 @@ public class JumpTile extends Tile {
 	public JumpTile(Label label) {
 		this.label = label;
 	}
+	
+	public String att(){
+		return "jmp "+label;
+	}
 }

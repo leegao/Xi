@@ -76,5 +76,29 @@ public abstract class Expr implements VisualizableTreeNode {
 		return null;
 	}
 	
-	
+	@Override
+	public boolean equals(Object that){
+		if (that instanceof Expr){
+			for (Field f : this.getClass().getDeclaredFields()){
+				Object o1, o2;
+				try {
+					o1 = f.get(this);
+					o2 = f.get(that);
+					
+					if (o1 instanceof ArrayList<?>){
+						ArrayList<?> a1 = (ArrayList<?>)o1, a2 = (ArrayList<?>)o2;
+						for (int i = 0; i < a1.size(); i++){
+							if (!a1.get(i).equals(a2.get(i))) return false;
+						}
+					} else {
+						if (!o1.equals(o2)) return false;
+					}
+				} catch (Exception e) {
+					return false;
+				}
+			}
+			return true;
+		}
+		return false;
+	}
 }
