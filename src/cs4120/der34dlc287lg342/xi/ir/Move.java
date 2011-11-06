@@ -1,9 +1,13 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
-import cs4120.der34dlc287lg342.xi.tiles.ConstTile;
-import cs4120.der34dlc287lg342.xi.tiles.MemTile;
+
 import cs4120.der34dlc287lg342.xi.tiles.MoveTile;
-import cs4120.der34dlc287lg342.xi.tiles.TempTile;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Expr_Mem_Expr;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Inc_Reg;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Add_Const_Expr_Expr;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Expr;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Mem_Expr;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Inc_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Move extends Stmt {
@@ -47,103 +51,82 @@ public class Move extends Stmt {
 	}
 	
 	@Override
-	public MoveTile munch() {
-		Tile destTile = null;
-		Tile srcTile = null;
+	public Tile munch() {
 		
-		// Move (Temp, Temp)
-		if (dest instanceof Temp && val instanceof Temp) {
-			destTile = new TempTile(((Temp)dest).temp);
-			srcTile = new TempTile(((Temp)val).temp);
+		// src = Mem( Add(Const,Temp) )
+		// dest = expr  
+		// assembly = movq k(%r), %r
+		if (val instanceof Mem && ((Mem)val).expr instanceof Binop && 
+				((Binop)((Mem)val).expr).op == Binop.PLUS &&
+				((Binop)((Mem)val).expr).right instanceof Const) {
+			
+			long constant = ((Const)((Binop)((Mem)dest).expr).left).value;	
+			return new Move_Mem_Add_Const_Expr_Expr(constant, ((Binop)((Mem)val).expr).left.munch(), dest.munch());
 		}
-		// Move (Mem( Add(Temp,Const) ), Temp)  => mov k(%r), %r
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Binop && 
-				((Binop)((Mem)dest).expr).op == Binop.PLUS && 
-				((Binop)((Mem)dest).expr).left instanceof Temp &&
-				((Binop)((Mem)dest).expr).left instanceof Const && 
-				val instanceof Temp) {
+		
+		// %r = %r + 1
+		// assembly = inc %r
+		else if (dest instanceof Temp && val instanceof Binop && ((Binop)val).op == Binop.PLUS && 
+				((Binop)val).left instanceof Temp && ((Temp)((Binop)val).left).temp.equals(((Temp)dest).temp) &&
+				((Binop)val).right instanceof Const && ((Const)((Binop)val).right).value == 1) {
+			return new Move_Inc_Reg(((Temp)dest).temp);
+		}
+		
+		// %r = 1 + %r
+		// assembly = inc %r
+		else if (dest instanceof Temp && val instanceof Binop && ((Binop)val).op == Binop.PLUS && 
+				((Binop)val).right instanceof Temp && ((Temp)((Binop)val).right).temp.equals(((Temp)dest).temp) &&
+				((Binop)val).left instanceof Const && ((Const)((Binop)val).left).value == 1) {
+			return new Move_Inc_Reg(((Temp)dest).temp);
+		}
+		
+		// Mem(expr) = Mem(expr) + 1
+		// assembly = inc (expr)
+		else if (dest instanceof Mem &&  
+				val instanceof Binop && ((Binop)val).op == Binop.PLUS && 
+				((Binop)val).left instanceof Mem &&  
+				((Mem)((Binop)val).left).equals(((Mem)dest).expr) &&
+				((Binop)val).right instanceof Const && ((Const)((Binop)val).right).value == 1) {
+			return new Move_Mem_Inc_Expr(((Mem)dest).munch());
+		}
+		
+		// Mem(expr) = 1 + Mem(expr)
+		// assembly = inc (expr)
+		else if (dest instanceof Mem &&  
+				val instanceof Binop && ((Binop)val).op == Binop.PLUS && 
+				((Binop)val).right instanceof Mem &&  
+				((Mem)((Binop)val).right).equals(((Mem)dest).expr) &&
+				((Binop)val).left instanceof Const && ((Const)((Binop)val).left).value == 1) {
+			return new Move_Mem_Inc_Expr(((Mem)dest).munch());
+		}
 				
-		}
 		
 		// Move (Mem(*), Mem(*))
 		// This operation is not allowed, this will have to translate to:
 		// 		MOV reg, [address1]
 		//		MOV [address2], reg
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Mem) {
-			destTile = new MemTile((((Mem)dest).expr).munch());
-			srcTile = new MemTile((((Mem)val).expr).munch());
-		}
-		// Move (Mem(*), Const)
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Const) {
-			destTile = new MemTile((((Mem)dest).expr).munch());
-			srcTile = new ConstTile(((Const)val).value);
-		} 
-		// Move (Mem(*), Temp))
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && val instanceof Temp) {
-			destTile = new MemTile((((Mem)dest).expr).munch());
-			srcTile = new TempTile(((Temp)val).temp);
-		}
-		// Move (Mem(*), Expr))
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp) {
-			destTile = new MemTile((((Mem)dest).expr).munch());
-			srcTile = val.munch();
-		}
-		// Move (Mem(Expr), Const)
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Expr && val instanceof Const) {
-			destTile = ((Mem)dest).expr.munch();
-			srcTile = new ConstTile(((Const)val).value);
-		} 
-		// Move (Mem(Expr), Temp))
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Expr && val instanceof Temp) {
-			destTile = ((Mem)dest).expr.munch();
-			srcTile = new TempTile(((Temp)val).temp);
-		}
-		// Move (Mem(Expr), Expr)
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Expr) {
-			destTile = new MemTile(((Mem)dest).expr.munch());
-			srcTile = val.munch();
-		}
-		// Move (Temp, Const)
-		else if (dest instanceof Temp && val instanceof Const) {
-			destTile = new TempTile(((Temp)dest).temp);
-			srcTile = new ConstTile(((Const)val).value);
-		}
-		// Move (Temp, Mem(*))
-		else if (dest instanceof Temp && val instanceof Mem) {
-			destTile = new TempTile(((Temp)dest).temp);
-			srcTile = new MemTile((((Mem)val).expr).munch());
-		}
-
-		// Move (Temp, Expr)
-		else if (dest instanceof Temp) {
-			destTile = new TempTile(((Temp)dest).temp);
-			srcTile = val.munch();
-		}
-		// Move (Expr, Const)
-		else if (val instanceof Const) {
-			destTile = dest.munch();
-			srcTile = new ConstTile(((Const)val).value);
-		}
-		// Move (Expr, Mem(*))
-		else if (val instanceof Mem) {
-			destTile = dest.munch();
-			srcTile = new MemTile(val.munch());
-		}
-		// Move (Expr, Temp)
-		else if (val instanceof Temp) {
-			destTile = dest.munch();
-			srcTile = new TempTile(((Temp)val).temp);
-		}
-		// Move (Expr, Expr) 
-		else {
-			destTile = dest.munch();
-			srcTile = val.munch();
+		else if (dest instanceof Mem && val instanceof Mem) {
+			return new Move_Mem_Expr_Mem_Expr((((Mem)val).expr).munch(), (((Mem)dest).expr).munch());
 		}
 		
-		if( destTile != null && srcTile != null)
-			return new MoveTile(destTile, srcTile);
-		else
-			return null;
-	
+		// src = Mem(expr)
+		// dest = expr
+		//assembly = movq Mem(expr), expr
+		else if (val instanceof Mem) {
+			return new Move_Mem_Expr_Expr((((Mem)val).expr).munch(), dest.munch());
+		}
+
+		// src = expr
+		// dest = Mem(Expr)
+		// assembly = movq expr, Mem(expr)
+		else if (dest instanceof Mem) {
+			return new Move_Expr_Mem_Expr(val.munch(), (((Mem)dest).expr).munch());
+		}
+		
+		// src = expr
+		// dest = expr 
+		else {
+			return new MoveTile(val.munch(), dest.munch());
+		}	
 	}
 }

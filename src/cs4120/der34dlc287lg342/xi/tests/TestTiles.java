@@ -22,19 +22,6 @@ public class TestTiles extends TestCase{
 
 	TestIRGen testirgen = new TestIRGen();
 	
-	public void test_Move_Temp_Temp() {
-		Move moveIR = new Move(new Temp(new TempRegister()), new Temp(new TempRegister()));
-		Tile tile = moveIR.munch();
-		
-		assertTrue(tile instanceof MoveTile);
-		MoveTile moveTile = (MoveTile)tile;
-		if( moveTile.dest instanceof TempTile && moveTile.src instanceof TempTile) {
-			assertEquals( "r(9)", ((TempTile)(moveTile.dest)).out.toString());
-			assertEquals( "r(10)", ((TempTile)(moveTile.src)).out.toString());
-		} else {
-			fail();
-		}
-	}
 	
 	public Seq gen(String code){
 		Reader reader = new StringReader(code);
@@ -68,4 +55,17 @@ public class TestTiles extends TestCase{
 		
 		System.out.println(func.att());
 	}
+	
+	public void testIncReg() {
+		//Seq stmt = gen("main(){i:int[1] i[0] = 0  i[0] = i[0] + 1}");
+		Seq stmt = gen("main(){i:int = 0; i = i + 2}");
+		System.out.println(testirgen.islike(stmt));
+		SeqTile main = (SeqTile) stmt.munch();
+		SeqTile func = (SeqTile) main.tiles.get(0);
+		
+		System.out.println(func.att());
+	}
+	
+	
+
 }
