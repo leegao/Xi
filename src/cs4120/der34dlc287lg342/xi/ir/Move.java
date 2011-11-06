@@ -1,8 +1,6 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
-import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
-import cs4120.der34dlc287lg342.xi.tiles.ConstTile;
-import cs4120.der34dlc287lg342.xi.tiles.MemTile;
+
 import cs4120.der34dlc287lg342.xi.tiles.MoveTile;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Expr_Mem_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Inc_Reg;
@@ -10,7 +8,6 @@ import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Add_Const_Expr_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Mem_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Inc_Expr;
-import cs4120.der34dlc287lg342.xi.tiles.TempTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Move extends Stmt {

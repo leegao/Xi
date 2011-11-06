@@ -57,7 +57,8 @@ public class TestTiles extends TestCase{
 	}
 	
 	public void testIncReg() {
-		Seq stmt = gen("main(){i:int[1] i[0] = 0  i[0] = i[0] + 1}");
+		//Seq stmt = gen("main(){i:int[1] i[0] = 0  i[0] = i[0] + 1}");
+		Seq stmt = gen("main(){i:int = 0; i = i + 2}");
 		System.out.println(testirgen.islike(stmt));
 		SeqTile main = (SeqTile) stmt.munch();
 		SeqTile func = (SeqTile) main.tiles.get(0);
