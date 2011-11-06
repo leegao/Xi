@@ -9,7 +9,7 @@ import cs4120.der34dlc287lg342.xi.tiles.Move_Inc_Reg;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Add_Const_Expr_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Mem_Expr;
-import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Inc_Reg;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Inc_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.TempTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
@@ -56,8 +56,6 @@ public class Move extends Stmt {
 	@Override
 	public Tile munch() {
 		
-
-		
 		// src = Mem( Add(Const,Temp) )
 		// dest = expr  
 		// assembly = movq k(%r), %r
@@ -77,14 +75,32 @@ public class Move extends Stmt {
 			return new Move_Inc_Reg(((Temp)dest).temp);
 		}
 		
-		// Mem(%r) = Mem(%r) + 1
-		// assembly = inc (%r)
-		else if (dest instanceof Mem && ((Mem)dest).expr instanceof Temp && 
+		// %r = 1 + %r
+		// assembly = inc %r
+		else if (dest instanceof Temp && val instanceof Binop && ((Binop)val).op == Binop.PLUS && 
+				((Binop)val).right instanceof Temp && ((Temp)((Binop)val).right).temp.equals(((Temp)dest).temp) &&
+				((Binop)val).left instanceof Const && ((Const)((Binop)val).left).value == 1) {
+			return new Move_Inc_Reg(((Temp)dest).temp);
+		}
+		
+		// Mem(expr) = Mem(expr) + 1
+		// assembly = inc (expr)
+		else if (dest instanceof Mem &&  
 				val instanceof Binop && ((Binop)val).op == Binop.PLUS && 
-				((Binop)val).left instanceof Mem && ((Mem)((Binop)val).left).expr instanceof Temp && 
-				((Temp)((Mem)((Binop)val).left).expr).equals(((Temp)((Mem)dest).expr).temp) &&
+				((Binop)val).left instanceof Mem &&  
+				((Mem)((Binop)val).left).equals(((Mem)dest).expr) &&
 				((Binop)val).right instanceof Const && ((Const)((Binop)val).right).value == 1) {
-			return new Move_Mem_Inc_Reg(((Temp)((Mem)dest).expr).temp);
+			return new Move_Mem_Inc_Expr(((Mem)dest).munch());
+		}
+		
+		// Mem(expr) = 1 + Mem(expr)
+		// assembly = inc (expr)
+		else if (dest instanceof Mem &&  
+				val instanceof Binop && ((Binop)val).op == Binop.PLUS && 
+				((Binop)val).right instanceof Mem &&  
+				((Mem)((Binop)val).right).equals(((Mem)dest).expr) &&
+				((Binop)val).left instanceof Const && ((Const)((Binop)val).left).value == 1) {
+			return new Move_Mem_Inc_Expr(((Mem)dest).munch());
 		}
 				
 		

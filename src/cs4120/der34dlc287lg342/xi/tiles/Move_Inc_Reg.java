@@ -11,7 +11,7 @@ public class Move_Inc_Reg extends Tile{
 	}
 	
 	public String att() {
-		return "";
+		return "inc " + reg;
 	}
 
 }
