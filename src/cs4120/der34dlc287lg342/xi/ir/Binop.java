@@ -185,7 +185,7 @@ public class Binop extends Expr {
 		case RSH:
 			return new RshTile(left, right);
 		}
-		System.out.println(label());
+		//System.out.println(label());
 		return null;
 	}
 }

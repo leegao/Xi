@@ -43,7 +43,7 @@ public class Assemble {
 			if (!map.containsKey(r)){
 				int i = map.size();
 				String register = map_register(i, r);
-				System.out.println(r+" -> "+register);
+				//System.out.println(r+" -> "+register);
 				map.put(r, register);
 				asm = asm.replace(r, register);
 			}
@@ -60,8 +60,7 @@ public class Assemble {
 		for (int i = calleesaves.length-1; i >= 0; i--) epilogue = "popq %"+calleesaves[i]+"\n";
 		epilogue += "popq %r15\npopq %r14\naddq $"+(map.size()-6)*8 + ", %rsp\nmovq %rbp, %rsp\npopq %rbp\n";
 		
-		System.out.println(prologue + asm + epilogue);
-		return null;
+		return prologue + asm + epilogue;
 	}
 	
 	public void att(){
@@ -69,7 +68,10 @@ public class Assemble {
 			if (tile instanceof FuncTile){
 				FuncTile func = (FuncTile)tile;
 				String asm = func.att();
-				allocate_registers(asm);
+				asm = ".globl "+func.name+"\n"+
+					  func.name+":\n\t"+
+					  allocate_registers(asm).replace("\n", "\n\t");
+				System.out.println(asm);
 			}
 		}
 	}
