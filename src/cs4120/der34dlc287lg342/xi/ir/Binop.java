@@ -14,7 +14,7 @@ import cs4120.der34dlc287lg342.xi.tiles.OrTile;
 import cs4120.der34dlc287lg342.xi.tiles.RshTile;
 import cs4120.der34dlc287lg342.xi.tiles.SubTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
-import cs4120.der34dlc287lg342.xi.tiles.UgeTile;
+import cs4120.der34dlc287lg342.xi.tiles.EqTile;
 import cs4120.der34dlc287lg342.xi.tiles.XorTile;
 
 public class Binop extends Expr {
@@ -184,8 +184,6 @@ public class Binop extends Expr {
 			return new LshTile(left, right);
 		case RSH:
 			return new RshTile(left, right);
-		case UGE:
-			return new UgeTile(left, right);
 		}
 		System.out.println(label());
 		return null;

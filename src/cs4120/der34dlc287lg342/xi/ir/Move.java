@@ -112,9 +112,9 @@ public class Move extends Stmt {
 		// src = Mem(expr)
 		// dest = expr
 		//assembly = movq Mem(expr), expr
-		else if (val instanceof Mem) {
-			return new Move_Mem_Expr_Expr((((Mem)val).expr).munch(), dest.munch());
-		}
+//		else if (val instanceof Mem) {
+//			return new Move_Mem_Expr_Expr((((Mem)val).expr).munch(), dest.munch());
+//		}
 
 		// src = expr
 		// dest = Mem(Expr)

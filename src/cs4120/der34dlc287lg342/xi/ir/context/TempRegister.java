@@ -42,7 +42,7 @@ public class TempRegister {
 	}
 	
 	public String toString(){
-		return "%r("+value+")";
+		return "%r("+name+")";
 	}
 	
 	public static Seq init_array(Expr base, Expr n){

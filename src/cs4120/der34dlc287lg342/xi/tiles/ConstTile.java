@@ -13,4 +13,8 @@ public class ConstTile extends Tile {
 		out = new TempRegister();
 		return "movq $"+value+", "+out+"\n";
 	}
+	
+	public String out(){
+		return "$"+value;
+	}
 }
