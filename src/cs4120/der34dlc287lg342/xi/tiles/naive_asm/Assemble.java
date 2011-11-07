@@ -12,6 +12,9 @@ import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Assemble {
 	SeqTile main;
+	
+	String calleesaves[] = {"rbx","r12","r13"};
+	
 	public Assemble(SeqTile main){
 		this.main = main;
 	}
@@ -24,10 +27,10 @@ public class Assemble {
 		}
 		// rdi, rsi, rdx, rcx, r8, and r9
 		// then %rbp-i*8
-		if (i < TempRegister.free_registers.length){
-			return "%"+TempRegister.free_registers[i].name;
+		if (i < calleesaves.length){
+			return "%"+calleesaves[i];
 		}
-		return -(i-5)*8+"(%rbp)";
+		return -(i-calleesaves.length+1)*8+"(%rbp)";
 	}
 	
 	public String allocate_registers(String asm){
@@ -49,10 +52,15 @@ public class Assemble {
 		String prologue = "pushq %rbp\n" +
 					      "movq %rsp, %rbp\n" +
 					      "subq $" + (map.size()-6)*8 + ", %rsp\n" + 
-					      "pushq %r14\n" +
+					      "pushq %r14\n" + // clobbered
 					      "pushq %r15\n"; // shuttle
+		for (String callee_reg : calleesaves) prologue += "pushq %"+callee_reg+"\n";
 		
-		System.out.println(prologue + asm);
+		String epilogue = "";
+		for (int i = calleesaves.length-1; i >= 0; i--) epilogue = "popq %"+calleesaves[i]+"\n";
+		epilogue += "popq %r15\npopq %r14\naddq $"+(map.size()-6)*8 + ", %rsp\nmovq %rbp, %rsp\npopq %rbp\n";
+		
+		System.out.println(prologue + asm + epilogue);
 		return null;
 	}
 	

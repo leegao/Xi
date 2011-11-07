@@ -141,9 +141,9 @@ public class Move extends Stmt {
 		// This operation is not allowed, this will have to translate to:
 		// 		MOV reg, [address1]
 		//		MOV [address2], reg
-		else if (dest instanceof Mem && val instanceof Mem) {
-			return new Move_Mem_Expr_Mem_Expr((((Mem)val).expr).munch(), (((Mem)dest).expr).munch());
-		}
+//		else if (dest instanceof Mem && val instanceof Mem) {
+//			return new Move_Mem_Expr_Mem_Expr((((Mem)val).expr).munch(), (((Mem)dest).expr).munch());
+//		}
 		
 		// src = Mem(expr)
 		// dest = expr
@@ -155,9 +155,9 @@ public class Move extends Stmt {
 		// src = expr
 		// dest = Mem(Expr)
 		// assembly = movq expr, Mem(expr)
-		else if (dest instanceof Mem) {
-			return new Move_Expr_Mem_Expr(val.munch(), (((Mem)dest).expr).munch());
-		}
+//		else if (dest instanceof Mem) {
+//			return new Move_Expr_Mem_Expr(val.munch(), (((Mem)dest).expr).munch());
+//		}
 		
 		// src = expr
 		// dest = expr 

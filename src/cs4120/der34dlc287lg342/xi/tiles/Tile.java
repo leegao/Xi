@@ -8,6 +8,7 @@ public abstract class Tile {
 	public TempRegister out;
 	
 	public String att(){
+		// %r14 and %r15 are clobbered by default
 		return ""+this.getClass().getSimpleName()+"\n";
 	}
 

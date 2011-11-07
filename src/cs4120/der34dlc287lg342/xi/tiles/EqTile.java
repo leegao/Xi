@@ -38,7 +38,8 @@ public class EqTile extends CjumpTile {
 		String asm = "";
 		asm += left.att();
 		asm += right.att();
-		asm += "cmp "+left.out+", "+right.out+"\n";
+		asm += "movq "+left.out()+", %r15\n";
+		asm += "cmp %r15, "+right.out()+"\n";
 		asm += jump()+" "+to;
 		return asm;
 	}

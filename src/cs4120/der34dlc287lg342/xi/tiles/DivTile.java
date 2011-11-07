@@ -10,6 +10,8 @@ public class DivTile extends BinopTile {
 	public String att(){
 		String asm = "";
 		TempRegister a = new TempRegister(), d = new TempRegister();
+		asm += left.att();
+		asm += right.att();
 		asm += "movq %rdx, "+d+"\n";
 		asm += "movq %rax, "+a+"\n";
 		asm += "movq "+left.out+", %rax\n";
@@ -17,8 +19,8 @@ public class DivTile extends BinopTile {
 		asm += "idiv %r14\n";
 		out = new TempRegister();
 		asm += "movq %rax, "+out+"\n";
-		asm += "movq " + d + "%rdx\n";
-		asm += "movq " + a + "%rax\n";
+		asm += "movq " + d + ", %rdx\n";
+		asm += "movq " + a + ", %rax\n";
 		return asm;
 	}
 }

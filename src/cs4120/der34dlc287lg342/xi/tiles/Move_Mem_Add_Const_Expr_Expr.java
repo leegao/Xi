@@ -23,7 +23,7 @@ public class Move_Mem_Add_Const_Expr_Expr extends Tile{
 		asm += dest.att();
 		asm += "movq "+src.out+", %r15\n";
 		asm += "movq "+value+"(%r15), "+"%r15\n";
-		asm += "movq %r15, "+dest.out()+"\n";
+		asm += "movq %r15, "+dest.out();
 		return asm;
 	}
 }
