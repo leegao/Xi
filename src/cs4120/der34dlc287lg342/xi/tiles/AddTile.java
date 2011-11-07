@@ -10,9 +10,7 @@ public class AddTile extends BinopTile {
 	
 	public String att(){
 		String asm = before();
-		asm += "addq %r14, %r15\n";
-		out = new TempRegister();
-		asm += "movq %r15, "+out+"\n";
+		asm += "addq %r14, "+out+"\n";
 		return asm;
 	}
 }

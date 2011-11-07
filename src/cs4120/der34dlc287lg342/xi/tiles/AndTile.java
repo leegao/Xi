@@ -9,9 +9,7 @@ public class AndTile extends BinopTile {
 	
 	public String att(){
 		String asm = before();
-		asm += "xor %r14, %r15\n";
-		out = new TempRegister();
-		asm += "movq %r14, "+out+"\n";
+		asm += "andq %r14, "+out+"\n";
 		return asm;
 	}
 }

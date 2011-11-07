@@ -39,7 +39,7 @@ public class EqTile extends CjumpTile {
 		asm += left.att();
 		asm += right.att();
 		asm += "cmp "+left.out+", "+right.out+"\n";
-		asm += jump()+" "+to+"\n";
+		asm += jump()+" "+to;
 		return asm;
 	}
 }

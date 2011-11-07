@@ -9,9 +9,7 @@ public class SubTile extends BinopTile {
 	
 	public String att(){
 		String asm = before();
-		asm += "subq %r14, %r15\n";
-		out = new TempRegister();
-		asm += "movq %r15, "+out+"\n";
+		asm += "subq %r14, "+out+"\n";
 		return asm;
 	}
 }

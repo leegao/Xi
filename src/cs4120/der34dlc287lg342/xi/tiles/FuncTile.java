@@ -10,11 +10,11 @@ public class FuncTile extends SeqTile {
 	}
 	
 	public String prologue(){
-		return "";
+		return "pushq %r14\n";
 	}
 	
 	public String epilogue(){
-		return "";
+		return "popq %r14\nret";
 	}
 	
 	public String att(){

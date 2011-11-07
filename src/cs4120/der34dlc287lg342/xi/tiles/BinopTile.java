@@ -16,7 +16,8 @@ public class BinopTile extends Tile{
 			asm += left.att();
 		if (!(right instanceof ConstTile))
 			asm += right.att();
-		asm += "movq "+left.out()+", %r15\n";
+		out = new TempRegister();
+		asm += "movq "+left.out()+", "+out+"\n";
 		asm += "movq "+right.out()+", %r14\n";
 		return asm;
 	}

@@ -9,9 +9,7 @@ public class MulTile extends BinopTile {
 	
 	public String att(){
 		String asm = before();
-		asm += "imulq %r14, %r15\n";
-		out = new TempRegister();
-		asm += "movq %r15, "+out+"\n";
+		asm += "imulq %r14, "+out+"\n";
 		return asm;
 	}
 }

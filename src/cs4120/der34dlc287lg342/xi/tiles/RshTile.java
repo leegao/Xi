@@ -9,9 +9,7 @@ public class RshTile extends BinopTile {
 	
 	public String att(){
 		String asm = before();
-		asm += "sarq %r14, %r15\n";
-		out = new TempRegister();
-		asm += "movq %r15, "+out+"\n";
+		asm += "sarq %r14, "+out+"\n";
 		return asm;
 	}
 }

@@ -9,9 +9,7 @@ public class OrTile extends BinopTile {
 	
 	public String att(){
 		String asm = before();
-		asm += "orq %r14, %r15\n";
-		out = new TempRegister();
-		asm += "movq %r15, "+out+"\n";
+		asm += "orq %r14, "+out+"\n";
 		return asm;
 	}
 }
