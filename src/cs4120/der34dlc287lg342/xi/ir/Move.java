@@ -7,7 +7,6 @@ import cs4120.der34dlc287lg342.xi.tiles.Move_Dec_Reg;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Expr_Mem_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Inc_Reg;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Add_Const_Expr_Expr;
-import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Mem_Expr_Mem_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Inc_Mem_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
@@ -157,7 +156,6 @@ public class Move extends Stmt {
 		// dest = Mem(Expr)
 		// assembly = movq expr, Mem(expr)
 		else if (dest instanceof Mem) {
-			System.out.println("munching movq expr, Mem(expr)");
 			return new Move_Expr_Mem_Expr(val.munch(), (((Mem)dest).expr).munch());
 		}
 		
