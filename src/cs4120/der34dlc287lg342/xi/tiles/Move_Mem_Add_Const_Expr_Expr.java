@@ -15,4 +15,15 @@ public class Move_Mem_Add_Const_Expr_Expr extends Tile{
 		this.value = value;
 		this.src = src;
 	}
+	
+	public String att(){
+		//movq k(%r), %r
+		// shuttle
+		String asm = src.att();
+		asm += dest.att();
+		asm += "movq "+src.out+", %r15\n";
+		asm += "movq "+value+"(%r15), "+"%r15\n";
+		asm += "movq %r15, "+dest.out()+"\n";
+		return asm;
+	}
 }

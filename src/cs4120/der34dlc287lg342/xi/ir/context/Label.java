@@ -23,7 +23,7 @@ public class Label {
 	
 	public Label(){
 		this("");
-		this.name = ""+value;
+		this.name = ".L"+value;
 	}
 	
 	public int value(){

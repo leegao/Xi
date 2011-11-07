@@ -46,14 +46,26 @@ public class TestTiles extends TestCase{
 	}
 	
 	public void testProgTile(){
-		Seq stmt = gen("main(){a:int[] b:int = a[3]}");
+		Seq stmt = gen("use io mean(list:int[]):int{ print(\"hello world!\") sum:int = 0  i:int = 0 while (i < length(list))"+ 
+		"sum = sum + list[i]; "+
+	"x(1,2,3,4,5,6,7,8);"+
+	"return sum/length(list)"+
+"}"+
+
+"x(a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:int){"+
+"	a':int[] = \"1\""+
+"	a' = a' + a';"+
+"}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		System.out.println(testirgen.islike(stmt));
-		SeqTile main = (SeqTile) stmt.munch();
-		SeqTile func = (SeqTile) main.tiles.get(0);
-		//System.out.println(stmt.prettyPrint());
+//		SeqTile main = (SeqTile) stmt.munch();
+//		SeqTile func = (SeqTile) main.tiles.get(0);
+//		//System.out.println(stmt.prettyPrint());
+//		
+//		System.out.println(func.att());
 		
-		System.out.println(func.att());
+		Assemble assembler = new Assemble((SeqTile)stmt.munch());
+		assembler.att();
 	}
 	
 	public void testIncReg() {

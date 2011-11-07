@@ -38,8 +38,7 @@ public class IRContext {
 		
 		if (i < 6){
 			TempRegister r = new TempRegister();
-			Expr arg = new Temp(r);
-			return new Seq(new Arg(r), new Move(temp, arg));
+			return new Seq(new Arg(temp.temp, i));
 		} else{
 			Expr arg = new Mem(new Binop(Binop.PLUS, new Temp(TempRegister.FP), new Const((n-i)*8+8)));
 			return new Move(temp, arg);

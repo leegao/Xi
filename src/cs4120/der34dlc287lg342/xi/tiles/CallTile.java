@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.tiles;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class CallTile extends Tile{
 	public Label name;
@@ -23,12 +24,13 @@ public class CallTile extends Tile{
 		for (Tile arg : args){
 			asm += arg.att();
 			if (i < 6){
-				asm += "movq "+arg.out+", "+registers[i++]+"\n";
+				asm += "movq "+arg.out+", %"+TempRegister.free_registers[i++].name+"\n";
 			} else {
 				asm += "pushq "+arg.out+"\n";
 			}
 		}
-		asm += "call "+name;
+		asm += "call "+name+"\n";
+		out = TempRegister.RV;
 		return asm;
 	}
 }

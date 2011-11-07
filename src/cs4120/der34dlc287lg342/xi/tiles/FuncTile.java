@@ -10,16 +10,17 @@ public class FuncTile extends SeqTile {
 	}
 	
 	public String prologue(){
-		return "pushq %r14\n";
+		return "";
 	}
 	
 	public String epilogue(){
-		return "popq %r14\nret";
+		return "";
 	}
 	
 	public String att(){
 		String asm = prologue();
 		for (Tile tile : tiles){
+			System.out.println(tile);
 			asm += tile.att()+"\n";
 		}
 		asm += epilogue();

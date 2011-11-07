@@ -61,7 +61,7 @@ public class Move extends Stmt {
 				((Binop)((Mem)val).expr).op == Binop.PLUS &&
 				((Binop)((Mem)val).expr).right instanceof Const) {
 			
-			long constant = ((Const)((Binop)((Mem)dest).expr).left).value;	
+			long constant = ((Const)(((Binop)((Mem)val).expr).right)).value;	
 			return new Move_Mem_Add_Const_Expr_Expr(constant, ((Binop)((Mem)val).expr).left.munch(), dest.munch());
 		}
 		

@@ -1,6 +1,8 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.tiles.NameTile;
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Name extends Expr {
 	public Label label;
@@ -16,5 +18,9 @@ public class Name extends Expr {
 	@Override
 	public String label(){
 		return ""+label;
+	}
+	
+	public Tile munch(){
+		return new NameTile(label);
 	}
 }
