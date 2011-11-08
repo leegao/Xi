@@ -3,15 +3,18 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Call;
 import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
@@ -151,7 +154,7 @@ public class InstNode extends AbstractSyntaxTree {
 			IRTranslation tr2 = e.to_ir(stack);
 			Expr expr = tr2.expr();
 			
-			Seq seq = new Seq(new Exp(expr));
+			Seq seq = new Seq();
 			
 			if (decl != null) {
 				for (int i = 0; i < list.size(); i++){
@@ -160,7 +163,13 @@ public class InstNode extends AbstractSyntaxTree {
 					DeclNode d = (DeclNode)tree;
 					d.to_ir(stack);
 					
-					Expr heap_addr = new Temp(TempRegister.RV);
+					Call call = (Call)expr;
+					
+					Expr alloc = new Call(new Name(Label.alloc), new Const(((XiReturnType)e.type).ret.size()*8));
+					Temp heap_addr = new Temp(new TempRegister());
+					seq.add(new Move(heap_addr, alloc));
+					call.tuple = heap_addr.temp;
+					seq.add(new Exp(call));
 					seq.add(new Move(
 						stack.find_register(d.id.id), 
 						new Mem(new Binop(Binop.PLUS, 

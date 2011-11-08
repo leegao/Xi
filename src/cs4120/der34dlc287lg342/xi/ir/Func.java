@@ -26,7 +26,6 @@ public class Func extends Seq {
 	@Override
 	public Tile munch(){
 		FuncTile tiles = new FuncTile(name);
-		
 		for (VisualizableTreeNode s : children){
 			Stmt stmt = (Stmt)s;
 			tiles.add(stmt.munch());

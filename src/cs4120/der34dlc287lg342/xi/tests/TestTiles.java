@@ -1,5 +1,9 @@
 package cs4120.der34dlc287lg342.xi.tests;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -15,6 +19,7 @@ import cs4120.der34dlc287lg342.xi.tiles.naive_asm.Assemble;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.parser.Parser;
 import junit.framework.TestCase;
 
@@ -32,6 +37,33 @@ public class TestTiles extends TestCase{
 			tc = new XiTypechecker(ast, code);
 		} catch (InvalidXiTypeException e1) {
 			fail(e1.getMessage());
+			return null;
+		}
+		tc.typecheck();
+		((AbstractSyntaxTree)tc.ast).foldConstants();
+		try {
+			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
+			return LowerCjump.translate(tr.stmt().lower());
+		} catch (InvalidIRContextException e) {
+			fail(e.getMessage());
+		}
+		return null;
+	}
+	
+	public Seq gen_file(String code){
+		Reader reader;
+		try {
+			reader = new FileReader(code);
+		} catch (Exception e2) {
+			return null;
+		}
+		Parser p = new XiParser(reader);
+		AbstractSyntaxNode ast = p.parse();
+		XiTypechecker tc;
+		try {
+			tc = new XiTypechecker(ast, code);
+		} catch (InvalidXiTypeException e1) {
+			System.out.println(e1);
 			return null;
 		}
 		tc.typecheck();
@@ -86,7 +118,22 @@ public class TestTiles extends TestCase{
 	}
 	
 	
-	
+	public void testExamples(){
+		File[] valid = new File("2009-testcases").listFiles();
+		
+		for (File validFile: valid) {
+			Seq s = gen_file(validFile.getPath());
+			System.out.println("#"+validFile.getPath());
+			Assemble assembler = new Assemble((SeqTile)s.munch());
+			try{
+				FileWriter writer = new FileWriter(validFile.getPath()+".s");
+				writer.write(assembler.att());
+				writer.close();
+			}catch(Exception e){
+				System.out.println(e);
+			}
+		}
+	}
 	
 
 }

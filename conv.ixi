@@ -1,1 +1,2 @@
 unparseInt(n: int) : int[]
+parseInt(arg:int[]):int,bool

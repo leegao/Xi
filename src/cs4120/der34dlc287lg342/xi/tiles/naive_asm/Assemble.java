@@ -24,6 +24,8 @@ public class Assemble {
 			return "%rbp";
 		} else if (r.equals(TempRegister.RV.toString())){
 			return "%rax";
+		} else if (r.equals(TempRegister.RDI.toString())){
+			return "%rdx";
 		}
 		// rdi, rsi, rdx, rcx, r8, and r9
 		// then %rbp-i*8
