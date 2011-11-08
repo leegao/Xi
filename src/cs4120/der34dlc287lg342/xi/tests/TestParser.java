@@ -324,10 +324,20 @@ public class TestParser extends TestCase {
 			"BLOCK", "RETURN"});
 	}
 	
+
 	public void testPA4Issue() {
+		AbstractSyntaxNode p = gen("main() {b:bool = 3+-3*40/4/5*2 == -9}").parse();
+		ArrayList<String> observed = traverse(p, new ArrayList<String>());
+		
+		for (String label : observed){
+			System.out.println(label);
+		}
+		/**
 		checkType(gen("main() {b:bool = 3+-3*40/4/5*2 == -9}"), new String[] {
-			"PRORGAM", "FUNCDECL", "ID(main)", "BLOCK", 
-		});
+			"PROGRAM", "FUNCDECL", "ID(main)", "BLOCK", "INST", "DECL", "ID(b)",
+			"BIN(PLUS)", "3", "", "", "", ""});
+			**/
 	
 	}
+	
 }
