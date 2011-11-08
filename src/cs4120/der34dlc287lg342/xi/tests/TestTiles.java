@@ -46,7 +46,7 @@ public class TestTiles extends TestCase{
 	}
 	
 	public void testProgTile(){
-		Seq stmt = gen("use io main(args:int[][]){print(\"hello world\")}");
+		Seq stmt = gen("use io main(args:int[][]){print(\"hello world\"+\"\\nyay!\")}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		//System.out.println(testirgen.islike(stmt));
 		//SeqTile main = (SeqTile) stmt.munch();
@@ -56,7 +56,7 @@ public class TestTiles extends TestCase{
 		//System.out.println(func.att());
 		
 		Assemble assembler = new Assemble((SeqTile)stmt.munch());
-		assembler.att();
+		System.out.println(assembler.att());
 	}
 	
 	public void testIncReg() {

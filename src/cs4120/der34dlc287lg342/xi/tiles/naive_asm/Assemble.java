@@ -66,7 +66,7 @@ public class Assemble {
 		return prologue + asm + epilogue;
 	}
 	
-	public void att(){
+	public String att(){
 		String att = "";
 		for (Tile tile : main.tiles){
 			if (tile instanceof FuncTile){
@@ -81,6 +81,6 @@ public class Assemble {
 			}
 		}
 		
-		System.out.println(".att_syntax prefix\n.text\n"+att);
+		return (".att_syntax prefix\n.text\n"+att);
 	}
 }
