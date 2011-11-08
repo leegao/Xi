@@ -79,6 +79,21 @@ public class TestTiles extends TestCase{
 		System.out.println(func.att());
 	}
 	
+	public void testScrap() {
+		//Seq stmt = gen("main(){i:int = 0; i=i+1; i=1+i; i=i-1; i=1-i;}");
+		//Seq stmt = gen("main(){ i:int[1]}");
+		Seq stmt = gen("main(): int {a:int = 1; b:int = 2 if(a<b){return a} else {return b}} foo() {}");
+		System.out.println(testirgen.islike(stmt));
+		SeqTile main = (SeqTile) stmt.munch();
+		SeqTile func = (SeqTile) main.tiles.get(0);
+		System.out.println(func.tiles);
+		for (Tile t : func.tiles ) {
+			System.out.println(t);
+		}
+		
+		System.out.println(func.att());
+	}
+	
 	
 	
 	
