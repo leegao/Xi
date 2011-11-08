@@ -79,6 +79,7 @@ public class Driver {
 			if (optimization) {
 				program_ir = ConstantFolding.foldConstants(program_ir);
 			}
+			System.out.println(program_ir.prettyPrint());
 			Assemble assemble = new Assemble((SeqTile)program_ir.munch());
 				
 			FileWriter writer = new FileWriter(outputFile);

@@ -151,12 +151,9 @@ public class InstNode extends AbstractSyntaxTree {
 			IRTranslation tr2 = e.to_ir(stack);
 			Expr expr = tr2.expr();
 			
-			Seq seq;
+			Seq seq = new Seq(new Exp(expr));
 			
-			if (decl == null)
-				seq = new Seq(new Exp(expr)); // underscore
-			else{
-				seq = new Seq();
+			if (decl != null) {
 				for (int i = 0; i < list.size(); i++){
 					AbstractSyntaxTree tree = (AbstractSyntaxTree) list.get(i);
 					if (!(tree instanceof DeclNode)) continue; // underscore

@@ -46,9 +46,9 @@ public class TestTiles extends TestCase{
 	}
 	
 	public void testProgTile(){
-		Seq stmt = gen("use io main(args:int[][]){print(\"hello world\"+\"\\nyay!\")}");
+		Seq stmt = gen("use io main(args:int[][]){a:int, b:int = lol()} lol():int,int{return 1, 2}");
 		stmt = ConstantFolding.foldConstants(stmt);
-		//System.out.println(testirgen.islike(stmt));
+		System.out.println(testirgen.islike(stmt));
 		//SeqTile main = (SeqTile) stmt.munch();
 		//SeqTile func = (SeqTile) main.tiles.get(0);
 //		//System.out.println(stmt.prettyPrint());
