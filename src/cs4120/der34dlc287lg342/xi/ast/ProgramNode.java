@@ -173,7 +173,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 				"} "
 				 */
 				dynamalloc_method = new Func(Label.dynamalloc,
-					new Move(reg("arr"),new Temp(TempRegister.RDI)),
+					new Arg(reg("arr").temp, 0),
 					new Move(reg("n"),new Mem(new Binop(Binop.MINUS,reg("arr"),new Const(8)))),
 					new Move(reg("i"),new Const(1)),
 					new Cjump(new Binop(Binop.NE,reg("n"),new Const(0)),label("213"),label("212")),
@@ -227,7 +227,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 					new LabelNode(label("227")),
 					new Exp(new Call(new Name(Label.outOfBounds))),
 					new LabelNode(label("226")),
-					new Move(new Mem(new Binop(Binop.PLUS,reg(539),new Binop(Binop.LSH,reg(540),new Const(3)))),reg("a'")),
+					new Move(new Mem(new Binop(Binop.PLUS,reg(539),new Binop(Binop.LSH,reg(540),new Const(3)))),reg("a")),
 					new Jump(label("223")),
 					new LabelNode(label("225")),
 					new Move(new Temp(TempRegister.RV),reg("list")),

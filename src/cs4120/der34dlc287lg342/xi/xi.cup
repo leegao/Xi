@@ -61,6 +61,7 @@ nonterminal AbstractSyntaxNode func_decl, use_stmt;
 precedence nonassoc IF;
 precedence nonassoc ELSE; // we want to shift else rather than reduce on if
 
+
 precedence left OR;
 precedence left AND;
 precedence left EQUAL, NOT_EQUAL;
@@ -110,13 +111,18 @@ expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
 	| expr:e1 MODULO expr:e2 {: RESULT = new BinNode("MODULO");
       ((BinNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
 	
-	| uop:op expr:e
+	| NOT:t expr:e {: RESULT = new UnNotNode(t.position()); ((UnNotNode)RESULT).set(e, span(RESULT.position(), e.position())); :} 
+	%prec UNOT
+	| MINUS:t expr:e {: RESULT = new UnNegNode(t.position()); ((UnNegNode)RESULT).set(e, span(RESULT.position(), e.position())); :}
+	%prec UMINUS
+	
+	/*| uop:op expr:e
 	{:	RESULT = op; 
 		if (op instanceof UnNegNode)
 			((UnNegNode)op).set(e, span(op.position(), e.position())); 
 		else
 			((UnNotNode)op).set(e, span(op.position(), e.position()));
-		:}
+		:}*/
 	
 	| func_call:e
 	{: RESULT = e; :}

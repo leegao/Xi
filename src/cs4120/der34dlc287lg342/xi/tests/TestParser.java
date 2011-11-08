@@ -326,7 +326,7 @@ public class TestParser extends TestCase {
 	
 	public void testPA4Issue() {
 		checkType(gen("main() {b:bool = 3+-3*40/4/5*2 == -9}"), new String[] {
-			"PRORGAM", "FUNCDECL", "ID(main)", "BLOCK", 
+			"PROGRAM", "FUNCDECL", "ID(main)", "BLOCK", "INST", "DECL", "ID(b)", "EQ(EQUAL)"
 		});
 	
 	}
