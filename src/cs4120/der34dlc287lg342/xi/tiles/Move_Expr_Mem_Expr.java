@@ -17,7 +17,9 @@ public class Move_Expr_Mem_Expr extends Tile {
 		String asm = "";
 		asm += this.dest.att();
 		asm += this.src.att();
-		asm += "movq "+src.out+", ("+dest.out + ")";
+		asm += "movq "+dest.out+", %r15\n";
+		asm += "movq "+src.out+", %r14\n";
+		asm += "movq %r14, (%r15)";
 		return asm;
 	}
 	

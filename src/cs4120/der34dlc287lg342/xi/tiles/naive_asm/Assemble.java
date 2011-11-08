@@ -43,7 +43,7 @@ public class Assemble {
 			if (!map.containsKey(r)){
 				int i = map.size();
 				String register = map_register(i, r);
-				//System.out.println(r+" -> "+register);
+				System.out.println(r+" -> "+register);
 				map.put(r, register);
 				asm = asm.replace(r, register);
 			}
@@ -51,19 +51,20 @@ public class Assemble {
 		
 		String prologue = "pushq %rbp\n" +
 					      "movq %rsp, %rbp\n" +
-					      "subq $" + (map.size()-6)*8 + ", %rsp\n" + 
+					      "subq $" + (map.size()-calleesaves.length+1)*8 + ", %rsp\n" + 
 					      "pushq %r14\n" + // clobbered
 					      "pushq %r15\n"; // shuttle
 		for (String callee_reg : calleesaves) prologue += "pushq %"+callee_reg+"\n";
 		
 		String epilogue = "";
-		for (int i = calleesaves.length-1; i >= 0; i--) epilogue = "popq %"+calleesaves[i]+"\n";
-		epilogue += "popq %r15\npopq %r14\naddq $"+(map.size()-6)*8 + ", %rsp\nmovq %rbp, %rsp\npopq %rbp\n";
+		for (int i = calleesaves.length-1; i >= 0; i--) epilogue += "popq %"+calleesaves[i]+"\n";
+		epilogue += "popq %r15\npopq %r14\naddq $"+(map.size()-calleesaves.length+1)*8 + ", %rsp\nmovq %rbp, %rsp\npopq %rbp\nret\n";
 		
 		return prologue + asm + epilogue;
 	}
 	
 	public void att(){
+		String att = "";
 		for (Tile tile : main.tiles){
 			if (tile instanceof FuncTile){
 				FuncTile func = (FuncTile)tile;
@@ -71,8 +72,12 @@ public class Assemble {
 				asm = ".globl "+func.name+"\n"+
 					  func.name+":\n\t"+
 					  allocate_registers(asm).replace("\n", "\n\t");
-				System.out.println(asm);
+				att += asm + "\n";
+			}else{
+				att += tile.att()+"\n";
 			}
 		}
+		
+		System.out.println(".att_syntax prefix\n.text\n"+att);
 	}
 }

@@ -7,37 +7,50 @@ import cs4120.der34dlc287lg342.xi.ir.*;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public class ConstantFolding {
+	
+	public static Func foldConstants(Func stmts){
+		Seq seq = foldConstants((Seq)stmts);
+		Func f = new Func(stmts.name);
+		f.addAll(seq);
+		return f;
+	}
+	
 	public static Seq foldConstants(Seq stmts){
 		int i = 0;
 		for (VisualizableTreeNode child : stmts.children()){
 			Stmt stmt = (Stmt)child;
-			ArrayList<VisualizableTreeNode> arr = (ArrayList<VisualizableTreeNode>)stmt.children();
-			// introspect stmt
-			for (Field field : stmt.getClass().getDeclaredFields()){
-				
-				field.setAccessible(true);
-				Object o;
-				try {
-					o = field.get(stmt);
-				} catch (Exception e) {
-					e.printStackTrace();
-					continue;
-				}
-				
-				if (o instanceof Expr){
-					Expr expr = (Expr)o;
-					Expr new_expr = foldConstants(expr);
-					if (new_expr != null){
-						try {
-							field.set(stmt, new_expr);
-						} catch (IllegalAccessException e) {
-							e.printStackTrace();
-						}
-						int j = arr.indexOf(expr);
-						if (j > -1)
-							arr.set(j, new_expr);
+			
+			if (stmt instanceof Func){
+				foldConstants((Func)stmt);
+			} else {
+				ArrayList<VisualizableTreeNode> arr = (ArrayList<VisualizableTreeNode>)stmt.children();
+				// introspect stmt
+				for (Field field : stmt.getClass().getDeclaredFields()){
+					
+					field.setAccessible(true);
+					Object o;
+					try {
+						o = field.get(stmt);
+					} catch (Exception e) {
+						e.printStackTrace();
+						continue;
 					}
-				} 
+					
+					if (o instanceof Expr){
+						Expr expr = (Expr)o;
+						Expr new_expr = foldConstants(expr);
+						if (new_expr != null){
+							try {
+								field.set(stmt, new_expr);
+							} catch (IllegalAccessException e) {
+								e.printStackTrace();
+							}
+							int j = arr.indexOf(expr);
+							if (j > -1)
+								arr.set(j, new_expr);
+						}
+					} 
+				}
 			}
 			
 			// check special cases
