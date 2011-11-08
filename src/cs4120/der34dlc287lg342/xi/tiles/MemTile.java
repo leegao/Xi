@@ -16,7 +16,8 @@ public class MemTile extends Tile {
 			asm += tile.att();
 		}
 		out = new TempRegister();
-		asm += "movq "+out()+", %r15\n";
+		asm += "movq "+tile.out()+", %r15\n";
+		asm += "movq (%r15), %r15\n";
 		asm += "movq %r15, "+out+"\n";
 		return asm;
 	}

@@ -11,6 +11,10 @@ public class NameTile extends Tile{
 	
 	public String att(){
 		out = new TempRegister();
-		return "movq $"+label+", "+out+"\n";
+		return "";
+	}
+	
+	public String toString(){
+		return label+"(%rip)";
 	}
 }

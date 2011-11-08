@@ -46,14 +46,14 @@ public class TestTiles extends TestCase{
 	}
 	
 	public void testProgTile(){
-		Seq stmt = gen("use io main(args:int[][]){a:int[] = (101,) c:int = a[0]} ");
+		Seq stmt = gen("use io main(args:int[][]){print(\"hello world\")}");
 		stmt = ConstantFolding.foldConstants(stmt);
-		System.out.println(testirgen.islike(stmt));
-		SeqTile main = (SeqTile) stmt.munch();
-		SeqTile func = (SeqTile) main.tiles.get(0);
+		//System.out.println(testirgen.islike(stmt));
+		//SeqTile main = (SeqTile) stmt.munch();
+		//SeqTile func = (SeqTile) main.tiles.get(0);
 //		//System.out.println(stmt.prettyPrint());
 //		
-		System.out.println(func.att());
+		//System.out.println(func.att());
 		
 		Assemble assembler = new Assemble((SeqTile)stmt.munch());
 		assembler.att();

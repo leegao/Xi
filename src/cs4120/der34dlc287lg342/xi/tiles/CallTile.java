@@ -24,7 +24,10 @@ public class CallTile extends Tile{
 		for (Tile arg : args){
 			asm += arg.att();
 			if (i < 6){
-				asm += "movq "+arg.out+", %"+TempRegister.free_registers[i++].name+"\n";
+				if (name == Label.internal_strdup)
+					asm += "leaq "+ arg + ", %"+TempRegister.free_registers[i++].name+"\n";
+				else
+					asm += "movq "+ arg.out+", %"+TempRegister.free_registers[i++].name+"\n";
 			} else {
 				asm += "pushq "+arg.out+"\n";
 			}
