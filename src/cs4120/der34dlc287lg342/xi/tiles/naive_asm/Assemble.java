@@ -43,22 +43,25 @@ public class Assemble {
 			if (!map.containsKey(r)){
 				int i = map.size();
 				String register = map_register(i, r);
-				System.out.println(r+" -> "+register);
+				//System.out.println(r+" -> "+register);
 				map.put(r, register);
 				asm = asm.replace(r, register);
 			}
 		}
 		
+		int aligned_stack = (map.size()-calleesaves.length+1)*8;
+		if (aligned_stack % 16 != 0) aligned_stack += 8;
+		
 		String prologue = "pushq %rbp\n" +
 					      "movq %rsp, %rbp\n" +
-					      "subq $" + (map.size()-calleesaves.length+1)*8 + ", %rsp\n" + 
+					      "subq $" + aligned_stack + ", %rsp\n" + 
 					      "pushq %r14\n" + // clobbered
 					      "pushq %r15\n"; // shuttle
 		for (String callee_reg : calleesaves) prologue += "pushq %"+callee_reg+"\n";
 		
 		String epilogue = "";
 		for (int i = calleesaves.length-1; i >= 0; i--) epilogue += "popq %"+calleesaves[i]+"\n";
-		epilogue += "popq %r15\npopq %r14\naddq $"+(map.size()-calleesaves.length+1)*8 + ", %rsp\nmovq %rbp, %rsp\npopq %rbp\nret\n";
+		epilogue += "popq %r15\npopq %r14\naddq $"+ aligned_stack + ", %rsp\nmovq %rbp, %rsp\npopq %rbp\nret\n";
 		
 		return prologue + asm + epilogue;
 	}

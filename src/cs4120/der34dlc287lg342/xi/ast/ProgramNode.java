@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import cs4120.der34dlc287lg342.xi.XiInterfaceParser;
+import cs4120.der34dlc287lg342.xi.ir.Arg;
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Call;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
@@ -254,15 +255,15 @@ public class ProgramNode extends AbstractSyntaxTree {
 			      )
 				 * */
 				strdup = new Func(Label.internal_strdup, 
-					new Move(reg("reg0"),new Temp(TempRegister.RDI)),
-					new Move(reg("p0"), reg("reg0")),
+					new Arg(reg("p0").temp, 0),
 					new Move(reg("t10"), new Mem(reg("p0"))),
 					new Move(reg("t27"), new Call(new Name(Label.alloc), new Binop(Binop.PLUS, new Binop(Binop.LSH, reg("t10"), new Const(3)), new Const(8)))),
 					new LabelNode(label(".L9")),
 					new Move(new Mem(new Binop(Binop.PLUS, reg("t27"), new Binop(Binop.LSH, reg("t10"), new Const(3)))), 
 							 new Mem(new Binop(Binop.PLUS, reg("p0"), new Binop(Binop.LSH, reg("t10"), new Const(3))))),
 					new Move(reg("t10"), new Binop(Binop.MINUS, reg("t10"), new Const(1))),
-					new Cjump(new Binop(Binop.GE, reg("t10"), new Const(0)), label(".L9"), null),
+					new Cjump(new Binop(Binop.GE, reg("t10"), new Const(0)), label(".L9"), label(".Lnull")),
+					new LabelNode(label(".Lnull")),
 					new Move(new Temp(TempRegister.RV), new Binop(Binop.PLUS, reg("t27"), new Const(8)))
 				);
 			}
@@ -308,7 +309,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 		if (label_s.containsKey(s))
 			return label_s.get(s);
 		
-		Label t = new Label(s);
+		Label t = new Label();
 		label_s.put(s, t);
 		return t;
 	}

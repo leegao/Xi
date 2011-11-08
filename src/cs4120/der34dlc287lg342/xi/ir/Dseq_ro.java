@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.tiles.DseqRoTile;
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Dseq_ro extends Stmt {
 	Label ro_entry;
@@ -21,4 +23,8 @@ public class Dseq_ro extends Stmt {
 		return new Seq(this);
 	}
 	
+	@Override
+	public Tile munch(){
+		return new DseqRoTile(ro_entry, data);
+	}
 }
