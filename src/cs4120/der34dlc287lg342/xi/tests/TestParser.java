@@ -323,4 +323,11 @@ public class TestParser extends TestCase {
 			"PROGRAM","USE", "ID(io)", "FUNCDECL","ID(func)","BLOCK",
 			"BLOCK", "RETURN"});
 	}
+	
+	public void testPA4Issue() {
+		checkType(gen("main() {b:bool = 3+-3*40/4/5*2 == -9}"), new String[] {
+			"PRORGAM", "FUNCDECL", "ID(main)", "BLOCK", 
+		});
+	
+	}
 }
