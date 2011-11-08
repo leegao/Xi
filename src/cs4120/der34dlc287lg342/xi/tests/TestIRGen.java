@@ -1481,4 +1481,11 @@ public class TestIRGen extends TestCase {
 			ret
 		));
 	}
+	
+	public void testConditionalConstantFolding(){
+		Seq stmt = gen("main(){a:int; if(1==1) {a = 1 } if(true) { a = 2}  while(false) {a = 3 }}");
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(islike(stmt));
+		System.out.println(stmt.prettyPrint());
+	}
 }
