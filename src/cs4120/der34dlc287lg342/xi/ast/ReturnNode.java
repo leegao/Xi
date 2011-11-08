@@ -110,11 +110,11 @@ public class ReturnNode extends AbstractSyntaxTree {
 			IRTranslation tr = e.to_ir(stack);
 			seq = new Seq(new Move(new Temp(TempRegister.RV), tr.expr()));
 		} else if (children.size() > 1){
-			Expr return_register = new Temp(TempRegister.RV);
+			Expr return_register = new Temp(TempRegister.RDI);
 			// allocate heap here
-			seq.add(new Move(return_register, new Call(new Name(Label.alloc), new Const(8*children.size()))));
-			for (int i = 0; i < children.size()-1;i++){
-				AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(i+1);
+			//seq.add(new Move(return_register, new Call(new Name(Label.alloc), new Const(8*children.size()))));
+			for (int i = 0; i < children.size();i++){
+				AbstractSyntaxTree e = (AbstractSyntaxTree) children.get(i);
 				IRTranslation tr = e.to_ir(stack);
 				
 				// put it on the heap

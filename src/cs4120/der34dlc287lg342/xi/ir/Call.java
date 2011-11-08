@@ -9,6 +9,7 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 public class Call extends Expr {
 	public Expr func;
 	public ArrayList<Expr> args;
+	public TempRegister tuple;
 	
 	public Call(Expr func, Expr... args_arr){
 		super();
@@ -47,6 +48,7 @@ public class Call extends Expr {
 				call.add(e.expr);
 			Stmt.add_and_lower(seq, (Seq) e.stmts);
 		}
+		call.tuple = tuple;
 		Temp t = new Temp(new TempRegister()); // fresh
 		seq.add(new Move(t, call, true));
 		return new Eseq(t, seq);
@@ -64,6 +66,7 @@ public class Call extends Expr {
 	public CallTile munch() {
 		Name name = (Name)func;
 		CallTile tile = new CallTile(name.label);
+		tile.tuple = tuple;
 		for (Expr arg : args){
 			tile.add(arg.munch());
 		}

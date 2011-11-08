@@ -24,6 +24,8 @@ public class Assemble {
 			return "%rbp";
 		} else if (r.equals(TempRegister.RV.toString())){
 			return "%rax";
+		} else if (r.equals(TempRegister.RDI.toString())){
+			return "%rdx";
 		}
 		// rdi, rsi, rdx, rcx, r8, and r9
 		// then %rbp-i*8
@@ -66,7 +68,7 @@ public class Assemble {
 		return prologue + asm + epilogue;
 	}
 	
-	public void att(){
+	public String att(){
 		String att = "";
 		for (Tile tile : main.tiles){
 			if (tile instanceof FuncTile){
@@ -81,6 +83,6 @@ public class Assemble {
 			}
 		}
 		
-		System.out.println(".att_syntax prefix\n.text\n"+att);
+		return (".att_syntax prefix\n.text\n"+att);
 	}
 }

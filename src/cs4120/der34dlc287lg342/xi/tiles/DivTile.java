@@ -15,8 +15,9 @@ public class DivTile extends BinopTile {
 		asm += "movq %rdx, "+d+"\n";
 		asm += "movq %rax, "+a+"\n";
 		asm += "movq "+left.out+", %rax\n";
+		asm += "movq $0, %rdx\n";
 		asm += "movq "+right.out+", %r14\n";
-		asm += "idiv %r14\n";
+		asm += "idivq %r14\n";
 		out = new TempRegister();
 		asm += "movq %rax, "+out+"\n";
 		asm += "movq " + d + ", %rdx\n";
