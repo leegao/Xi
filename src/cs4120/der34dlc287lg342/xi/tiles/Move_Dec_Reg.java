@@ -11,6 +11,6 @@ public class Move_Dec_Reg extends Tile {
 	}
 	
 	public String att() {
-		return "dec " + reg;
+		return "decq " + reg;
 	}
 }

@@ -8,6 +8,7 @@ import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
@@ -99,6 +100,6 @@ public class LengthNode extends ExpressionNode {
 		IRTranslation tr = args.to_ir(stack);
 		Expr base_addr = tr.expr();
 		Expr length = new Mem(new Binop(Binop.MINUS, base_addr, new Const(8)));
-		return new IRTranslationExpr(length);
+		return new IRTranslationExpr(TempRegister.size_of(base_addr));
 	}
 }

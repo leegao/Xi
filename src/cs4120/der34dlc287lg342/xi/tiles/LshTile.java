@@ -8,8 +8,15 @@ public class LshTile extends BinopTile {
 	}
 	
 	public String att(){
-		String asm = before();
-		asm += "salq %r14, "+out+"\n";
+		String asm = "";
+		if (!(left instanceof ConstTile))
+			asm += left.att();
+		if (!(right instanceof ConstTile))
+			asm += right.att();
+		out = new TempRegister();
+		asm += "movq "+left.out()+", %r15\n";
+		asm += "salq "+right.out()+", %r15\n";
+		asm += "movq %r15, "+out+"\n";
 		return asm;
 	}
 }

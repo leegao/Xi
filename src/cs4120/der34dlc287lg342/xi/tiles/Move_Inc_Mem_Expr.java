@@ -10,9 +10,9 @@ public class Move_Inc_Mem_Expr extends Tile {
 	public String att() {
 		String asm = "";
 		if (expr instanceof ConstTile) {
-			asm += "inc " + ((ConstTile)expr).value;
+			asm += "incq " + ((ConstTile)expr).value;
 		} else {
-			asm += "inc " + "(" + expr.out + ")";
+			asm += "incq " + "(" + expr.out + ")";
 		}
 		
 		return asm;
