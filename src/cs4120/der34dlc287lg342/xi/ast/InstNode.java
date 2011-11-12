@@ -157,19 +157,23 @@ public class InstNode extends AbstractSyntaxTree {
 			Seq seq = new Seq();
 			
 			if (decl != null) {
+				
+				Call call = (Call)expr;
+				
+				Expr alloc = new Call(new Name(Label.alloc), new Const(((XiReturnType)e.type).ret.size()*8));
+				Temp heap_addr = new Temp(new TempRegister());
+				seq.add(new Move(heap_addr, alloc));
+				call.tuple = heap_addr.temp;
+				System.out.println(call.tuple);
+				seq.add(new Exp(call));
+				
 				for (int i = 0; i < list.size(); i++){
 					AbstractSyntaxTree tree = (AbstractSyntaxTree) list.get(i);
 					if (!(tree instanceof DeclNode)) continue; // underscore
 					DeclNode d = (DeclNode)tree;
 					d.to_ir(stack);
 					
-					Call call = (Call)expr;
 					
-					Expr alloc = new Call(new Name(Label.alloc), new Const(((XiReturnType)e.type).ret.size()*8));
-					Temp heap_addr = new Temp(new TempRegister());
-					seq.add(new Move(heap_addr, alloc));
-					call.tuple = heap_addr.temp;
-					seq.add(new Exp(call));
 					seq.add(new Move(
 						stack.find_register(d.id.id), 
 						new Mem(new Binop(Binop.PLUS, 

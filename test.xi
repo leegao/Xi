@@ -20,12 +20,19 @@ x(a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:int){
 	a' = a' + a';
 }
 
+f(a:int):int,int{
+	return 1,2
+}
+
 main(args:int[][]){
 	avg:int = mean((1,2,3,4,5));
 	println(unparseInt(avg % 2));
 	
 	arg:int[] = readln()
 	i:int, _ = parseInt(arg)
+	
+	a:int,b:int = f(1)
+	println(unparseInt(b))
 	
 	if (i > 10)
 		println("i is greater than 10")

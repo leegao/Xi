@@ -10,6 +10,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.*;
@@ -125,9 +126,13 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		c.return_to = return_to;
 		int i = 0;
 		Func seq = new Func(stack.find_name(id.id).label);
+		int size = args.size();
+		if (types.size()>1){
+			seq.add(c.add_arg("_tuple", i++, ++size));
+		}
 		for (VisualizableTreeNode child : args){
 			DeclNode arg = (DeclNode)child;
-			seq.add(c.add_arg(arg.id.id, i++, args.size()));
+			seq.add(c.add_arg(arg.id.id, i++, size));
 		}
 		
 		block.new_ircontext = c;

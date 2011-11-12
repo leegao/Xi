@@ -45,7 +45,7 @@ public class Assemble {
 			if (!map.containsKey(r)){
 				int i = map.size();
 				String register = map_register(i, r);
-				//System.out.println(r+" -> "+register);
+				System.out.println(r+" -> "+register);
 				map.put(r, register);
 				asm = asm.replace(r, register);
 			}
