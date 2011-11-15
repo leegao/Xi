@@ -7,6 +7,7 @@ import java.util.HashSet;
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
+import cs4120.der34dlc287lg342.xi.cfg.Worklist;
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
@@ -53,5 +54,24 @@ public class TestCFG extends TestCase {
 		CFG cfg = func.cfg();
 		System.out.println(cfg);
 		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+	}
+	
+	public void testWorklist() {
+		Seq stmt = gen("main(a:int){b:int c:int d:int b=a+a c=a+a d=c+b if(d<b) {d=a+1} else {d=c+1}}");
+		stmt = ConstantFolding.foldConstants(stmt);
+		Func func = (Func) stmt.children.get(0);
+		
+		CFG cfg = func.cfg();
+
+//		System.out.println(cfg);
+		//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+		
+		Worklist wl = new Worklist(cfg);
+		wl.analyze();
+		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+//		System.out.println(cfg);
+//		for (CFG node : wl.worklist) {
+//			System.out.println(node.simpleName(node));
+//		}
 	}
 }

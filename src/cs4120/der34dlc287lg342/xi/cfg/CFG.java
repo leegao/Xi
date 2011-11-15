@@ -23,11 +23,13 @@ public class CFG {
 	public int id;
 	
 	HashSet<TempRegister> use, def;
+	HashSet<TempRegister> in_wl;
 	public Stmt ir;
 	public CFG(Stmt ir){
 		parents = new ArrayList<CFG>();
 		child1 = null;
 		child2 = null;
+		in_wl = new HashSet<TempRegister>();
 		
 		this.use = use(ir);
 		this.def = def(ir);
@@ -130,7 +132,7 @@ public class CFG {
 		}
 		String next = simpleName(child1) + ", "+simpleName(child2);
 		
-		String str = "["+ir.prettyPrint()+"]\n\tparents: "+prev+"\n\tchildren: "+next+"\n\tuses: "+use+"\n\tdefs: "+def+"\n";
+		String str = "["+ir.prettyPrint()+"]\n\tparents: "+prev+"\n\tchildren: "+next+"\n\tuses: "+use+"\n\tdefs: "+def+"\n\tin_wl: " + in_wl +"\n";
 		
 		return str+(child1 == null ? "":child1.toString_(seen))+(child2 == null ? "" :child2.toString_(seen));
 	}
@@ -148,7 +150,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nuse: "+use+"\\ndef: "+def+"\"]\n";
+		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nuse: "+use+"\\ndef: "+def+"\\nin_wl: "+in_wl+"\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";
