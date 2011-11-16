@@ -14,7 +14,7 @@ public class NameTile extends Tile{
 	
 	public ArrayList<Assembly> att(){
 		out = new TempRegister();
-		return "";
+		return null;
 	}
 	
 	public String toString(){
