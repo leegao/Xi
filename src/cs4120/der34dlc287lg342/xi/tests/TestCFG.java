@@ -7,6 +7,7 @@ import java.util.HashSet;
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
+import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
@@ -68,7 +69,9 @@ public class TestCFG extends TestCase {
 		
 		LivenessWorklist wl = new LivenessWorklist(cfg);
 		wl.analyze();
-		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+		InterferenceGraph g = new InterferenceGraph(cfg);
+		System.out.println(g.adjacent);
+		//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
 //		System.out.println(cfg);
 //		for (CFG node : wl.worklist) {
 //			System.out.println(node.simpleName(node));

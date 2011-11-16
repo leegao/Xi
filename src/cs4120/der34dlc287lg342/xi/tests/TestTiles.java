@@ -15,7 +15,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
 import cs4120.der34dlc287lg342.xi.tiles.*;
-import cs4120.der34dlc287lg342.xi.tiles.naive_asm.Assemble;
+import cs4120.der34dlc287lg342.xi.tiles.naive_asm.NaiveAssemble;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -87,7 +87,7 @@ public class TestTiles extends TestCase{
 //		
 		//System.out.println(func.att());
 		
-		Assemble assembler = new Assemble((SeqTile)stmt.munch());
+		NaiveAssemble assembler = new NaiveAssemble((SeqTile)stmt.munch());
 		System.out.println(assembler.att());
 	}
 	
@@ -124,7 +124,7 @@ public class TestTiles extends TestCase{
 		for (File validFile: valid) {
 			Seq s = gen_file(validFile.getPath());
 			System.out.println("#"+validFile.getPath());
-			Assemble assembler = new Assemble((SeqTile)s.munch());
+			NaiveAssemble assembler = new NaiveAssemble((SeqTile)s.munch());
 			try{
 				FileWriter writer = new FileWriter(validFile.getPath()+".s");
 				writer.write(assembler.att());

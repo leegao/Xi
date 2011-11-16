@@ -15,7 +15,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
 import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
-import cs4120.der34dlc287lg342.xi.tiles.naive_asm.Assemble;
+import cs4120.der34dlc287lg342.xi.tiles.naive_asm.NaiveAssemble;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 
@@ -80,7 +80,7 @@ public class Driver {
 				program_ir = ConstantFolding.foldConstants(program_ir);
 			}
 			System.out.println(program_ir.prettyPrint());
-			Assemble assemble = new Assemble((SeqTile)program_ir.munch());
+			NaiveAssemble assemble = new NaiveAssemble((SeqTile)program_ir.munch());
 				
 			FileWriter writer = new FileWriter(outputFile);
 			writer.write(assemble.att());

@@ -10,12 +10,12 @@ import cs4120.der34dlc287lg342.xi.tiles.FuncTile;
 import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
-public class Assemble {
+public class NaiveAssemble {
 	SeqTile main;
 	
 	String calleesaves[] = {"rbx","r12","r13"};
 	
-	public Assemble(SeqTile main){
+	public NaiveAssemble(SeqTile main){
 		this.main = main;
 	}
 	
