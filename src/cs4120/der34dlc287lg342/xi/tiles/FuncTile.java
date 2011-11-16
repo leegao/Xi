@@ -1,5 +1,8 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
+import java.util.ArrayList;
+
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 
 public class FuncTile extends SeqTile {
@@ -17,7 +20,7 @@ public class FuncTile extends SeqTile {
 		return "";
 	}
 	
-	public String att(){
+	public ArrayList<Assembly> att(){
 		String asm = prologue();
 		for (Tile tile : tiles){
 			asm += tile.att()+"\n";

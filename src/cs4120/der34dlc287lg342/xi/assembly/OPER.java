@@ -10,23 +10,23 @@ public class OPER extends Assembly {
 	TempRegister src[];
 	Label jump_to;
 	
-	public OPER(String assem, TempRegister dest, TempRegister src[], Label to){
+	public OPER(String assem, TempRegister src[], TempRegister dest, Label to){
 		this.assem = assem;
 		this.dest = dest;
 		this.src = src;
 		this.jump_to = to;
 	}
 	
-	public OPER(String assem, TempRegister dest, TempRegister src[]){
-		this(assem, dest, src, null);
+	public OPER(String assem, TempRegister src[], TempRegister dest){
+		this(assem, src, dest, null);
 	}
 	
 	public OPER(String assem, TempRegister src1, TempRegister src2, Label to){
-		this(assem, null, new TempRegister[]{src1, src2}, to);
+		this(assem, new TempRegister[]{src1, src2}, null, to);
 	}
 	
-	public OPER(String assem, TempRegister dest, TempRegister src){
-		this(assem, dest, new TempRegister[]{src}, null);
+	public OPER(String assem, TempRegister src, TempRegister dest){
+		this(assem, new TempRegister[]{src}, dest, null);
 	}
 	
 	@Override

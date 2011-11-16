@@ -1,5 +1,9 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
+import java.util.ArrayList;
+
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+
 /**
  * Creating the assembly with the form:
  * 		movq expr, Mem(expr)
@@ -13,7 +17,7 @@ public class Move_Expr_Mem_Expr extends Tile {
 		this.dest = dest;
 	}
 	
-	public String att() {
+	public ArrayList<Assembly> att() {
 		String asm = "";
 		asm += this.dest.att();
 		asm += this.src.att();

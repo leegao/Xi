@@ -1,5 +1,9 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
+import java.util.ArrayList;
+
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+
 
 /**
  * Creating the assembly with the form:
@@ -16,7 +20,7 @@ public class Move_Mem_Add_Const_Expr_Expr extends Tile{
 		this.src = src;
 	}
 	
-	public String att(){
+	public ArrayList<Assembly> att(){
 		//movq k(%r), %r
 		// shuttle
 		String asm = src.att();

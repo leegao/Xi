@@ -1,15 +1,18 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public abstract class Tile {
 	public TempRegister out;
 	
-	public String att(){
+	public ArrayList<Assembly> att(){
 		// %r14 and %r15 are clobbered by default
-		return ""+this.getClass().getSimpleName()+"\n";
+		return null;
+		//return ""+this.getClass().getSimpleName()+"\n";
 	}
 
 	public String out() {

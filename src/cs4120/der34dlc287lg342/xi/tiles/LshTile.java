@@ -1,5 +1,10 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
+import java.util.ArrayList;
+
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.MOVE;
+import cs4120.der34dlc287lg342.xi.assembly.OPER;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class LshTile extends BinopTile {
@@ -7,16 +12,13 @@ public class LshTile extends BinopTile {
 		super(left, right);
 	}
 	
-	public String att(){
-		String asm = "";
-		if (!(left instanceof ConstTile))
-			asm += left.att();
-		if (!(right instanceof ConstTile))
-			asm += right.att();
+	public ArrayList<Assembly> att(){
+		ArrayList<Assembly> asm = new ArrayList<Assembly>();
+		asm.addAll(left.att());
 		out = new TempRegister();
-		asm += "movq "+left.out()+", %r15\n";
-		asm += "salq "+right.out()+", %r15\n";
-		asm += "movq %r15, "+out+"\n";
+		asm.add(new MOVE(left.out, out));
+		asm.add(new OPER("salq "+right.out()+", %d0", new TempRegister[]{}, out));
+		
 		return asm;
 	}
 }

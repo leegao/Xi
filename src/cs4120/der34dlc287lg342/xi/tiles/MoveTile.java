@@ -1,5 +1,9 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
+import java.util.ArrayList;
+
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+
 public class MoveTile extends Tile {
 	public Tile dest, src;
 
@@ -8,7 +12,7 @@ public class MoveTile extends Tile {
 		this.src = src;
 	}
 	
-	public String att(){
+	public ArrayList<Assembly> att(){
 		String asm = "";
 		String out;
 		if (!(dest instanceof MemTile)){

@@ -1,5 +1,8 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
+import java.util.ArrayList;
+
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class ConstTile extends Tile {
@@ -9,7 +12,7 @@ public class ConstTile extends Tile {
 		this.value = value;
 	}
 	
-	public String att(){
+	public ArrayList<Assembly> att(){
 		out = new TempRegister();
 		return "movq $"+value+", "+out+"\n";
 	}

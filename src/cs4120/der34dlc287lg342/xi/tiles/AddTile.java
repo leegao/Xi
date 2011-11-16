@@ -1,5 +1,10 @@
 package cs4120.der34dlc287lg342.xi.tiles;
 
+import java.util.ArrayList;
+
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.MOVE;
+import cs4120.der34dlc287lg342.xi.assembly.OPER;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class AddTile extends BinopTile {
@@ -8,9 +13,9 @@ public class AddTile extends BinopTile {
 		super(left, right);
 	}
 	
-	public String att(){
-		String asm = before();
-		asm += "addq %r14, "+out+"\n";
+	public ArrayList<Assembly> att(){
+		ArrayList<Assembly> asm = before();
+		asm.add(new OPER("addq %s0, %d0", right.out, out));
 		return asm;
 	}
 }

@@ -7,8 +7,8 @@ import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class MOVE extends Assembly {
 	public TempRegister src, dest;
-	public MOVE(String assem, TempRegister dest, TempRegister src){
-		this.assem = assem;
+	public MOVE(TempRegister src, TempRegister dest){
+		this.assem = "movq %s0, %d0";
 		this.src = src;
 		this.dest = dest;
 	}
