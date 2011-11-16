@@ -7,8 +7,8 @@ import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class LABEL extends Assembly {
 	public Label label;
-	public LABEL(String assem, Label label){
-		this.assem = assem;
+	public LABEL(Label label){
+		this.assem = label+":";
 		this.label = label;
 	}
 	@Override

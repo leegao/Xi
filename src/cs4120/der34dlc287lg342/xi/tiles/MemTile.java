@@ -3,6 +3,8 @@ package cs4120.der34dlc287lg342.xi.tiles;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.LABEL;
+import cs4120.der34dlc287lg342.xi.assembly.OPER;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class MemTile extends Tile {
@@ -14,14 +16,19 @@ public class MemTile extends Tile {
 
 	@Override
 	public ArrayList<Assembly> att(){
-		String asm = "";
-		if (!(tile instanceof ConstTile)){
-			asm += tile.att();
-		}
+//		String asm = "";
+//		if (!(tile instanceof ConstTile)){
+//			asm += tile.att();
+//		}
+//		out = new TempRegister();
+//		asm += "movq "+tile.out()+", %r15\n";
+//		asm += "movq (%r15), %r15\n";
+//		asm += "movq %r15, "+out+"\n";
+
+		ArrayList<Assembly> asm = new ArrayList<Assembly>();
+		asm.addAll(tile.att());
 		out = new TempRegister();
-		asm += "movq "+tile.out()+", %r15\n";
-		asm += "movq (%r15), %r15\n";
-		asm += "movq %r15, "+out+"\n";
+		asm.add(new OPER("movq (%s0), %d0", tile.out, out));
 		return asm;
 	}
 	

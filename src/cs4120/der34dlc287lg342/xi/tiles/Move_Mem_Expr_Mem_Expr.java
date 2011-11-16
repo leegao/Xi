@@ -24,7 +24,7 @@ public class Move_Mem_Expr_Mem_Expr extends Tile{
 		asm += this.dest.att();
 		asm += this.src.att();
 		asm += "movq ("+src.out+"), (" +dest.out+")";
-		return asm;
+		return null;
 	}
 
 }

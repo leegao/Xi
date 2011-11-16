@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.tiles;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.OPER;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class Move_Dec_Reg extends Tile {
@@ -14,6 +15,8 @@ public class Move_Dec_Reg extends Tile {
 	}
 	
 	public ArrayList<Assembly> att() {
-		return "decq " + reg;
+		ArrayList<Assembly> asm = new ArrayList<Assembly>();
+		asm.add(new OPER("decq %d0", new TempRegister[]{}, reg));
+		return asm;
 	}
 }
