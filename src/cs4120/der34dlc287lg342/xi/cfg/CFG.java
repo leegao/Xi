@@ -2,17 +2,22 @@ package cs4120.der34dlc287lg342.xi.cfg;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.LABEL;
 import cs4120.der34dlc287lg342.xi.ir.Arg;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
 import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Jump;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Stmt;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
@@ -24,16 +29,16 @@ public class CFG {
 	
 	HashSet<TempRegister> use, def;
 	HashSet<TempRegister> in_wl;
-	public Stmt ir;
-	public CFG(Stmt ir){
+	public Assembly asm;
+	public CFG(Assembly asm){
 		parents = new ArrayList<CFG>();
 		child1 = null;
 		child2 = null;
 		in_wl = new HashSet<TempRegister>();
 		
-		this.use = use(ir);
-		this.def = def(ir);
-		this.ir = ir;
+		this.use = asm.use();//use(asm);
+		this.def = asm.def();//def(asm);
+		this.asm = asm;
 		id = guid++;
 	}
 	
@@ -113,11 +118,11 @@ public class CFG {
 	public String simpleName(CFG node){
 		if (node == null)
 			return "";
-		else if (node.ir instanceof LabelNode){
-			LabelNode label = (LabelNode)node.ir;
+		else if (node.asm instanceof LABEL){
+			LABEL label = (LABEL)node.asm;
 			return ""+label.label;
 		}
-		return node.ir.getClass().getSimpleName();
+		return node.asm.getClass().getSimpleName();
 	}
 	
 	public String toString_(HashSet<CFG> seen){
@@ -128,11 +133,11 @@ public class CFG {
 		
 		String prev = "";
 		for (CFG parent : parents){
-			prev += parent.ir.getClass().getSimpleName()+", ";
+			prev += parent.asm.getClass().getSimpleName()+", ";
 		}
 		String next = simpleName(child1) + ", "+simpleName(child2);
 		
-		String str = "["+ir.prettyPrint()+"]\n\tparents: "+prev+"\n\tchildren: "+next+"\n\tuses: "+use+"\n\tdefs: "+def+"\n\tin_wl: " + in_wl +"\n";
+		String str = "["+asm.assem+"]\n\tparents: "+prev+"\n\tchildren: "+next+"\n\tuses: "+use+"\n\tdefs: "+def+"\n\tin_wl: " + in_wl +"\n";
 		
 		return str+(child1 == null ? "":child1.toString_(seen))+(child2 == null ? "" :child2.toString_(seen));
 	}
@@ -150,7 +155,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nuse: "+use+"\\ndef: "+def+"\\nin_wl: "+in_wl+"\"]\n";
+		str += "\t"+"n"+id+" [label=\""+asm.assem+"\\nuse: "+use+"\\ndef: "+def+"\\nin_wl: "+in_wl+"\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";
@@ -161,5 +166,88 @@ public class CFG {
 		}
 
 		return str+(child1 == null ? "":child1.dot_edge(seen))+(child2 == null ? "" :child2.dot_edge(seen));
+	}
+	
+	public static CFG cfg_first_pass(ArrayList<Assembly> children, HashMap<Label, CFG> jumps){
+		CFG prev = null, current = null;
+		CFG root = null;
+		
+		//HashMap<Label, CFG> jumps = new HashMap<Label, CFG>();
+		
+		for (Assembly stmt : children){
+			if (root == null){
+				root = new CFG(stmt);
+				current = root;
+			} else {
+				current = new CFG(stmt);
+			}
+			
+			if (prev != null){
+				current.parents.add(prev);
+				prev.child1 = current;
+			}
+			
+//			if (stmt instanceof Jump){
+//				jumps.put(((Jump)stmt).label, current);
+//			} else if (stmt instanceof Cjump){
+//				jumps.put(((Cjump)stmt).to, current);
+//			}
+			if (stmt instanceof LABEL){
+				jumps.put(((LABEL)stmt).label, current);
+			}
+
+			prev = current;
+		}
+		
+		return root;
+	}
+	
+	public static CFG traverse(CFG node, HashMap<Label, CFG> jumps, HashSet<CFG> memoize){
+		if (node == null){
+			return null;
+		}
+		
+		// dynamic memoization
+		if (memoize.contains(node))
+			return node;
+		else
+			memoize.add(node);
+		
+		if (node.asm.is_jump()) {
+			Label to = node.asm.jump();
+			CFG next = jumps.get(to);
+			
+			// remove child1.parent that is equal to current
+			node.child1.parents.remove(node);
+			
+			// make child1 next
+			next.parents.add(node);
+			node.child1 = traverse(next, jumps, memoize);
+		} else if (node.asm.is_cjump()) {
+			Label to = node.asm.jump();
+			CFG next = jumps.get(to);
+			
+			// make child2 next
+			next.parents.add(node);
+			node.child2 = traverse(next, jumps, memoize);
+			
+			// update child1 as well
+			traverse(node.child1, jumps, memoize);
+		} else {
+			traverse(node.child1, jumps, memoize);
+		}
+		
+		return node;
+	}
+	
+	public static CFG cfg(ArrayList<Assembly> instrs){
+		HashMap<Label, CFG> jumps = new HashMap<Label, CFG>();
+		HashSet<CFG> memoize = new HashSet<CFG>();
+		CFG first_pass = cfg_first_pass(instrs, jumps);
+		
+		// single DPS to traverse and alter the connection of the graphs
+		CFG second_pass = traverse(first_pass, jumps, memoize);
+		
+		return second_pass;
 	}
 }

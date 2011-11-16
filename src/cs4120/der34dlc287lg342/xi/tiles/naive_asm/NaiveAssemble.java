@@ -73,7 +73,7 @@ public class NaiveAssemble {
 		for (Tile tile : main.tiles){
 			if (tile instanceof FuncTile){
 				FuncTile func = (FuncTile)tile;
-				String asm = func.att();
+				String asm = "";//func.att();
 				asm = ".globl "+func.name+"\n"+
 					  func.name+":\n\t"+
 					  allocate_registers(asm).replace("\n", "\n\t");

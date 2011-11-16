@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.cfg;
 import java.util.HashSet;
 import java.util.Hashtable;
 
+import cs4120.der34dlc287lg342.xi.assembly.MOVE;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
@@ -24,13 +25,11 @@ public class InterferenceGraph {
 		if (node == null){
 			return;
 		}
-		if (node.ir instanceof Move){
-			Move mov = (Move)node.ir;
-			if (mov.val instanceof Temp && mov.dest instanceof Temp){
-				TempRegister d = ((Temp)mov.dest).temp, s = ((Temp)mov.val).temp;
-				if (!moves.containsKey(d)) moves.put(d, new HashSet<TempRegister>());
-				moves.get(d).add(s);
-			}
+		if (node.asm instanceof MOVE){
+			MOVE mov = (MOVE)node.asm;
+			TempRegister d = mov.dest, s = mov.src;
+			if (!moves.containsKey(d)) moves.put(d, new HashSet<TempRegister>());
+			moves.get(d).add(s);
 		}
 		
 		HashSet<TempRegister> live = node.in_wl;

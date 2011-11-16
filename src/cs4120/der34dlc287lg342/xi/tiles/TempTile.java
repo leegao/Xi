@@ -11,6 +11,6 @@ public class TempTile extends Tile {
 	}
 
 	public ArrayList<Assembly> att(){
-		return null;
+		return new ArrayList<Assembly>();
 	}
 }
