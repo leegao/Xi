@@ -5,11 +5,11 @@ import java.util.HashSet;
 
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
-public class Worklist {
+public class LivenessWorklist {
 	public ArrayList<CFG> worklist;
 	CFG node;
 	
-	public Worklist(CFG node) {
+	public LivenessWorklist(CFG node) {
 		this.node = node;
 		worklist = new ArrayList<CFG>();
 		

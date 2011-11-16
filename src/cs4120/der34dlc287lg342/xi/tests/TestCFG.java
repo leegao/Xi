@@ -7,7 +7,7 @@ import java.util.HashSet;
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
-import cs4120.der34dlc287lg342.xi.cfg.Worklist;
+import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
@@ -66,7 +66,7 @@ public class TestCFG extends TestCase {
 //		System.out.println(cfg);
 		//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
 		
-		Worklist wl = new Worklist(cfg);
+		LivenessWorklist wl = new LivenessWorklist(cfg);
 		wl.analyze();
 		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
 //		System.out.println(cfg);
