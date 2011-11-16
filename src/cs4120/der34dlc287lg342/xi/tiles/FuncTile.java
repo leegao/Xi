@@ -12,20 +12,12 @@ public class FuncTile extends SeqTile {
 		this.name = name;
 	}
 	
-	public String prologue(){
-		return "";
-	}
-	
-	public String epilogue(){
-		return "";
-	}
 	
 	public ArrayList<Assembly> att(){
-		String asm = prologue();
+		ArrayList<Assembly> asm = new ArrayList<Assembly>();
 		for (Tile tile : tiles){
-			asm += tile.att()+"\n";
+			asm.addAll(tile.att());
 		}
-		asm += epilogue();
 		return asm;
 	}
 }

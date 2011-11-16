@@ -3,7 +3,9 @@ package cs4120.der34dlc287lg342.xi.tiles;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.OPER;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class DseqRoTile extends Tile {
 	Label ro_entry;
@@ -21,6 +23,8 @@ public class DseqRoTile extends Tile {
 			asm += "\t.quad "+i+"\n";
 		}
 		asm += "\t.text\n";
-		return asm;
+		ArrayList<Assembly> x = new ArrayList<Assembly>();
+		x.add(new OPER(asm, new TempRegister[]{}, null));
+		return x;
 	}
 }

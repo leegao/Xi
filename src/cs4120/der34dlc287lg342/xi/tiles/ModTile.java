@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.tiles;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.OPER;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class ModTile extends BinopTile {
@@ -11,20 +12,18 @@ public class ModTile extends BinopTile {
 	}
 	
 	public ArrayList<Assembly> att(){
-		String asm = "";
-		TempRegister a = new TempRegister(), d = new TempRegister();
-		asm += left.att();
-		asm += right.att();
-		asm += "movq %rdx, "+d+"\n";
-		asm += "movq %rax, "+a+"\n";
-		asm += "movq "+left.out+", %rax\n";
-		asm += "movq $0, %rdx\n";
-		asm += "movq "+right.out+", %r14\n";
-		asm += "idivq %r14\n";
+		ArrayList<Assembly> asm = new ArrayList<Assembly>();
+		//TempRegister a = new TempRegister(), d = new TempRegister();
+		asm.addAll(left.att());
+		asm.addAll(right.att());
+
+		asm.add(new OPER("movq %s0, %rax", left.out, null));
+		asm.add(new OPER("movq $0, %rdx", new TempRegister[]{}, null));
+
+		asm.add(new OPER("idivq %s0", right.out, null));
 		out = new TempRegister();
-		asm += "movq %rdx, "+out+"\n";
-		asm += "movq " + d + ", %rdx\n";
-		asm += "movq " + a + ", %rax\n";
+		asm.add(new OPER("movq %rdx, %d0", new TempRegister[]{}, out));
+		
 		return asm;
 	}
 }

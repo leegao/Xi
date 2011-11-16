@@ -17,19 +17,14 @@ public class DivTile extends BinopTile {
 		//TempRegister a = new TempRegister(), d = new TempRegister();
 		asm.addAll(left.att());
 		asm.addAll(right.att());
-		asm.add(new OPER("pushq %rdx", new TempRegister[]{}, null));
-		asm.add(new OPER("pushq %rax", new TempRegister[]{}, null));
 
-		asm.add(new OPER("movq %s0, %rax", new TempRegister[]{}, TempRegister.RV));
-		asm.add(new OPER("movq $0, %rdx", new TempRegister[]{}, TempRegister.RDX));
-		
-		asm += "movq "+right.out+", %r14\n";
-		asm += "idivq %r14\n";
+		asm.add(new OPER("movq %s0, %rax", left.out, null));
+		asm.add(new OPER("movq $0, %rdx", new TempRegister[]{}, null));
+
+		asm.add(new OPER("idivq %s0", right.out, null));
 		out = new TempRegister();
-		asm += "movq %rax, "+out+"\n";
+		asm.add(new OPER("movq %rax, %d0", new TempRegister[]{}, out));
 		
-		asm.add(new OPER("popq %rax", new TempRegister[]{}, null));
-		asm.add(new OPER("popq %rdx", new TempRegister[]{}, null));
 		return asm;
 	}
 }

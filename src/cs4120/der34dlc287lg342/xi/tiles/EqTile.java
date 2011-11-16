@@ -3,8 +3,10 @@ package cs4120.der34dlc287lg342.xi.tiles;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.OPER;
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class EqTile extends CjumpTile {
 	int op;
@@ -38,12 +40,11 @@ public class EqTile extends CjumpTile {
 	}
 	
 	public ArrayList<Assembly> att(){
-		String asm = "";
-		asm += left.att();
-		asm += right.att();
-		asm += "movq "+left.out+", %r15\n";
-		asm += "cmpq "+right.out+", %r15\n";
-		asm += jump()+" "+to;
+		ArrayList<Assembly> asm = new ArrayList<Assembly>();
+		asm.addAll(left.att());
+		asm.addAll(right.att());
+		asm.add(new OPER("cmpq %s0, %s1", new TempRegister[]{right.out, left.out}, null));
+		asm.add(new OPER(jump()+" %to", new TempRegister[]{}, null, to));
 		return asm;
 	}
 }
