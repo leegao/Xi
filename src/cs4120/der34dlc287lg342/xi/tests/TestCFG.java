@@ -80,4 +80,25 @@ public class TestCFG extends TestCase {
 ////			System.out.println(node.simpleName(node));
 ////		}
 //	}
+	
+	public void testWorklist(){
+		Seq stmt = gen("main(a:int){b:int if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) f(a,b)}} f(a:int, b:int){}");
+		stmt = ConstantFolding.foldConstants(stmt);
+		Func func = (Func) stmt.children.get(0);
+		System.out.println(func.prettyPrint());
+		ArrayList<Assembly> instrs = func.munch().att();
+		CFG cfg = CFG.cfg(instrs);
+		//System.out.println(cfg);
+		//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+		
+		LivenessWorklist wl = new LivenessWorklist(cfg);
+		wl.analyze();
+		InterferenceGraph g = new InterferenceGraph(cfg);
+		System.out.println(g.adjacent);
+		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+//		System.out.println(cfg);
+//		for (CFG node : wl.worklist) {
+//			System.out.println(node.simpleName(node));
+//		}
+	}
 }

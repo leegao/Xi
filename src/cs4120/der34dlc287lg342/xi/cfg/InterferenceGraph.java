@@ -18,10 +18,18 @@ public class InterferenceGraph {
 		coalesced = new Hashtable<TempRegister, TempRegister>();
 		build(cfg);
 		
-		coalesce();
+		//coalesce();
 	}
 	
 	public void build(CFG node){
+		build_(node, new HashSet<CFG>());
+	}
+	
+	public void build_(CFG node, HashSet<CFG> seen){
+		if (seen.contains(node))
+			return;
+		seen.add(node);
+		
 		if (node == null){
 			return;
 		}
@@ -41,9 +49,11 @@ public class InterferenceGraph {
 			}
 		}
 		
-		build(node.child1);
-		build(node.child2);
+		build_(node.child1, seen);
+		build_(node.child2, seen);
 	}
+	
+	
 	
 	public void simplify(){
 		
@@ -51,7 +61,11 @@ public class InterferenceGraph {
 	
 	public void coalesce(){
 		for (TempRegister d : moves.keySet()){
+			if (!adjacent.contains(d))
+				adjacent.put(d, new HashSet<TempRegister>());
 			for (TempRegister s : moves.get(d)){
+				if (!adjacent.contains(s))
+					adjacent.put(s, new HashSet<TempRegister>());
 				// if s, d not connected
 				if (adjacent.get(d).contains(s))
 					continue;

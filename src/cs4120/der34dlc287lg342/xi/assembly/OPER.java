@@ -33,14 +33,16 @@ public class OPER extends Assembly {
 	public HashSet<TempRegister> use() {
 		HashSet<TempRegister> set = new HashSet<TempRegister>();
 		for (TempRegister s : src)
-			set.add(s);
+			if (s != null)
+				set.add(s);
 		return set;
 	}
 
 	@Override
 	public HashSet<TempRegister> def() {
 		HashSet<TempRegister> set = new HashSet<TempRegister>();
-		set.add(dest);
+		if (dest != null)
+			set.add(dest);
 		return set;
 	}
 
