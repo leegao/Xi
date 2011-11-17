@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.cfg;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map.Entry;
@@ -15,33 +16,207 @@ import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 public class InterferenceGraph {
 	public Hashtable<TempRegister, HashSet<TempRegister>> adjacent, moves;
 	public Hashtable<TempRegister, TempRegister> coalesced;
-	public Hashtable<TempRegister, Integer> deg;
-	HashSet<TempRegister> potentialSpills;
+	public Hashtable<TempRegister, Integer> deg, coloring;
+	public ArrayList<Tuple<TempRegister, TempRegister>> potentialSpills;
+	public HashSet<TempRegister> spills;
 	public InterferenceGraph(CFG cfg){
 		adjacent = new Hashtable<TempRegister, HashSet<TempRegister>>();
 		moves = new Hashtable<TempRegister, HashSet<TempRegister>>();
 		coalesced = new Hashtable<TempRegister, TempRegister>();
 		deg = new Hashtable<TempRegister, Integer>();
 		simplifyStack = new ArrayList<Tuple<TempRegister, TempRegister>>();
-		potentialSpills = new HashSet<TempRegister>();
+		potentialSpills = new ArrayList<Tuple<TempRegister, TempRegister>>();
+		coloring = new Hashtable<TempRegister, Integer>();
+		spills = new HashSet<TempRegister>();
 		build(cfg);
-		python("g");
+		//python("g");
 		int last_deg = 0;
 		
 		while (last_deg != deg.size()){
 			last_deg = deg.size();
-			System.out.println(deg);
+			//System.out.println(deg);
 			simplify();
 		}
 		
 		find_spills();
-		
+		System.out.println(potentialSpills);
 		//coalesce();
+		
+		select();
+		//System.out.println(coloring);
+		
+//		for (Tuple<TempRegister, TempRegister> edge : simplifyStack){
+//			potentialSpills.remove(edge);
+//		}
+		
+//		for (Tuple<TempRegister, TempRegister> edge : potentialSpills){
+//			TempRegister a = edge.getKey(), b = edge.getValue();
+//			if (!coloring.containsKey(a)){
+//				spills.add(a);
+//			}
+//			if (!coloring.containsKey(b)){
+//				spills.add(b);
+//			}
+//		}
+		
+		System.out.println(spills);
+		System.out.println(coloring);
+		for (Tuple<TempRegister, TempRegister> edge : simplifyStack){
+			TempRegister a = edge.getKey(), b = edge.getValue();
+			System.out.println(edge+" "+coloring.get(a)+":"+coloring.get(b));
+		}
+		//System.out.println(dot_edge());
 	}
 	
+	
+	
+	private void select() {
+		ArrayList<Tuple<TempRegister, TempRegister>> ret = select_(simplifyStack, simplifyStack, true);
+		ArrayList<Tuple<TempRegister, TempRegister>> r;
+		ArrayList<Tuple<TempRegister, TempRegister>> ret_copy = (ArrayList<Tuple<TempRegister, TempRegister>>) ret.clone();
+		ret_copy.addAll(potentialSpills);
+		while ((r = select_spills(potentialSpills, ret_copy, false)) == null){
+			for (Tuple<TempRegister, TempRegister> edge : (ArrayList<Tuple<TempRegister, TempRegister>>) potentialSpills.clone()){
+				TempRegister a = edge.getKey(), b = edge.getValue();
+				if (spills.contains(a) || spills.contains(b))
+					potentialSpills.remove(edge);
+			}
+			ret_copy = (ArrayList<Tuple<TempRegister, TempRegister>>) ret.clone();
+			ret_copy.addAll(potentialSpills);
+		}
+		//ret.addAll(r);
+		simplifyStack = ret;
+	}
+
+	private ArrayList<Tuple<TempRegister, TempRegister>> select_(ArrayList<Tuple<TempRegister, TempRegister>> edges, ArrayList<Tuple<TempRegister, TempRegister>> simplifyStack, boolean err) {
+		ArrayList<Tuple<TempRegister, TempRegister>> ret = new ArrayList<Tuple<TempRegister, TempRegister>>();
+		
+		for (Tuple<TempRegister, TempRegister> edge : edges){
+			TempRegister a = edge.getKey(), b = edge.getValue();
+			if (coloring.containsKey(a) && coloring.containsKey(b) && coloring.get(a) == coloring.get(b)){
+				//
+				System.out.println("Cannot Color " + edge + "\n");
+				if (!err) continue;
+				return null;
+			}
+			if (!err)
+				System.out.println(edge);
+			if (!coloring.containsKey(a)){
+				HashSet<Integer> cannot = new HashSet<Integer>();
+				if (coloring.containsKey(b))
+					cannot.add(coloring.get(b));
+				for (Tuple<TempRegister, TempRegister> e : simplifyStack){
+					TempRegister x = e.getKey(), y = e.getValue();
+					if (x.equals(a) || y.equals(a)){
+						TempRegister z = y.equals(a) ? x : y;
+						if (coloring.containsKey(z)){
+							cannot.add(coloring.get(z));
+						}
+					}
+				}
+				if (!err)
+					System.out.println(cannot);
+				for (int i = 0; i < Register.callee.length; i++){
+					if (!cannot.contains(i)){
+						coloring.put(a, i);
+						break;
+					}
+				}
+			}
+			
+			if (!coloring.containsKey(b)){
+				HashSet<Integer> cannot = new HashSet<Integer>();
+				if (coloring.containsKey(a))
+					cannot.add(coloring.get(a));
+				for (Tuple<TempRegister, TempRegister> e : simplifyStack){
+					TempRegister x = e.getKey(), y = e.getValue();
+					if (x.equals(b) || y.equals(b)){
+						TempRegister z = y.equals(b) ? x : y;
+						if (coloring.containsKey(z))
+							cannot.add(coloring.get(z));
+					}
+				}
+				if (!err)
+					System.out.println(cannot);
+				for (int i = 0; i < Register.callee.length; i++){
+					if (!cannot.contains(i)){
+						coloring.put(b, i);
+						break;
+					}
+				}
+			}
+			
+			ret.add(edge);
+		}
+		
+		return ret;
+	}
+	
+	private ArrayList<Tuple<TempRegister, TempRegister>> select_spills(ArrayList<Tuple<TempRegister, TempRegister>> edges, ArrayList<Tuple<TempRegister, TempRegister>> simplifyStack, boolean err) {
+		ArrayList<Tuple<TempRegister, TempRegister>> ret = new ArrayList<Tuple<TempRegister, TempRegister>>();
+		
+		for (Tuple<TempRegister, TempRegister> edge : edges){
+			TempRegister a = edge.getKey(), b = edge.getValue();
+			if (coloring.containsKey(a) && coloring.containsKey(b) && coloring.get(a) == coloring.get(b)){
+				System.out.println("Cannot Color " + edge + "\n");
+				spills.add(a);
+				coloring.remove(a);
+				return null;
+			}
+			if (!coloring.containsKey(a)){
+				HashSet<Integer> cannot = new HashSet<Integer>();
+				if (coloring.containsKey(b))
+					cannot.add(coloring.get(b));
+				for (Tuple<TempRegister, TempRegister> e : simplifyStack){
+					TempRegister x = e.getKey(), y = e.getValue();
+					if (x.equals(a) || y.equals(a)){
+						TempRegister z = y.equals(a) ? x : y;
+						if (coloring.containsKey(z)){
+							cannot.add(coloring.get(z));
+						}
+					}
+				}
+				for (int i = 0; i < Register.callee.length; i++){
+					if (!cannot.contains(i)){
+						coloring.put(a, i);
+						break;
+					}
+				}
+			}
+			
+			if (!coloring.containsKey(b)){
+				HashSet<Integer> cannot = new HashSet<Integer>();
+				if (coloring.containsKey(a))
+					cannot.add(coloring.get(a));
+				for (Tuple<TempRegister, TempRegister> e : simplifyStack){
+					TempRegister x = e.getKey(), y = e.getValue();
+					if (x.equals(b) || y.equals(b)){
+						TempRegister z = y.equals(b) ? x : y;
+						if (coloring.containsKey(z))
+							cannot.add(coloring.get(z));
+					}
+				}
+				for (int i = 0; i < Register.callee.length; i++){
+					if (!cannot.contains(i)){
+						coloring.put(b, i);
+						break;
+					}
+				}
+			}
+			
+			ret.add(edge);
+		}
+		
+		return ret;
+	}
+
 	private void find_spills() {
-		for (TempRegister r : nodes())
-			potentialSpills.add(r);
+		for (TempRegister r : adjacent.keySet())
+			for (TempRegister s : adjacent.get(r)){
+				Tuple<TempRegister, TempRegister> tuple = new Tuple<TempRegister, TempRegister>(r, s);
+				if (!potentialSpills.contains(tuple))
+					potentialSpills.add(tuple);
+			}
 	}
 
 	public void build(CFG node){
@@ -79,6 +254,7 @@ public class InterferenceGraph {
 	
 	public ArrayList<Tuple<TempRegister, TempRegister>> simplifyStack;
 	public void simplify(){
+		Hashtable<TempRegister, Integer> deg = (Hashtable<TempRegister, Integer>) this.deg.clone();
 		for (TempRegister r : nodes()){
 			if (deg.get(r) < Register.callee.length){
 				remove_adj(r);
@@ -160,6 +336,33 @@ public class InterferenceGraph {
 			}
 		}
 	}
+	
+	public String color_of(TempRegister a){
+		if (coloring.containsKey(a)){
+			return "r"+coloring.get(a);
+		}
+		return "spilled";
+	}
+	
+	public String dot_edge(){
+		String dot = "graph G{\n";
+		HashMap<TempRegister, String> seen = new HashMap<TempRegister, String>();
+		int i = 0;
+		for (Tuple<TempRegister, TempRegister> e : simplifyStack){
+			TempRegister a = e.getKey(), b = e.getValue();
+			if (!seen.containsKey(a)){
+				dot += "\tn"+i+" [label=\""+a+" "+color_of(a)+"\"]\n";
+				seen.put(a, "n"+(i++));
+			}
+			if (!seen.containsKey(b)){
+				dot += "\tn"+i+" [label=\""+b+" "+color_of(b)+"\"]\n";
+				seen.put(b, "n"+(i++));
+			}
+			dot += "\t"+seen.get(a)+" -- "+seen.get(b)+"\n";
+		}
+		
+		return dot + "}";
+	}
 }
 
 class Tuple<K, V> implements Entry<K, V>{
@@ -196,5 +399,10 @@ class Tuple<K, V> implements Entry<K, V>{
     			   (other.getValue().equals(getKey()) && other.getKey().equals(getValue()));
     	}
     	return false;
+    }
+    
+    @Override
+    public String toString(){
+    	return "("+key+", "+value+")";
     }
 }
