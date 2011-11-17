@@ -155,7 +155,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+asm.assem+"\\nuse: "+use+"\\ndef: "+def+"\\nin_wl: "+in_wl+"\"]\n";
+		str += "\t"+"n"+id+" [label=\""+asm.simple_assem()+"\\nuse: "+use+"\\ndef: "+def+"\\nin_wl: "+in_wl+"\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";

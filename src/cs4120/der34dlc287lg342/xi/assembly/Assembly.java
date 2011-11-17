@@ -1,6 +1,8 @@
 package cs4120.der34dlc287lg342.xi.assembly;
 
 import java.util.HashSet;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
@@ -38,5 +40,9 @@ public abstract class Assembly {
 		return assem.startsWith("je") || assem.startsWith("jne") || assem.startsWith("jg") || 
 				assem.startsWith("jge") || assem.startsWith("jl") || assem.startsWith("jle") || 
 				assem.startsWith("jae");
+	}
+	
+	public String simple_assem(){
+		return assem.replace("%to", ""+jump());
 	}
 }

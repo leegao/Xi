@@ -31,4 +31,8 @@ public class MOVE extends Assembly {
 		return null;
 	}
 
+	public String simple_assem(){
+		String assem = super.simple_assem();
+		return assem.replace("%d0", ""+dest).replace("%s0", ""+src);
+	}
 }

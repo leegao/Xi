@@ -94,8 +94,8 @@ public class TestCFG extends TestCase {
 		LivenessWorklist wl = new LivenessWorklist(cfg);
 		wl.analyze();
 		InterferenceGraph g = new InterferenceGraph(cfg);
-		System.out.println(g.adjacent);
-		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+		//System.out.println(g.adjacent);
+		//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
 //		System.out.println(cfg);
 //		for (CFG node : wl.worklist) {
 //			System.out.println(node.simpleName(node));
