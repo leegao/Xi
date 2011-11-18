@@ -19,7 +19,7 @@ public class InterferenceGraph {
 	public Hashtable<TempRegister, HashSet<MOVE>> moves;
 	public Hashtable<TempRegister, TempRegister> alias;
 	public Hashtable<TempRegister, Integer> deg, coloring;
-	public HashSet<TempRegister> spills, initial, coalesced;
+	public HashSet<TempRegister> spills, initial, coalesced, colored;
 	
 	Stack<MOVE> move_worklist, active_moves, frozen_moves;
 	Stack<TempRegister> simplify_worklist, spill_worklist, freeze_worklist, select_stack;
@@ -28,6 +28,8 @@ public class InterferenceGraph {
 	public HashSet<TempRegister> precolored;
 	private Stack<MOVE> coalesced_moves;
 	private Stack<MOVE> constrained_moves;
+	
+	ArrayList<Integer> ok_colors = new ArrayList<Integer>();
 	
 	public InterferenceGraph(CFG cfg){
 		adjacent = new ArrayList<Tuple>();
@@ -42,6 +44,7 @@ public class InterferenceGraph {
 		
 		coloring = new Hashtable<TempRegister, Integer>();
 		spills = new HashSet<TempRegister>();
+		colored = new HashSet<TempRegister>();
 		initial = new HashSet<TempRegister>();
 		precolored = new HashSet<TempRegister>();
 		coalesced = new HashSet<TempRegister>();
@@ -52,6 +55,8 @@ public class InterferenceGraph {
 		constrained_moves = new Stack<MOVE>();
 		frozen_moves = new Stack<MOVE>();
 		this.cfg = cfg;
+		
+		for (int i = 0; i < Register.callee.length; i++) ok_colors.add(i);
 		
 		build(cfg);
 		make_worklist();
@@ -72,6 +77,35 @@ public class InterferenceGraph {
 			}
 		} while(!(simplify_worklist.isEmpty() && move_worklist.isEmpty()
 			   && freeze_worklist.isEmpty() && spill_worklist.isEmpty()));
+		assign_colors();
+		
+		System.out.println(coloring);
+		System.out.println(spills);
+	}
+
+	private void assign_colors() {
+		while (!select_stack.isEmpty()){
+			TempRegister n = select_stack.pop();
+			ArrayList<Integer> colors = new ArrayList<Integer>(ok_colors);
+			for (TempRegister w : adjacent(n)){
+				colored = new HashSet<TempRegister>(this.colored);
+				colored.addAll(precolored);
+				if (colored.contains(get_alias(w))){
+					colors.remove(coloring.get(get_alias(w)));
+				}
+			}
+			
+			if (colors.isEmpty()){
+				spills.add(n);
+			} else{
+				this.colored.add(n);
+				coloring.put(n, colors.get(0));
+			}
+		}
+		
+		for (TempRegister n : coalesced){
+			coloring.put(n, coloring.get(get_alias(n)));
+		}
 	}
 
 	private void select() {
@@ -370,25 +404,25 @@ public class InterferenceGraph {
 		return "spilled";
 	}
 	
-//	public String dot_edge(){
-//		String dot = "graph G{\n";
-//		HashMap<TempRegister, String> seen = new HashMap<TempRegister, String>();
-//		int i = 0;
-//		for (Tuple<TempRegister, TempRegister> e : simplifyStack){
-//			TempRegister a = e.getKey(), b = e.getValue();
-//			if (!seen.containsKey(a)){
-//				dot += "\tn"+i+" [label=\""+a+" "+color_of(a)+"\"]\n";
-//				seen.put(a, "n"+(i++));
-//			}
-//			if (!seen.containsKey(b)){
-//				dot += "\tn"+i+" [label=\""+b+" "+color_of(b)+"\"]\n";
-//				seen.put(b, "n"+(i++));
-//			}
-//			dot += "\t"+seen.get(a)+" -- "+seen.get(b)+"\n";
-//		}
-//		
-//		return dot + "}";
-//	}
+	public String dot_edge(){
+		String dot = "graph G{\n";
+		HashMap<TempRegister, String> seen = new HashMap<TempRegister, String>();
+		int i = 0;
+		for (Tuple e : adjacent){
+			TempRegister a = e.getKey(), b = e.getValue();
+			if (!seen.containsKey(a)){
+				dot += "\tn"+i+" [label=\""+a+" "+color_of(a)+"\"]\n";
+				seen.put(a, "n"+(i++));
+			}
+			if (!seen.containsKey(b)){
+				dot += "\tn"+i+" [label=\""+b+" "+color_of(b)+"\"]\n";
+				seen.put(b, "n"+(i++));
+			}
+			dot += "\t"+seen.get(a)+" -- "+seen.get(b)+"\n";
+		}
+		
+		return dot + "}";
+	}
 }
 
 class Tuple implements Entry<TempRegister, TempRegister>{
