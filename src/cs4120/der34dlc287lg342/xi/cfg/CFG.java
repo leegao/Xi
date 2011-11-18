@@ -154,7 +154,7 @@ public class CFG {
 			seen.add(this);
 		String str = "";
 		str += asm.simple_assem(coloring) + "\n";
-		return str+(child1 == null ? "":child1.asm_(seen, coloring))+(child2 == null ? "" :child2.asm_(seen, coloring));
+		return str+(child2 == null ? "":child2.asm_(seen, coloring))+(child1 == null ? "" :child1.asm_(seen, coloring));
 	}
 	
 	public String asm(Hashtable<TempRegister, Integer> coloring){

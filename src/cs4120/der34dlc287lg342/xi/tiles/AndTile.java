@@ -13,7 +13,7 @@ public class AndTile extends BinopTile {
 	
 	public ArrayList<Assembly> att(){
 		ArrayList<Assembly> asm = before();
-		asm.add(new OPER("andq %s0, %d0", right.out, out));
+		asm.add(new OPER("andq %s0, %d0", new TempRegister[]{right.out, out}, out));
 		return asm;
 	}
 }

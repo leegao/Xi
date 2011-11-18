@@ -83,7 +83,7 @@ public class TestCFG extends TestCase {
 //	}
 	
 	public void testWorklist(){
-		Seq stmt = gen("main(a:int){b:int c:int = 3 f(a+1/b*3,7+c/b+a)} f(a:int, b:int){}");
+		Seq stmt = gen("main(a:int){b:int c:int = 3 if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) f(a,b)} f(a+1/b*3,7+c/b+a)} f(a:int, b:int){}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 		//System.out.println(func.prettyPrint());
@@ -110,6 +110,7 @@ public class TestCFG extends TestCase {
 		}
 
 		System.out.println(cfg.asm(g.coloring));
+		System.out.println(cfg.dot_edge(new HashSet<CFG>(), g.coloring));
 		//System.out.println(g.dot_edge());
 		
 		//System.out.println(g.adjacent);
