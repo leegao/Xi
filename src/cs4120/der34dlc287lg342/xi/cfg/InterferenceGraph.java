@@ -65,16 +65,16 @@ public class InterferenceGraph {
 		do{
 			if (!simplify_worklist.isEmpty()){
 				simplify();
-				//System.out.println("simplify");
+				System.out.println("simplify");
 			} else if (!move_worklist.isEmpty()){
 				coalesce();
-				//System.out.println("coalesce");
+				System.out.println("coalesce");
 			} else if (!freeze_worklist.isEmpty()){
 				freeze();
-				//System.out.println("freeze");
+				System.out.println("freeze");
 			} else if (!spill_worklist.isEmpty()){
 				select();
-				//System.out.println("select spill");
+				System.out.println("select spill");
 			}
 		} while(!(simplify_worklist.isEmpty() && move_worklist.isEmpty()
 			   && freeze_worklist.isEmpty() && spill_worklist.isEmpty()));
@@ -82,6 +82,9 @@ public class InterferenceGraph {
 		
 		System.out.println(coloring);
 		System.out.println(spills);
+		for (Tuple t : adjacent){
+			System.out.println(coloring.get(t.getKey()) + " : " + coloring.get(t.getValue()));
+		}
 	}
 
 	private void assign_colors() {
@@ -152,22 +155,26 @@ public class InterferenceGraph {
 			u = v;
 			v = t;
 		}
-	
+		
 		if (u.equals(v)){
 			coalesced_moves.push(m);
 			add_worklist(u);
-		} else if (precolored.contains(v) || adjacent.contains(new Tuple(u,v))){
+		// precolored.contains(v) || adjacent.contains(new Tuple(u,v))
+		} else if (adjacent.contains(new Tuple(u,v))){
+			System.out.println(u + ", " + v);
 			constrained_moves.push(m);
 			add_worklist(u);
 			add_worklist(v);
-		} else if ((precolored.contains(u) && allOK(u,v)) || 
-				   (!precolored.contains(u) && conservative(u,v))){
+		//(precolored.contains(u) && allOK(u,v)) || (!precolored.contains(u) &&
+		} else if (conservative(u,v)){
+			
 			coalesced_moves.push(m);
 			combine(u,v);
 			add_worklist(u);
 		} else {
 			active_moves.push(m);
 		}
+		
 	}
 
 	private void combine(TempRegister u, TempRegister v) {
@@ -320,7 +327,7 @@ public class InterferenceGraph {
 	}
 	
 	public void add_worklist(TempRegister u){
-		if (precolored.contains(u) && node_moves(u).isEmpty() && deg.get(u) < Register.callee.length){
+		if (node_moves(u).isEmpty() && deg.get(u) < Register.callee.length){
 			freeze_worklist.remove(u);
 			simplify_worklist.push(u);
 		}
@@ -398,7 +405,7 @@ public class InterferenceGraph {
 		if (coloring.containsKey(a)){
 			return "r"+coloring.get(a);
 		}
-		return "spilled";
+		return "null";
 	}
 	
 	public String dot_edge(){
