@@ -17,9 +17,33 @@ public class OPER extends Assembly {
 		this.assem = assem;
 		this.dest = dest;
 		this.src = src;
+		
+		preprocess();
+		
 		this.jump_to = to;
 	}
 	
+	private void preprocess() {
+		// check src for RV
+		TempRegister rax = TempRegister.RV;
+		int i = 0;
+		
+		for (TempRegister s : src){
+			if (s != null && s.equals(rax)){
+				assem = assem.replace("%s"+i, "%rax");
+				src[i] = null;
+			}
+			
+			i++;
+		}
+		
+		// check dest for RV
+		if (dest != null && dest.equals(rax)){
+			assem = assem.replace("%d0", "%rax");
+			dest = null;
+		}
+	}
+
 	public OPER(String assem, TempRegister src[], TempRegister dest){
 		this(assem, src, dest, null);
 	}

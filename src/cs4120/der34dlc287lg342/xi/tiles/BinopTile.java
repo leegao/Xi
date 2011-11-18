@@ -20,7 +20,8 @@ public class BinopTile extends Tile{
 		asm.addAll(right.att());
 		out = new TempRegister();
 		
-		asm.add(new MOVE(left.out, out));
+		
+		asm.add(Assembly.new_move(left.out, out));
 		return asm;
 	}
 }

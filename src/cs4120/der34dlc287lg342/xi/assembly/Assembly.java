@@ -47,16 +47,28 @@ public abstract class Assembly {
 	public String simple_assem(){
 		return simple_assem(new Hashtable<TempRegister, Integer>());
 	}
+	
 	public String simple_assem(Hashtable<TempRegister, Integer> coloring) {
 		return assem.replace("%to", ""+jump());
 	}
+	
 	public String machine_register(Hashtable<TempRegister, Integer> coloring, TempRegister r){
-		if (r != null && r.equals(TempRegister.RV)){
-			return "%rax";
-		}
+//		if (r != null && r.equals(TempRegister.RV)){
+//			return "%rax";
+//		}
 		if (r != null && coloring.containsKey(r)){
 			return Register.callee[coloring.get(r)];
 		}
 		return ""+r;
+	}
+	
+	public static Assembly new_move(TempRegister src, TempRegister dest){
+		if (src.equals(TempRegister.RV)){
+			return new OPER("movq %rax, %d0", new TempRegister[]{}, dest);
+		} else if (dest.equals(TempRegister.RV)){
+			return new OPER("movq %s0, %rax", new TempRegister[]{src}, null);
+		} else {
+			return new MOVE(src, dest);
+		}
 	}
 }

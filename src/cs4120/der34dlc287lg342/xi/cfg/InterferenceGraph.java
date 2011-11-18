@@ -59,8 +59,9 @@ public class InterferenceGraph {
 		for (int i = 0; i < Register.callee.length; i++) ok_colors.add(i);
 		
 		build(cfg);
-		
+		System.out.println(initial);
 		make_worklist();
+		
 		
 		do{
 			if (!simplify_worklist.isEmpty()){
@@ -74,10 +75,13 @@ public class InterferenceGraph {
 			}
 		} while(!(simplify_worklist.isEmpty() && move_worklist.isEmpty()
 			   && freeze_worklist.isEmpty() && spill_worklist.isEmpty()));
+		
+		//System.out.println(initial);
+		
 		assign_colors();
 		
-		//System.out.println(coloring);
-		//System.out.println(spills);
+		System.out.println(coloring);
+		System.out.println(spills);
 		for (Tuple t : adjacent){
 			//System.out.println(coloring.get(t.getKey()) + " : " + coloring.get(t.getValue()));
 		}
@@ -103,9 +107,10 @@ public class InterferenceGraph {
 			}
 		}
 		for (TempRegister n : coalesced){
-			
 			if (!spills.contains(get_alias(n)))
 				coloring.put(n, coloring.get(get_alias(n)));
+			else
+				spills.add(n);
 		}
 	}
 
@@ -292,6 +297,20 @@ public class InterferenceGraph {
 			return;
 		}
 		
+		
+		// initialize nodes
+		for (TempRegister r : node.use){
+			initial.add(r);
+			if (!deg.containsKey(r))
+				deg.put(r, 0);
+		}
+		
+		for (TempRegister r : node.def){
+			initial.add(r);
+			if (!deg.containsKey(r))
+				deg.put(r, 0);
+		}
+		
 		HashSet<TempRegister> live = node.in_wl;
 		if (node.asm instanceof MOVE){
 			MOVE mov = (MOVE)node.asm;
@@ -352,11 +371,6 @@ public class InterferenceGraph {
 	}
 	
 	public void add_adj(Tuple t){
-		if (!t.valid()){
-			initial.add(t.getKey());
-			deg.put(t.getKey(), 0);
-			return;
-		}
 		if (!adjacent.contains(t)){
 			adjacent.add(t);
 			TempRegister a = t.getKey(), b = t.getValue();

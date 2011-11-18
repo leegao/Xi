@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import cs4120.der34dlc287lg342.xi.XiParser;
+import cs4120.der34dlc287lg342.xi.assembly.Assembler;
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.assembly.RegAlloc;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
@@ -20,6 +21,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
+import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -84,33 +86,36 @@ public class TestCFG extends TestCase {
 //	}
 	
 	public void testWorklist(){
-		Seq stmt = gen("use io main(a:int){b:int c:int = 3 if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) f(a,b)} f(a+1/b*3,7+c/b+a) print(\"absd\")} f(a:int, b:int){}");
+		Seq stmt = gen("use io main(args:int[][]){a:int = 1 b:int = 2 c:int = 3 if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) {f(a,b) a = a - 1}} f(a+1/b*3,7+c/b+a) print(\"absd\")} f(a:int, b:int){}");
 		stmt = ConstantFolding.foldConstants(stmt);
-		Func func = (Func) stmt.children.get(0);
-		//System.out.println(func.prettyPrint());
-		ArrayList<Assembly> instrs = func.munch().att();
-		CFG cfg = CFG.cfg(instrs);
-		//System.out.println(cfg);
-		//System.out.println(cfg.asm());
 		
-		LivenessWorklist wl = new LivenessWorklist(cfg);
-		wl.analyze();
-		InterferenceGraph g = new InterferenceGraph(cfg);
-		
-		int n = 0;
-		while (!g.spills.isEmpty()){
-			
-			Rewrite rewrite = new Rewrite(instrs, g.spills, n);
-			n += g.spills.size();
-			instrs = rewrite.rewrite();
-			cfg = CFG.cfg(instrs);
-			wl = new LivenessWorklist(cfg);
-			wl.analyze();
-			//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
-			g = new InterferenceGraph(cfg);
-		}
-
-		System.out.println(RegAlloc.allocate(instrs, g.coloring));
+		Assembler assembler = new Assembler((SeqTile) stmt.munch());
+		System.out.println(assembler.att());
+//		Func func = (Func) stmt.children.get(0);
+//		//System.out.println(func.prettyPrint());
+//		ArrayList<Assembly> instrs = func.munch().att();
+//		CFG cfg = CFG.cfg(instrs);
+//		//System.out.println(cfg);
+//		//System.out.println(cfg.asm());
+//		
+//		LivenessWorklist wl = new LivenessWorklist(cfg);
+//		wl.analyze();
+//		InterferenceGraph g = new InterferenceGraph(cfg);
+//		
+//		int n = 0;
+//		while (!g.spills.isEmpty()){
+//			
+//			Rewrite rewrite = new Rewrite(instrs, g.spills, n);
+//			n += g.spills.size();
+//			instrs = rewrite.rewrite();
+//			cfg = CFG.cfg(instrs);
+//			wl = new LivenessWorklist(cfg);
+//			wl.analyze();
+//			//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+//			g = new InterferenceGraph(cfg);
+//		}
+//
+//		System.out.println(RegAlloc.allocate(instrs, g.coloring));
 		//System.out.println(cfg.dot_edge(new HashSet<CFG>(), g.coloring));
 		//System.out.println(g.dot_edge());
 		

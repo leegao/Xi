@@ -16,7 +16,7 @@ public class LshTile extends BinopTile {
 		ArrayList<Assembly> asm = new ArrayList<Assembly>();
 		asm.addAll(left.att());
 		out = new TempRegister();
-		asm.add(new MOVE(left.out, out));
+		asm.add(Assembly.new_move(left.out, out));
 		asm.add(new OPER("salq "+right.out()+", %d0", new TempRegister[]{out}, out));
 		
 		return asm;

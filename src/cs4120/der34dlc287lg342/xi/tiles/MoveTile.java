@@ -39,7 +39,7 @@ public class MoveTile extends Tile {
 		ArrayList<Assembly> asm = new ArrayList<Assembly>();
 		asm.addAll(dest.att());
 		asm.addAll(src.att());
-		asm.add(new MOVE(src.out, dest.out));
+		asm.add(Assembly.new_move(src.out, dest.out));
 		return asm;
 	}
 }
