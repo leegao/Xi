@@ -82,7 +82,7 @@ public class TestCFG extends TestCase {
 //	}
 	
 	public void testWorklist(){
-		Seq stmt = gen("main(a:int){b:int c:int = 3 if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) f(a,b)} f(a+1/b*3,7+c/b+a)} f(a:int, b:int){}");
+		Seq stmt = gen("main(a:int){b:int c:int = 3 f(a+1/b*3,7+c/b+a)} f(a:int, b:int){}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 		//System.out.println(func.prettyPrint());
