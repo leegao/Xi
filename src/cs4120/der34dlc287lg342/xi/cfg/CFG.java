@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.assembly.LABEL;
@@ -146,7 +147,25 @@ public class CFG {
 		return toString_(new HashSet<CFG>());
 	}
 	
-	public String dot_edge(HashSet<CFG> seen){
+	public String asm_(HashSet<CFG> seen, Hashtable<TempRegister, Integer> coloring){
+		if (seen.contains(this))
+			return "";
+		else
+			seen.add(this);
+		String str = "";
+		str += asm.simple_assem(coloring) + "\n";
+		return str+(child1 == null ? "":child1.asm_(seen, coloring))+(child2 == null ? "" :child2.asm_(seen, coloring));
+	}
+	
+	public String asm(Hashtable<TempRegister, Integer> coloring){
+		return asm_(new HashSet<CFG>(), coloring);
+	}
+	
+	public String asm(){
+		return asm(new Hashtable<TempRegister, Integer>());
+	}
+	
+	public String dot_edge(HashSet<CFG> seen, Hashtable<TempRegister, Integer> coloring){
 		if (seen.contains(this))
 			return "";
 		else
@@ -155,7 +174,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+asm.simple_assem()+"\\nuse: "+use+"\\ndef: "+def+"\\nin_wl: "+in_wl+"\"]\n";
+		str += "\t"+"n"+id+" [label=\""+asm.simple_assem(coloring)+"\\nuse: "+use+"\\ndef: "+def+"\\nin_wl: "+in_wl+"\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";
@@ -165,7 +184,11 @@ public class CFG {
 			str += "\tn"+id+" -> return\n";
 		}
 
-		return str+(child1 == null ? "":child1.dot_edge(seen))+(child2 == null ? "" :child2.dot_edge(seen));
+		return str+(child1 == null ? "":child1.dot_edge(seen, coloring))+(child2 == null ? "" :child2.dot_edge(seen, coloring));
+	}
+	
+	public String dot_edge(HashSet<CFG> seen){
+		return dot_edge(seen, new Hashtable<TempRegister, Integer>());
 	}
 	
 	public static CFG cfg_first_pass(ArrayList<Assembly> children, HashMap<Label, CFG> jumps){
@@ -250,4 +273,6 @@ public class CFG {
 		
 		return second_pass;
 	}
+
+
 }

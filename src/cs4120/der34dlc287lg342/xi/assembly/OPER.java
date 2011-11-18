@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.assembly;
 
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -52,15 +53,15 @@ public class OPER extends Assembly {
 	public Label jump() {
 		return jump_to;
 	}
-
-	public String simple_assem(){
-		String assem = super.simple_assem();
+	
+	public String simple_assem(Hashtable<TempRegister, Integer> coloring){
+		String assem = super.simple_assem(coloring);
 		Pattern p = Pattern.compile("%s(\\d+)");
 		Matcher m = p.matcher(assem);
 		while (m.find()){
 			int r = Integer.parseInt(m.group(1));
-			assem = assem.replace("%s"+r, ""+src[r]);
+			assem = assem.replace("%s"+r, ""+machine_register(coloring, src[r]));
 		}
-		return assem.replace("%d0", ""+dest);
+		return assem.replace("%d0", ""+machine_register(coloring, dest));
 	}
 }

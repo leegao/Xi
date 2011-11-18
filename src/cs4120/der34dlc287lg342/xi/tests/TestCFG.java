@@ -90,7 +90,7 @@ public class TestCFG extends TestCase {
 		ArrayList<Assembly> instrs = func.munch().att();
 		CFG cfg = CFG.cfg(instrs);
 		//System.out.println(cfg);
-		//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+		System.out.println(cfg.asm());
 		
 		LivenessWorklist wl = new LivenessWorklist(cfg);
 		wl.analyze();
@@ -98,16 +98,18 @@ public class TestCFG extends TestCase {
 		
 		int n = 0;
 		while (!g.spills.isEmpty()){
+			
 			Rewrite rewrite = new Rewrite(instrs, g.spills, n);
 			n += g.spills.size();
 			instrs = rewrite.rewrite();
 			cfg = CFG.cfg(instrs);
 			wl = new LivenessWorklist(cfg);
 			wl.analyze();
-			
+			System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+			g = new InterferenceGraph(cfg);
 		}
 
-		//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+		System.out.println(cfg.asm(g.coloring));
 		//System.out.println(g.dot_edge());
 		
 		//System.out.println(g.adjacent);
