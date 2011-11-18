@@ -49,7 +49,7 @@ public class Assembler {
 				for (String callee_reg : Register.callee) prologue += "pushq "+callee_reg+"\n";
 				
 				String epilogue = "";
-				for (int i = Register.callee.length-1; i >= 0; i--) epilogue += "popq %"+Register.callee[i]+"\n";
+				for (int i = Register.callee.length-1; i >= 0; i--) epilogue += "popq "+Register.callee[i]+"\n";
 				epilogue += "addq $"+ aligned_stack + ", %rsp\nmovq %rbp, %rsp\npopq %rbp\nret\n";
 				
 				String function = prologue + RegAlloc.allocate(instrs, g.coloring) + epilogue;

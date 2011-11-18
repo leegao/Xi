@@ -33,7 +33,7 @@ public class Rewrite {
 		Hashtable<TempRegister, Integer> map = new Hashtable<TempRegister, Integer>();
 		int i = 1;
 		for (TempRegister r : spills){
-			int next = (locals+(i++))*8;
+			int next = -(locals+(i++))*8;
 			map.put(r, next);
 		}
 		
@@ -57,10 +57,13 @@ public class Rewrite {
 				}
 			} else if (asm instanceof OPER){
 				OPER oper = (OPER)asm;
+				TempRegister s = null;
 				for (TempRegister u : oper.use()){
 					if (spills.contains(u)){
 						// add a fetch
 						TempRegister d = new TempRegister();
+						if (u.equals(oper.dest))
+							s = d;
 						new_instrs.add(new OPER("movq "+map.get(u)+"(%rbp), %d0", new TempRegister[]{}, d));
 						replace(oper.src, u, d);
 					}
@@ -68,7 +71,8 @@ public class Rewrite {
 				new_instrs.add(oper);
 				if (spills.contains(oper.dest)){
 					// add a store
-					TempRegister s = new TempRegister();
+					if (s == null)
+						s = new TempRegister();
 					new_instrs.add(new OPER("movq %s0, "+map.get(oper.dest)+"(%rbp)", s, null));
 					oper.dest = s;
 				}

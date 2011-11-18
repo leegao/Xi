@@ -86,9 +86,9 @@ public class TestCFG extends TestCase {
 //	}
 	
 	public void testWorklist(){
-		Seq stmt = gen("use io main(args:int[][]){a:int = 1 b:int = 2 c:int = 3 if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) {f(a,b) a = a - 1}} f(a+1/b*3,7+c/b+a) print(\"absd\")} f(a:int, b:int){}");
+		Seq stmt = gen("use io main(args:int[][]){a:int = 3 print((97,98,99,100,a))}");
 		stmt = ConstantFolding.foldConstants(stmt);
-		
+		System.out.println(stmt.prettyPrint());
 		Assembler assembler = new Assembler((SeqTile) stmt.munch());
 		System.out.println(assembler.att());
 //		Func func = (Func) stmt.children.get(0);

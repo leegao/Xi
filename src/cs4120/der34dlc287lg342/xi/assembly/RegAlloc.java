@@ -9,7 +9,7 @@ public class RegAlloc {
 	public static String allocate(ArrayList<Assembly> instrs, Hashtable<TempRegister, Integer> coloring){
 		String str = "";
 		for (Assembly asm : instrs){
-			str += asm.simple_assem(coloring) + "\n";
+			str += asm.simple_assem(coloring) + "\t\t# " + asm.simple_assem()+ "\n";
 		}
 		return str;
 	}
