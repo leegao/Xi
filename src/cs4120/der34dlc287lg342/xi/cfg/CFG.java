@@ -251,9 +251,10 @@ public class CFG {
 			CFG next = jumps.get(to);
 			
 			// make child2 next
-			next.parents.add(node);
-			node.child2 = traverse(next, jumps, memoize);
-			
+			if (next != null)
+				next.parents.add(node);
+				node.child2 = traverse(next, jumps, memoize);
+				
 			// update child1 as well
 			traverse(node.child1, jumps, memoize);
 		} else {
