@@ -96,6 +96,9 @@ public class TestCFG extends TestCase {
 		wl.analyze();
 		InterferenceGraph g = new InterferenceGraph(cfg);
 		
+		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+		System.out.println(g.dot_edge());
+		
 		int n = 0;
 		while (!g.spills.isEmpty()){
 			Rewrite rewrite = new Rewrite(instrs, g.spills, n);
@@ -106,6 +109,7 @@ public class TestCFG extends TestCase {
 			wl.analyze();
 			
 			g = new InterferenceGraph(cfg);
+			break;
 		}
 
 		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
