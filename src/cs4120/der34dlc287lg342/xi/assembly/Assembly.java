@@ -51,7 +51,9 @@ public abstract class Assembly {
 		return assem.replace("%to", ""+jump());
 	}
 	public String machine_register(Hashtable<TempRegister, Integer> coloring, TempRegister r){
-		
+		if (r != null && r.equals(TempRegister.RV)){
+			return "%rax";
+		}
 		if (r != null && coloring.containsKey(r)){
 			return Register.callee[coloring.get(r)];
 		}

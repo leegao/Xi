@@ -51,19 +51,26 @@ public class CallTile extends Tile{
 	
 	public ArrayList<Assembly> att(){
 		ArrayList<Assembly> asm = new ArrayList<Assembly>();
+		
+		// we want to move to args after all the att()
+		for (Tile arg : args){
+			ArrayList<Assembly> instrs = arg.att();
+			if (instrs != null)
+				asm.addAll(instrs);
+		}
+		
 		int i = 0;
 		if (tuple != null){
 			//asm += "movq " + tuple + ", %rdi\n";
 			asm.add(new OPER("movq %s0, %rdi", tuple, null));
 			i++;
 		}
+		
 		for (Tile arg : args){
-			asm.addAll(arg.att());
-			
 			if (i < 6){
 				if (name == Label.internal_strdup)
 					//asm += "leaq "+ arg + ", %"+TempRegister.free_registers[i++].name+"\n";
-					asm.add(new OPER("leaq %s0, %"+TempRegister.free_registers[i++].name, arg.out, null));
+					asm.add(new OPER("leaq " + arg + ", %"+TempRegister.free_registers[i++].name, new TempRegister[]{}, null));
 				else
 					//asm += "movq "+ arg.out+", %"+TempRegister.free_registers[i++].name+"\n";
 					asm.add(new OPER("movq %s0, %"+TempRegister.free_registers[i++].name, arg.out, null));
@@ -76,7 +83,7 @@ public class CallTile extends Tile{
 		if (args.size() > 6)
 			for (int j = 0; j < args.size()-6; j++)
 				//asm += "popq %rdx\n";
-				asm.add(new OPER("popq %rdx", new TempRegister[]{}, null));
+				asm.add(new OPER("popq %rsi", new TempRegister[]{}, null));
 		out = TempRegister.RV;
 		return asm;
 	}

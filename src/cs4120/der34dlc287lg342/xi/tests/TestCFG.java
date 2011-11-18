@@ -7,6 +7,7 @@ import java.util.HashSet;
 
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.RegAlloc;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
@@ -83,14 +84,14 @@ public class TestCFG extends TestCase {
 //	}
 	
 	public void testWorklist(){
-		Seq stmt = gen("main(a:int){b:int c:int = 3 if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) f(a,b)} f(a+1/b*3,7+c/b+a)} f(a:int, b:int){}");
+		Seq stmt = gen("use io main(a:int){b:int c:int = 3 if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) f(a,b)} f(a+1/b*3,7+c/b+a) print(\"absd\")} f(a:int, b:int){}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 		//System.out.println(func.prettyPrint());
 		ArrayList<Assembly> instrs = func.munch().att();
 		CFG cfg = CFG.cfg(instrs);
 		//System.out.println(cfg);
-		System.out.println(cfg.asm());
+		//System.out.println(cfg.asm());
 		
 		LivenessWorklist wl = new LivenessWorklist(cfg);
 		wl.analyze();
@@ -105,12 +106,12 @@ public class TestCFG extends TestCase {
 			cfg = CFG.cfg(instrs);
 			wl = new LivenessWorklist(cfg);
 			wl.analyze();
-			System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+			//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
 			g = new InterferenceGraph(cfg);
 		}
 
-		System.out.println(cfg.asm(g.coloring));
-		System.out.println(cfg.dot_edge(new HashSet<CFG>(), g.coloring));
+		System.out.println(RegAlloc.allocate(instrs, g.coloring));
+		//System.out.println(cfg.dot_edge(new HashSet<CFG>(), g.coloring));
 		//System.out.println(g.dot_edge());
 		
 		//System.out.println(g.adjacent);

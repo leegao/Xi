@@ -33,7 +33,7 @@ public class Rewrite {
 		Hashtable<TempRegister, Integer> map = new Hashtable<TempRegister, Integer>();
 		int i = 1;
 		for (TempRegister r : spills){
-			int next = (locals+i)*8;
+			int next = (locals+(i++))*8;
 			map.put(r, next);
 		}
 		

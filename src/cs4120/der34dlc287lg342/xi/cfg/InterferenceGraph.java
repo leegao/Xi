@@ -59,8 +59,6 @@ public class InterferenceGraph {
 		for (int i = 0; i < Register.callee.length; i++) ok_colors.add(i);
 		
 		build(cfg);
-		System.out.println(adjacent);
-		
 		
 		make_worklist();
 		
@@ -78,10 +76,10 @@ public class InterferenceGraph {
 			   && freeze_worklist.isEmpty() && spill_worklist.isEmpty()));
 		assign_colors();
 		
-		System.out.println(coloring);
-		System.out.println(spills);
+		//System.out.println(coloring);
+		//System.out.println(spills);
 		for (Tuple t : adjacent){
-			System.out.println(coloring.get(t.getKey()) + " : " + coloring.get(t.getValue()));
+			//System.out.println(coloring.get(t.getKey()) + " : " + coloring.get(t.getValue()));
 		}
 	}
 
@@ -104,9 +102,10 @@ public class InterferenceGraph {
 				coloring.put(n, colors.get(0));
 			}
 		}
-		
 		for (TempRegister n : coalesced){
-			coloring.put(n, coloring.get(get_alias(n)));
+			
+			if (!spills.contains(get_alias(n)))
+				coloring.put(n, coloring.get(get_alias(n)));
 		}
 	}
 

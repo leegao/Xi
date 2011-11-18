@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.tiles;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
+import cs4120.der34dlc287lg342.xi.assembly.MOVE;
 import cs4120.der34dlc287lg342.xi.assembly.OPER;
 
 public class MoveTile extends Tile {
@@ -38,7 +39,7 @@ public class MoveTile extends Tile {
 		ArrayList<Assembly> asm = new ArrayList<Assembly>();
 		asm.addAll(dest.att());
 		asm.addAll(src.att());
-		asm.add(new OPER("movq %s0, %d0", src.out, dest.out));
+		asm.add(new MOVE(src.out, dest.out));
 		return asm;
 	}
 }

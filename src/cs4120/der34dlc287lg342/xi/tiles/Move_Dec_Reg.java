@@ -16,7 +16,7 @@ public class Move_Dec_Reg extends Tile {
 	
 	public ArrayList<Assembly> att() {
 		ArrayList<Assembly> asm = new ArrayList<Assembly>();
-		asm.add(new OPER("decq %d0", new TempRegister[]{}, reg));
+		asm.add(new OPER("decq %d0", new TempRegister[]{reg}, reg));
 		return asm;
 	}
 }
