@@ -11,6 +11,7 @@ import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
+import cs4120.der34dlc287lg342.xi.cfg.Rewrite;
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
@@ -94,7 +95,22 @@ public class TestCFG extends TestCase {
 		LivenessWorklist wl = new LivenessWorklist(cfg);
 		wl.analyze();
 		InterferenceGraph g = new InterferenceGraph(cfg);
+		
+		int n = 0;
+		while (!g.spills.isEmpty()){
+			Rewrite rewrite = new Rewrite(instrs, g.spills, n);
+			n += g.spills.size();
+			instrs = rewrite.rewrite();
+			cfg = CFG.cfg(instrs);
+			wl = new LivenessWorklist(cfg);
+			wl.analyze();
+			
+			g = new InterferenceGraph(cfg);
+		}
+
+		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
 		System.out.println(g.dot_edge());
+		
 		//System.out.println(g.adjacent);
 		//System.out.println(cfg.dot_edge(new HashSet<CFG>()));
 //		System.out.println(cfg);

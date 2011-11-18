@@ -8,8 +8,8 @@ import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class OPER extends Assembly {
-	TempRegister dest;
-	TempRegister src[];
+	public TempRegister dest;
+	public TempRegister src[];
 	Label jump_to;
 	
 	public OPER(String assem, TempRegister src[], TempRegister dest, Label to){

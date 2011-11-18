@@ -59,6 +59,7 @@ public class InterferenceGraph {
 		for (int i = 0; i < Register.callee.length; i++) ok_colors.add(i);
 		
 		build(cfg);
+		
 		make_worklist();
 		
 		do{
@@ -104,12 +105,15 @@ public class InterferenceGraph {
 		}
 		
 		for (TempRegister n : coalesced){
-			coloring.put(n, coloring.get(get_alias(n)));
+			//System.out.println(get_alias(n) + " " + coloring.get(get_alias(n)));
+			if (coloring.get(get_alias(n)) != null)
+				coloring.put(n, coloring.get(get_alias(n)));
 		}
 	}
 
 	private void select() {
 		TempRegister r = spill_worklist.pop();
+		System.out.println(r + " : " + deg.get(r));
 		simplify_worklist.push(r);
 		freeze_moves(r);
 	}
@@ -179,7 +183,6 @@ public class InterferenceGraph {
 			add_adj(new Tuple(t,u));
 			decrement_degree(t);
 		}
-		
 		if (deg.get(u) >= Register.callee.length && freeze_worklist.contains(u)){
 			freeze_worklist.remove(u);
 			spill_worklist.push(u);
@@ -298,6 +301,8 @@ public class InterferenceGraph {
 				moves.get(n).add(mov);
 			}
 			move_worklist.push(mov);
+			if (!deg.containsKey(def)) deg.put(def, 0);
+			if (!deg.containsKey(use)) deg.put(use, 0);
 		}
 		
 		for (TempRegister a : live){
@@ -360,17 +365,6 @@ public class InterferenceGraph {
 			}
 			deg.put(b, deg.get(b)+1);
 		}
-	}
-	
-	public void remove_adj(TempRegister r){
-		for (Tuple t : (ArrayList<Tuple>)adjacent.clone()){
-			if (t.contains(r)){
-				adjacent.remove(t);
-				TempRegister z = t.other(r);
-				deg.put(z, deg.get(z)-1);
-			}
-		}
-		deg.remove(r);
 	}
 	
 	
