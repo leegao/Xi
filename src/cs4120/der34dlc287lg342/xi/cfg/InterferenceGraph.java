@@ -17,20 +17,22 @@ import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 public class InterferenceGraph {
 	public ArrayList<Tuple> adjacent;
 	public Hashtable<TempRegister, HashSet<MOVE>> moves;
-	public Hashtable<TempRegister, TempRegister> coalesced;
+	public Hashtable<TempRegister, TempRegister> alias;
 	public Hashtable<TempRegister, Integer> deg, coloring;
-	public HashSet<TempRegister> spills, initial;
+	public HashSet<TempRegister> spills, initial, coalesced;
 	
-	HashSet<MOVE> move_worklist, active_moves;
+	Stack<MOVE> move_worklist, active_moves, frozen_moves;
 	Stack<TempRegister> simplify_worklist, spill_worklist, freeze_worklist, select_stack;
 	
 	public CFG cfg;
 	public HashSet<TempRegister> precolored;
+	private Stack<MOVE> coalesced_moves;
+	private Stack<MOVE> constrained_moves;
 	
 	public InterferenceGraph(CFG cfg){
 		adjacent = new ArrayList<Tuple>();
 		moves = new Hashtable<TempRegister, HashSet<MOVE>>();
-		coalesced = new Hashtable<TempRegister, TempRegister>();
+		alias = new Hashtable<TempRegister, TempRegister>();
 		deg = new Hashtable<TempRegister, Integer>();
 		
 		simplify_worklist = new Stack<TempRegister>();
@@ -42,9 +44,13 @@ public class InterferenceGraph {
 		spills = new HashSet<TempRegister>();
 		initial = new HashSet<TempRegister>();
 		precolored = new HashSet<TempRegister>();
+		coalesced = new HashSet<TempRegister>();
 		
-		move_worklist = new HashSet<MOVE>();
-		active_moves = new HashSet<MOVE>();
+		move_worklist = new Stack<MOVE>();
+		active_moves = new Stack<MOVE>();
+		coalesced_moves = new Stack<MOVE>();
+		constrained_moves = new Stack<MOVE>();
+		frozen_moves = new Stack<MOVE>();
 		this.cfg = cfg;
 		
 		build(cfg);
@@ -53,11 +59,109 @@ public class InterferenceGraph {
 		do{
 			if (!simplify_worklist.isEmpty()){
 				simplify();
+				System.out.println("simplify");
+			} else if (!move_worklist.isEmpty()){
+				coalesce();
+				System.out.println("coalesce");
+			} else if (!freeze_worklist.isEmpty()){
+				freeze();
+				System.out.println("freeze");
+			} else if (!spill_worklist.isEmpty()){
+				select();
+				System.out.println("select spill");
 			}
-			
-			break;
 		} while(!(simplify_worklist.isEmpty() && move_worklist.isEmpty()
 			   && freeze_worklist.isEmpty() && spill_worklist.isEmpty()));
+	}
+
+	private void select() {
+		TempRegister r = spill_worklist.pop();
+		simplify_worklist.push(r);
+		freeze_moves(r);
+	}
+
+	private void freeze() {
+		TempRegister u = freeze_worklist.pop();
+		simplify_worklist.push(u);
+		freeze_moves(u);
+	}
+
+	private void freeze_moves(TempRegister u) {
+		for (MOVE m : node_moves(u)){
+			TempRegister x = m.dest, y = m.src, v;
+			if (get_alias(y).equals(get_alias(u))){
+				v = get_alias(x);
+			} else {
+				v = get_alias(y);
+			}
+			active_moves.remove(m);
+			frozen_moves.push(m);
+			
+			if (freeze_worklist.contains(v) && node_moves(v).isEmpty()){
+				freeze_worklist.remove(v);
+				simplify_worklist.push(v);
+			}
+		}
+	}
+
+	private void coalesce() {
+		MOVE m = move_worklist.pop();
+		TempRegister u = get_alias(m.src), v = get_alias(m.dest);
+		if (precolored.contains(v)){
+			TempRegister t = u;
+			u = v;
+			v = t;
+		}
+	
+		if (u.equals(v)){
+			coalesced_moves.push(m);
+			add_worklist(u);
+		} else if (precolored.contains(v) || adjacent.contains(new Tuple(u,v))){
+			constrained_moves.push(m);
+			add_worklist(u);
+			add_worklist(v);
+		} else if ((precolored.contains(u) && allOK(u,v)) || 
+				   (!precolored.contains(u) && conservative(u,v))){
+			coalesced_moves.push(m);
+			combine(u,v);
+			add_worklist(u);
+		} else {
+			active_moves.push(m);
+		}
+	}
+
+	private void combine(TempRegister u, TempRegister v) {
+		if (freeze_worklist.contains(v))
+			freeze_worklist.remove(v);
+		else
+			spill_worklist.remove(v);
+		
+		coalesced.add(v);
+		alias.put(v, u);
+		moves.get(u).addAll(moves.get(v));
+		enable_moves(v);
+		
+		for (TempRegister t : adjacent(v)){
+			add_adj(new Tuple(t,u));
+			decrement_degree(t);
+		}
+		
+		if (deg.get(u) >= Register.callee.length && freeze_worklist.contains(u)){
+			freeze_worklist.remove(u);
+			spill_worklist.push(u);
+		}
+	}
+
+	private void enable_moves(TempRegister v) {
+		HashSet<TempRegister> set = new HashSet<TempRegister>();
+		set.add(v);
+		enable_moves(set);
+	}
+
+	private boolean conservative(TempRegister u, TempRegister v) {
+		HashSet<TempRegister> adj = adjacent(u);
+		adj.addAll(adjacent(v));
+		return conservative(adj);
 	}
 
 	public void make_worklist(){
@@ -121,7 +225,7 @@ public class InterferenceGraph {
 			for (MOVE m : node_moves(n)){
 				if (active_moves.contains(m)){
 					active_moves.remove(m);
-					move_worklist.add(m);
+					move_worklist.push(m);
 				}
 			}
 		}
@@ -159,7 +263,7 @@ public class InterferenceGraph {
 				if (!moves.containsKey(n)) moves.put(n, new HashSet<MOVE>());
 				moves.get(n).add(mov);
 			}
-			move_worklist.add(mov);
+			move_worklist.push(mov);
 		}
 		
 		for (TempRegister a : live){
@@ -180,6 +284,13 @@ public class InterferenceGraph {
 		}
 	}
 	
+	public boolean allOK(TempRegister u, TempRegister v){
+		for (TempRegister t : adjacent(v)){
+			if (!OK(t,u)) return false;
+		}
+		return true;
+	}
+	
 	public boolean OK(TempRegister t, TempRegister r){
 		return deg.get(t) < Register.callee.length || precolored.contains(t) || adjacent.contains(new Tuple(t,r));
 	}
@@ -191,6 +302,13 @@ public class InterferenceGraph {
 				k++;
 		}
 		return k < Register.callee.length;
+	}
+	
+	public TempRegister get_alias(TempRegister n){
+		if (coalesced.contains(n)){
+			return get_alias(alias.get(n));
+		}
+		return n;
 	}
 	
 	public void add_adj(Tuple t){
