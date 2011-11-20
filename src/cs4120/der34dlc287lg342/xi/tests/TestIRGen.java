@@ -21,7 +21,7 @@ import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
-import cs4120.der34dlc287lg342.xi.ir.Return;
+import cs4120.der34dlc287lg342.xi.ir.Return_DEPRECATED;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Stmt;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
@@ -44,7 +44,7 @@ public class TestIRGen extends TestCase {
 	public LabelNode label = new LabelNode(l);
 	public TempRegister r = new TempRegister();
 	public Temp temp = new Temp(r); 
-	public Return ret = new Return();
+	public Return_DEPRECATED ret = new Return_DEPRECATED();
 	public Const c = new Const(0);
 	public Name name = new Name(l);
 	public Temp reg = temp;
@@ -224,7 +224,7 @@ public class TestIRGen extends TestCase {
 	}
 	
 	public String islike(Stmt stmt){
-		if (stmt instanceof Return)
+		if (stmt instanceof Return_DEPRECATED)
 			return "ret";
 		Field[] f = stmt.getClass().getDeclaredFields();
 		ArrayList<Field> fields = new ArrayList<Field>();

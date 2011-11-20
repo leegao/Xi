@@ -13,6 +13,7 @@ public class IRContextStack extends ArrayList<IRContext>{
 	private static final long serialVersionUID = 3696771296698086996L;
 	public boolean dynamic_allocation = false;
 	public boolean strdup = false;
+	public boolean strcat = false;
 	public HashMap<Label, byte[]> ro_data;
 	public boolean abort = false;
 

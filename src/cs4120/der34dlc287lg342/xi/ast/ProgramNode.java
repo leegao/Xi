@@ -22,8 +22,9 @@ import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
-import cs4120.der34dlc287lg342.xi.ir.Return;
+import cs4120.der34dlc287lg342.xi.ir.Return_DEPRECATED;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Stmt;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
@@ -46,6 +47,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 
 	public Position position;
 	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
+	private static Stmt strcat;
 	
 	public ProgramNode(Position position){
 		this.position = position;
@@ -270,6 +272,63 @@ public class ProgramNode extends AbstractSyntaxTree {
 			seq.add(strdup);
 		}
 		
+		if (stack.strcat){
+			if (strcat == null){
+				/* 
+				 * i:int = 0
+				 * n1:int = length(lhs)
+				 * n2:int = n1 + length(rhs)
+				 * arr:*[n2]
+				 * while (i < n1){
+				 *   arr[i] = lhs[i]
+				 *   i = i + 1
+				 * }
+				 * while (i < n2){
+				 *   arr[i] = rhs[i-n1]
+				 *   i = i + 1
+				 * }
+				 */
+				Temp i = new Temp(new TempRegister()), n1 = new Temp(new TempRegister()), n2 = new Temp(new TempRegister()), arr = new Temp(new TempRegister());
+				Temp base = new Temp(new TempRegister()), l = new Temp(new TempRegister()), r = new Temp(new TempRegister());
+				LabelNode a = new LabelNode(new Label()), b = new LabelNode(new Label()), c = new LabelNode(new Label());
+				LabelNode a_ = new LabelNode(new Label()), b_ = new LabelNode(new Label()), c_ = new LabelNode(new Label());
+				strcat = new Func(Label.internal_strcat,
+					new Arg(l.temp, 0),
+					new Arg(r.temp, 1),
+					new Move(i, new Const(0)),
+					//new Move(l, lhs), new Move(r, rhs),
+					new Move(n1, TempRegister.size_of(l)),
+					new Move(n2, new Binop(Binop.PLUS, n1, TempRegister.size_of(r))),
+					new Move(base, new Call(new Name(Label.alloc), new Binop(Binop.PLUS, n2, new Const(1)))),
+					new Move(new Mem(base), n2),
+					new Move(arr, new Binop(Binop.PLUS, base, new Const(8))),
+					a, // check cond
+					new Cjump(new Binop(Binop.LT, i, n1), b.label, c.label),
+					b, // body
+					new Move(
+						new Mem(new Binop(Binop.PLUS, arr, new Binop(Binop.LSH, i, new Const(3)))), 
+						new Mem(new Binop(Binop.PLUS, l, new Binop(Binop.LSH, i, new Const(3))))
+					), // arr[i] = lhs[i]
+					new Move(i, new Binop(Binop.PLUS, i, new Const(1))),
+					new Jump(a.label),
+					c, // end
+					
+					a_, // check cond
+					new Cjump(new Binop(Binop.LT, i, n2), b_.label, c_.label),
+					b_, // body
+					new Move(
+						new Mem(new Binop(Binop.PLUS, arr, new Binop(Binop.LSH, i, new Const(3)))), 
+						new Mem(new Binop(Binop.PLUS, r, new Binop(Binop.LSH, new Binop(Binop.MINUS, i, n1), new Const(3))))
+					), // arr[i] = rhs[i-n1]
+					new Move(i, new Binop(Binop.PLUS, i, new Const(1))),
+					new Jump(a_.label),
+					c_, // end
+					new Move(new Temp(TempRegister.RV), arr)
+				);
+			}
+			seq.add(strcat);
+		}
+		
 		for (Entry<Label, byte[]> e : stack.ro_data.entrySet()){
 			seq.add(new Dseq_ro(e.getKey(), e.getValue()));
 		}
@@ -313,5 +372,5 @@ public class ProgramNode extends AbstractSyntaxTree {
 		label_s.put(s, t);
 		return t;
 	}
-	public static Return ret = new Return();
+	public static Return_DEPRECATED ret = new Return_DEPRECATED();
 }

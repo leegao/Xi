@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
-import cs4120.der34dlc287lg342.xi.ir.Return;
+import cs4120.der34dlc287lg342.xi.ir.Return_DEPRECATED;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;

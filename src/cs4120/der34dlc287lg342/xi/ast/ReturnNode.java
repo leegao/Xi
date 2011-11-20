@@ -10,7 +10,7 @@ import cs4120.der34dlc287lg342.xi.ir.Jump;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
-import cs4120.der34dlc287lg342.xi.ir.Return;
+import cs4120.der34dlc287lg342.xi.ir.Return_DEPRECATED;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;

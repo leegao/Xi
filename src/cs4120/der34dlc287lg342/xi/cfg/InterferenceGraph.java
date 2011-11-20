@@ -1,11 +1,13 @@
 package cs4120.der34dlc287lg342.xi.cfg;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
 
@@ -19,10 +21,11 @@ public class InterferenceGraph {
 	public Hashtable<TempRegister, HashSet<MOVE>> moves;
 	public Hashtable<TempRegister, TempRegister> alias;
 	public Hashtable<TempRegister, Integer> deg, coloring;
-	public HashSet<TempRegister> spills, initial, coalesced, colored;
-	
-	Stack<MOVE> move_worklist, active_moves, frozen_moves;
-	Stack<TempRegister> simplify_worklist, spill_worklist, freeze_worklist, select_stack;
+	public HashSet<TempRegister> spills, coalesced, colored;
+	ArrayList<TempRegister> initial;
+	Queue<MOVE> move_worklist, active_moves, frozen_moves;
+	Queue<TempRegister> simplify_worklist, spill_worklist, freeze_worklist;
+	Queue<TempRegister> select_stack;
 	
 	public CFG cfg;
 	public HashSet<TempRegister> precolored;
@@ -37,29 +40,28 @@ public class InterferenceGraph {
 		alias = new Hashtable<TempRegister, TempRegister>();
 		deg = new Hashtable<TempRegister, Integer>();
 		
-		simplify_worklist = new Stack<TempRegister>();
-		spill_worklist = new Stack<TempRegister>();
-		freeze_worklist = new Stack<TempRegister>();
-		select_stack = new Stack<TempRegister>();
+		simplify_worklist = new ArrayDeque<TempRegister>();
+		spill_worklist = new ArrayDeque<TempRegister>();
+		freeze_worklist = new ArrayDeque<TempRegister>();
+		select_stack = new ArrayDeque<TempRegister>();
 		
 		coloring = new Hashtable<TempRegister, Integer>();
 		spills = new HashSet<TempRegister>();
 		colored = new HashSet<TempRegister>();
-		initial = new HashSet<TempRegister>();
+		initial = new ArrayList<TempRegister>();
 		precolored = new HashSet<TempRegister>();
 		coalesced = new HashSet<TempRegister>();
 		
-		move_worklist = new Stack<MOVE>();
-		active_moves = new Stack<MOVE>();
+		move_worklist = new ArrayDeque<MOVE>();
+		active_moves = new ArrayDeque<MOVE>();
 		coalesced_moves = new Stack<MOVE>();
 		constrained_moves = new Stack<MOVE>();
-		frozen_moves = new Stack<MOVE>();
+		frozen_moves = new ArrayDeque<MOVE>();
 		this.cfg = cfg;
 		
 		for (int i = 0; i < Register.callee.length; i++) ok_colors.add(i);
 		
 		build(cfg);
-		System.out.println(initial);
 		make_worklist();
 		
 		
@@ -76,20 +78,15 @@ public class InterferenceGraph {
 		} while(!(simplify_worklist.isEmpty() && move_worklist.isEmpty()
 			   && freeze_worklist.isEmpty() && spill_worklist.isEmpty()));
 		
-		//System.out.println(initial);
-		
 		assign_colors();
 		
-		System.out.println(coloring);
+		//System.out.println(coloring);
 		System.out.println(spills);
-		for (Tuple t : adjacent){
-			//System.out.println(coloring.get(t.getKey()) + " : " + coloring.get(t.getValue()));
-		}
 	}
 
 	private void assign_colors() {
 		while (!select_stack.isEmpty()){
-			TempRegister n = select_stack.pop();
+			TempRegister n = select_stack.poll();
 			ArrayList<Integer> colors = new ArrayList<Integer>(ok_colors);
 			for (TempRegister w : adjacent(n)){
 				HashSet<TempRegister> colored = new HashSet<TempRegister>(this.colored);
@@ -115,14 +112,15 @@ public class InterferenceGraph {
 	}
 
 	private void select() {
-		TempRegister r = spill_worklist.pop();
-		simplify_worklist.push(r);
+		TempRegister r = spill_worklist.poll();
+		System.out.println("Select: "+r);
+		simplify_worklist.offer(r);
 		freeze_moves(r);
 	}
 
 	private void freeze() {
-		TempRegister u = freeze_worklist.pop();
-		simplify_worklist.push(u);
+		TempRegister u = freeze_worklist.poll();
+		simplify_worklist.offer(u);
 		freeze_moves(u);
 	}
 
@@ -135,17 +133,17 @@ public class InterferenceGraph {
 				v = get_alias(y);
 			}
 			active_moves.remove(m);
-			frozen_moves.push(m);
+			frozen_moves.offer(m);
 			
 			if (freeze_worklist.contains(v) && node_moves(v).isEmpty()){
 				freeze_worklist.remove(v);
-				simplify_worklist.push(v);
+				simplify_worklist.offer(v);
 			}
 		}
 	}
 
 	private void coalesce() {
-		MOVE m = move_worklist.pop();
+		MOVE m = move_worklist.poll();
 		TempRegister u = get_alias(m.src), v = get_alias(m.dest);
 		if (precolored.contains(v)){
 			TempRegister t = u;
@@ -168,7 +166,7 @@ public class InterferenceGraph {
 			combine(u,v);
 			add_worklist(u);
 		} else {
-			active_moves.push(m);
+			active_moves.offer(m);
 		}
 		
 	}
@@ -190,7 +188,7 @@ public class InterferenceGraph {
 		}
 		if (deg.get(u) >= Register.callee.length && freeze_worklist.contains(u)){
 			freeze_worklist.remove(u);
-			spill_worklist.push(u);
+			spill_worklist.offer(u);
 		}
 	}
 
@@ -213,11 +211,11 @@ public class InterferenceGraph {
 			initial.remove(r);
 			
 			if (this.deg.get(r) >= Register.callee.length){
-				spill_worklist.push(r);
+				spill_worklist.offer(r);
 			} else if (!node_moves(r).isEmpty()){
-				freeze_worklist.push(r);
+				freeze_worklist.offer(r);
 			} else {
-				simplify_worklist.push(r);
+				simplify_worklist.offer(r);
 			}
 		}
 	}
@@ -225,7 +223,8 @@ public class InterferenceGraph {
 	private HashSet<MOVE> node_moves(TempRegister r) {
 		if (!moves.contains(r)) return new HashSet<MOVE>();
 		HashSet<MOVE> set1 = moves.get(r);
-		HashSet<MOVE> set2 = (HashSet<MOVE>)move_worklist.clone();
+		HashSet<MOVE> set2 = new HashSet<MOVE>();
+		set2.addAll(move_worklist);
 		set2.addAll(active_moves);
 		
 		HashSet<MOVE> ret = new HashSet<MOVE>();
@@ -237,8 +236,8 @@ public class InterferenceGraph {
 	}
 
 	public void simplify(){
-		TempRegister r = simplify_worklist.pop();
-		select_stack.push(r);
+		TempRegister r = simplify_worklist.poll();
+		select_stack.offer(r);
 		for (Tuple t : adjacent)
 			if (t.contains(r)){
 				TempRegister m = t.other(r);
@@ -256,9 +255,9 @@ public class InterferenceGraph {
 			enable_moves(adj);
 			spill_worklist.remove(m);
 			if (!node_moves(m).isEmpty())
-				freeze_worklist.push(m);
+				freeze_worklist.offer(m);
 			else
-				simplify_worklist.push(m);
+				simplify_worklist.offer(m);
 		}
 	}
 	
@@ -267,7 +266,7 @@ public class InterferenceGraph {
 			for (MOVE m : node_moves(n)){
 				if (active_moves.contains(m)){
 					active_moves.remove(m);
-					move_worklist.push(m);
+					move_worklist.offer(m);
 				}
 			}
 		}
@@ -300,12 +299,14 @@ public class InterferenceGraph {
 		
 		// initialize nodes
 		for (TempRegister r : node.use){
+			if (!initial.contains(r))
 			initial.add(r);
 			if (!deg.containsKey(r))
 				deg.put(r, 0);
 		}
 		
 		for (TempRegister r : node.def){
+			if (!initial.contains(r))
 			initial.add(r);
 			if (!deg.containsKey(r))
 				deg.put(r, 0);
@@ -320,7 +321,7 @@ public class InterferenceGraph {
 				if (!moves.containsKey(n)) moves.put(n, new HashSet<MOVE>());
 				moves.get(n).add(mov);
 			}
-			move_worklist.push(mov);
+			move_worklist.offer(mov);
 			if (!deg.containsKey(def)) deg.put(def, 0);
 			if (!deg.containsKey(use)) deg.put(use, 0);
 		}
@@ -339,7 +340,7 @@ public class InterferenceGraph {
 	public void add_worklist(TempRegister u){
 		if (node_moves(u).isEmpty() && deg.get(u) < Register.callee.length){
 			freeze_worklist.remove(u);
-			simplify_worklist.push(u);
+			simplify_worklist.offer(u);
 		}
 	}
 	
@@ -376,11 +377,13 @@ public class InterferenceGraph {
 			TempRegister a = t.getKey(), b = t.getValue();
 			if (!deg.containsKey(a)){
 				deg.put(a, 0);
+				if (!initial.contains(a))
 				initial.add(a);
 			}
 			deg.put(a, deg.get(a)+1);
 			if (!deg.containsKey(b)){
 				deg.put(b, 0); 
+				if (!initial.contains(b))
 				initial.add(b);
 			}
 			deg.put(b, deg.get(b)+1);

@@ -86,9 +86,9 @@ public class TestCFG extends TestCase {
 //	}
 	
 	public void testWorklist(){
-		Seq stmt = gen("use io use conv main(args:int[][]){a:int,_ = parseInt(args[1]) b:int = 0 while (a > 0){b = b + a; a = a - 1} print(unparseInt(b))}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int,_ = parseInt(args[1]) b:int = 0 while (a > 0){b = b + a; a = a - 1} print(unparseInt(b)+\"\\n\")}");
 		stmt = ConstantFolding.foldConstants(stmt);
-		System.out.println(stmt.prettyPrint());
+		//System.out.println(stmt.prettyPrint());
 		Assembler assembler = new Assembler((SeqTile) stmt.munch());
 		System.out.println(assembler.att());
 //		Func func = (Func) stmt.children.get(0);

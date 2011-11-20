@@ -21,7 +21,9 @@ public class Assembler {
 		String att = "";
 		for (Tile tile : main.tiles){
 			if (tile instanceof FuncTile){
+				
 				FuncTile func = (FuncTile)tile;
+				System.out.println(func.name);
 				ArrayList<Assembly> instrs = func.att();
 				CFG cfg = CFG.cfg(instrs);
 				
