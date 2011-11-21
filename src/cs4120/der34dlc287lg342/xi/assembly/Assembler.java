@@ -2,7 +2,7 @@ package cs4120.der34dlc287lg342.xi.assembly;
 
 import java.util.ArrayList;
 
-import cs4120.der34dlc287lg342.xi.cfg.CFG;
+import cs4120.der34dlc287lg342.xi.cfg.AssemblyCFG;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
 import cs4120.der34dlc287lg342.xi.cfg.Register;
@@ -25,7 +25,7 @@ public class Assembler {
 				FuncTile func = (FuncTile)tile;
 				System.out.println(func.name);
 				ArrayList<Assembly> instrs = func.att();
-				CFG cfg = CFG.cfg(instrs);
+				AssemblyCFG cfg = AssemblyCFG.cfg(instrs);
 				
 				LivenessWorklist wl = new LivenessWorklist(cfg);
 				wl.analyze();
@@ -36,7 +36,7 @@ public class Assembler {
 					Rewrite rewrite = new Rewrite(instrs, g.spills, n);
 					n += g.spills.size();
 					instrs = rewrite.rewrite();
-					cfg = CFG.cfg(instrs);
+					cfg = AssemblyCFG.cfg(instrs);
 					wl = new LivenessWorklist(cfg);
 					wl.analyze();
 					g = new InterferenceGraph(cfg);

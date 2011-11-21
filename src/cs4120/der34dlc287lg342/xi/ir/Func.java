@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import cs4120.der34dlc287lg342.xi.cfg.CFG;
+import cs4120.der34dlc287lg342.xi.cfg.AssemblyCFG;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.tiles.FuncTile;
 import cs4120.der34dlc287lg342.xi.tiles.SeqTile;

@@ -6,17 +6,17 @@ import java.util.HashSet;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
 public class LivenessWorklist {
-	public ArrayList<CFG> worklist;
-	CFG node;
+	public ArrayList<AssemblyCFG> worklist;
+	AssemblyCFG node;
 	
-	public LivenessWorklist(CFG node) {
+	public LivenessWorklist(AssemblyCFG node) {
 		this.node = node;
-		worklist = new ArrayList<CFG>();
+		worklist = new ArrayList<AssemblyCFG>();
 		
-		generateWorklist(this.node, new HashSet<CFG>());
+		generateWorklist(this.node, new HashSet<AssemblyCFG>());
 	}
 	
-	private void generateWorklist(CFG node, HashSet<CFG> seen) {
+	private void generateWorklist(AssemblyCFG node, HashSet<AssemblyCFG> seen) {
 		if (seen.contains(node)){
 			return;
 		} else {
@@ -34,7 +34,7 @@ public class LivenessWorklist {
 	public void analyze() {
 		
 		while (!worklist.isEmpty()) {
-			CFG node = worklist.get(0);
+			AssemblyCFG node = worklist.get(0);
 			worklist.remove(0);
 			boolean changed = false;
 			
@@ -64,7 +64,7 @@ public class LivenessWorklist {
 			}
 			
 			if (changed) {
-				for (CFG parent : node.parents) {
+				for (AssemblyCFG parent : node.parents) {
 					if (!worklist.contains(parent)) {
 						worklist.add(parent);
 					}

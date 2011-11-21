@@ -10,6 +10,7 @@ import cs4120.der34dlc287lg342.xi.assembly.Assembler;
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.assembly.RegAlloc;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
+import cs4120.der34dlc287lg342.xi.cfg.AssemblyCFG;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
@@ -56,12 +57,9 @@ public class TestCFG extends TestCase {
 		Seq stmt = gen("main(a:int){b:int if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) f(a,b)}} f(a:int, b:int){}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
-		System.out.println(func.prettyPrint());
-		ArrayList<Assembly> instrs = func.munch().att();
 //		System.out.println(func.prettyPrint());
-		CFG cfg = CFG.cfg(instrs);
-		System.out.println(cfg);
-		System.out.println(cfg.dot_edge(new HashSet<CFG>()));
+		CFG cfg = CFG.cfg(func);
+		System.out.println(cfg.dot_edge());
 	}
 	
 //	public void testWorklist() {

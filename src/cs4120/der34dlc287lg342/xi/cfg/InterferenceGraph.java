@@ -27,14 +27,14 @@ public class InterferenceGraph {
 	Queue<TempRegister> simplify_worklist, spill_worklist, freeze_worklist;
 	Queue<TempRegister> select_stack;
 	
-	public CFG cfg;
+	public AssemblyCFG cfg;
 	public HashSet<TempRegister> precolored;
 	private Stack<MOVE> coalesced_moves;
 	private Stack<MOVE> constrained_moves;
 	
 	ArrayList<Integer> ok_colors = new ArrayList<Integer>();
 	
-	public InterferenceGraph(CFG cfg){
+	public InterferenceGraph(AssemblyCFG cfg){
 		adjacent = new ArrayList<Tuple>();
 		moves = new Hashtable<TempRegister, HashSet<MOVE>>();
 		alias = new Hashtable<TempRegister, TempRegister>();
@@ -283,11 +283,11 @@ public class InterferenceGraph {
 		return set;
 	}
 
-	public void build(CFG node){
-		build_(node, new HashSet<CFG>());
+	public void build(AssemblyCFG node){
+		build_(node, new HashSet<AssemblyCFG>());
 	}
 	
-	public void build_(CFG node, HashSet<CFG> seen){
+	public void build_(AssemblyCFG node, HashSet<AssemblyCFG> seen){
 		if (seen.contains(node))
 			return;
 		seen.add(node);
@@ -397,7 +397,7 @@ public class InterferenceGraph {
 		return r;
 	}
 	
-	public HashSet<TempRegister> liveOut(CFG node){
+	public HashSet<TempRegister> liveOut(AssemblyCFG node){
 		HashSet<TempRegister> set = new HashSet<TempRegister>();
 		if (node.child1 != null)
 			set.addAll(node.child1.in_wl);
