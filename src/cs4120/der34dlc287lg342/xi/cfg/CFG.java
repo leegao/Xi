@@ -77,7 +77,8 @@ public class CFG {
 	}
 	
 	public String toString(){
-		return toString_(new HashSet<CFG>());
+		//return toString_(new HashSet<CFG>());
+		return ir.prettyPrint();
 	}
 	
 	public String dot_edge_(HashSet<CFG> seen){
@@ -167,8 +168,10 @@ public class CFG {
 			CFG next = jumps.get(to);
 			
 			// make child2 next
-			next.parents.add(node);
-			node.child2 = traverse(next, jumps, memoize);
+			if (next != null){
+				next.parents.add(node);
+				node.child2 = traverse(next, jumps, memoize);
+			}
 			
 			// update child1 as well
 			traverse(node.child1, jumps, memoize);
@@ -188,5 +191,22 @@ public class CFG {
 		CFG second_pass = traverse(first_pass, jumps, memoize);
 		
 		return second_pass;
+	}
+	
+	public HashSet intersect(HashSet a, HashSet b){
+		HashSet set = new HashSet();
+		for (Object o : a){
+			if (b.contains(a)){
+				set.add(o);
+			}
+		}
+		return set;
+	}
+	
+	public HashSet union(HashSet a, HashSet b){
+		HashSet set = new HashSet();
+		set.addAll(a);
+		set.addAll(b);
+		return set;
 	}
 }
