@@ -4,28 +4,50 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
+import java.util.Map.Entry;
 
 import cs4120.der34dlc287lg342.xi.ir.Call;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Exp;
+import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Stmt;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public class AvailableExpressions {
 	public ArrayList<CFG> worklist;
 	public HashSet<Expr> universal;
-	public Hashtable<CFG, Object> map;
+	public Hashtable<CFG, HashSet<Expr>> map;
 	public Hashtable<CFG, HashSet<Expr>> expr_map;
+	public Hashtable<CFG, TempRegister> kill_map;
+	public HashSet<CFG> kill_mem;
 	CFG node;
 	
 	public AvailableExpressions(CFG node){
 		this.node = node;
 		worklist = new ArrayList<CFG>();
 		universal = new HashSet<Expr>();
-		map = new Hashtable<CFG, Object>();
+		map = new Hashtable<CFG, HashSet<Expr>>();
 		expr_map = new Hashtable<CFG, HashSet<Expr>>();
+		kill_map = new Hashtable<CFG, TempRegister>();
 		generate_worklist(this.node, new HashSet<CFG>());
-		//System.out.println(expr_map);
+		
+		// don't cache kill set
+		for (CFG cfg : worklist){
+			// if is a move
+			if (cfg != node){
+				cfg.out_available = new HashSet<Expr>(universal);
+			}
+		}
+		
+		for (Entry<CFG, HashSet<Expr>> e : expr_map.entrySet()){
+			//System.out.println(e.getKey().ir.prettyPrint() + ": "+e.getValue());
+		}
 	}
 
 	private void generate_worklist(CFG node, HashSet<CFG> seen) {
@@ -33,8 +55,10 @@ public class AvailableExpressions {
 			return;
 		}
 		seen.add(node);
-		Stmt stmt = node.ir;
-		expr_map.put(node, gen_exprs(stmt));
+		HashSet<Expr> exprs = gen_exprs(node);
+		
+		worklist.add(node);
+		expr_map.put(node, kill(exprs, node));
 		
 		if(node.child1 != null) 
 			generate_worklist(node.child1, seen);
@@ -42,22 +66,78 @@ public class AvailableExpressions {
 		if (node.child2 != null) 
 			generate_worklist(node.child2, seen);
 		
-		worklist.add(node); 
+		
 	}
 	
-	public HashSet<Expr> gen_exprs(Stmt stmt){
-		HashSet<Expr> exprs = new HashSet<Expr>();
-		for (Field f : stmt.getClass().getDeclaredFields()){
-			try {
-				f.setAccessible(true);
-				Object o = f.get(stmt);
-				if (o instanceof Expr){
-					Expr expr = (Expr)o;
-					exprs.addAll(gen_exprs(expr));
+	public void analyze(){
+		while (!worklist.isEmpty()) {
+			CFG node = worklist.get(0);
+			worklist.remove(0);
+			boolean changed = false;
+			// each iteration, recompute in with a new cache
+			Hashtable<CFG, HashSet<Expr>> seen = new Hashtable<CFG, HashSet<Expr>>();
+			seen.put(this.node, new HashSet<Expr>());
+			
+			HashSet<Expr> intersection = out(node, seen);
+			changed = !intersection.equals(node.out_available);
+			
+			if (changed) {
+				node.out_available = intersection;
+				
+				for (CFG next : node.succ()) {
+					if (!worklist.contains(next)) {
+						worklist.add(next);
+					}
 				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			}
+		}
+	}
+	
+	public HashSet<Expr> out(CFG n, Hashtable<CFG, HashSet<Expr>> seen){
+		if (seen.containsKey(n)){
+			return seen.get(n);
+		}
+		HashSet<Expr> gen = new HashSet<Expr>();
+		if (expr_map.containsKey(n))
+			gen.addAll(expr_map.get(n));
+		HashSet<Expr> intersect = null;
+		for (CFG p : n.pred()){
+			HashSet<Expr> cur = kill(p.out_available, n);
+			if (intersect == null) 
+				intersect = cur;
+			else
+				intersect = CFG.intersect(intersect, cur);
+		}
+		gen.addAll(intersect);
+		seen.put(n, gen);
+		
+		return gen;
+	}
+	
+	public HashSet<Expr> gen_exprs(CFG node){
+		Stmt stmt = node.ir;
+		HashSet<Expr> exprs = new HashSet<Expr>();
+		
+		if (stmt instanceof Cjump){
+			return exprs;
+		} else if (stmt instanceof Move){
+			Move move = (Move)stmt;
+			exprs.addAll(gen_exprs(move.val));
+			if (move.dest instanceof Temp)
+				kill_map.put(node, ((Temp)move.dest).temp);
+		} else {
+			for (Field f : stmt.getClass().getDeclaredFields()){
+				try {
+					f.setAccessible(true);
+					Object o = f.get(stmt);
+					if (o instanceof Expr){
+						Expr expr = (Expr)o;
+						exprs.addAll(gen_exprs(expr));
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		return exprs;
@@ -76,9 +156,14 @@ public class AvailableExpressions {
 				exprs.addAll(gen_exprs(e));
 			}
 			return exprs;
+		} else if (expr instanceof Name){
+			return exprs;
+		} else if (expr instanceof Temp){
+			return exprs;
+		} else if (expr instanceof Const){
+			return exprs;
 		}
-		exprs.add(expr);
-		universal.add(expr);
+		
 		
 		for (Field f : expr.getClass().getDeclaredFields()){
 			try {
@@ -89,10 +174,50 @@ public class AvailableExpressions {
 					exprs.addAll(gen_exprs(e));
 				}
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+		
+		
+		exprs.add(expr);
+		universal.add(expr);
 		return exprs;
 	}
+	
+	HashSet<Expr> kill(HashSet<Expr> set, CFG node){
+		HashSet<Expr> ret = new HashSet<Expr>();
+		if (kill_map.containsKey(node)){
+			TempRegister r = kill_map.get(node);
+			for (Expr e : set){
+				if (!uses(e, r)){
+					ret.add(e);
+				}
+			}
+		}
+		
+		return ret;
+	}
+	
+	static Hashtable<Expr, HashSet<TempRegister>> memoize_uses = new Hashtable<Expr, HashSet<TempRegister>>();
+	boolean uses(Expr e, TempRegister r){
+		if (!memoize_uses.containsKey(e))
+			uses_(e, new HashSet<TempRegister>());
+		return memoize_uses.get(e).contains(r);
+	}
+
+	private void uses_(Expr e, HashSet<TempRegister> hashSet) {
+		HashSet<TempRegister> cur = new HashSet<TempRegister>();
+		if (e instanceof Temp){
+			cur.add(((Temp)e).temp);
+		} else{
+			for (VisualizableTreeNode child : e.children()){
+				Expr echild = (Expr)child;
+				uses_(echild, cur);
+			}
+		}
+		memoize_uses.put(e, cur);
+		hashSet.addAll(cur);
+		return;
+	}
 }
+

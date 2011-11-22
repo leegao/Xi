@@ -25,13 +25,14 @@ public class CFG {
 	public CFG child1, child2;
 	public static int guid = 0;
 	public int id;
+	public HashSet<Expr> out_available;
 	
 	public Stmt ir;
 	public CFG(Stmt ir){
 		parents = new ArrayList<CFG>();
 		child1 = null;
 		child2 = null;
-		
+		out_available = new HashSet<Expr>();
 		this.ir = ir;
 		id = guid++;
 	}
@@ -90,7 +91,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\"]\n";
+		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\navailable_out: " + this.out_available + "\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";
@@ -193,7 +194,7 @@ public class CFG {
 		return second_pass;
 	}
 	
-	public HashSet intersect(HashSet a, HashSet b){
+	public static HashSet intersect(HashSet a, HashSet b){
 		HashSet set = new HashSet();
 		for (Object o : a){
 			if (b.contains(a)){
@@ -203,7 +204,7 @@ public class CFG {
 		return set;
 	}
 	
-	public HashSet union(HashSet a, HashSet b){
+	public static HashSet union(HashSet a, HashSet b){
 		HashSet set = new HashSet();
 		set.addAll(a);
 		set.addAll(b);

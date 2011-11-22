@@ -16,10 +16,14 @@ import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
 import cs4120.der34dlc287lg342.xi.cfg.Rewrite;
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
@@ -55,13 +59,15 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testCFG(){
-		Seq stmt = gen("main(a:int){b:int if (a > 3) {a = (1+a)*3 + b} else {while (a > 3) f(a,b)}} f(a:int, b:int){}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 5+6*a c:int = 6*a a = c*a}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 //		System.out.println(func.prettyPrint());
 		CFG cfg = CFG.cfg(func);
 		AvailableExpressions ae = new AvailableExpressions(cfg);
-		//System.out.println(cfg.dot_edge());
+		ae.analyze();
+		
+		System.out.println(cfg.dot_edge());
 	}
 	
 //	public void testWorklist() {

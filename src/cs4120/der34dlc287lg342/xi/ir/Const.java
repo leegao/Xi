@@ -22,4 +22,12 @@ public class Const extends Expr {
 	public ConstTile munch() {
 		return new ConstTile(value);
 	}
+	
+	@Override
+	public boolean equals(Object that){
+		if (that instanceof Const){
+			return ((Const)that).value == value;
+		}
+		return false;
+	}
 }

@@ -86,6 +86,15 @@ public class Binop extends Expr {
 	public Binop(String op, Expr left, Expr right){
 		this(translate(op), left, right);
 	}
+	
+	public boolean equals(Object that){
+		if (that instanceof Binop){
+			Binop bin = (Binop)that;
+			//System.out.println(bin + " " + this + " " + (bin.left.equals(left) && bin.right.equals(right) && op == bin.op));
+			return bin.left.equals(left) && bin.right.equals(right) && op == bin.op;
+		}
+		return false;
+	}
 
 	@Override
 	public String label() {

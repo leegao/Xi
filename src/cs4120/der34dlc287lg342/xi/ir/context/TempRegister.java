@@ -42,7 +42,7 @@ public class TempRegister {
 	}
 	
 	public String toString(){
-		return "%r("+name+")";
+		return "%r("+value+")";
 	}
 	
 	public static Seq init_array(Expr base, Expr n){
@@ -73,5 +73,12 @@ public class TempRegister {
 		
 		//return new Eseq(size, seq);
 		return new Mem(new Binop(Binop.MINUS, base_expr, new Const(8)));
+	}
+	
+	public boolean equals(Object that){
+		if (that instanceof TempRegister){
+			return ((TempRegister)that).value == value;
+		}
+		return false;
 	}
 }
