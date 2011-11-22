@@ -101,4 +101,40 @@ public abstract class Expr implements VisualizableTreeNode {
 		}
 		return false;
 	}
+
+	public void replace(Expr from, Expr to) {
+		ArrayList<VisualizableTreeNode> todo = new ArrayList<VisualizableTreeNode>(children);
+		for (Field f : this.getClass().getDeclaredFields()){
+			try{
+				f.setAccessible(true);
+				Object o = f.get(this);
+				if (o instanceof Expr){
+					Expr expr = (Expr)o;
+					if (expr.equals(from)){
+						f.set(this, to);
+						int i = children.indexOf(expr);
+						if (i != -1){
+							children.set(i, to);
+						}
+					} else {
+						expr.replace(from, to);
+					}
+					todo.remove(expr);
+				}
+			} catch (Exception e){
+				//pass
+			}
+		}
+		for (VisualizableTreeNode node : todo){
+			Expr next = (Expr)node;
+			if (next.equals(from)){
+				int i = children.indexOf(next);
+				if (i != -1){
+					children.set(i, to);
+				}
+			} else {
+				next.replace(from, to);
+			}
+		}
+	}
 }

@@ -44,10 +44,6 @@ public class AvailableExpressions {
 				cfg.out_available = new HashSet<Expr>(universal);
 			}
 		}
-		
-		for (Entry<CFG, HashSet<Expr>> e : expr_map.entrySet()){
-			//System.out.println(e.getKey().ir.prettyPrint() + ": "+e.getValue());
-		}
 	}
 
 	private void generate_worklist(CFG node, HashSet<CFG> seen) {
