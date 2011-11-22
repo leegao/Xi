@@ -50,6 +50,20 @@ public class CFG {
 		return parents;
 	}
 	
+	public void insert_before(CFG prev){
+		prev.parents = parents;
+		for (CFG last : pred()){
+			if (last.child1.equals(this)){
+				last.child1 = prev;
+			} else {
+				last.child2 = prev;
+			}
+		}
+		prev.child1 = this;
+		this.parents = new ArrayList<CFG>();
+		this.parents.add(prev);
+	}
+	
 	public String simpleName(CFG node){
 		if (node == null)
 			return "";

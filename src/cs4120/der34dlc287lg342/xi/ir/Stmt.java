@@ -13,6 +13,36 @@ public abstract class Stmt implements VisualizableTreeNode{
 		children = new ArrayList<VisualizableTreeNode>();
 	}
 	
+	public boolean contains(Expr from){
+		ArrayList<VisualizableTreeNode> todo = new ArrayList<VisualizableTreeNode>(children);
+		for (Field f : this.getClass().getDeclaredFields()){
+			try{
+				f.setAccessible(true);
+				Object o = f.get(this);
+				if (o instanceof Expr){
+					Expr expr = (Expr)o;
+					if (expr.equals(from)){
+						return true;
+					} else {
+						if (expr.contains(from)) return true;
+					}
+					todo.remove(expr);
+				}
+			} catch (Exception e){
+				//pass
+			}
+		}
+		for (VisualizableTreeNode node : todo){
+			Expr next = (Expr)node;
+			if (!next.equals(from)){
+				if (next.contains(from)) return true;
+			} else {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public void replace(Expr from, Expr to){
 		ArrayList<VisualizableTreeNode> todo = new ArrayList<VisualizableTreeNode>(children);
 		for (Field f : this.getClass().getDeclaredFields()){

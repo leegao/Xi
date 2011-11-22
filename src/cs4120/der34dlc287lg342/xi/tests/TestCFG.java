@@ -13,6 +13,7 @@ import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.AssemblyCFG;
 import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
+import cs4120.der34dlc287lg342.xi.cfg.CSE;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
 import cs4120.der34dlc287lg342.xi.cfg.Rewrite;
@@ -61,21 +62,22 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testCFG(){
-		Seq stmt = gen("use io use conv main(args:int[][]){a:int,_ = parseInt(args[1]) b:int = 0 while (a > 0){c:int = b + a b = b + a; a = a - 1} print(unparseInt(b)+\"\\n\")}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 0 b:int = 1 c:int = 3 if (a == 3) {c = a + 3; b = (a + 3) * 4; a = b + c}}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 //		System.out.println(func.prettyPrint());
 		CFG cfg = CFG.cfg(func);
 		AvailableExpressions ae = new AvailableExpressions(cfg);
 		ae.analyze();
+		CSE cse = new CSE(cfg);
+		cse.analyze();
+		System.out.println(cfg.dot_edge());
 		
-		//System.out.println(cfg.dot_edge());
-		
-		TempRegister r = new TempRegister();
-		Stmt a = new Move(new Temp(r), new Binop(Binop.MINUS, new Binop(Binop.PLUS, new Temp(r), new Const(3)), new Const(4)));
-		System.out.println(a);
-		a.replace(new Binop(Binop.PLUS, new Temp(r), new Const(3)), new Temp(new TempRegister("r")));
-		System.out.println(a);
+//		TempRegister r = new TempRegister();
+//		Stmt a = new Move(new Temp(r), new Binop(Binop.MINUS, new Binop(Binop.PLUS, new Temp(r), new Const(3)), new Const(4)));
+//		System.out.println(a);
+//		a.replace(new Binop(Binop.PLUS, new Temp(r), new Const(3)), new Temp(new TempRegister("r")));
+//		System.out.println(a);
 	}
 	
 //	public void testWorklist() {
