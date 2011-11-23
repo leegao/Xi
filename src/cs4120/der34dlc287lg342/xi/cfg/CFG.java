@@ -326,12 +326,12 @@ public class CFG {
 		return set;
 	}
 	
-	public boolean equals(Object that){
-		if (that instanceof CFG){
-			return equals((CFG)that, new HashSet<CFG>());
-		}
-		return false;
-	}
+//	public boolean equals(Object that){
+//		if (that instanceof CFG){
+//			return equals((CFG)that, new HashSet<CFG>());
+//		}
+//		return false;
+//	}
 	
 	public boolean equals(CFG other, HashSet<CFG> memoize){
 		if (other == null)

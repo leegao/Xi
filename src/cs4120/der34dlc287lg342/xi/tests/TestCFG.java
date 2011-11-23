@@ -22,6 +22,7 @@ import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
 import cs4120.der34dlc287lg342.xi.cfg.CSE;
+import cs4120.der34dlc287lg342.xi.cfg.DeadCodeElimination;
 import cs4120.der34dlc287lg342.xi.cfg.VariablePropagation;
 import cs4120.der34dlc287lg342.xi.cfg.IRLivenessAnalysis;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
@@ -163,7 +164,8 @@ public class TestCFG extends TestCase {
 		
 		HashSet<Move> last_ac = new HashSet<Move>();
 		
-		// this goes into a loop until we stabilizes or after 10 iterations
+		// this goes into a loop until we stabilizes or after 20 iterations
+		int i = 0;
 		while(true){
 			AvailableCopiesAndConstants ac = new AvailableCopiesAndConstants(cfg);
 			ac.analyze();
@@ -171,15 +173,17 @@ public class TestCFG extends TestCase {
 			cp.analyze();
 			CFGConstantFolding.foldConstants(cfg);
 			
+			IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
+			la.analyze();
+			DeadCodeElimination dce = new DeadCodeElimination(cfg);
+			dce.analyze();
+			
 			HashSet<Move> cur_ac = ac.get_all(cfg, new HashSet<Move>(), new HashSet<CFG>());
-			if (cur_ac.equals(last_ac))
+			if (cur_ac.equals(last_ac) || i >= 20)
 				break;
 			last_ac = cur_ac;
+			i++;
 		}
-		
-		IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
-		la.analyze();
-		
 		
 		System.out.println(cfg.dot_edge());
 		
