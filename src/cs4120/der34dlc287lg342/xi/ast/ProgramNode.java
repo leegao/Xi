@@ -175,7 +175,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 				"} "
 				 */
 				dynamalloc_method = new Func(Label.dynamalloc,
-						new Arg(reg("arr").temp,0),
+						new Arg(reg("arr").temp,0,1),
 						
 //						new Move(reg(3200),new Call(new Name(Label.alloc),new Const(32))),
 //						new Move(reg(1300),reg(3200)),
@@ -266,7 +266,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 			      )
 				 * */
 				strdup = new Func(Label.internal_strdup, 
-					new Arg(reg("p0").temp, 0),
+					new Arg(reg("p0").temp, 0,1),
 					new Move(reg("t10"), new Mem(reg("p0"))),
 					new Move(reg("t27"), new Call(new Name(Label.alloc), new Binop(Binop.PLUS, new Binop(Binop.LSH, reg("t10"), new Const(3)), new Const(8)))),
 					new LabelNode(label(".L9")),
@@ -302,8 +302,8 @@ public class ProgramNode extends AbstractSyntaxTree {
 				LabelNode a = new LabelNode(new Label()), b = new LabelNode(new Label()), c = new LabelNode(new Label());
 				LabelNode a_ = new LabelNode(new Label()), b_ = new LabelNode(new Label()), c_ = new LabelNode(new Label());
 				strcat = new Func(Label.internal_strcat,
-					new Arg(l.temp, 0),
-					new Arg(r.temp, 1),
+					new Arg(l.temp, 0,2),
+					new Arg(r.temp, 1,2),
 					new Move(i, new Const(0)),
 					//new Move(l, lhs), new Move(r, rhs),
 					new Move(n1, TempRegister.size_of(l)),

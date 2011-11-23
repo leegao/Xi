@@ -23,7 +23,7 @@ public class Assembler {
 			if (tile instanceof FuncTile){
 				
 				FuncTile func = (FuncTile)tile;
-				System.out.println(func.name);
+				//System.out.println(func.name);
 				ArrayList<Assembly> instrs = func.att();
 				AssemblyCFG cfg = AssemblyCFG.cfg(instrs);
 				

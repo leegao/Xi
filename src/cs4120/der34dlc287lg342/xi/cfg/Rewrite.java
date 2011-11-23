@@ -36,7 +36,7 @@ public class Rewrite {
 			int next = -(locals+(i++))*8;
 			map.put(r, next);
 		}
-		System.out.println("\nRewrite:");
+		//System.out.println("\nRewrite:");
 		// check each instruction
 		for (Assembly asm : instrs){
 			if (asm instanceof MOVE){
@@ -45,7 +45,7 @@ public class Rewrite {
 				if (spills.contains(mov.src)){
 					// add a fetch
 					TempRegister d = new TempRegister();
-					System.out.println("Fetch: "+map.get(mov.src)+"(%rbp) : "+d);
+					//System.out.println("Fetch: "+map.get(mov.src)+"(%rbp) : "+d);
 					new_instrs.add(new OPER("movq "+map.get(mov.src)+"(%rbp), %d0", new TempRegister[]{}, d));
 					mov.src = d;
 				}
@@ -53,7 +53,7 @@ public class Rewrite {
 				if (spills.contains(mov.dest)){
 					// add a store
 					TempRegister s = new TempRegister();
-					System.out.println("Store: "+map.get(mov.dest)+"(%rbp) : "+s);
+					//System.out.println("Store: "+map.get(mov.dest)+"(%rbp) : "+s);
 					new_instrs.add(new OPER("movq %s0, "+map.get(mov.dest)+"(%rbp)", s, null));
 					mov.dest = s;
 				}
@@ -66,7 +66,7 @@ public class Rewrite {
 						TempRegister d = new TempRegister();
 						if (u.equals(oper.dest))
 							s = d;
-						System.out.println("Fetch: "+map.get(u)+"(%rbp) : "+d);
+						//System.out.println("Fetch: "+map.get(u)+"(%rbp) : "+d);
 						new_instrs.add(new OPER("movq "+map.get(u)+"(%rbp), %d0", new TempRegister[]{}, d));
 						replace(oper.src, u, d);
 					}
@@ -76,7 +76,7 @@ public class Rewrite {
 					// add a store
 					if (s == null)
 						s = new TempRegister();
-					System.out.println("Store: "+map.get(oper.dest)+"(%rbp) : "+s);
+					//System.out.println("Store: "+map.get(oper.dest)+"(%rbp) : "+s);
 					new_instrs.add(new OPER("movq %s0, "+map.get(oper.dest)+"(%rbp)", s, null));
 					oper.dest = s;
 				}

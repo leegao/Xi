@@ -81,7 +81,7 @@ public class InterferenceGraph {
 		assign_colors();
 		
 		//System.out.println(coloring);
-		System.out.println(spills);
+		//System.out.println(spills);
 	}
 
 	private void assign_colors() {
@@ -113,7 +113,7 @@ public class InterferenceGraph {
 
 	private void select() {
 		TempRegister r = spill_worklist.poll();
-		System.out.println("Select: "+r);
+		//System.out.println("Select: "+r);
 		simplify_worklist.offer(r);
 		freeze_moves(r);
 	}

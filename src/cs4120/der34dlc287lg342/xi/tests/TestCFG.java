@@ -102,7 +102,7 @@ public class TestCFG extends TestCase {
 //	}
 	
 	public void testWorklist(){
-		Seq stmt = gen("use io use conv main(args:int[][]){n:int = 3 a:int[n] println(unparseInt(length(a)))}");
+		Seq stmt = gen("use io use conv main(args:int[][]){f(1,2,3,4,5,6,7,8)} f(a:int, b:int, c:int, d:int, e:int, f:int, g:int, h:int){print((a,b,c,d,e,f,g,h))}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		//System.out.println(stmt.prettyPrint());
 		Assembler assembler = new Assembler((SeqTile) stmt.munch());

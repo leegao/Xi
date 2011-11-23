@@ -36,13 +36,13 @@ public class IRContext {
 		Temp temp = new Temp(new TempRegister(id));
 		symbols.put(id, temp);
 		
-		if (i < 6){
-			TempRegister r = new TempRegister();
-			return new Seq(new Arg(temp.temp, i));
-		} else{
-			Expr arg = new Mem(new Binop(Binop.PLUS, new Temp(TempRegister.FP), new Const((n-i)*8+8)));
-			return new Move(temp, arg);
-		}
+		//if (i < 6){
+			//TempRegister r = new TempRegister();
+			return new Seq(new Arg(temp.temp, i, n));
+//		} else{
+//			Expr arg = new Mem(new Binop(Binop.PLUS, new Temp(TempRegister.FP), new Const((n-i)*8+8)));
+//			return new Move(temp, arg);
+//		}
 		
 		
 	}
