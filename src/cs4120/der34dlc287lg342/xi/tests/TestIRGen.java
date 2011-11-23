@@ -1488,4 +1488,28 @@ public class TestIRGen extends TestCase {
 		//System.out.println(islike(stmt));
 		System.out.println(stmt.prettyPrint());
 	}
+	
+	public void testLol(){
+		Seq stmt = gen("use io dynamalloc(arr:int[]):int[]{" +
+				"   println((97,98,99)) " +
+				"	n:int = length(arr) i:int = 1" +
+				"   if (n == 0) {return arr}" +
+				"	tl:int[] = alloca(n+1)" +
+				"	while (i<n){" +
+				"		tl[i-1] = arr[i]" +
+				"		i = i + 1"+
+				"	}" +
+				"	i = arr[0]" +
+				"	list:int[] = alloca(i+1)" +
+				"	while (i > 0){" +
+				"		i = i - 1" +
+				"		a:int[] = dynamalloc(tl) a':int" +
+				"		list[i] = a'" +
+				"	}"+
+				"	return list;" +
+				"} alloca(a:int):int[]{return ()}");
+		stmt = ConstantFolding.foldConstants(stmt);
+		//System.out.println(stmt.prettyPrint());
+		System.out.println(islike(stmt));
+	}
 }
