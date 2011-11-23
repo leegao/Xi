@@ -11,63 +11,54 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $-2, %r12		# movq $-2, %r(924)
-	movq %r12, %r12		# movq %r(924), %r(940)
-	movq %r12, -8(%rbp)		# movq %r(940), -8(%rbp)
-	movq $-6, %r12		# movq $-6, %r(925)
-	movq %r12, %r12		# movq %r(925), %r(941)
-	movq %r12, -16(%rbp)		# movq %r(941), -16(%rbp)
-	movq $6, %r12		# movq $6, %r(926)
-	movq %r12, %r12		# movq %r(926), %r(b)
-	movq $1, %r13		# movq $1, %r(927)
-	movq %r13, %r13		# movq %r(927), %r(918)
+	movq $-2, %r12		# movq $-2, %r(927)
+	movq %r12, -16(%rbp)		# movq %r(943), -16(%rbp)
+	movq $-6, %r12		# movq $-6, %r(928)
+	movq %r12, -8(%rbp)		# movq %r(944), -8(%rbp)
+	movq $6, %r12		# movq $6, %r(929)
+	movq $1, %r13		# movq $1, %r(930)
 	movq %r12, %rax		# movq %r(b), %rax
-	movq $0, %rdx		# movq $0, %rdx
-	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(942)
-	idivq %rbx		# idivq %r(942)
-	movq %rax, %rbx		# movq %rax, %r(928)
-	movq $-3, %r12		# movq $-3, %r(929)
-	cmpq %r12, %rbx		# cmpq %r(929), %r(928)
+	cltq		# cltq
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(945)
+	idivq %rbx		# idivq %r(945)
+	movq %rax, %rbx		# movq %rax, %r(931)
+	movq $-3, %r12		# movq $-3, %r(932)
+	cmpq %r12, %rbx		# cmpq %r(932), %r(931)
 	je .L126		# je .L126
 	.L127:		# .L127:
-	movq $0, %r13		# movq $0, %r(930)
-	movq %r13, %r13		# movq %r(930), %r(918)
+	movq $0, %r13		# movq $0, %r(933)
 	.L126:		# .L126:
-	movq %r13, %rdi		# movq %r(918), %rdi
+	movq %r13, %rdi		# movq %r(921), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	movq $1, %r13		# movq $1, %r(931)
-	movq %r13, %r13		# movq %r(931), %r(919)
-	movq $2, %rbx		# movq $2, %r(932)
-	movq -16(%rbp), %r12		# movq -16(%rbp), %r(943)
-	movq %r12, %rax		# movq %r(943), %rax
-	movq $0, %rdx		# movq $0, %rdx
-	idivq %rbx		# idivq %r(932)
-	movq %rax, %rbx		# movq %rax, %r(933)
-	movq $-3, %r12		# movq $-3, %r(934)
-	cmpq %r12, %rbx		# cmpq %r(934), %r(933)
+	movq $1, %r13		# movq $1, %r(934)
+	movq $2, %rbx		# movq $2, %r(935)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(946)
+	movq %r12, %rax		# movq %r(946), %rax
+	cltq		# cltq
+	idivq %rbx		# idivq %r(935)
+	movq %rax, %rbx		# movq %rax, %r(936)
+	movq $-3, %r12		# movq $-3, %r(937)
+	cmpq %r12, %rbx		# cmpq %r(937), %r(936)
 	je .L128		# je .L128
 	.L129:		# .L129:
-	movq $0, %r13		# movq $0, %r(935)
-	movq %r13, %r13		# movq %r(935), %r(919)
+	movq $0, %r13		# movq $0, %r(938)
 	.L128:		# .L128:
-	movq %r13, %rdi		# movq %r(919), %rdi
+	movq %r13, %rdi		# movq %r(922), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	movq $1, %r13		# movq $1, %r(936)
-	movq %r13, %r13		# movq %r(936), %r(920)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(944)
-	movq %rbx, %rax		# movq %r(944), %rax
-	movq $0, %rdx		# movq $0, %rdx
-	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(945)
-	idivq %rbx		# idivq %r(945)
-	movq %rax, %rbx		# movq %rax, %r(937)
-	movq $3, %r12		# movq $3, %r(938)
-	cmpq %r12, %rbx		# cmpq %r(938), %r(937)
+	movq $1, %r13		# movq $1, %r(939)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(947)
+	movq %rbx, %rax		# movq %r(947), %rax
+	cltq		# cltq
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(948)
+	idivq %rbx		# idivq %r(948)
+	movq %rax, %rbx		# movq %rax, %r(940)
+	movq $3, %r12		# movq $3, %r(941)
+	cmpq %r12, %rbx		# cmpq %r(941), %r(940)
 	je .L130		# je .L130
 	.L131:		# .L131:
-	movq $0, %r13		# movq $0, %r(939)
-	movq %r13, %r13		# movq %r(939), %r(920)
+	movq $0, %r13		# movq $0, %r(942)
 	.L130:		# .L130:
-	movq %r13, %rdi		# movq %r(920), %rdi
+	movq %r13, %rdi		# movq %r(923), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	.L125:		# .L125:
 	popq %r15
