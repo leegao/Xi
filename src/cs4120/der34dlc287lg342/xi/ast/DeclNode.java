@@ -140,7 +140,7 @@ public class DeclNode extends AbstractSyntaxTree {
 		Seq seq = new Seq();
 		ArrayList<Expr> exprs = new ArrayList<Expr>();
 		boolean static_array = true;
-		
+		int tot = 1;
 		for (int i = 0; i < brackets.size(); i++){
 			AbstractSyntaxTree node = (AbstractSyntaxTree)brackets.get(i);
 			
@@ -153,8 +153,12 @@ public class DeclNode extends AbstractSyntaxTree {
 				exprs.add(n);
 				if (!(n instanceof Const))
 					static_array = false;
-				else if (((Const)n).value > 10)
-					static_array = false;
+				else {
+					if (((Const)n).value > 10)
+						static_array = false;
+					tot *= (((Const)n).value+1);
+					if (tot > 50) static_array = false;
+				}
 				
 			}
 		}

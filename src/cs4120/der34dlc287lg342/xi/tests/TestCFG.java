@@ -107,7 +107,7 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testMeh(){
-		File[] valid = new File("2009-good").listFiles();
+		File[] valid = new File("2011-contest").listFiles();
 		
 		for (File validFile: valid) {
 			Seq f = null;
@@ -135,7 +135,7 @@ public class TestCFG extends TestCase {
 				Assembler assembler = new Assembler((SeqTile) t);
 				String att = assembler.att();
 				
-				FileWriter fstream = new FileWriter("2009-good/"+validFile.getName().replace("xi", "s"));
+				FileWriter fstream = new FileWriter("2011-contest/"+validFile.getName().replace("xi", "s"));
 				BufferedWriter out = new BufferedWriter(fstream);
 				out.write(att);
 				out.close();
@@ -151,7 +151,7 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testCFG(){
-		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 if (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c} print(unparseInt(c))}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 while (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c a = a - 1} print(unparseInt(c))}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 //		System.out.println(func.prettyPrint());
@@ -169,7 +169,7 @@ public class TestCFG extends TestCase {
 			// this goes into a loop until we stabilizes or after 20 iterations
 			int i = 0;
 			while(true){
-				cfg.reset();
+				//cfg.reset();
 				
 				AvailableCopies ac = new AvailableCopies(cfg);
 				ac.analyze();
@@ -179,12 +179,18 @@ public class TestCFG extends TestCase {
 				
 				CFGConstantFolding.foldConstants(cfg);
 				
+				
+				
 				IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
 				la.analyze();
 				
-				DeadCodeElimination dce = new DeadCodeElimination(cfg);
-				dce.analyze();
-				
+				//System.out.println(cfg.dot_edge());
+				//break;
+//				DeadCodeElimination dce = new DeadCodeElimination(cfg);
+//				dce.analyze();
+//				
+//				System.out.println(cfg.dot_edge());
+//				
 				HashSet<Move> cur_ac = ac.get_all(cfg, new HashSet<Move>(), new HashSet<CFG>());
 				if (cur_ac.equals(last_ac) || i >= 20)
 					break;
