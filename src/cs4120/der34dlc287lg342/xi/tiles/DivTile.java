@@ -19,7 +19,7 @@ public class DivTile extends BinopTile {
 		asm.addAll(right.att());
 
 		asm.add(new OPER("movq %s0, %rax", left.out, null));
-		asm.add(new OPER("cltd", new TempRegister[]{}, null)); // doh!
+		asm.add(new OPER("cltq", new TempRegister[]{}, null)); // doh!
 
 		asm.add(new OPER("idivq %s0", right.out, null));
 		out = new TempRegister();
