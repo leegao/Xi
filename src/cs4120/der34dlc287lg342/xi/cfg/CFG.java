@@ -176,7 +176,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live + "\"]\n";
+		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live +"\\nuse: " + this.use +"\\ndef: " + this.def + "\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";
@@ -268,6 +268,31 @@ public class CFG {
 		return node;
 	}
 	
+	public static void prune_labels(CFG node, HashSet<CFG> memoize){
+		if (memoize.contains(node)){
+			return;
+		}
+		memoize.add(node);
+		// invariant: each label has one child except for the return label
+		// for each label except one without child1, its child1 takes all of its parents
+		
+		if (node.ir instanceof LabelNode && node.child1 != null){
+			CFG child = node.child1;
+			for (CFG parent : node.pred()){
+				if (parent.child1.equals(node)){
+					parent.child1 = child;
+				} else {
+					parent.child2 = child;
+				}
+			}
+			child.parents = node.parents;
+		}
+		
+		for (CFG next : node.succ()){
+			prune_labels(next, memoize);
+		}
+	}
+	
 	public static CFG cfg(Func ir){
 		HashMap<Label, CFG> jumps = new HashMap<Label, CFG>();
 		HashSet<CFG> memoize = new HashSet<CFG>();
@@ -275,6 +300,10 @@ public class CFG {
 		
 		// single DPS to traverse and alter the connection of the graphs
 		CFG second_pass = traverse(first_pass, jumps, memoize);
+		
+		// prune labels from second pass
+		memoize = new HashSet<CFG>();
+		prune_labels(second_pass, memoize);
 		
 		return second_pass;
 	}
