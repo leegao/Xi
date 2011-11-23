@@ -25,16 +25,84 @@ public class CFG {
 	public CFG child1, child2;
 	public static int guid = 0;
 	public int id;
+	
 	public HashSet<Expr> out_available;
+	HashSet<TempRegister> use, def;
 	
 	public Stmt ir;
+	public HashSet<TempRegister> in_live;
+	
 	public CFG(Stmt ir){
 		parents = new ArrayList<CFG>();
 		child1 = null;
 		child2 = null;
 		out_available = new HashSet<Expr>();
+		in_live = new HashSet<TempRegister>();
+		this.use = use(ir);
+		this.def = def(ir);
+		
 		this.ir = ir;
 		id = guid++;
+	}
+	
+	public static HashSet<TempRegister> def(Stmt ir){
+		HashSet<TempRegister> in_def = new HashSet<TempRegister>();
+		
+		if (ir instanceof Move){
+			Move mov = (Move)ir;
+			if (mov.dest instanceof Temp){
+				in_def.add(((Temp)mov.dest).temp);
+			}
+		} else if (ir instanceof Arg){
+			Arg arg = (Arg)ir;
+			in_def.add(arg.r);
+		}
+		
+		return in_def;
+	}
+	
+	public static HashSet<TempRegister> use(Stmt ir){
+		HashSet<TempRegister> in_use = new HashSet<TempRegister>();
+		
+		if (ir instanceof Move){
+			Move mov = (Move)ir;
+			if (mov.dest instanceof Mem){
+				Expr e1 = ((Mem)mov.dest).expr;
+				Expr e2 = mov.val;
+				in_use.addAll(use(e1));
+				in_use.addAll(use(e2));
+			} else {
+				in_use.addAll(use(mov.val));
+			}
+		} else if (ir instanceof Cjump){
+			Cjump cjump = (Cjump)ir;
+			in_use.addAll(use(cjump.condition));
+		} else if (ir instanceof Exp){
+			Exp exp = (Exp)ir;
+			in_use.addAll(use(exp.expr));
+		}
+		
+		return in_use;
+	}
+	
+	public static HashSet<TempRegister> use(Expr ir){
+		HashSet<TempRegister> in_use = new HashSet<TempRegister>();
+		
+		for (Field f : ir.getClass().getDeclaredFields()){
+			try{
+				f.setAccessible(true);
+				Object o = f.get(ir);
+				if (o instanceof TempRegister){
+					in_use.add((TempRegister) o);
+				}
+			} catch (Exception e){}
+		}
+		
+		for (VisualizableTreeNode e : ir.children()){
+			in_use.addAll(use((Expr)e));
+		}
+		
+		return in_use;
 	}
 	
 	public ArrayList<CFG> succ(){
