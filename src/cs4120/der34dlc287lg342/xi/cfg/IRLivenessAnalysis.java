@@ -71,16 +71,33 @@ public class IRLivenessAnalysis {
 			worklist.remove(0);
 			boolean changed = false;
 			
-			Hashtable<CFG, HashSet<TempRegister>> seen = new Hashtable<CFG, HashSet<TempRegister>>();
-			seen.put(this.node, new HashSet<TempRegister>());
+			for (TempRegister reg : node.use) {
+				if (!node.in_live.contains(reg)) {
+					node.in_live.add(reg);
+					changed = true;
+				}
+			}
 			
-			HashSet<TempRegister> union = in(node, seen);
-			changed = !union.equals(node.in_live);
+			if( node.child1 != null) {
+				for (TempRegister reg : node.child1.in_live) {
+					if (!node.def.contains(reg) && !node.in_live.contains(reg))  {
+						node.in_live.add(reg);
+						changed = true;
+					}
+				}
+			}
+			
+			if( node.child2 != null) {
+				for (TempRegister reg : node.child2.in_live) {
+					if (!node.def.contains(reg) && !node.in_live.contains(reg)) {
+						node.in_live.add(reg);
+						changed = true;
+					}
+				}
+			}
 			
 			if (changed) {
-				node.in_live = union;
-				
-				for (CFG parent : node.pred()) {
+				for (CFG parent : node.parents) {
 					if (!worklist.contains(parent)) {
 						worklist.add(parent);
 					}

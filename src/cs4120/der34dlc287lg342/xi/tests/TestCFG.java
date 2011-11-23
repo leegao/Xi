@@ -151,7 +151,7 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testCFG(){
-		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 while (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c a = a - 1} print(unparseInt(c))}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 if (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c a = a - 1} print(unparseInt(c))}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 //		System.out.println(func.prettyPrint());
@@ -179,15 +179,9 @@ public class TestCFG extends TestCase {
 				
 				CFGConstantFolding.foldConstants(cfg);
 				
-				
-				
-				IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
-				la.analyze();
-				
 				//System.out.println(cfg.dot_edge());
 				//break;
-//				DeadCodeElimination dce = new DeadCodeElimination(cfg);
-//				dce.analyze();
+				
 //				
 //				System.out.println(cfg.dot_edge());
 //				
@@ -199,10 +193,13 @@ public class TestCFG extends TestCase {
 				
 			}
 			
+			IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
+			la.analyze();
+			
+			DeadCodeElimination dce = new DeadCodeElimination(cfg);
+			dce.analyze();
+			
 			System.out.println(cfg.dot_edge());
-			
-			
-			
 		}
 		
 		
