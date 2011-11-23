@@ -33,9 +33,11 @@ public class DeadCodeElimination {
 		while (!worklist.isEmpty()){
 			CFG node = worklist.get(0);
 			worklist.remove(0);
-			
+			//System.out.println(node);
 			TempRegister r = ((Temp)((Move)node.ir).dest).temp;
+			//System.out.println(r + " "+ live_out(node));
 			if (!live_out(node).contains(r)){
+				
 				// remove this node
 				// moves are guaranteed only a single child, but not parent
 				for (CFG prev : node.pred()){

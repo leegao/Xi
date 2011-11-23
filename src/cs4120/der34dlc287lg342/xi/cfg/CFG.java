@@ -192,7 +192,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nin_copy: " + VariablePropagation.in(this) +"\\nout: " + this.out_copy + "\"]\n";
+		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live + "\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";
@@ -309,6 +309,31 @@ public class CFG {
 		}
 	}
 	
+	public static void prune_jumps(CFG node, HashSet<CFG> memoize){
+		if (memoize.contains(node)){
+			return;
+		}
+		memoize.add(node);
+		// invariant: each jump has exactly one child
+		
+		if (node.ir instanceof Jump && node.child1 != null){
+			// remove jump from parents
+			CFG child = node.child1;
+			for (CFG parent : node.pred()){
+				if (parent.child1.equals(node)){
+					parent.child1 = child;
+				} else {
+					parent.child2 = child;
+				}
+			}
+			child.parents = node.parents;
+		}
+		
+		for (CFG next : node.succ()){
+			prune_jumps(next, memoize);
+		}
+	}
+	
 	public static CFG cfg(Func ir){
 		HashMap<Label, CFG> jumps = new HashMap<Label, CFG>();
 		HashSet<CFG> memoize = new HashSet<CFG>();
@@ -320,7 +345,8 @@ public class CFG {
 		// prune labels from second pass
 		memoize = new HashSet<CFG>();
 		prune_labels(second_pass, memoize);
-		
+		memoize = new HashSet<CFG>();
+		prune_jumps(second_pass, memoize);
 		return second_pass;
 	}
 	

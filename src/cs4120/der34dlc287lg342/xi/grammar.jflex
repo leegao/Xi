@@ -101,7 +101,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 
 <YYINITIAL> {
   /* identifiers */ 
-  {Identifier}                   { return token(TokenType.IDENTIFIER); }
+  {Identifier}                   { return token(TokenType.IDENTIFIER, yytext().replace("'","_")); }
  
   /* literals */
   {DecIntegerLiteral}            { return token(TokenType.INTEGER_LITERAL); }

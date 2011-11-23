@@ -156,6 +156,7 @@ public class AvailableCopies {
 		if (node == null) return all;
 		if (seen.contains(node))
 			return all;
+		seen.add(node);
 		
 		all.addAll(node.out_copy);
 		for (CFG next : node.succ()){

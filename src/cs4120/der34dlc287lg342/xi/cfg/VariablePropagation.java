@@ -50,7 +50,7 @@ public class VariablePropagation {
 			HashSet<Move> copies_in = in(node);
 			for (Move move : copies_in){
 				ArrayList<CFG> chain = new ArrayList<CFG>();
-				make_chain(node, move, chain);
+				make_chain(node, move, chain, new HashSet<CFG>());
 				if (chain.size() > 0){
 					for (CFG el : chain){
 						Expr from = move.dest, to = move.val;
@@ -61,13 +61,16 @@ public class VariablePropagation {
 		}
 	}
 	
-	public void make_chain(CFG node, Move move, ArrayList<CFG> chain){
+	public void make_chain(CFG node, Move move, ArrayList<CFG> chain, HashSet<CFG> seen){
+		if (seen.contains(node))
+			return;
+		seen.add(node);
 		Temp copy = (Temp)move.dest;
 		//boolean contains = node.ir.contains(copy);
 		if (in(node).contains(move) &&  node.ir.contains(copy)){
 			chain.add(node);
 			for (CFG next : node.succ()){
-				make_chain(next, move, chain);
+				make_chain(next, move, chain, seen);
 			}
 		}
 		
