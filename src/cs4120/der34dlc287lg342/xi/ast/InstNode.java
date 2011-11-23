@@ -66,7 +66,7 @@ public class InstNode extends AbstractSyntaxTree {
 			XiType exprType = ((AbstractSyntaxTree)e).typecheck(stack);
 			XiType declType = ((AbstractSyntaxTree)list.get(0)).typecheck(stack);
 			
-			if(declType.equals(XiPrimitiveType.UNIT)){
+			if(list.get(0) instanceof DeclNode && declType.equals(XiPrimitiveType.UNIT)){
 				DeclNode decl = (DeclNode)list.get(0);
 				XiType t;
 				try {
@@ -80,7 +80,10 @@ public class InstNode extends AbstractSyntaxTree {
 				
 				type = XiPrimitiveType.UNIT;
 				return type;
-			}else 
+			} else if (list.get(0) instanceof UnderscoreNode){
+				type = XiPrimitiveType.UNIT;
+				return type;
+			} else
 				throw new CompilationException("Declaration did not typecheck", position);
 			
 		} else if(list.size() > 1) {
@@ -137,12 +140,19 @@ public class InstNode extends AbstractSyntaxTree {
 			 * e is primitive type
 			 * list's decl is vardecl
 			 */
-			DeclNode decl = (DeclNode)list.get(0);
-			decl.to_ir(stack); // if decl declares an array type, discard it
-			IRTranslation tr2 = e.to_ir(stack);
-			Expr expr = tr2.expr();
-			Seq seq = new Seq(new Move(stack.find_register(decl.id.id), expr));
-			return new IRTranslationStmt(seq);
+			if (list.get(0) instanceof DeclNode){
+				DeclNode decl = (DeclNode)list.get(0);
+				decl.to_ir(stack); // if decl declares an array type, discard it
+				IRTranslation tr2 = e.to_ir(stack);
+				Expr expr = tr2.expr();
+				Seq seq = new Seq(new Move(stack.find_register(decl.id.id), expr));
+				return new IRTranslationStmt(seq);
+			} else{
+				
+				IRTranslation tr2 = e.to_ir(stack);
+				Expr expr = tr2.expr();
+				return new IRTranslationStmt(new Exp(expr));
+			}
 		} else if (list.size() > 1) {
 			// find a way to represent tuples
 			AbstractSyntaxTree t = (AbstractSyntaxTree) list.get(0);

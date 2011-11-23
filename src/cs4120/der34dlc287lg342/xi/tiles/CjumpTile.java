@@ -18,8 +18,8 @@ public class CjumpTile extends Tile{
 	public ArrayList<Assembly> att(){
 		ArrayList<Assembly> asm = new ArrayList<Assembly>();
 		asm.addAll(cond.att());
-		asm.add(new OPER("testq %s0, $1", cond.out, null));
-		asm.add(new OPER("je %to", new TempRegister[]{}, null, to));
+		asm.add(new OPER("testq $1, %s0", cond.out, null));
+		asm.add(new OPER("jne %to", new TempRegister[]{}, null, to));
 		return asm;
 	}
 }

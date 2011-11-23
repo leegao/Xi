@@ -61,6 +61,7 @@ nonterminal AbstractSyntaxNode func_decl, use_stmt;
 precedence nonassoc IF;
 precedence nonassoc ELSE; // we want to shift else rather than reduce on if
 precedence nonassoc SEMICOLON;
+precedence nonassoc UNDERSCORE;
 
 precedence left OR;
 precedence left AND;
@@ -297,6 +298,11 @@ var_list ::= var_decl:s
 	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
 		list.add(s);
 		RESULT = list; :}
+	| UNDERSCORE:t
+	{:  ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(new UnderscoreNode(t.position()));
+		RESULT = list;
+	:}
 	| UNDERSCORE:t COMMA var_item:s
 	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
 		list.add(new UnderscoreNode(t.position()));

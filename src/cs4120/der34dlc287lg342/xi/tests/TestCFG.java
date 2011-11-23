@@ -102,14 +102,17 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testMeh(){
-		File[] valid = new File("2009-good").listFiles();
+		File[] valid = new File("2009-contest").listFiles();
 		
 		for (File validFile: valid) {
 			Seq f = null;
 			Tile t = null;
 			try{
 			if (validFile.getName().contains(".xi")){
+				//System.out.println(validFile.getName());
 				System.out.println("./linkxi.sh -o "+validFile.getName().replace(".xi", "")+" "+validFile.getName().replace("xi", "s"));
+				System.out.println("./"+validFile.getName().replace(".xi", "")+" > "+validFile.getName().replace("xi", "act"));
+				System.out.println("diff "+validFile.getName().replace("xi", "exp")+" "+validFile.getName().replace("xi", "act"));
 				Reader reader = null;
 				
 				reader = new FileReader(validFile.getPath());
@@ -127,15 +130,16 @@ public class TestCFG extends TestCase {
 				Assembler assembler = new Assembler((SeqTile) t);
 				String att = assembler.att();
 				
-				FileWriter fstream = new FileWriter("2009-good/"+validFile.getName().replace("xi", "s"));
+				FileWriter fstream = new FileWriter("2009-contest/"+validFile.getName().replace("xi", "s"));
 				BufferedWriter out = new BufferedWriter(fstream);
 				out.write(att);
 				out.close();
 			}
 			} catch (Exception e){
+				
+				e.printStackTrace();
 				System.out.println(f.prettyPrint());
 				System.out.println(t);
-				e.printStackTrace();
 				break;
 			}
 		}
