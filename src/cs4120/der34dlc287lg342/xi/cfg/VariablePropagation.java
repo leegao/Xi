@@ -8,10 +8,10 @@ import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 
-public class CopyPropagation {
+public class VariablePropagation {
 	CFG node;
 	ArrayList<CFG> worklist;
-	public CopyPropagation(CFG node){
+	public VariablePropagation(CFG node){
 		this.node = node;
 		worklist = new ArrayList<CFG>();
 		make_worklist(node, new HashSet<CFG>());

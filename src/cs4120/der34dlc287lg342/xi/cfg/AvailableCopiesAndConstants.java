@@ -17,14 +17,14 @@ import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
-public class AvailableCopies {
+public class AvailableCopiesAndConstants {
 	public ArrayList<CFG> worklist;
 	public Hashtable<CFG, HashSet<Move>> copy_map;
 	public Hashtable<CFG, TempRegister> kill_map;
 	public HashSet<CFG> kill_mem;
 	CFG node;
 	
-	public AvailableCopies(CFG node){
+	public AvailableCopiesAndConstants(CFG node){
 		this.node = node;
 		worklist = new ArrayList<CFG>();
 		copy_map = new Hashtable<CFG, HashSet<Move>>();
@@ -37,10 +37,10 @@ public class AvailableCopies {
 			return;
 		}
 		seen.add(node);
-		HashSet<Move> exprs = gen(node);
+		HashSet<Move> moves = gen(node);
 		
 		worklist.add(node);
-		copy_map.put(node, exprs);
+		copy_map.put(node, moves);
 		
 		if(node.child1 != null) 
 			generate_worklist(node.child1, seen);
@@ -97,6 +97,10 @@ public class AvailableCopies {
 			// copy
 			moves.add((Move) stmt);
 			kill_map.put(node, ((Temp)((Move)stmt).dest).temp);
+		} else if (stmt instanceof Move && ((Move)stmt).dest instanceof Temp && ((Move)stmt).val instanceof Const){
+			// constant
+			moves.add((Move) stmt);
+			kill_map.put(node, ((Temp)((Move)stmt).dest).temp);
 		} else if (stmt instanceof Move && ((Move)stmt).dest instanceof Temp){
 			// no copy, but kill
 			kill_map.put(node, ((Temp)((Move)stmt).dest).temp);
@@ -110,10 +114,10 @@ public class AvailableCopies {
 		if (kill_map.containsKey(node)){
 			TempRegister r = kill_map.get(node);
 			for (Move move : set){
-//				if (!uses(e, r)){
-//					ret.add(e);
-//				}
-				TempRegister use = ((Temp)move.val).temp;
+				TempRegister use = null;
+				if (move.val instanceof Temp){
+					use = ((Temp)move.val).temp;
+				}
 				TempRegister def = ((Temp)move.dest).temp;
 				if (!r.equals(use) && !r.equals(def)){
 					ret.add(move);
@@ -122,5 +126,18 @@ public class AvailableCopies {
 		}
 		
 		return ret;
+	}
+	
+	public HashSet<Move> get_all(CFG node, HashSet<Move> all, HashSet<CFG> seen){
+		if (node == null) return all;
+		if (seen.contains(node))
+			return all;
+		
+		all.addAll(node.out_copy);
+		for (CFG next : node.succ()){
+			get_all(next, all, seen);
+		}
+		
+		return all;
 	}
 }
