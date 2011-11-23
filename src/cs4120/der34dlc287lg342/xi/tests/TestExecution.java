@@ -254,4 +254,160 @@ public class TestExecution extends TestCase {
 		execReader.close();
 	}
 	
+	public void testContest2() throws Exception {
+		Reader reader = new FileReader("2011-contest/contest2.xi");
+		Seq stmnt = gen(reader);
+		stmnt = ConstantFolding.foldConstants(stmnt);
+		Tile t = stmnt.munch();
+		Assembler assembler = new Assembler((SeqTile) t);
+		String att = assembler.att();
+		
+		FileWriter fstream = new FileWriter("runtime/tests/contest2.s");
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write(att);
+		out.close();
+		reader.close();
+		
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(new String[] {"./linkxi.sh", "tests/contest2.s",  "-o", "tests/contest2"},
+				null, new File("runtime"));
+	
+		if( proc.waitFor() != 0 ) {
+			System.out.println("Failed because Makefile has not been executed. Running Makefile... execute again");
+			execMake();
+			fail();
+		}
+		
+		
+		String line = null;
+		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		while ((line=input.readLine()) != null) {
+			System.out.println(line);
+			fail();
+		}
+		
+		Process exec = rt.exec(new String[] {"runtime/tests/contest2"});
+		
+		BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+		
+		assertEquals("7", execReader.readLine());
+		execReader.close();
+	}
+	
+	public void testGHard() throws Exception {
+		Reader reader = new FileReader("2011-contest/GHard.xi");
+		Seq stmnt = gen(reader);
+		stmnt = ConstantFolding.foldConstants(stmnt);
+		Tile t = stmnt.munch();
+		Assembler assembler = new Assembler((SeqTile) t);
+		String att = assembler.att();
+		
+		FileWriter fstream = new FileWriter("runtime/tests/GHard.s");
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write(att);
+		out.close();
+		reader.close();
+		
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(new String[] {"./linkxi.sh", "tests/GHard.s",  "-o", "tests/GHard"},
+				null, new File("runtime"));
+	
+		if( proc.waitFor() != 0 ) {
+			System.out.println("Failed because Makefile has not been executed. Running Makefile... execute again");
+			execMake();
+			fail();
+		}
+		
+		
+		String line = null;
+		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		while ((line=input.readLine()) != null) {
+			System.out.println(line);
+			fail();
+		}
+		
+		Process exec = rt.exec(new String[] {"runtime/tests/GHard"});
+		
+		BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+		
+		assertEquals("hello ", execReader.readLine());
+		execReader.close();
+	}
+	
+	public void testinlineArray() throws Exception {
+		Reader reader = new FileReader("2011-contest/inlineArray.xi");
+		Seq stmnt = gen(reader);
+		stmnt = ConstantFolding.foldConstants(stmnt);
+		Tile t = stmnt.munch();
+		Assembler assembler = new Assembler((SeqTile) t);
+		String att = assembler.att();
+		
+		FileWriter fstream = new FileWriter("runtime/tests/inlineArray.s");
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write(att);
+		out.close();
+		reader.close();
+		
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(new String[] {"./linkxi.sh", "tests/inlineArray.s",  "-o", "tests/inlineArray"},
+				null, new File("runtime"));
+	
+		if( proc.waitFor() != 0 ) {
+			System.out.println("Failed because Makefile has not been executed. Running Makefile... execute again");
+			execMake();
+			fail();
+		}
+		
+		
+		String line = null;
+		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		while ((line=input.readLine()) != null) {
+			System.out.println(line);
+			fail();
+		}
+		
+		Process exec = rt.exec(new String[] {"runtime/tests/inlineArray"});
+		
+		//BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+		//execReader.close();
+	}
+	
+	public void testT1() throws Exception {
+		Reader reader = new FileReader("2011-contest/t1.xi");
+		Seq stmnt = gen(reader);
+		stmnt = ConstantFolding.foldConstants(stmnt);
+		Tile t = stmnt.munch();
+		Assembler assembler = new Assembler((SeqTile) t);
+		String att = assembler.att();
+		
+		FileWriter fstream = new FileWriter("runtime/tests/t1.s");
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write(att);
+		out.close();
+		reader.close();
+		
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(new String[] {"./linkxi.sh", "tests/t1.s",  "-o", "tests/t1"},
+				null, new File("runtime"));
+	
+		if( proc.waitFor() != 0 ) {
+			System.out.println("Failed because Makefile has not been executed. Running Makefile... execute again");
+			execMake();
+			fail();
+		}
+		
+		
+		String line = null;
+		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		while ((line=input.readLine()) != null) {
+			System.out.println(line);
+			fail();
+		}
+		
+		Process exec = rt.exec(new String[] {"runtime/tests/t1"});
+		
+		BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+		execReader.close();
+	}
+	
 }
