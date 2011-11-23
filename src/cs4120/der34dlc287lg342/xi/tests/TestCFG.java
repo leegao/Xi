@@ -21,6 +21,8 @@ import cs4120.der34dlc287lg342.xi.cfg.AvailableCopies;
 import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.CSE;
+import cs4120.der34dlc287lg342.xi.cfg.CopyPropagation;
+import cs4120.der34dlc287lg342.xi.cfg.IRLivenessAnalysis;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
 import cs4120.der34dlc287lg342.xi.cfg.Rewrite;
@@ -147,17 +149,24 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testCFG(){
-		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 0 b:int = 1 c:int = 3 if (a == 3) {c = a + 3; b = (a + 3) * 4; a = b + c}}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 0 b:int = 1 c:int = 3 if (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c}}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 //		System.out.println(func.prettyPrint());
 		CFG cfg = CFG.cfg(func);
+		
 		AvailableExpressions ae = new AvailableExpressions(cfg);
 		ae.analyze();
 		CSE cse = new CSE(cfg);
 		cse.analyze();
+		
 		AvailableCopies ac = new AvailableCopies(cfg);
 		ac.analyze();
+		CopyPropagation cp = new CopyPropagation(cfg);
+		cp.analyze();
+		
+		IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
+		la.analyze();
 		System.out.println(cfg.dot_edge());
 		
 //		TempRegister r = new TempRegister();

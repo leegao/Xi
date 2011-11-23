@@ -176,7 +176,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\navailable_out: " + this.out_available + "\"]\n";
+		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live + "\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";

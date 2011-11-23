@@ -40,7 +40,7 @@ public class AvailableCopies {
 		HashSet<Move> exprs = gen(node);
 		
 		worklist.add(node);
-		copy_map.put(node, kill(exprs, node));
+		copy_map.put(node, exprs);
 		
 		if(node.child1 != null) 
 			generate_worklist(node.child1, seen);
@@ -114,7 +114,8 @@ public class AvailableCopies {
 //					ret.add(e);
 //				}
 				TempRegister use = ((Temp)move.val).temp;
-				if (!r.equals(use)){
+				TempRegister def = ((Temp)move.dest).temp;
+				if (!r.equals(use) && !r.equals(def)){
 					ret.add(move);
 				}
 			}
