@@ -17,11 +17,13 @@ import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.assembly.RegAlloc;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.AssemblyCFG;
-import cs4120.der34dlc287lg342.xi.cfg.AvailableCopies;
+import cs4120.der34dlc287lg342.xi.cfg.AvailableCopiesAndConstants;
 import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
+import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
 import cs4120.der34dlc287lg342.xi.cfg.CSE;
-import cs4120.der34dlc287lg342.xi.cfg.CopyPropagation;
+import cs4120.der34dlc287lg342.xi.cfg.DeadCodeElimination;
+import cs4120.der34dlc287lg342.xi.cfg.VariablePropagation;
 import cs4120.der34dlc287lg342.xi.cfg.IRLivenessAnalysis;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
@@ -149,7 +151,7 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testCFG(){
-		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 0 b:int = 1 c:int = 3 if (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c}}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 if (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c} print(unparseInt(c))}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 //		System.out.println(func.prettyPrint());
@@ -160,13 +162,29 @@ public class TestCFG extends TestCase {
 		CSE cse = new CSE(cfg);
 		cse.analyze();
 		
-		AvailableCopies ac = new AvailableCopies(cfg);
-		ac.analyze();
-		CopyPropagation cp = new CopyPropagation(cfg);
-		cp.analyze();
+		HashSet<Move> last_ac = new HashSet<Move>();
 		
-		IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
-		la.analyze();
+		// this goes into a loop until we stabilizes or after 20 iterations
+		int i = 0;
+		while(true){
+			AvailableCopiesAndConstants ac = new AvailableCopiesAndConstants(cfg);
+			ac.analyze();
+			VariablePropagation cp = new VariablePropagation(cfg);
+			cp.analyze();
+			CFGConstantFolding.foldConstants(cfg);
+			
+			IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
+			la.analyze();
+			DeadCodeElimination dce = new DeadCodeElimination(cfg);
+			dce.analyze();
+			
+			HashSet<Move> cur_ac = ac.get_all(cfg, new HashSet<Move>(), new HashSet<CFG>());
+			if (cur_ac.equals(last_ac) || i >= 20)
+				break;
+			last_ac = cur_ac;
+			i++;
+		}
+		
 		System.out.println(cfg.dot_edge());
 		
 //		TempRegister r = new TempRegister();

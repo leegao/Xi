@@ -51,6 +51,18 @@ public class Move extends Stmt {
 		return seq;
 	}
 	
+	public void replace(Expr from, Expr to){
+		if (dest instanceof Temp){
+			if (val.equals(from)){
+				val = to;
+			} else {
+				val.replace(from, to);
+			}
+		} else {
+			super.replace(from, to);
+		}
+	}
+	
 	@Override
 	public Tile munch() {
 		

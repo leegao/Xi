@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 import cs4120.der34dlc287lg342.xi.ir.Arg;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
@@ -27,7 +28,7 @@ public class CFG {
 	public int id;
 	
 	public HashSet<Expr> out_available;
-	HashSet<TempRegister> use, def;
+	public HashSet<TempRegister> use, def;
 	
 	public Stmt ir;
 	public HashSet<TempRegister> in_live;
@@ -176,7 +177,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live + "\"]\n";
+		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live +"\\nuse: " + this.use +"\\ndef: " + this.def + "\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";
@@ -268,6 +269,31 @@ public class CFG {
 		return node;
 	}
 	
+	public static void prune_labels(CFG node, HashSet<CFG> memoize){
+		if (memoize.contains(node)){
+			return;
+		}
+		memoize.add(node);
+		// invariant: each label has one child except for the return label
+		// for each label except one without child1, its child1 takes all of its parents
+		
+		if (node.ir instanceof LabelNode && node.child1 != null){
+			CFG child = node.child1;
+			for (CFG parent : node.pred()){
+				if (parent.child1.equals(node)){
+					parent.child1 = child;
+				} else {
+					parent.child2 = child;
+				}
+			}
+			child.parents = node.parents;
+		}
+		
+		for (CFG next : node.succ()){
+			prune_labels(next, memoize);
+		}
+	}
+	
 	public static CFG cfg(Func ir){
 		HashMap<Label, CFG> jumps = new HashMap<Label, CFG>();
 		HashSet<CFG> memoize = new HashSet<CFG>();
@@ -275,6 +301,10 @@ public class CFG {
 		
 		// single DPS to traverse and alter the connection of the graphs
 		CFG second_pass = traverse(first_pass, jumps, memoize);
+		
+		// prune labels from second pass
+		memoize = new HashSet<CFG>();
+		prune_labels(second_pass, memoize);
 		
 		return second_pass;
 	}
@@ -294,5 +324,72 @@ public class CFG {
 		set.addAll(a);
 		set.addAll(b);
 		return set;
+	}
+	
+//	public boolean equals(Object that){
+//		if (that instanceof CFG){
+//			return equals((CFG)that, new HashSet<CFG>());
+//		}
+//		return false;
+//	}
+	
+	public boolean equals(CFG other, HashSet<CFG> memoize){
+		if (other == null)
+			return false;
+		
+		
+		if (memoize.contains(this))
+			return true;
+		memoize.add(this);
+		
+		if (!other.ir.equals(ir)){
+			return false;
+		}
+
+		boolean ret = true;
+		if (this.child1 != null && other.child1 != null){
+			ret &= this.child1.equals(other.child1, memoize);
+		} else if (this.child1 == null && other.child1 == null){
+			// pass
+		} else {
+			return false;
+		}
+		
+		if (this.child2 != null && other.child2 != null){
+			ret &= this.child2.equals(other.child2, memoize);
+		} else if (this.child2 == null && other.child2 == null){
+			// pass
+		} else {
+			return false;
+		}
+			
+		return ret;
+	}
+	
+	public CFG clone(){
+		return clone(new Hashtable<CFG, CFG>());
+	}
+	
+	public CFG clone(Hashtable<CFG, CFG> memoize){
+		if (memoize.containsKey(this))
+			return memoize.get(this);
+		Stmt ir_clone = this.ir;
+		CFG clone = new CFG(ir_clone);
+		for (CFG prev : this.pred()){
+			if (memoize.containsKey(prev)){
+				CFG parent = memoize.get(prev);
+				clone.parents.add(parent);
+				if (prev.child1 == this){
+					parent.child1 = clone;
+				} else {
+					parent.child2 = clone;
+				}
+			}
+		}
+		memoize.put(this, clone);
+		for (CFG next : this.succ()){
+			next.clone(memoize);
+		}
+		return clone;
 	}
 }
