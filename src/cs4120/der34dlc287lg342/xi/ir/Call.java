@@ -30,6 +30,20 @@ public class Call extends Expr {
 		args.add(arg);
 		children.add(arg);
 	}
+	
+	public void replace(Expr from, Expr to) {
+		int i = 0;
+		for (Expr arg : new ArrayList<Expr>(args)){
+			if (arg.equals(from)){
+				args.set(i, to);
+				children.set(i+1, to);
+			} else {
+				arg.replace(from, to);
+				children.set(i+1, arg);
+			}
+			i = i + 1;
+		}
+	}
 
 	@Override
 	public String label() {

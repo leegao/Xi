@@ -264,6 +264,31 @@ public class AssemblyCFG {
 		return node;
 	}
 	
+	public static void prune_labels(AssemblyCFG node, HashSet<AssemblyCFG> memoize){
+		if (memoize.contains(node)){
+			return;
+		}
+		memoize.add(node);
+		// invariant: each label has one child except for the return label
+		// for each label except one without child1, its child1 takes all of its parents
+		
+		if (node.asm instanceof LABEL && node.child1 != null){
+			AssemblyCFG child = node.child1;
+			for (AssemblyCFG parent : node.pred()){
+				if (parent.child1.equals(node)){
+					parent.child1 = child;
+				} else {
+					parent.child2 = child;
+				}
+			}
+			child.parents = node.parents;
+		}
+		
+		for (AssemblyCFG next : node.succ()){
+			prune_labels(next, memoize);
+		}
+	}
+	
 	public static AssemblyCFG cfg(ArrayList<Assembly> instrs){
 		HashMap<Label, AssemblyCFG> jumps = new HashMap<Label, AssemblyCFG>();
 		HashSet<AssemblyCFG> memoize = new HashSet<AssemblyCFG>();
@@ -271,6 +296,8 @@ public class AssemblyCFG {
 		
 		// single DPS to traverse and alter the connection of the graphs
 		AssemblyCFG second_pass = traverse(first_pass, jumps, memoize);
+		
+		prune_labels(second_pass, new HashSet<AssemblyCFG>());
 		
 		return second_pass;
 	}

@@ -28,12 +28,16 @@ public class VariablePropagation {
 			make_worklist(next, seen);
 	}
 	
-	public HashSet<Move> in(CFG node){
-		HashSet<Move> moves = new HashSet<Move>();
+	public static HashSet<Move> in(CFG node){
+		HashSet<Move> intersect = null;
 		for (CFG prev : node.pred()){
-			moves.addAll(prev.out_copy);
+			if (intersect == null) 
+				intersect = new HashSet<Move>(prev.out_copy);
+			else{
+				intersect = CFG.intersect(prev.out_copy, intersect);
+			}
 		}
-		return moves;
+		return intersect == null ? new HashSet<Move>() : intersect;
 	}
 	
 	public void analyze(){
@@ -59,13 +63,13 @@ public class VariablePropagation {
 	
 	public void make_chain(CFG node, Move move, ArrayList<CFG> chain){
 		Temp copy = (Temp)move.dest;
-		if (node.ir.contains(copy)){
+		//boolean contains = node.ir.contains(copy);
+		if (in(node).contains(move) &&  node.ir.contains(copy)){
 			chain.add(node);
-		}
-		
-		if (in(node).contains(move))
 			for (CFG next : node.succ()){
 				make_chain(next, move, chain);
 			}
+		}
+		
 	}
 }
