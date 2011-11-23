@@ -17,19 +17,29 @@ import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
-public class AvailableCopiesAndConstants {
+public class AvailableCopies {
 	public ArrayList<CFG> worklist;
 	public Hashtable<CFG, HashSet<Move>> copy_map;
 	public Hashtable<CFG, TempRegister> kill_map;
 	public HashSet<CFG> kill_mem;
+	HashSet<Move> universal;
 	CFG node;
 	
-	public AvailableCopiesAndConstants(CFG node){
+	public AvailableCopies(CFG node){
 		this.node = node;
 		worklist = new ArrayList<CFG>();
 		copy_map = new Hashtable<CFG, HashSet<Move>>();
 		kill_map = new Hashtable<CFG, TempRegister>();
+		universal = new HashSet<Move>();
 		generate_worklist(this.node, new HashSet<CFG>());
+		
+		// don't cache kill set
+		for (CFG cfg : worklist){
+			// if is a move
+			//if (cfg != node){
+				cfg.out_copy = new HashSet<Move>(universal);
+			//}
+		}
 	}
 
 	private void generate_worklist(CFG node, HashSet<CFG> seen) {
@@ -42,6 +52,7 @@ public class AvailableCopiesAndConstants {
 		worklist.add(node);
 		copy_map.put(node, moves);
 		
+		
 		if(node.child1 != null) 
 			generate_worklist(node.child1, seen);
 		
@@ -53,16 +64,17 @@ public class AvailableCopiesAndConstants {
 		while (!worklist.isEmpty()) {
 			CFG node = worklist.get(0);
 			worklist.remove(0);
+			
 			boolean changed = false;
 			// each iteration, recompute in with a new cache
 			Hashtable<CFG, HashSet<Move>> seen = new Hashtable<CFG, HashSet<Move>>();
 			seen.put(this.node, new HashSet<Move>());
 			
-			HashSet<Move> union = out(node, seen);
-			changed = !union.equals(node.out_available);
+			HashSet<Move> intersection = out(node, seen);
+			changed = !intersection.equals(node.out_copy);
 			
 			if (changed) {
-				node.out_copy = union;
+				node.out_copy = intersection;
 				
 				for (CFG next : node.succ()) {
 					if (!worklist.contains(next)) {
@@ -80,10 +92,18 @@ public class AvailableCopiesAndConstants {
 		HashSet<Move> gen = new HashSet<Move>();
 		if (copy_map.containsKey(n))
 			gen.addAll(copy_map.get(n));
+		//System.out.println(n + " " + gen);
+		HashSet<Move> intersect = null;
 		for (CFG p : n.pred()){
 			HashSet<Move> cur = kill(p.out_copy, n);
-			gen.addAll(cur);
+			//System.out.println("\t"+cur);
+			if (intersect == null)
+				intersect = cur;
+			else
+				intersect = CFG.intersect(cur, intersect);
 		}
+		if (intersect != null)
+			gen.addAll(intersect);
 		seen.put(n, gen);
 		
 		return gen;
@@ -96,10 +116,12 @@ public class AvailableCopiesAndConstants {
 		if (stmt instanceof Move && ((Move)stmt).dest instanceof Temp && ((Move)stmt).val instanceof Temp){
 			// copy
 			moves.add((Move) stmt);
+			universal.add((Move) stmt);
 			kill_map.put(node, ((Temp)((Move)stmt).dest).temp);
 		} else if (stmt instanceof Move && ((Move)stmt).dest instanceof Temp && ((Move)stmt).val instanceof Const){
-			// constant
+			// copy
 			moves.add((Move) stmt);
+			universal.add((Move) stmt);
 			kill_map.put(node, ((Temp)((Move)stmt).dest).temp);
 		} else if (stmt instanceof Move && ((Move)stmt).dest instanceof Temp){
 			// no copy, but kill
@@ -123,8 +145,10 @@ public class AvailableCopiesAndConstants {
 					ret.add(move);
 				}
 			}
+		} else {
+			ret.addAll(set);
 		}
-		
+		//System.out.println(set + " " + node + " " + ret);
 		return ret;
 	}
 	

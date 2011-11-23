@@ -49,6 +49,21 @@ public class CFG {
 		id = guid++;
 	}
 	
+	public void reset(){
+		reset(this, new HashSet<CFG>());
+	}
+	
+	public void reset(CFG node, HashSet<CFG> seen){
+		if (seen.contains(node))
+			return;
+		seen.add(node);
+		node.out_available = new HashSet<Expr>();
+		node.out_copy = new HashSet<Move>();
+		node.in_live = new HashSet<TempRegister>();
+		for (CFG next : node.succ())
+			reset(next, seen);
+	}
+	
 	public static HashSet<TempRegister> def(Stmt ir){
 		HashSet<TempRegister> in_def = new HashSet<TempRegister>();
 		
@@ -177,7 +192,7 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live +"\\nuse: " + this.use +"\\ndef: " + this.def + "\"]\n";
+		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nin_copy: " + VariablePropagation.in(this) +"\\nout: " + this.out_copy + "\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";
@@ -312,7 +327,7 @@ public class CFG {
 	public static HashSet intersect(HashSet a, HashSet b){
 		HashSet set = new HashSet();
 		for (Object o : a){
-			if (b.contains(a)){
+			if (b.contains(o)){
 				set.add(o);
 			}
 		}
