@@ -65,7 +65,7 @@ id ::= IDENTIFIER:o
 type ::= INT:o {: RESULT = o.value(); :} | BOOL:o {: RESULT = o.value(); :};
 dimension ::= | INTEGER_LITERAL:t 
 	{:	String s = t.value();
-		RESULT = new IntegerLiteralNode(Integer.parseInt(s), t.position()); :};
+		RESULT = new IntegerLiteralNode(Long.parseLong(s), t.position()); :};
 
 var_decl ::= id:id COLON type:t bracket_list:arr
 	{:	// check that arr is empty

@@ -131,7 +131,7 @@ expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
 	
 	| INTEGER_LITERAL:o
 	{: 	Token tok = (Token)o;
-		int v = Integer.parseInt(tok.value());
+		long v = Long.parseLong(tok.value());
 		Position p = tok.position();
 		RESULT = new IntegerLiteralNode(v, p); :}
 		
