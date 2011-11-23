@@ -31,13 +31,16 @@ public class CFG {
 	
 	public Stmt ir;
 	public HashSet<TempRegister> in_live;
+	public HashSet<Move> out_copy;
 	
 	public CFG(Stmt ir){
 		parents = new ArrayList<CFG>();
 		child1 = null;
 		child2 = null;
 		out_available = new HashSet<Expr>();
+		out_copy = new HashSet<Move>();
 		in_live = new HashSet<TempRegister>();
+		
 		this.use = use(ir);
 		this.def = def(ir);
 		

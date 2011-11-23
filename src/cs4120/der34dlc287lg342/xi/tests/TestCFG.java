@@ -17,6 +17,7 @@ import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.assembly.RegAlloc;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.AssemblyCFG;
+import cs4120.der34dlc287lg342.xi.cfg.AvailableCopies;
 import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.CSE;
@@ -155,6 +156,8 @@ public class TestCFG extends TestCase {
 		ae.analyze();
 		CSE cse = new CSE(cfg);
 		cse.analyze();
+		AvailableCopies ac = new AvailableCopies(cfg);
+		ac.analyze();
 		System.out.println(cfg.dot_edge());
 		
 //		TempRegister r = new TempRegister();
