@@ -1,0 +1,45 @@
+cordprnt.lo cordprnt.o: cord/cordprnt.c include/cord.h \
+  /usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stddef.h \
+  /usr/include/stdio.h /usr/include/_types.h /usr/include/sys/_types.h \
+  /usr/include/sys/cdefs.h /usr/include/machine/_types.h \
+  /usr/include/i386/_types.h /usr/include/secure/_stdio.h \
+  /usr/include/secure/_common.h include/private/cord_pos.h \
+  /usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdarg.h include/ec.h \
+  /usr/include/string.h /usr/include/secure/_string.h include/gc.h \
+  include/gc_version.h include/gc_config_macros.h
+
+include/cord.h:
+
+/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stddef.h:
+
+/usr/include/stdio.h:
+
+/usr/include/_types.h:
+
+/usr/include/sys/_types.h:
+
+/usr/include/sys/cdefs.h:
+
+/usr/include/machine/_types.h:
+
+/usr/include/i386/_types.h:
+
+/usr/include/secure/_stdio.h:
+
+/usr/include/secure/_common.h:
+
+include/private/cord_pos.h:
+
+/usr/lib/gcc/i686-apple-darwin10/4.2.1/include/stdarg.h:
+
+include/ec.h:
+
+/usr/include/string.h:
+
+/usr/include/secure/_string.h:
+
+include/gc.h:
+
+include/gc_version.h:
+
+include/gc_config_macros.h:

@@ -1,0 +1,134 @@
+package cs4120.der34dlc287lg342.xi.tests;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.StringReader;
+
+import cs4120.der34dlc287lg342.xi.XiParser;
+import cs4120.der34dlc287lg342.xi.assembly.Assembler;
+import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
+import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
+import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import edu.cornell.cs.cs4120.xi.parser.Parser;
+
+import junit.framework.TestCase;
+
+public class TestExecution extends TestCase {
+	
+	public Seq gen(Reader r){
+		String code = "";
+		try {
+			while (r.ready()){
+				char[] buf = new char[1024];
+				r.read(buf);
+				code += new String(buf);
+			}
+		} catch (IOException e2) {
+			e2.printStackTrace();
+		}
+		Reader reader = new StringReader(code);
+		Parser p = new XiParser(reader);
+		AbstractSyntaxNode ast = p.parse();
+		XiTypechecker tc;
+		try {
+			tc = new XiTypechecker(ast, code);
+		} catch (InvalidXiTypeException e1) {
+			fail(e1.getMessage());
+			return null;
+		}
+		tc.typecheck();
+		((AbstractSyntaxTree)tc.ast).foldConstants();
+		try {
+			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
+			return LowerCjump.translate(tr.stmt().lower());
+		} catch (InvalidIRContextException e) {
+			fail(e.getMessage());
+		}
+		return null;
+	}
+	
+	public void execMake() throws Exception {
+		Runtime rt = Runtime.getRuntime();
+		Process pr = rt.exec("make", null, new File("runtime"));
+	}
+	
+	public void example() throws Exception {
+		Runtime rt = Runtime.getRuntime();
+		Process pr1 = rt.exec(new String[] {"./linkxi.sh", "examples/fibonacci_sysv_darwin.s",  "-o", "fibonacci"},
+							null, new File("runtime"));
+		int exit = pr1.waitFor();
+		
+		if( exit != 0 ) {
+			execMake();
+		} else {
+			Process pr2 = rt.exec("runtime/fibonacci");
+			
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(pr2.getOutputStream()));
+			
+			writer.write("10\n");
+			writer.close();
+			
+			BufferedReader input = new BufferedReader(new InputStreamReader(pr2.getInputStream()));
+		
+			System.out.println(input.readLine());
+		}
+	}
+	
+	public void testFibonacci() throws Exception {
+		Reader reader = new FileReader("runtime/examples/fibonacci.xi");
+		Seq stmnt = gen(reader);
+		stmnt = ConstantFolding.foldConstants(stmnt);
+		Tile t = stmnt.munch();
+		Assembler assembler = new Assembler((SeqTile) t);
+		String att = assembler.att();
+		
+		FileWriter fstream = new FileWriter("runtime/tests/fibonacci.s");
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write(att);
+		out.close();
+		reader.close();
+		
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(new String[] {"./linkxi.sh", "tests/fibonacci.s",  "-o", "tests/fibonacci"},
+				null, new File("runtime"));
+	
+		if( proc.waitFor() != 0 ) {
+			System.out.println("Failed because Makefile has not been executed. Running Makefile... execute again");
+			execMake();
+			fail();
+		}
+		
+		
+		String line = null;
+		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		while ((line=input.readLine()) != null) {
+			System.out.println(line);
+		}
+		
+		Process exec = rt.exec("runtime/tests/fibonacci");
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(exec.getOutputStream()));
+		writer.write("10\n");
+		writer.close();
+		
+		BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+		
+		assertEquals("Please enter a positive number : 55", execReader.readLine());
+		execReader.close();
+	}
+}
