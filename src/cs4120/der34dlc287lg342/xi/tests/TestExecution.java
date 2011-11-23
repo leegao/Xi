@@ -114,7 +114,6 @@ public class TestExecution extends TestCase {
 			fail();
 		}
 		
-		
 		String line = null;
 		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 		while ((line=input.readLine()) != null) {
@@ -131,4 +130,87 @@ public class TestExecution extends TestCase {
 		assertEquals("Please enter a positive number : 55", execReader.readLine());
 		execReader.close();
 	}
+	
+	public void testArgs() throws Exception {
+		Reader reader = new FileReader("runtime/examples/args.xi");
+		Seq stmnt = gen(reader);
+		stmnt = ConstantFolding.foldConstants(stmnt);
+		Tile t = stmnt.munch();
+		Assembler assembler = new Assembler((SeqTile) t);
+		String att = assembler.att();
+		
+		FileWriter fstream = new FileWriter("runtime/tests/args.s");
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write(att);
+		out.close();
+		reader.close();
+		
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(new String[] {"./linkxi.sh", "tests/args.s",  "-o", "tests/args"},
+				null, new File("runtime"));
+	
+		if( proc.waitFor() != 0 ) {
+			System.out.println("Failed because Makefile has not been executed. Running Makefile... execute again");
+			execMake();
+			fail();
+		}
+		
+		
+		String line = null;
+		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		while ((line=input.readLine()) != null) {
+			System.out.println(line);
+			fail();
+		}
+		
+		Process exec = rt.exec(new String[] {"runtime/tests/args", "asdf", "asdf1"});
+		
+		BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+		
+		assertEquals("runtime/tests/args", execReader.readLine());
+		assertEquals("asdf", execReader.readLine());
+		assertEquals("asdf1", execReader.readLine());
+		execReader.close();
+	}
+	
+	public void testContestAddArray() throws Exception {
+		Reader reader = new FileReader("2011-contest/addArray.xi");
+		Seq stmnt = gen(reader);
+		stmnt = ConstantFolding.foldConstants(stmnt);
+		Tile t = stmnt.munch();
+		Assembler assembler = new Assembler((SeqTile) t);
+		String att = assembler.att();
+		
+		FileWriter fstream = new FileWriter("runtime/tests/addArray.s");
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write(att);
+		out.close();
+		reader.close();
+		
+		Runtime rt = Runtime.getRuntime();
+		Process proc = rt.exec(new String[] {"./linkxi.sh", "tests/addArray.s",  "-o", "tests/addArray"},
+				null, new File("runtime"));
+	
+		if( proc.waitFor() != 0 ) {
+			System.out.println("Failed because Makefile has not been executed. Running Makefile... execute again");
+			execMake();
+			fail();
+		}
+		
+		
+		String line = null;
+		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
+		while ((line=input.readLine()) != null) {
+			System.out.println(line);
+			fail();
+		}
+		
+		Process exec = rt.exec(new String[] {"runtime/tests/addArray"});
+		
+		BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
+		
+		assertEquals("hello ABCFGHIJK", execReader.readLine());
+		execReader.close();
+	}
+	
 }
