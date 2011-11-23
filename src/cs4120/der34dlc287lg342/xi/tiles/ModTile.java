@@ -18,7 +18,7 @@ public class ModTile extends BinopTile {
 		asm.addAll(right.att());
 
 		asm.add(new OPER("movq %s0, %rax", left.out, null));
-		asm.add(new OPER("movq $0, %rdx", new TempRegister[]{}, null));
+		asm.add(new OPER("cltd", new TempRegister[]{}, null)); // wtf is this anyways?
 
 		asm.add(new OPER("idivq %s0", right.out, null));
 		out = new TempRegister();
