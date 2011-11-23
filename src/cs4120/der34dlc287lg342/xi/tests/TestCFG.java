@@ -107,7 +107,7 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testMeh(){
-		File[] valid = new File("2009-contest").listFiles();
+		File[] valid = new File("2009-good").listFiles();
 		
 		for (File validFile: valid) {
 			Seq f = null;
@@ -135,7 +135,7 @@ public class TestCFG extends TestCase {
 				Assembler assembler = new Assembler((SeqTile) t);
 				String att = assembler.att();
 				
-				FileWriter fstream = new FileWriter("2009-contest/"+validFile.getName().replace("xi", "s"));
+				FileWriter fstream = new FileWriter("2009-good/"+validFile.getName().replace("xi", "s"));
 				BufferedWriter out = new BufferedWriter(fstream);
 				out.write(att);
 				out.close();

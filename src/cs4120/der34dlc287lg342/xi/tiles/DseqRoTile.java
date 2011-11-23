@@ -16,7 +16,7 @@ public class DseqRoTile extends Tile {
 	}
 
 	public ArrayList<Assembly> att(){
-		String asm = ".section .rodata\n"+
+		String asm = "#.section .rodata\n"+
 					 ".align 8\n"+ro_entry+":\n";
 		asm += "\t.quad "+data.size()+"\n";
 		for (int i : data){
