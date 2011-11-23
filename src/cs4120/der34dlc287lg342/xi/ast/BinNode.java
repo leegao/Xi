@@ -102,8 +102,8 @@ public class BinNode extends ExpressionNode {
 		
 		// Scheme: if e1 and e2 are int literals, return int literal
 		if (e1 instanceof IntegerLiteralNode && e2 instanceof IntegerLiteralNode){
-			int value = ((IntegerLiteralNode)e1).value;
-			int rvalue = ((IntegerLiteralNode)e2).value;
+			long value = ((IntegerLiteralNode)e1).value;
+			long rvalue = ((IntegerLiteralNode)e2).value;
 			if (op.equals("PLUS")){
 				value += rvalue;
 			} else if (op.equals("MINUS")){

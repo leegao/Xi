@@ -91,9 +91,9 @@ public class ListIndexNode extends ExpressionNode {
 		if (expr instanceof ListNode && index instanceof IntegerLiteralNode){
 			// return the i-th object from list
 			ListNode list = (ListNode)expr;
-			int i = ((IntegerLiteralNode)index).value;
+			long i = ((IntegerLiteralNode)index).value;
 			if (i >= list.children.size()) return null;
-			AbstractSyntaxTree tree = (AbstractSyntaxTree)list.children.get(i);
+			AbstractSyntaxTree tree = (AbstractSyntaxTree)list.children.get((int)i);
 			assert(tree.type == type);
 			return tree;
 		}

@@ -16,9 +16,9 @@ import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
 public class IntegerLiteralNode extends ExpressionNode {
-	public int value;
+	public long value;
 	protected Position position;
-	public IntegerLiteralNode(int value, Position position){
+	public IntegerLiteralNode(long value, Position position){
 		this.value = value;
 		this.position = position;
 	}

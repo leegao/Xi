@@ -193,7 +193,7 @@ public class DeclNode extends AbstractSyntaxTree {
 			//return new Temp(TempRegister.Null);
 			return new Const(0);
 		
-		int n = ((Const)hd).value;
+		long n = ((Const)hd).value;
 		Expr base = new Temp(new TempRegister());
 		Seq seq = TempRegister.init_array(base,hd);
 		for (int i = 0; i < n; i++){

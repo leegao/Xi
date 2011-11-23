@@ -69,7 +69,7 @@ public class UnNegNode extends ExpressionNode {
 		
 		// if e1 is int literal node
 		if (e1 instanceof IntegerLiteralNode){
-			int value = -((IntegerLiteralNode)e1).value;
+			long value = -((IntegerLiteralNode)e1).value;
 			IntegerLiteralNode b = new IntegerLiteralNode(value, position());
 			b.type = type;
 			return b;

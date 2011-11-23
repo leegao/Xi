@@ -116,11 +116,11 @@ _I_c_internal_strdup_aii:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(57)
-	movq %rbx, -16(%rbp)		# movq %r(57), -16(%rbp)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(58)
+	movq %rbx, -24(%rbp)		# movq %r(57), -24(%rbp)
+	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(58)
 	movq (%rbx), %r12		# movq (%r(58)), %r(45)
-	movq %r12, -24(%rbp)		# movq %r(59), -24(%rbp)
-	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(60)
+	movq %r12, -16(%rbp)		# movq %r(59), -16(%rbp)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(60)
 	salq $3, %rbx		# salq $3, %r(46)
 	movq $8, %r12		# movq $8, %r(47)
 	addq %r12, %rbx		# addq %r(47), %r(48)
@@ -129,14 +129,14 @@ _I_c_internal_strdup_aii:
 	movq %rax, %rbx		# movq %rax, %r(31)
 	movq %rbx, %r14		# movq %r(31), %r(t27)
 	.L24:		# .L24:
-	movq -24(%rbp), %r12		# movq -24(%rbp), %r(61)
+	movq -16(%rbp), %r12		# movq -16(%rbp), %r(61)
 	salq $3, %r12		# salq $3, %r(49)
 	movq %r14, %r13		# movq %r(t27), %r(50)
 	addq %r12, %r13		# addq %r(49), %r(50)
-	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(62)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(62)
 	movq %rbx, %r12		# movq %r(62), %r(51)
 	salq $3, %r12		# salq $3, %r(51)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(63)
+	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(63)
 	movq %rbx, -8(%rbp)		# movq %r(64), -8(%rbp)
 	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(65)
 	addq %r12, %rbx		# addq %r(51), %r(65)
@@ -144,11 +144,11 @@ _I_c_internal_strdup_aii:
 	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(66)
 	movq (%rbx), %rbx		# movq (%r(66)), %r(53)
 	movq %rbx, (%r13)		# movq %r(53), (%r(50))
-	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(67)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(67)
 	decq %rbx		# decq %r(67)
-	movq %rbx, -24(%rbp)		# movq %r(67), -24(%rbp)
+	movq %rbx, -16(%rbp)		# movq %r(67), -16(%rbp)
 	movq $0, %rbx		# movq $0, %r(54)
-	movq -24(%rbp), %r12		# movq -24(%rbp), %r(68)
+	movq -16(%rbp), %r12		# movq -16(%rbp), %r(68)
 	cmpq %rbx, %r12		# cmpq %r(54), %r(68)
 	jge .L24		# jge .L24
 	.L25:		# .L25:
@@ -166,26 +166,6 @@ _I_c_internal_strdup_aii:
 	popq %rbp
 	ret
 	
-#.section .rodata
-.align 8
-.L23:
-	.quad 14
-	.quad 73
-	.quad 110
-	.quad 118
-	.quad 97
-	.quad 108
-	.quad 105
-	.quad 100
-	.quad 32
-	.quad 105
-	.quad 110
-	.quad 112
-	.quad 117
-	.quad 116
-	.quad 33
-	.text
-
 #.section .rodata
 .align 8
 .L20:
@@ -223,5 +203,25 @@ _I_c_internal_strdup_aii:
 	.quad 32
 	.quad 58
 	.quad 32
+	.text
+
+#.section .rodata
+.align 8
+.L23:
+	.quad 14
+	.quad 73
+	.quad 110
+	.quad 118
+	.quad 97
+	.quad 108
+	.quad 105
+	.quad 100
+	.quad 32
+	.quad 105
+	.quad 110
+	.quad 112
+	.quad 117
+	.quad 116
+	.quad 33
 	.text
 

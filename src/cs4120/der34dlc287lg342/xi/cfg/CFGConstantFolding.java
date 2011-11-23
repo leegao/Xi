@@ -58,7 +58,7 @@ public class CFGConstantFolding {
 		if (stmt instanceof Cjump){
 			Cjump cjump = (Cjump)stmt;
 			if (cjump.condition instanceof Const){
-				int v = ((Const)cjump.condition).value;
+				long v = ((Const)cjump.condition).value;
 				if (v == 0){
 					// if false 
 					// replace with jump(iffalse) aka, go to the next statement

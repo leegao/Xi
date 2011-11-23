@@ -119,8 +119,8 @@ public class EqualityNode extends ExpressionNode {
 			new_tree.type = type;
 			return new_tree;
 		} else if (e1 instanceof IntegerLiteralNode && e2 instanceof IntegerLiteralNode){
-			int lvalue = ((IntegerLiteralNode)e1).value;
-			int rvalue = ((IntegerLiteralNode)e2).value;
+			long lvalue = ((IntegerLiteralNode)e1).value;
+			long rvalue = ((IntegerLiteralNode)e2).value;
 			boolean value = false;
 			if (op.equals("EQUAL")){
 				value = lvalue == rvalue;

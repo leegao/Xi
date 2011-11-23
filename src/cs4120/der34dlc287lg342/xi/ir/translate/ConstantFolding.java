@@ -57,7 +57,7 @@ public class ConstantFolding {
 			if (stmt instanceof Cjump){
 				Cjump cjump = (Cjump)stmt;
 				if (cjump.condition instanceof Const){
-					int v = ((Const)cjump.condition).value;
+					long v = ((Const)cjump.condition).value;
 					if (v == 0){
 						// if false 
 						// replace with jump(iffalse)
@@ -128,7 +128,7 @@ public class ConstantFolding {
 	public static Expr foldConstants(Binop expr){
 		Expr left = foldConstants(expr.left), right = foldConstants(expr.right);
 		if (left instanceof Const && right instanceof Const){
-			int l = ((Const)left).value, r = ((Const)right).value;
+			long l = ((Const)left).value, r = ((Const)right).value;
 			switch (expr.op){
 			case Binop.PLUS:
 				return new Const(l+r);
@@ -170,10 +170,10 @@ public class ConstantFolding {
 		}
 		
 		if (left instanceof Const && right instanceof Binop){
-			int l = ((Const)left).value;
+			long l = ((Const)left).value;
 			Binop bin  = ((Binop)right);
 			if (bin.left instanceof Const || bin.right instanceof Const){
-				int r;
+				long r;
 				Expr e;
 				boolean leftside = true;
 				if (bin.left instanceof Const){

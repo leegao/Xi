@@ -3,8 +3,8 @@ package cs4120.der34dlc287lg342.xi.ir;
 import cs4120.der34dlc287lg342.xi.tiles.ConstTile;
 
 public class Const extends Expr {
-	public int value;
-	public Const(int value){
+	public long value;
+	public Const(long value){
 		this.value = value;
 	}
 	
