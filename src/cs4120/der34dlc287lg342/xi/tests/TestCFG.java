@@ -1,5 +1,11 @@
 package cs4120.der34dlc287lg342.xi.tests;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -31,6 +37,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.LowerCjump;
 import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -59,6 +66,79 @@ public class TestCFG extends TestCase {
 			fail(e.getMessage());
 		}
 		return null;
+	}
+	
+	public Seq gen(Reader r){
+		String code = "";
+		try {
+			while (r.ready()){
+				char[] buf = new char[1024];
+				r.read(buf);
+				code += new String(buf);
+			}
+		} catch (IOException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		Reader reader = new StringReader(code);
+		Parser p = new XiParser(reader);
+		AbstractSyntaxNode ast = p.parse();
+		XiTypechecker tc;
+		try {
+			tc = new XiTypechecker(ast, code);
+		} catch (InvalidXiTypeException e1) {
+			fail(e1.getMessage());
+			return null;
+		}
+		tc.typecheck();
+		((AbstractSyntaxTree)tc.ast).foldConstants();
+		try {
+			IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
+			return LowerCjump.translate(tr.stmt().lower());
+		} catch (InvalidIRContextException e) {
+			fail(e.getMessage());
+		}
+		return null;
+	}
+	
+	public void testMeh(){
+		File[] valid = new File("2009-good").listFiles();
+		
+		for (File validFile: valid) {
+			Seq f = null;
+			Tile t = null;
+			try{
+			if (validFile.getName().contains(".xi")){
+				System.out.println("./linkxi.sh -o "+validFile.getName().replace(".xi", "")+" "+validFile.getName().replace("xi", "s"));
+				Reader reader = null;
+				
+				reader = new FileReader(validFile.getPath());
+				
+				Seq stmt = gen(reader);
+				stmt = ConstantFolding.foldConstants(stmt);
+				f = stmt;
+		//		System.out.println(func.prettyPrint());
+		//		CFG cfg = CFG.cfg(func);
+		//		AvailableExpressions ae = new AvailableExpressions(cfg);
+		//		ae.analyze();
+		//		CSE cse = new CSE(cfg);
+		//		cse.analyze();
+				t = stmt.munch();
+				Assembler assembler = new Assembler((SeqTile) t);
+				String att = assembler.att();
+				
+				FileWriter fstream = new FileWriter("2009-good/"+validFile.getName().replace("xi", "s"));
+				BufferedWriter out = new BufferedWriter(fstream);
+				out.write(att);
+				out.close();
+			}
+			} catch (Exception e){
+				System.out.println(f.prettyPrint());
+				System.out.println(t);
+				e.printStackTrace();
+				break;
+			}
+		}
 	}
 	
 	public void testCFG(){

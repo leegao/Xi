@@ -37,6 +37,7 @@ public class MoveTile extends Tile {
 	
 	public ArrayList<Assembly> att(){
 		ArrayList<Assembly> asm = new ArrayList<Assembly>();
+		//System.out.println(src + " : " + dest);
 		asm.addAll(dest.att());
 		asm.addAll(src.att());
 		asm.add(Assembly.new_move(src.out, dest.out));

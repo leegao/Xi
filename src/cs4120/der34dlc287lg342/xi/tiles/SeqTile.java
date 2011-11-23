@@ -11,4 +11,12 @@ public class SeqTile extends Tile {
 	public void add(Tile tile){
 		tiles.add(tile);
 	}
+	
+	public String toString(){
+		String s = "";
+		for (Tile t : tiles){
+			s += t + "\n";
+		}
+		return s;
+	}
 }

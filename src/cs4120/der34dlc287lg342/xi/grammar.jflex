@@ -76,7 +76,7 @@ import edu.cornell.cs.cs4120.xi.lexer.*;
 %type Token
 LineTerminator = \r|\n|\r\n
 InputCharacter = [^\r\n]
-WhiteSpace     = {LineTerminator} | [ \t\f]
+WhiteSpace     = {LineTerminator} | [ \t\f\0]
 
 Comment     = "//" {InputCharacter}*
 
