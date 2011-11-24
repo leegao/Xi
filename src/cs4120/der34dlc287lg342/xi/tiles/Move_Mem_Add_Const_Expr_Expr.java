@@ -17,6 +17,7 @@ public class Move_Mem_Add_Const_Expr_Expr extends Tile{
 	long value;
 	
 	public Move_Mem_Add_Const_Expr_Expr(long value, Tile src, Tile dest) {
+		System.out.println(value);
 		this.dest = dest;
 		this.value = value;
 		this.src = src;

@@ -143,10 +143,10 @@ public class TestCFG extends TestCase {
 			}
 			} catch (Exception e){
 				
-				e.printStackTrace();
-				System.out.println(f.prettyPrint());
-				System.out.println(t);
-				break;
+				//e.printStackTrace();
+				//System.out.println(f.prettyPrint());
+				//System.out.println(t);
+				//break;
 			}
 		}
 	}

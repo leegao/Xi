@@ -118,13 +118,7 @@ public class FuncCallNode extends ExpressionNode {
 //			call.add(tr.expr());
 //		}
 		
-		for (int i = 0; i < (args.size() < 6 ? args.size() : 6); i++){
-			VisualizableTreeNode arg = args.get(i);
-			IRTranslation tr = ((AbstractSyntaxTree)arg).to_ir(stack);
-			call.add(tr.expr());
-		}
-		
-		for (int i = args.size()-1; i >= 6; i--){
+		for (int i = 0; i < (args.size()); i++){
 			VisualizableTreeNode arg = args.get(i);
 			IRTranslation tr = ((AbstractSyntaxTree)arg).to_ir(stack);
 			call.add(tr.expr());
