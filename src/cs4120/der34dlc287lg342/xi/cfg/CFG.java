@@ -49,6 +49,25 @@ public class CFG {
 		id = guid++;
 	}
 	
+	public void recompute(){
+		recompute(this, new HashSet<CFG>());
+	}
+	
+	public void recompute(CFG node, HashSet<CFG>seen){
+		if (node == null) return;
+		if (seen.contains(node))
+			return;
+		seen.add(node);
+		
+		for (CFG next : node.succ()){
+			if (!next.parents.contains(node)){
+				next.parents.add(node);
+			}
+			
+			recompute(next, seen);
+		}
+	}
+	
 	public void reset(){
 		reset(this, new HashSet<CFG>());
 	}

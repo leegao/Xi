@@ -110,15 +110,15 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testMeh(){
-		File[] valid = new File("2009-contest").listFiles();
+		File[] valid = new File("2011-contest").listFiles();
 		
 		for (File validFile: valid) {
 			Tile t = null;
 			try{
-			if (validFile.getName().contains("fibonacci.xi")){
+			if (validFile.getName().contains(".xi")){
 				//System.out.println(validFile.getName());
 				System.out.println("./../runtime/linkxi.sh -o "+validFile.getName().replace(".xi", "")+" "+validFile.getName().replace("xi", "s"));
-				System.out.println("./"+validFile.getName().replace(".xi", "")+" > o");
+				System.out.println("./"+validFile.getName().replace(".xi", "")+"");
 				//System.out.println("diff "+validFile.getName().replace("xi", "exp")+" "+validFile.getName().replace("xi", "act"));
 				Reader reader = null;
 				
@@ -126,7 +126,7 @@ public class TestCFG extends TestCase {
 				
 				Seq stmt = gen(reader);
 				stmt = ConstantFolding.foldConstants(stmt);
-
+				//stmt.children
 				for (VisualizableTreeNode s : new ArrayList<VisualizableTreeNode>(stmt.children)){
 					if (!(s instanceof Func)) 
 						continue;
@@ -140,6 +140,7 @@ public class TestCFG extends TestCase {
 						ae.analyze();
 						CSE cse = new CSE(cfg);
 						cse.analyze();
+						cfg.recompute();
 						
 						HashSet<Move> last_ac = new HashSet<Move>();
 						//System.out.println(cfg.dot_edge());
@@ -150,9 +151,11 @@ public class TestCFG extends TestCase {
 							
 							AvailableCopies ac = new AvailableCopies(cfg);
 							ac.analyze();
+							cfg.recompute();
 							
 							VariablePropagation cp = new VariablePropagation(cfg);
 							cp.analyze();
+							cfg.recompute();
 							
 							CFGConstantFolding.foldConstants(cfg);
 							
@@ -174,18 +177,17 @@ public class TestCFG extends TestCase {
 						
 						DeadCodeElimination dce = new DeadCodeElimination(cfg);
 						dce.analyze();
-						
+						cfg.recompute();
 						
 					}
 					//System.out.println(cfg.dot_edge());
 					Trace lin = new Trace(cfg);
 					Func f = new Func(func.name);
 					lin.flatten(f);
-//					
 					stmt.children.set(which, f);
 				}
 				
-				System.out.println(stmt);
+				//System.out.println(CFG.cfg((Func) stmt.children.get(1)));
 				
 				Assembler assembler = new Assembler((SeqTile) stmt.munch());
 				//System.out.println(assembler.att());
@@ -199,7 +201,7 @@ public class TestCFG extends TestCase {
 //				Assembler assembler = new Assembler((SeqTile) t);
 				String att = assembler.att();
 				
-				FileWriter fstream = new FileWriter("2009-contest/"+validFile.getName().replace("xi", "s"));
+				FileWriter fstream = new FileWriter("2011-contest/"+validFile.getName().replace("xi", "s"));
 				BufferedWriter out = new BufferedWriter(fstream);
 				out.write(att);
 				out.close();

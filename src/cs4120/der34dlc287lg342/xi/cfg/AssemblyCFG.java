@@ -175,7 +175,7 @@ public class AssemblyCFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+asm.simple_assem(coloring)+"\\nuse: "+use+"\\ndef: "+def+"\\nin_wl: "+in_wl+"\"]\n";
+		str += "\t"+"n"+id+" [label=\""+asm.simple_assem(coloring)+"\\nuse: "+use+"\\ndef: "+def+"\"]\n";
 
 		for (AssemblyCFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";

@@ -11,65 +11,65 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $1, %r13		# movq $1, %r(997)
-	movq $27, %rbx		# movq $27, %r(998)
-	movq $13, %r12		# movq $13, %r(999)
-	movq %rbx, %rdi		# movq %r(998), %rdi
-	movq %r12, %rsi		# movq %r(999), %rsi
+	movq $1, %r13		# movq $1, %r(1064)
+	movq $27, %rbx		# movq $27, %r(1065)
+	movq $13, %r12		# movq $13, %r(1066)
+	movq %rbx, %rdi		# movq %r(1065), %rdi
+	movq %r12, %rsi		# movq %r(1066), %rsi
 	call _Igcd_iii		# call _Igcd_iii
-	movq %rax, %rbx		# movq %rax, %r(988)
-	movq $1, %r12		# movq $1, %r(1000)
-	cmpq %rbx, %r12		# cmpq %r(988), %r(1000)
+	movq %rax, %rbx		# movq %rax, %r(1055)
+	movq $1, %r12		# movq $1, %r(1067)
+	cmpq %rbx, %r12		# cmpq %r(1055), %r(1067)
 	je .L172		# je .L172
 	.L173:		# .L173:
-	movq $0, %r13		# movq $0, %r(1001)
+	movq $0, %r13		# movq $0, %r(1068)
 	.L172:		# .L172:
-	movq %r13, %rdi		# movq %r(981), %rdi
+	movq %r13, %rdi		# movq %r(1048), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	movq $1, %r13		# movq $1, %r(1002)
-	movq $27, %rbx		# movq $27, %r(1003)
-	movq $9, %r12		# movq $9, %r(1004)
-	movq %rbx, %rdi		# movq %r(1003), %rdi
-	movq %r12, %rsi		# movq %r(1004), %rsi
+	movq $1, %r13		# movq $1, %r(1069)
+	movq $27, %rbx		# movq $27, %r(1070)
+	movq $9, %r12		# movq $9, %r(1071)
+	movq %rbx, %rdi		# movq %r(1070), %rdi
+	movq %r12, %rsi		# movq %r(1071), %rsi
 	call _Igcd_iii		# call _Igcd_iii
-	movq %rax, %rbx		# movq %rax, %r(990)
-	movq $9, %r12		# movq $9, %r(1005)
-	cmpq %rbx, %r12		# cmpq %r(990), %r(1005)
+	movq %rax, %rbx		# movq %rax, %r(1057)
+	movq $9, %r12		# movq $9, %r(1072)
+	cmpq %rbx, %r12		# cmpq %r(1057), %r(1072)
 	je .L174		# je .L174
 	.L175:		# .L175:
-	movq $0, %r13		# movq $0, %r(1006)
+	movq $0, %r13		# movq $0, %r(1073)
 	.L174:		# .L174:
-	movq %r13, %rdi		# movq %r(982), %rdi
+	movq %r13, %rdi		# movq %r(1049), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	movq $1, %r13		# movq $1, %r(1007)
-	movq $25, %rbx		# movq $25, %r(1008)
-	movq $55, %r12		# movq $55, %r(1009)
-	movq %rbx, %rdi		# movq %r(1008), %rdi
-	movq %r12, %rsi		# movq %r(1009), %rsi
+	movq $1, %r13		# movq $1, %r(1074)
+	movq $25, %rbx		# movq $25, %r(1075)
+	movq $55, %r12		# movq $55, %r(1076)
+	movq %rbx, %rdi		# movq %r(1075), %rdi
+	movq %r12, %rsi		# movq %r(1076), %rsi
 	call _Igcd_iii		# call _Igcd_iii
-	movq %rax, %rbx		# movq %rax, %r(992)
-	movq $5, %r12		# movq $5, %r(1010)
-	cmpq %rbx, %r12		# cmpq %r(992), %r(1010)
+	movq %rax, %rbx		# movq %rax, %r(1059)
+	movq $5, %r12		# movq $5, %r(1077)
+	cmpq %rbx, %r12		# cmpq %r(1059), %r(1077)
 	je .L176		# je .L176
 	.L177:		# .L177:
-	movq $0, %r13		# movq $0, %r(1011)
+	movq $0, %r13		# movq $0, %r(1078)
 	.L176:		# .L176:
-	movq %r13, %rdi		# movq %r(983), %rdi
+	movq %r13, %rdi		# movq %r(1050), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	movq $1, %r13		# movq $1, %r(1012)
-	movq $4008, %rbx		# movq $4008, %r(1013)
-	movq $6012, %r12		# movq $6012, %r(1014)
-	movq %rbx, %rdi		# movq %r(1013), %rdi
-	movq %r12, %rsi		# movq %r(1014), %rsi
+	movq $1, %r13		# movq $1, %r(1079)
+	movq $4008, %rbx		# movq $4008, %r(1080)
+	movq $6012, %r12		# movq $6012, %r(1081)
+	movq %rbx, %rdi		# movq %r(1080), %rdi
+	movq %r12, %rsi		# movq %r(1081), %rsi
 	call _Igcd_iii		# call _Igcd_iii
-	movq %rax, %rbx		# movq %rax, %r(994)
-	movq $2004, %r12		# movq $2004, %r(1015)
-	cmpq %rbx, %r12		# cmpq %r(994), %r(1015)
+	movq %rax, %rbx		# movq %rax, %r(1061)
+	movq $2004, %r12		# movq $2004, %r(1082)
+	cmpq %rbx, %r12		# cmpq %r(1061), %r(1082)
 	je .L178		# je .L178
 	.L179:		# .L179:
-	movq $0, %r13		# movq $0, %r(1016)
+	movq $0, %r13		# movq $0, %r(1083)
 	.L178:		# .L178:
-	movq %r13, %rdi		# movq %r(984), %rdi
+	movq %r13, %rdi		# movq %r(1051), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	.L171:		# .L171:
 	popq %r15
@@ -101,8 +101,8 @@ _Igcd_iii:
 	movq %r13, %r12		# movq %r(x), %r(y)
 	movq %rbx, %r13		# movq %r(t), %r(x)
 	.L182:		# .L182:
-	movq $0, %rbx		# movq $0, %r(1017)
-	cmpq %rbx, %r12		# cmpq %r(1017), %r(y)
+	movq $0, %rbx		# movq $0, %r(1084)
+	cmpq %rbx, %r12		# cmpq %r(1084), %r(y)
 	jne .L184		# jne .L184
 	.L183:		# .L183:
 	movq %r13, %rax		# movq %r(x), %rax
@@ -121,11 +121,11 @@ _Igcd_iii:
 	movq %r13, %rax		# movq %r(x), %rax
 	cqto		# cqto
 	idivq %r12		# idivq %r(y)
-	movq %rdx, %rbx		# movq %rdx, %r(1018)
+	movq %rdx, %rbx		# movq %rdx, %r(1085)
 	movq %r12, %rdi		# movq %r(y), %rdi
-	movq %rbx, %rsi		# movq %r(1018), %rsi
+	movq %rbx, %rsi		# movq %r(1085), %rsi
 	call _Igcd_iii		# call _Igcd_iii
-	movq %rax, %rbx		# movq %rax, %r(996)
-	movq %rbx, %rax		# movq %r(996), %rax
+	movq %rax, %rbx		# movq %rax, %r(1063)
+	movq %rbx, %rax		# movq %r(1063), %rax
 	jmp .L180		# jmp .L180
 	
