@@ -11,14 +11,14 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $5, %rbx		# movq $5, %r(47007)
-	movq %rbx, %rdi		# movq %r(47007), %rdi
+	movq $5, %rbx		# movq $5, %r(46984)
+	movq %rbx, %rdi		# movq %r(46984), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(47003)
-	movq %rbx, %rdi		# movq %r(47003), %rdi
+	movq %rax, %rbx		# movq %rax, %r(46980)
+	movq %rbx, %rdi		# movq %r(46980), %rdi
 	call _IunparseInt_aii		# call _IunparseInt_aii
-	movq %rax, %rbx		# movq %rax, %r(47004)
-	movq %rbx, %rdi		# movq %r(47004), %rdi
+	movq %rax, %rbx		# movq %rax, %r(46981)
+	movq %rbx, %rdi		# movq %r(46981), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
 	.L172:		# .L172:
 	popq %r15
@@ -42,22 +42,22 @@ _Ifact_ii:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %r12		# movq %rdi, %r(a)
-	movq $1, %rbx		# movq $1, %r(47008)
-	cmpq %rbx, %r12		# cmpq %r(47008), %r(a)
+	movq $1, %rbx		# movq $1, %r(46985)
+	cmpq %rbx, %r12		# cmpq %r(46985), %r(a)
 	jne .L175		# jne .L175
 	.L174:		# .L174:
-	movq $1, %rbx		# movq $1, %r(47009)
-	movq %rbx, %rax		# movq %r(47009), %rax
+	movq $1, %rbx		# movq $1, %r(46986)
+	movq %rbx, %rax		# movq %r(46986), %rax
 	jmp .L173		# jmp .L173
 	.L175:		# .L175:
-	movq $1, %rbx		# movq $1, %r(47010)
-	movq %r12, %r13		# movq %r(a), %r(47011)
-	subq %rbx, %r13		# subq %r(47010), %r(47011)
-	movq %r13, %rdi		# movq %r(47011), %rdi
+	movq $1, %rbx		# movq $1, %r(46987)
+	movq %r12, %r13		# movq %r(a), %r(46988)
+	subq %rbx, %r13		# subq %r(46987), %r(46988)
+	movq %r13, %rdi		# movq %r(46988), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(47006)
-	imulq %rbx, %r12		# imulq %r(47006), %r(47012)
-	movq %r12, %rax		# movq %r(47012), %rax
+	movq %rax, %rbx		# movq %rax, %r(46983)
+	imulq %rbx, %r12		# imulq %r(46983), %r(46989)
+	movq %r12, %rax		# movq %r(46989), %rax
 	jmp .L173		# jmp .L173
 	.L173:		# .L173:
 	popq %r15
