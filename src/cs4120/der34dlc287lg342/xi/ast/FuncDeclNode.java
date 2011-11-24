@@ -140,7 +140,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		seq.add(tr.stmt());
 		
 		// add a return label
-		seq.add(new LabelNode(return_to));
+		seq.add(new Return(return_to));
 		
 		return new IRTranslationStmt(seq);
 	}

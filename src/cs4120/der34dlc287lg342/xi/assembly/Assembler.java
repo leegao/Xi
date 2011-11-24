@@ -54,7 +54,7 @@ public class Assembler {
 				for (int i = Register.callee.length-1; i >= 0; i--) epilogue += "popq "+Register.callee[i]+"\n";
 				epilogue += "addq $"+ aligned_stack + ", %rsp\nmovq %rbp, %rsp\npopq %rbp\nret\n";
 				
-				String function = prologue + RegAlloc.allocate(instrs, g.coloring) + epilogue;
+				String function = prologue + RegAlloc.allocate(instrs, g.coloring, epilogue);
 				
 				String asm = "";//func.att();
 				asm = ".globl "+func.name+"\n"+

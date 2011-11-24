@@ -8,13 +8,13 @@ public class Return extends LabelNode {
 		super(l);
 	}
 	
-	@Override
-	public Seq lower(){
-		return new Seq(this);
-	}
-	
+//	@Override
+//	public Seq lower(){
+//		return new Seq(this);
+//	}
+//	
 	@Override 
 	public ReturnTile munch() {
-		return new ReturnTile();
+		return new ReturnTile(label);
 	}
 }
