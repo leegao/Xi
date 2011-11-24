@@ -12,12 +12,12 @@ _Imain_paai:
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
 	.L802:		# .L802:
-	movq $1, %rbx		# movq $1, %r(4700)
-	movq %rbx, %rdi		# movq %r(4700), %rdi
+	movq $1, %rbx		# movq $1, %r(4672)
+	movq %rbx, %rdi		# movq %r(4672), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	.L804:		# .L804:
-	movq $1, %rbx		# movq $1, %r(4701)
-	movq %rbx, %rdi		# movq %r(4701), %rdi
+	movq $1, %rbx		# movq $1, %r(4673)
+	movq %rbx, %rdi		# movq %r(4673), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	jmp .L801		# jmp .L801
 	.L801:		# .L801:

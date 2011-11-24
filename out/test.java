@@ -32,10 +32,10 @@ public void testAddarray() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/addArray.exp");
+		Reader r2 = new FileReader("out/addArray.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -84,10 +84,10 @@ public void testArray_valid_0() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/array-valid-0.exp");
+		Reader r2 = new FileReader("out/array-valid-0.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -136,10 +136,10 @@ public void testArray() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/array.exp");
+		Reader r2 = new FileReader("out/array.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -188,10 +188,10 @@ public void testBubblesort() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/bubbleSort.exp");
+		Reader r2 = new FileReader("out/bubbleSort.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -240,10 +240,10 @@ public void testCompare_signed() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/compare-signed.exp");
+		Reader r2 = new FileReader("out/compare-signed.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -292,10 +292,10 @@ public void testContest1() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/contest1.exp");
+		Reader r2 = new FileReader("out/contest1.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -344,10 +344,10 @@ public void testContest2() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/contest2.exp");
+		Reader r2 = new FileReader("out/contest2.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -396,10 +396,10 @@ public void testDivide_signed_def() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/divide-signed-def.exp");
+		Reader r2 = new FileReader("out/divide-signed-def.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -448,10 +448,10 @@ public void testDivide_signed() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/divide-signed.exp");
+		Reader r2 = new FileReader("out/divide-signed.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -500,10 +500,10 @@ public void testDivmod() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/divmod.exp");
+		Reader r2 = new FileReader("out/divmod.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -552,10 +552,10 @@ public void testDivnegative() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/divnegative.exp");
+		Reader r2 = new FileReader("out/divnegative.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -604,10 +604,10 @@ public void testFib() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/fib.exp");
+		Reader r2 = new FileReader("out/fib.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -656,10 +656,10 @@ public void testFibonacci() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/fibonacci.exp");
+		Reader r2 = new FileReader("out/fibonacci.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -708,10 +708,10 @@ public void testGcd() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/gcd.exp");
+		Reader r2 = new FileReader("out/gcd.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -760,10 +760,10 @@ public void testGhard() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/GHard.exp");
+		Reader r2 = new FileReader("out/GHard.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -812,10 +812,10 @@ public void testHello() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/hello.exp");
+		Reader r2 = new FileReader("out/hello.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -864,10 +864,10 @@ public void testInlinearray() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/inlineArray.exp");
+		Reader r2 = new FileReader("out/inlineArray.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -916,10 +916,10 @@ public void testInt_pytha() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/int-pytha.exp");
+		Reader r2 = new FileReader("out/int-pytha.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -968,10 +968,10 @@ public void testMerge_short() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/merge_short.exp");
+		Reader r2 = new FileReader("out/merge_short.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1020,10 +1020,10 @@ public void testSort() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/sort.exp");
+		Reader r2 = new FileReader("out/sort.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1072,10 +1072,10 @@ public void testStatement_break() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/statement-break.exp");
+		Reader r2 = new FileReader("out/statement-break.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1124,10 +1124,10 @@ public void testStatement_if() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/statement-if.exp");
+		Reader r2 = new FileReader("out/statement-if.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1176,10 +1176,10 @@ public void testT1() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/t1.exp");
+		Reader r2 = new FileReader("out/t1.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1228,10 +1228,10 @@ public void testT2() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/t2.exp");
+		Reader r2 = new FileReader("out/t2.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1280,10 +1280,10 @@ public void testT3() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/t3.exp");
+		Reader r2 = new FileReader("out/t3.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1332,10 +1332,10 @@ public void testT4() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/t4.exp");
+		Reader r2 = new FileReader("out/t4.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1384,10 +1384,10 @@ public void testT5() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/t5.exp");
+		Reader r2 = new FileReader("out/t5.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1436,10 +1436,10 @@ public void testTelephone() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/telephone.exp");
+		Reader r2 = new FileReader("out/telephone.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1488,10 +1488,10 @@ public void testTest2() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/test2.exp");
+		Reader r2 = new FileReader("out/test2.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1540,10 +1540,10 @@ public void testTest3() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/test3.exp");
+		Reader r2 = new FileReader("out/test3.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1592,10 +1592,10 @@ public void testTest4() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/test4.exp");
+		Reader r2 = new FileReader("out/test4.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1644,10 +1644,10 @@ public void testTuple() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/tuple.exp");
+		Reader r2 = new FileReader("out/tuple.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1696,10 +1696,10 @@ public void testType_array_0() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/type-array-0.exp");
+		Reader r2 = new FileReader("out/type-array-0.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1748,10 +1748,10 @@ public void testType_array_1() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/type-array-1.exp");
+		Reader r2 = new FileReader("out/type-array-1.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1800,10 +1800,10 @@ public void testType_bool_shortcircuit_2() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/type-bool-shortcircuit-2.exp");
+		Reader r2 = new FileReader("out/type-bool-shortcircuit-2.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1852,10 +1852,10 @@ public void testType_bool_shortcircuit() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/type-bool-shortcircuit.exp");
+		Reader r2 = new FileReader("out/type-bool-shortcircuit.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1904,10 +1904,10 @@ public void testType_int_0() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/type-int-0.exp");
+		Reader r2 = new FileReader("out/type-int-0.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -1956,10 +1956,10 @@ public void testType_int_1() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/type-int-1.exp");
+		Reader r2 = new FileReader("out/type-int-1.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -2008,10 +2008,10 @@ public void testType_tuples_1() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/type-tuples-1.exp");
+		Reader r2 = new FileReader("out/type-tuples-1.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -2060,10 +2060,10 @@ public void testVars_0() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/vars-0.exp");
+		Reader r2 = new FileReader("out/vars-0.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -2112,10 +2112,10 @@ public void testVars_1() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/vars-1.exp");
+		Reader r2 = new FileReader("out/vars-1.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		
@@ -2164,10 +2164,10 @@ public void testVars_2() throws Exception {
 			System.out.println(line);
 		}
 		
-		Reader reader = new FileReader("out/vars-2.exp");
+		Reader r2 = new FileReader("out/vars-2.exp");
 		String exp = "";
-		BufferedReader input = new BufferedReader(reader);
-		while ((line=input.readLine()) != null) {
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
 			exp += (line + "\n");
 		}
 		

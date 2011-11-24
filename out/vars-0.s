@@ -12,8 +12,8 @@ _Imain_paai:
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
 	.L1096:		# .L1096:
-	movq $1, %rbx		# movq $1, %r(5887)
-	movq %rbx, %rdi		# movq %r(5887), %rdi
+	movq $1, %rbx		# movq $1, %r(5851)
+	movq %rbx, %rdi		# movq %r(5851), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	jmp .L1095		# jmp .L1095
 	.L1095:		# .L1095:
