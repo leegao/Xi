@@ -22,6 +22,7 @@ import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
 import cs4120.der34dlc287lg342.xi.cfg.CSE;
+import cs4120.der34dlc287lg342.xi.cfg.CreateBlocks;
 import cs4120.der34dlc287lg342.xi.cfg.DeadCodeElimination;
 import cs4120.der34dlc287lg342.xi.cfg.Trace;
 import cs4120.der34dlc287lg342.xi.cfg.VariablePropagation;
@@ -110,7 +111,7 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testMeh(){
-		File[] valid = new File("2011-contest").listFiles();
+		File[] valid = new File("out").listFiles();
 		
 		for (File validFile: valid) {
 			Tile t = null;
@@ -126,6 +127,7 @@ public class TestCFG extends TestCase {
 				
 				Seq stmt = gen(reader);
 				stmt = ConstantFolding.foldConstants(stmt);
+				
 				//stmt.children
 				for (VisualizableTreeNode s : new ArrayList<VisualizableTreeNode>(stmt.children)){
 					if (!(s instanceof Func)) 
@@ -133,7 +135,10 @@ public class TestCFG extends TestCase {
 					int which = stmt.children.indexOf(s);
 					Func func = (Func)s;
 					//System.out.println(func.name);
+					new CreateBlocks(func).analyze();
+					//System.out.println(func.prettyPrint());
 					CFG cfg = CFG.cfg(func);
+					//System.out.println(cfg.dot_edge());
 					//System.out.println(cfg.dot_edge());
 					for (int n = 0; n < 1; n++){
 						AvailableExpressions ae = new AvailableExpressions(cfg);
@@ -186,7 +191,7 @@ public class TestCFG extends TestCase {
 					lin.flatten(f);
 					stmt.children.set(which, f);
 				}
-				
+				//System.out.println(stmt.prettyPrint());
 				//System.out.println(CFG.cfg((Func) stmt.children.get(1)));
 				
 				Assembler assembler = new Assembler((SeqTile) stmt.munch());
@@ -201,14 +206,14 @@ public class TestCFG extends TestCase {
 //				Assembler assembler = new Assembler((SeqTile) t);
 				String att = assembler.att();
 				
-				FileWriter fstream = new FileWriter("2011-contest/"+validFile.getName().replace("xi", "s"));
+				FileWriter fstream = new FileWriter("out/"+validFile.getName().replace("xi", "s"));
 				BufferedWriter out = new BufferedWriter(fstream);
 				out.write(att);
 				out.close();
 			}
 			} catch (Exception e){
 				
-				//e.printStackTrace();
+				e.printStackTrace();
 				//System.out.println(f.prettyPrint());
 				//System.out.println(t);
 				//break;
