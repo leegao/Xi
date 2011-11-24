@@ -5,6 +5,7 @@ import java.util.HashSet;
 
 import cs4120.der34dlc287lg342.xi.ir.*;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public class Trace {
 	CFG node;
@@ -18,8 +19,9 @@ public class Trace {
 	
 	public void flatten(Func f){
 		HashSet<CFG> seen = new HashSet<CFG>();
+		CFG node = null;
 		while (!blocks.isEmpty()){
-			CFG node = blocks.get(0);
+			node = blocks.get(0);
 			blocks.remove(0);
 			
 			while (!seen.contains(node)){
@@ -32,6 +34,20 @@ public class Trace {
 						node = next;
 						break;
 					}
+				}
+			}
+		}
+		
+		if (!(node.ir instanceof Return || node.ir instanceof Jump) && node.child1 != null){
+			if (node.child1.ir instanceof LabelNode){
+				f.add(new Jump(((LabelNode)node.child1.ir).label));
+			} else {
+				ArrayList<VisualizableTreeNode> children = f.children;
+				int i = children.indexOf(node.child1.ir);
+				Label l = new Label();
+				if (i != -1){
+					children.add(i, new LabelNode(l));
+					f.add(new Jump(l));
 				}
 			}
 		}

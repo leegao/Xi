@@ -115,7 +115,7 @@ public class TestCFG extends TestCase {
 		for (File validFile: valid) {
 			Tile t = null;
 			try{
-			if (validFile.getName().contains("short.xi")){
+			if (validFile.getName().contains("fibonacci.xi")){
 				//System.out.println(validFile.getName());
 				System.out.println("./../runtime/linkxi.sh -o "+validFile.getName().replace(".xi", "")+" "+validFile.getName().replace("xi", "s"));
 				System.out.println("./"+validFile.getName().replace(".xi", "")+" > o");
@@ -184,6 +184,8 @@ public class TestCFG extends TestCase {
 //					
 					stmt.children.set(which, f);
 				}
+				
+				System.out.println(stmt);
 				
 				Assembler assembler = new Assembler((SeqTile) stmt.munch());
 				//System.out.println(assembler.att());
