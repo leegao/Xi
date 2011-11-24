@@ -83,6 +83,8 @@ Comment     = "//" {InputCharacter}*
 Identifier = [a-zA-Z] [a-zA-Z0-9_']*
 
 DecIntegerLiteral = 0 | [1-9][0-9]*
+NegIntegerLiteral = "-" {DecIntegerLiteral}
+IntegerLiteral    = {DecIntegerLiteral} | {NegIntegerLiteral}
 %state STRING
 
 %%
@@ -102,9 +104,9 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
 <YYINITIAL> {
   /* identifiers */ 
   {Identifier}                   { return token(TokenType.IDENTIFIER, yytext().replace("'","_")); }
- 
+
   /* literals */
-  {DecIntegerLiteral}            { return token(TokenType.INTEGER_LITERAL); }
+  {DecIntegerLiteral}			 { return token(TokenType.INTEGER_LITERAL); }
   \"                             { string.setLength(0); yybegin(STRING); }
   
   /* comments */
@@ -114,7 +116,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
   // re.findall(r"code (.+)\}.+\n\s+(\w+)", a)
   /* Operators */
   "+"                            { return token(TokenType.PLUS); }
-  "-"                            { return token(TokenType.MINUS); }
+  
   "*"                            { return token(TokenType.TIMES); }
   "/"                            { return token(TokenType.DIVIDE); }
   "%"                            { return token(TokenType.MODULO); }
@@ -128,7 +130,7 @@ DecIntegerLiteral = 0 | [1-9][0-9]*
   "=="                           { return token(TokenType.EQUAL); }
   "!="                           { return token(TokenType.NOT_EQUAL); }
   "="                            { return token(TokenType.GETS); }
-
+  "-"                            { return token(TokenType.MINUS); }
   /* Other symbols */
   "["                            { return token(TokenType.OPEN_BRACKET); }
   "]"                            { return token(TokenType.CLOSE_BRACKET); }
