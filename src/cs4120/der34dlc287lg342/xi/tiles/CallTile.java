@@ -59,7 +59,7 @@ public class CallTile extends Tile{
 				asm.addAll(instrs);
 		}
 		
-		int i = 0;
+		int i = 0, n = args.size()-1;
 		if (tuple != null){
 			//asm += "movq " + tuple + ", %rdi\n";
 			asm.add(new OPER("movq %s0, %rdi", tuple, null));
@@ -75,10 +75,15 @@ public class CallTile extends Tile{
 					//asm += "movq "+ arg.out+", %"+TempRegister.free_registers[i++].name+"\n";
 					asm.add(new OPER("movq %s0, %"+TempRegister.free_registers[i++].name, arg.out, null));
 			} else {
-				//asm += "pushq "+arg.out+"\n";
-				asm.add(new OPER("pushq %s0", arg.out, null));
+				break;
 			}
 		}
+		
+		for (;n>=(tuple == null ? 6 : 5);n--){
+			Tile arg = args.get(n);
+			asm.add(new OPER("pushq %s0", arg.out, null));
+		}
+		
 		asm.add(new OPER("call "+name, new TempRegister[]{}, null));
 		if (args.size() > 6)
 			for (int j = 0; j < args.size()-6; j++)

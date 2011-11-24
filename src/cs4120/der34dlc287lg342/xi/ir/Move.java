@@ -73,19 +73,20 @@ public class Move extends Stmt {
 				((Binop)((Mem)val).expr).op == Binop.PLUS &&
 				((Binop)((Mem)val).expr).right instanceof Const) {
 			
-			long constant = ((Const)(((Binop)((Mem)val).expr).right)).value;	
+			long constant = ((Const)(((Binop)((Mem)val).expr).right)).value;
+			//System.out.println(constant);
 			return new Move_Mem_Add_Const_Expr_Expr(constant, ((Binop)((Mem)val).expr).left.munch(), dest.munch());
-		}
-		// src = Mem( Add(Const,Temp) )
-		// dest = expr  
-		// assembly = movq k(%r), %r
+		}  // src = Mem( Add(Temp, Const) )
+			// dest = expr  
+			// assembly = movq k(%r), %r
 		else if (val instanceof Mem && ((Mem)val).expr instanceof Binop && 
-				((Binop)((Mem)val).expr).op == Binop.PLUS &&
-				((Binop)((Mem)val).expr).left instanceof Const) {
-			
-			long constant = ((Const)(((Binop)((Mem)val).expr).left)).value;	
-			return new Move_Mem_Add_Const_Expr_Expr(constant, ((Binop)((Mem)val).expr).right.munch(), dest.munch());
-		}
+					((Binop)((Mem)val).expr).op == Binop.PLUS &&
+					((Binop)((Mem)val).expr).left instanceof Const) {
+				
+				long constant = ((Const)(((Binop)((Mem)val).expr).left)).value;
+				//System.out.println(constant);
+				return new Move_Mem_Add_Const_Expr_Expr(constant, ((Binop)((Mem)val).expr).right.munch(), dest.munch());
+			}
 		
 		// %r = %r + 1
 		// assembly = inc %r

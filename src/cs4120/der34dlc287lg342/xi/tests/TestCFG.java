@@ -23,6 +23,7 @@ import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
 import cs4120.der34dlc287lg342.xi.cfg.CSE;
 import cs4120.der34dlc287lg342.xi.cfg.DeadCodeElimination;
+import cs4120.der34dlc287lg342.xi.cfg.Linearize;
 import cs4120.der34dlc287lg342.xi.cfg.VariablePropagation;
 import cs4120.der34dlc287lg342.xi.cfg.IRLivenessAnalysis;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
@@ -142,22 +143,22 @@ public class TestCFG extends TestCase {
 			}
 			} catch (Exception e){
 				
-				e.printStackTrace();
-				System.out.println(f.prettyPrint());
-				System.out.println(t);
-				break;
+				//e.printStackTrace();
+				//System.out.println(f.prettyPrint());
+				//System.out.println(t);
+				//break;
 			}
 		}
 	}
 	
 	public void testCFG(){
-		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 if (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c a = a - 1} print(unparseInt(c))}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 while (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c a = a - 1} print(unparseInt(c))}");
 		stmt = ConstantFolding.foldConstants(stmt);
 		Func func = (Func) stmt.children.get(0);
 //		System.out.println(func.prettyPrint());
 		CFG cfg = CFG.cfg(func);
 		CFGConstantFolding.foldConstants(cfg);
-		
+		System.out.println(cfg.dot_edge());
 		for (int n = 0; n < 1; n++){
 			AvailableExpressions ae = new AvailableExpressions(cfg);
 			ae.analyze();
@@ -190,7 +191,7 @@ public class TestCFG extends TestCase {
 					break;
 				last_ac = cur_ac;
 				i++;
-				
+				cfg.reset();
 			}
 			
 			IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
@@ -198,6 +199,8 @@ public class TestCFG extends TestCase {
 			
 			DeadCodeElimination dce = new DeadCodeElimination(cfg);
 			dce.analyze();
+			
+			Linearize lin = new Linearize(cfg);
 			
 			System.out.println(cfg.dot_edge());
 		}

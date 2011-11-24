@@ -11,17 +11,17 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $12, %r14		# movq $12, %r(1153)
-	movq $1, %r13		# movq $1, %r(1154)
-	movq $12, %r12		# movq $12, %r(1155)
-	cmpq %r14, %r12		# cmpq %r(a), %r(1155)
-	je .L181		# je .L181
-	.L182:		# .L182:
-	movq $0, %r13		# movq $0, %r(1156)
-	.L181:		# .L181:
-	movq %r13, %rdi		# movq %r(1151), %rdi
+	movq $12, %r14		# movq $12, %r(463)
+	movq $1, %r13		# movq $1, %r(464)
+	movq $12, %r12		# movq $12, %r(465)
+	cmpq %r14, %r12		# cmpq %r(a), %r(465)
+	je .L87		# je .L87
+	.L88:		# .L88:
+	movq $0, %r13		# movq $0, %r(466)
+	.L87:		# .L87:
+	movq %r13, %rdi		# movq %r(461), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	.L180:		# .L180:
+	.L86:		# .L86:
 	popq %r15
 	popq %r14
 	popq %r13

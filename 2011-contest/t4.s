@@ -11,16 +11,16 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $5, %rbx		# movq $5, %r(1509)
-	movq %rbx, %rdi		# movq %r(1509), %rdi
+	movq $5, %rbx		# movq $5, %r(609)
+	movq %rbx, %rdi		# movq %r(609), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(1505)
-	movq %rbx, %rdi		# movq %r(1505), %rdi
+	movq %rax, %rbx		# movq %rax, %r(605)
+	movq %rbx, %rdi		# movq %r(605), %rdi
 	call _IunparseInt_aii		# call _IunparseInt_aii
-	movq %rax, %rbx		# movq %rax, %r(1506)
-	movq %rbx, %rdi		# movq %r(1506), %rdi
+	movq %rax, %rbx		# movq %rax, %r(606)
+	movq %rbx, %rdi		# movq %r(606), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
-	.L231:		# .L231:
+	.L106:		# .L106:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -42,24 +42,24 @@ _Ifact_ii:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %r12		# movq %rdi, %r(a)
-	movq $1, %rbx		# movq $1, %r(1510)
-	cmpq %rbx, %r12		# cmpq %r(1510), %r(a)
-	jne .L234		# jne .L234
-	.L233:		# .L233:
-	movq $1, %rbx		# movq $1, %r(1511)
-	movq %rbx, %rax		# movq %r(1511), %rax
-	jmp .L232		# jmp .L232
-	.L234:		# .L234:
-	movq $1, %rbx		# movq $1, %r(1512)
-	movq %r12, %r13		# movq %r(a), %r(1513)
-	subq %rbx, %r13		# subq %r(1512), %r(1513)
-	movq %r13, %rdi		# movq %r(1513), %rdi
+	movq $1, %rbx		# movq $1, %r(610)
+	cmpq %rbx, %r12		# cmpq %r(610), %r(a)
+	jne .L109		# jne .L109
+	.L108:		# .L108:
+	movq $1, %rbx		# movq $1, %r(611)
+	movq %rbx, %rax		# movq %r(611), %rax
+	jmp .L107		# jmp .L107
+	.L109:		# .L109:
+	movq $1, %rbx		# movq $1, %r(612)
+	movq %r12, %r13		# movq %r(a), %r(613)
+	subq %rbx, %r13		# subq %r(612), %r(613)
+	movq %r13, %rdi		# movq %r(613), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(1508)
-	imulq %rbx, %r12		# imulq %r(1508), %r(1514)
-	movq %r12, %rax		# movq %r(1514), %rax
-	jmp .L232		# jmp .L232
-	.L232:		# .L232:
+	movq %rax, %rbx		# movq %rax, %r(608)
+	imulq %rbx, %r12		# imulq %r(608), %r(614)
+	movq %r12, %rax		# movq %r(614), %rax
+	jmp .L107		# jmp .L107
+	.L107:		# .L107:
 	popq %r15
 	popq %r14
 	popq %r13

@@ -22,7 +22,7 @@ import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
-import cs4120.der34dlc287lg342.xi.ir.Return_DEPRECATED;
+import cs4120.der34dlc287lg342.xi.ir.Return;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Stmt;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
@@ -198,7 +198,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 						new Jump(label(".dynamL9")),
 						new LabelNode(label(".dynamL11")),
 						
-						new Move(reg(30),new Call(new Name(Label.alloc),reg("n"))),
+						new Move(reg(30),new Call(new Name(Label.alloc),new Binop(Binop.LSH, reg("n"), new Const(3)))),
 						new Move(reg(3000), reg(30)),
 						new Move(new Mem(reg(3000)), new Binop(Binop.MINUS, reg("n"),new Const(1))),
 						new Move(reg("tl"),new Binop(Binop.PLUS,reg(3000),new Const(8))),
@@ -220,8 +220,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 						new Move(reg(20),new Const(0)),
 						new Cjump(new Binop(Binop.UGE,reg(20),new Mem(new Binop(Binop.MINUS,reg(19),new Const(8)))),Label.outofbounds_jump,label(".dynamL20")),
 						new Move(reg("i"),new Mem(new Binop(Binop.PLUS,reg(19),new Binop(Binop.LSH,reg(20),new Const(3))))),
-						
-						new Move(reg(31),new Call(new Name(Label.alloc),new Binop(Binop.PLUS,reg("i"),new Const(1)))),
+						new Move(reg(31),new Call(new Name(Label.alloc),new Binop(Binop.LSH, new Binop(Binop.PLUS,reg("i"),new Const(1)), new Const(3)))),
 						new Move(reg(3100), reg(31)),
 						new Move(new Mem(reg(3100)), reg("i")),
 						new Move(reg("list"),new Binop(Binop.PLUS,reg(3100),new Const(8))),
@@ -381,5 +380,4 @@ public class ProgramNode extends AbstractSyntaxTree {
 		label_s.put(s, t);
 		return t;
 	}
-	public static Return_DEPRECATED ret = new Return_DEPRECATED();
 }

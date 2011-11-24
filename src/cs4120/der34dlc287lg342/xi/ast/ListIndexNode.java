@@ -94,7 +94,8 @@ public class ListIndexNode extends ExpressionNode {
 			long i = ((IntegerLiteralNode)index).value;
 			if (i >= list.children.size()) return null;
 			AbstractSyntaxTree tree = (AbstractSyntaxTree)list.children.get((int)i);
-			assert(tree.type == type);
+			//assert(tree.type == type);
+			tree.type = type;
 			return tree;
 		}
 		return null;
