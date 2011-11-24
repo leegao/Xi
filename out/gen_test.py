@@ -40,24 +40,31 @@ public void test%s() throws Exception {
 		String exp = "";
 		BufferedReader i2 = new BufferedReader(r2);
 		while ((line=i2.readLine()) != null) {
-			exp += (line + "\n");
+			exp += line;
 		}
 		
 		Process exec = rt.exec("out/%s");
 		//BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(exec.getOutputStream()));
 		//writer.write("10\n");
 		//writer.close();
-		
+		System.out.println("%s");
+		System.out.println("\tExpected: "+exp);
+
 		BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
-		
-		assertEquals(exp, execReader.readLine());
+		String act = "";
+		while ((line=execReader.readLine()) != null) {
+			act += line;
+		}
+		System.out.println("\tActual: "+act);
+
+		assertEquals(exp.replace("\n","").replace("\r",""), act.replace("\n","").replace("\r",""));
 		execReader.close();
 	}
 """
 
 def format(file):
 	file = file.replace(".xi","")
-	return case%(file.capitalize().replace("-","_"), file, file, file, file, file, file)
+	return case%(file.capitalize().replace("-","_"), file, file, file, file, file, file, file)
 	
 import sys
 o = sys.stdout

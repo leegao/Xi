@@ -11,16 +11,16 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	.L802:		# .L802:
-	movq $1, %rbx		# movq $1, %r(4672)
-	movq %rbx, %rdi		# movq %r(4672), %rdi
+	.L579:		# .L579:
+	movq $1, %rbx		# movq $1, %r(2717)
+	movq %rbx, %rdi		# movq %r(2717), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	.L804:		# .L804:
-	movq $1, %rbx		# movq $1, %r(4673)
-	movq %rbx, %rdi		# movq %r(4673), %rdi
+	.L581:		# .L581:
+	movq $1, %rbx		# movq $1, %r(2718)
+	movq %rbx, %rdi		# movq %r(2718), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	jmp .L801		# jmp .L801
-	.L801:		# .L801:
+	jmp .L578		# jmp .L578
+	.L578:		# .L578:
 	popq %r15
 	popq %r14
 	popq %r13

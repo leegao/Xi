@@ -11,13 +11,13 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	leaq .L466(%rip), %rdi		# leaq .L466(%rip), %rdi
+	leaq .L172(%rip), %rdi		# leaq .L172(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %rbx		# movq %rax, %r(2411)
-	movq %rbx, %rdi		# movq %r(2411), %rdi
+	movq %rax, %rbx		# movq %rax, %r(1053)
+	movq %rbx, %rdi		# movq %r(1053), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
-	jmp .L465		# jmp .L465
-	.L465:		# .L465:
+	jmp .L171		# jmp .L171
+	.L171:		# .L171:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -38,49 +38,44 @@ _I_c_internal_strdup_aii:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq %rdi, %rbx		# movq %rdi, %r(2427)
-	movq %rbx, -24(%rbp)		# movq %r(2427), -24(%rbp)
-	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(2428)
-	movq (%rbx), %r12		# movq (%r(2428)), %r(2415)
-	movq %r12, -8(%rbp)		# movq %r(2429), -8(%rbp)
-	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(2430)
-	salq $3, %rbx		# salq $3, %r(2416)
-	movq $8, %r12		# movq $8, %r(2417)
-	addq %r12, %rbx		# addq %r(2417), %r(2418)
-	movq %rbx, %rdi		# movq %r(2418), %rdi
+	movq %rdi, %rbx		# movq %rdi, %r(1069)
+	movq %rbx, -16(%rbp)		# movq %r(1069), -16(%rbp)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(1070)
+	movq (%rbx), %rbx		# movq (%r(1070)), %r(1057)
+	movq %rbx, %r14		# movq %r(1057), %r(t10)
+	movq %r14, %rbx		# movq %r(t10), %r(1058)
+	salq $3, %rbx		# salq $3, %r(1058)
+	movq $8, %r12		# movq $8, %r(1059)
+	addq %r12, %rbx		# addq %r(1059), %r(1060)
+	movq %rbx, %rdi		# movq %r(1060), %rdi
 	call _I_alloc_i		# call _I_alloc_i
-	movq %rax, %r14		# movq %rax, %r(2413)
-	jmp .L14		# jmp .L14
-	.L14:		# .L14:
-	movq -8(%rbp), %r12		# movq -8(%rbp), %r(2431)
-	salq $3, %r12		# salq $3, %r(2419)
-	movq %r14, %r13		# movq %r(2413), %r(2420)
-	addq %r12, %r13		# addq %r(2419), %r(2420)
-	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(2432)
-	movq %rbx, %r12		# movq %r(2432), %r(2421)
-	salq $3, %r12		# salq $3, %r(2421)
-	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(2433)
-	movq %rbx, -16(%rbp)		# movq %r(2434), -16(%rbp)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(2435)
-	addq %r12, %rbx		# addq %r(2421), %r(2435)
-	movq %rbx, -16(%rbp)		# movq %r(2435), -16(%rbp)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(2436)
-	movq (%rbx), %rbx		# movq (%r(2436)), %r(2423)
-	movq %rbx, (%r13)		# movq %r(2423), (%r(2420))
-	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(2437)
-	decq %rbx		# decq %r(2437)
-	movq %rbx, -8(%rbp)		# movq %r(2437), -8(%rbp)
-	movq $0, %rbx		# movq $0, %r(2424)
-	movq -8(%rbp), %r12		# movq -8(%rbp), %r(2438)
-	cmpq %rbx, %r12		# cmpq %r(2424), %r(2438)
-	jge .L14		# jge .L14
-	.L15:		# .L15:
-	movq $8, %rbx		# movq $8, %r(2425)
-	movq %r14, %r12		# movq %r(2413), %r(2426)
-	addq %rbx, %r12		# addq %r(2425), %r(2426)
-	movq %r12, %rax		# movq %r(2426), %rax
-	jmp .L16		# jmp .L16
-	.L16:		# .L16:
+	movq %rax, %r12		# movq %rax, %r(1055)
+	jmp .L111		# jmp .L111
+	.L111:		# .L111:
+	movq %r14, %rbx		# movq %r(t10), %r(1061)
+	salq $3, %rbx		# salq $3, %r(1061)
+	movq %r12, %r15		# movq %r(1055), %r(1062)
+	addq %rbx, %r15		# addq %r(1061), %r(1062)
+	movq %r14, %r13		# movq %r(t10), %r(1063)
+	salq $3, %r13		# salq $3, %r(1063)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(1071)
+	movq %rbx, -8(%rbp)		# movq %r(1072), -8(%rbp)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(1073)
+	addq %r13, %rbx		# addq %r(1063), %r(1073)
+	movq %rbx, -8(%rbp)		# movq %r(1073), -8(%rbp)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(1074)
+	movq (%rbx), %rbx		# movq (%r(1074)), %r(1065)
+	movq %rbx, (%r15)		# movq %r(1065), (%r(1062))
+	decq %r14		# decq %r(t10)
+	movq $0, %rbx		# movq $0, %r(1066)
+	cmpq %rbx, %r14		# cmpq %r(1066), %r(t10)
+	jge .L111		# jge .L111
+	.L112:		# .L112:
+	movq $8, %rbx		# movq $8, %r(1067)
+	addq %rbx, %r12		# addq %r(1067), %r(1068)
+	movq %r12, %rax		# movq %r(1068), %rax
+	jmp .L113		# jmp .L113
+	.L113:		# .L113:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -93,7 +88,7 @@ _I_c_internal_strdup_aii:
 	
 #.section .rodata
 .align 8
-.L466:
+.L172:
 	.quad 13
 	.quad 72
 	.quad 101

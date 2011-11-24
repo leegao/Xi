@@ -11,12 +11,12 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	.L341:		# .L341:
-	movq $1, %rbx		# movq $1, %r(2050)
-	movq %rbx, %rdi		# movq %r(2050), %rdi
+	.L698:		# .L698:
+	movq $1, %rbx		# movq $1, %r(3113)
+	movq %rbx, %rdi		# movq %r(3113), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	jmp .L340		# jmp .L340
-	.L340:		# .L340:
+	jmp .L697		# jmp .L697
+	.L697:		# .L697:
 	popq %r15
 	popq %r14
 	popq %r13

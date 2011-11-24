@@ -11,18 +11,18 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $-2, %rbx		# movq $-2, %r(2058)
-	movq %rbx, %rdi		# movq %r(2058), %rdi
+	movq $-2, %rbx		# movq $-2, %r(2938)
+	movq %rbx, %rdi		# movq %r(2938), %rdi
 	call _IunparseInt_aii		# call _IunparseInt_aii
-	movq %rax, %rbx		# movq %rax, %r(2055)
-	movq %rbx, %rdi		# movq %r(2055), %rdi
+	movq %rax, %rbx		# movq %rax, %r(2935)
+	movq %rbx, %rdi		# movq %r(2935), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
-	.L353:		# .L353:
-	movq $1, %rbx		# movq $1, %r(2059)
-	movq %rbx, %rdi		# movq %r(2059), %rdi
+	.L640:		# .L640:
+	movq $1, %rbx		# movq $1, %r(2939)
+	movq %rbx, %rdi		# movq %r(2939), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	jmp .L352		# jmp .L352
-	.L352:		# .L352:
+	jmp .L639		# jmp .L639
+	.L639:		# .L639:
 	popq %r15
 	popq %r14
 	popq %r13

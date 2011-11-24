@@ -25,5 +25,6 @@ main(args: int[][]) {
     b:int[];
     b = a;
     test("#5", b == a);
+    print(unparseInt(length(b)));
     test("#6", (length(b)) == 10);
 }
