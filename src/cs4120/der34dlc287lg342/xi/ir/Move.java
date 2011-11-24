@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.ir;
 
 
 import cs4120.der34dlc287lg342.xi.tiles.MoveTile;
+import cs4120.der34dlc287lg342.xi.tiles.Move_Const;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Dec_Mem_Expr;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Dec_Reg;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Expr_Mem_Expr;
@@ -86,7 +87,11 @@ public class Move extends Stmt {
 				long constant = ((Const)(((Binop)((Mem)val).expr).left)).value;
 				//System.out.println(constant);
 				return new Move_Mem_Add_Const_Expr_Expr(constant, ((Binop)((Mem)val).expr).right.munch(), dest.munch());
-			}
+		}
+		// Const into an expr
+		else if (val instanceof Const) {
+			return new Move_Const(((Const)val).value, dest.munch());
+		}
 		
 		// %r = %r + 1
 		// assembly = inc %r

@@ -11,16 +11,16 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $5, %rbx		# movq $5, %r(46984)
-	movq %rbx, %rdi		# movq %r(46984), %rdi
+	movq $5, %rbx		# movq $5, %r(1180)
+	movq %rbx, %rdi		# movq %r(1180), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(46980)
-	movq %rbx, %rdi		# movq %r(46980), %rdi
+	movq %rax, %rbx		# movq %rax, %r(1176)
+	movq %rbx, %rdi		# movq %r(1176), %rdi
 	call _IunparseInt_aii		# call _IunparseInt_aii
-	movq %rax, %rbx		# movq %rax, %r(46981)
-	movq %rbx, %rdi		# movq %r(46981), %rdi
+	movq %rax, %rbx		# movq %rax, %r(1177)
+	movq %rbx, %rdi		# movq %r(1177), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
-	.L172:		# .L172:
+	.L261:		# .L261:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -41,25 +41,23 @@ _Ifact_ii:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq %rdi, %r12		# movq %rdi, %r(a)
-	movq $1, %rbx		# movq $1, %r(46985)
-	cmpq %rbx, %r12		# cmpq %r(46985), %r(a)
-	jne .L175		# jne .L175
-	.L174:		# .L174:
-	movq $1, %rbx		# movq $1, %r(46986)
-	movq %rbx, %rax		# movq %r(46986), %rax
-	jmp .L173		# jmp .L173
-	.L175:		# .L175:
-	movq $1, %rbx		# movq $1, %r(46987)
-	movq %r12, %r13		# movq %r(a), %r(46988)
-	subq %rbx, %r13		# subq %r(46987), %r(46988)
-	movq %r13, %rdi		# movq %r(46988), %rdi
+	movq %rdi, %r14		# movq %rdi, %r(a)
+	movq $1, %rbx		# movq $1, %r(1181)
+	cmpq %rbx, %r14		# cmpq %r(1181), %r(a)
+	jne .L264		# jne .L264
+	.L263:		# .L263:
+	movq $1, %rax		# movq $1, %rax
+	jmp .L262		# jmp .L262
+	.L264:		# .L264:
+	movq %r14, %r12		# movq %r(a), %r(1182)
+	subq $1, %r12		# subq $1, %r(1182)
+	movq %r12, %rdi		# movq %r(1182), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(46983)
-	imulq %rbx, %r12		# imulq %r(46983), %r(46989)
-	movq %r12, %rax		# movq %r(46989), %rax
-	jmp .L173		# jmp .L173
-	.L173:		# .L173:
+	movq %rax, %rbx		# movq %rax, %r(1179)
+	imulq %rbx, %r14		# imulq %r(1179), %r(1183)
+	movq %r14, %rax		# movq %r(1183), %rax
+	jmp .L262		# jmp .L262
+	.L262:		# .L262:
 	popq %r15
 	popq %r14
 	popq %r13
