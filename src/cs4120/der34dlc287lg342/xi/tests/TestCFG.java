@@ -23,7 +23,7 @@ import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
 import cs4120.der34dlc287lg342.xi.cfg.CSE;
 import cs4120.der34dlc287lg342.xi.cfg.DeadCodeElimination;
-import cs4120.der34dlc287lg342.xi.cfg.Linearize;
+import cs4120.der34dlc287lg342.xi.cfg.Trace;
 import cs4120.der34dlc287lg342.xi.cfg.VariablePropagation;
 import cs4120.der34dlc287lg342.xi.cfg.IRLivenessAnalysis;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
@@ -110,16 +110,16 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testMeh(){
-		File[] valid = new File("2011-contest").listFiles();
+		File[] valid = new File("2009-contest").listFiles();
 		
 		for (File validFile: valid) {
 			Tile t = null;
 			try{
-			if (validFile.getName().contains(".xi")){
+			if (validFile.getName().contains("short.xi")){
 				//System.out.println(validFile.getName());
 				System.out.println("./../runtime/linkxi.sh -o "+validFile.getName().replace(".xi", "")+" "+validFile.getName().replace("xi", "s"));
-				System.out.println("./"+validFile.getName().replace(".xi", "")+" > "+validFile.getName().replace("xi", "act"));
-				System.out.println("diff "+validFile.getName().replace("xi", "exp")+" "+validFile.getName().replace("xi", "act"));
+				System.out.println("./"+validFile.getName().replace(".xi", "")+" > o");
+				//System.out.println("diff "+validFile.getName().replace("xi", "exp")+" "+validFile.getName().replace("xi", "act"));
 				Reader reader = null;
 				
 				reader = new FileReader(validFile.getPath());
@@ -127,14 +127,14 @@ public class TestCFG extends TestCase {
 				Seq stmt = gen(reader);
 				stmt = ConstantFolding.foldConstants(stmt);
 
-				stmt = ConstantFolding.foldConstants(stmt);
 				for (VisualizableTreeNode s : new ArrayList<VisualizableTreeNode>(stmt.children)){
 					if (!(s instanceof Func)) 
 						continue;
 					int which = stmt.children.indexOf(s);
 					Func func = (Func)s;
+					//System.out.println(func.name);
 					CFG cfg = CFG.cfg(func);
-					CFGConstantFolding.foldConstants(cfg);
+					//System.out.println(cfg.dot_edge());
 					for (int n = 0; n < 1; n++){
 						AvailableExpressions ae = new AvailableExpressions(cfg);
 						ae.analyze();
@@ -142,11 +142,11 @@ public class TestCFG extends TestCase {
 						cse.analyze();
 						
 						HashSet<Move> last_ac = new HashSet<Move>();
-						
+						//System.out.println(cfg.dot_edge());
 						// this goes into a loop until we stabilizes or after 20 iterations
 						int i = 0;
 						while(true){
-							//cfg.reset();
+							cfg.reset();
 							
 							AvailableCopies ac = new AvailableCopies(cfg);
 							ac.analyze();
@@ -156,7 +156,7 @@ public class TestCFG extends TestCase {
 							
 							CFGConstantFolding.foldConstants(cfg);
 							
-							//System.out.println(cfg.dot_edge());
+							
 							//break;
 							
 			//				
@@ -167,7 +167,6 @@ public class TestCFG extends TestCase {
 								break;
 							last_ac = cur_ac;
 							i++;
-							cfg.reset();
 						}
 						
 						IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
@@ -178,26 +177,27 @@ public class TestCFG extends TestCase {
 						
 						
 					}
-					
-					Linearize lin = new Linearize(cfg);
+					//System.out.println(cfg.dot_edge());
+					Trace lin = new Trace(cfg);
 					Func f = new Func(func.name);
 					lin.flatten(f);
-					
+//					
 					stmt.children.set(which, f);
 				}
 				
-				
+				Assembler assembler = new Assembler((SeqTile) stmt.munch());
+				//System.out.println(assembler.att());
 		//		System.out.println(func.prettyPrint());
 		//		CFG cfg = CFG.cfg(func);
 		//		AvailableExpressions ae = new AvailableExpressions(cfg);
 		//		ae.analyze();
 		//		CSE cse = new CSE(cfg);
 		//		cse.analyze();
-				t = stmt.munch();
-				Assembler assembler = new Assembler((SeqTile) t);
+//				t = stmt.munch();
+//				Assembler assembler = new Assembler((SeqTile) t);
 				String att = assembler.att();
 				
-				FileWriter fstream = new FileWriter("2011-contest/"+validFile.getName().replace("xi", "s"));
+				FileWriter fstream = new FileWriter("2009-contest/"+validFile.getName().replace("xi", "s"));
 				BufferedWriter out = new BufferedWriter(fstream);
 				out.write(att);
 				out.close();
@@ -266,7 +266,7 @@ public class TestCFG extends TestCase {
 				
 			}
 			
-			Linearize lin = new Linearize(cfg);
+			Trace lin = new Trace(cfg);
 			Func f = new Func(func.name);
 			lin.flatten(f);
 			

@@ -344,7 +344,7 @@ public class CFG {
 		
 		// prune labels from second pass
 		memoize = new HashSet<CFG>();
-		prune_labels(second_pass, memoize);
+		//prune_labels(second_pass, memoize);
 		memoize = new HashSet<CFG>();
 		//prune_jumps(second_pass, memoize);
 		return second_pass;

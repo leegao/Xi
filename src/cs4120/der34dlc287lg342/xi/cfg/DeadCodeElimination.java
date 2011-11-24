@@ -3,7 +3,7 @@ package cs4120.der34dlc287lg342.xi.cfg;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.*;
 import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
@@ -35,7 +35,7 @@ public class DeadCodeElimination {
 			worklist.remove(0);
 			//System.out.println(node);
 			TempRegister r = ((Temp)((Move)node.ir).dest).temp;
-			if (r.equals(TempRegister.RV)) continue;
+			if (r.equals(TempRegister.RV) || ((Move)node.ir).val instanceof Call) continue;
 			//System.out.println(r + " "+ live_out(node));
 			if (!live_out(node).contains(r)){
 				

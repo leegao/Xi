@@ -4,51 +4,49 @@
 _Imain_paai:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $32, %rsp
+	subq $16, %rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $-5, %r12		# movq $-5, %r(307)
-	movq %r12, -16(%rbp)		# movq %r(318), -16(%rbp)
-	movq $2, %rbx		# movq $2, %r(308)
-	movq %rbx, %r12		# movq %r(308), %r(b)
-	movq $1, %rbx		# movq $1, %r(309)
-	movq %rbx, %r13		# movq %r(309), %r(305)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(319)
-	movq %rbx, %rax		# movq %r(319), %rax
-	cltq		# cltq
+	movq $-5, %rbx		# movq $-5, %r(331)
+	movq %rbx, %r15		# movq %r(331), %r(a)
+	movq $2, %rbx		# movq $2, %r(332)
+	movq %rbx, %r12		# movq %r(332), %r(b)
+	movq $1, %rbx		# movq $1, %r(333)
+	movq %rbx, %r14		# movq %r(333), %r(329)
+	movq %r15, %rax		# movq %r(a), %rax
+	cqto		# cqto
 	idivq %r12		# idivq %r(b)
-	movq %rax, %r14		# movq %rax, %r(310)
-	movq %r12, %rbx		# movq %r(b), %r(315)
-	movq %rbx, -8(%rbp)		# movq %r(315), -8(%rbp)
-	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(316)
-	imulq %r14, %rbx		# imulq %r(310), %r(316)
-	movq %rbx, -8(%rbp)		# movq %r(316), -8(%rbp)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(320)
-	movq %rbx, %rax		# movq %r(320), %rax
-	cltq		# cltq
+	movq %rax, %r13		# movq %rax, %r(334)
+	movq %r12, %rbx		# movq %r(b), %r(339)
+	movq %rbx, -8(%rbp)		# movq %r(339), -8(%rbp)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(340)
+	imulq %r13, %rbx		# imulq %r(334), %r(340)
+	movq %rbx, -8(%rbp)		# movq %r(340), -8(%rbp)
+	movq %r15, %rax		# movq %r(a), %rax
+	cqto		# cqto
 	idivq %r12		# idivq %r(b)
-	movq %rdx, %r12		# movq %rdx, %r(312)
-	movq -8(%rbp), %r14		# movq -8(%rbp), %r(317)
-	addq %r12, %r14		# addq %r(312), %r(313)
-	movq -16(%rbp), %r12		# movq -16(%rbp), %r(321)
-	cmpq %r12, %r14		# cmpq %r(321), %r(313)
-	je .L97		# je .L97
+	movq %rdx, %r13		# movq %rdx, %r(336)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(341)
+	addq %r13, %rbx		# addq %r(336), %r(337)
+	cmpq %r15, %rbx		# cmpq %r(a), %r(337)
+	je .L98		# je .L98
+	.L99:		# .L99:
+	movq $0, %rbx		# movq $0, %r(338)
+	movq %rbx, %r14		# movq %r(338), %r(329)
 	.L98:		# .L98:
-	movq $0, %r13		# movq $0, %r(314)
-	.L97:		# .L97:
-	movq %r13, %rdi		# movq %r(305), %rdi
+	movq %r14, %rdi		# movq %r(329), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	.L96:		# .L96:
+	.L97:		# .L97:
 	popq %r15
 	popq %r14
 	popq %r13
 	popq %r12
 	popq %rbx
-	addq $32, %rsp
+	addq $16, %rsp
 	movq %rbp, %rsp
 	popq %rbp
 	ret
