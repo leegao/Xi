@@ -11,16 +11,16 @@ _Imain_paai:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $5, %rbx		# movq $5, %r(46984)
-	movq %rbx, %rdi		# movq %r(46984), %rdi
+	movq $5, %rbx		# movq $5, %r(1589)
+	movq %rbx, %rdi		# movq %r(1589), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(46980)
-	movq %rbx, %rdi		# movq %r(46980), %rdi
+	movq %rax, %rbx		# movq %rax, %r(1583)
+	movq %rbx, %rdi		# movq %r(1583), %rdi
 	call _IunparseInt_aii		# call _IunparseInt_aii
-	movq %rax, %rbx		# movq %rax, %r(46981)
-	movq %rbx, %rdi		# movq %r(46981), %rdi
+	movq %rax, %rbx		# movq %rax, %r(1584)
+	movq %rbx, %rdi		# movq %r(1584), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
-	.L172:		# .L172:
+	.L263:		# .L263:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -42,24 +42,29 @@ _Ifact_ii:
 	pushq %r14
 	pushq %r15
 	movq %rdi, %r12		# movq %rdi, %r(a)
-	movq $1, %rbx		# movq $1, %r(46985)
-	cmpq %rbx, %r12		# cmpq %r(46985), %r(a)
-	jne .L175		# jne .L175
-	.L174:		# .L174:
-	movq $1, %rbx		# movq $1, %r(46986)
-	movq %rbx, %rax		# movq %r(46986), %rax
-	jmp .L173		# jmp .L173
-	.L175:		# .L175:
-	movq $1, %rbx		# movq $1, %r(46987)
-	movq %r12, %r13		# movq %r(a), %r(46988)
-	subq %rbx, %r13		# subq %r(46987), %r(46988)
-	movq %r13, %rdi		# movq %r(46988), %rdi
+	movq %r12, %rdi		# movq %r(a), %rdi
+	call _IunparseInt_aii		# call _IunparseInt_aii
+	movq %rax, %rbx		# movq %rax, %r(1586)
+	movq %rbx, %rdi		# movq %r(1586), %rdi
+	call _Iprintln_pai		# call _Iprintln_pai
+	movq $1, %rbx		# movq $1, %r(1590)
+	cmpq %rbx, %r12		# cmpq %r(1590), %r(a)
+	jne .L266		# jne .L266
+	.L265:		# .L265:
+	movq $1, %rbx		# movq $1, %r(1591)
+	movq %rbx, %rax		# movq %r(1591), %rax
+	jmp .L264		# jmp .L264
+	.L266:		# .L266:
+	movq $1, %rbx		# movq $1, %r(1592)
+	movq %r12, %r13		# movq %r(a), %r(1593)
+	subq %rbx, %r13		# subq %r(1592), %r(1593)
+	movq %r13, %rdi		# movq %r(1593), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(46983)
-	imulq %rbx, %r12		# imulq %r(46983), %r(46989)
-	movq %r12, %rax		# movq %r(46989), %rax
-	jmp .L173		# jmp .L173
-	.L173:		# .L173:
+	movq %rax, %rbx		# movq %rax, %r(1588)
+	imulq %rbx, %r12		# imulq %r(1588), %r(1594)
+	movq %r12, %rax		# movq %r(1594), %rax
+	jmp .L264		# jmp .L264
+	.L264:		# .L264:
 	popq %r15
 	popq %r14
 	popq %r13

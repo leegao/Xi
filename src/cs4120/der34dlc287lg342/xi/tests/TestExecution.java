@@ -10,10 +10,24 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashSet;
 
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.assembly.Assembler;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
+import cs4120.der34dlc287lg342.xi.cfg.AvailableCopies;
+import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
+import cs4120.der34dlc287lg342.xi.cfg.CFG;
+import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
+import cs4120.der34dlc287lg342.xi.cfg.CSE;
+import cs4120.der34dlc287lg342.xi.cfg.CreateBlocks;
+import cs4120.der34dlc287lg342.xi.cfg.DeadCodeElimination;
+import cs4120.der34dlc287lg342.xi.cfg.IRLivenessAnalysis;
+import cs4120.der34dlc287lg342.xi.cfg.Trace;
+import cs4120.der34dlc287lg342.xi.cfg.VariablePropagation;
+import cs4120.der34dlc287lg342.xi.ir.Func;
+import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
@@ -24,6 +38,7 @@ import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.parser.Parser;
 
@@ -173,22 +188,25 @@ public class TestExecution extends TestCase {
 		execReader.close();
 	}
 	
-	public void testContestAddArray() throws Exception {
-		Reader reader = new FileReader("2011-contest/addArray.xi");
+	public void testAddarray() throws Exception {
+		Reader reader = new FileReader("out/addArray.xi");
 		Seq stmnt = gen(reader);
 		stmnt = ConstantFolding.foldConstants(stmnt);
+		
+		optimize(stmnt);
+		
 		Tile t = stmnt.munch();
 		Assembler assembler = new Assembler((SeqTile) t);
 		String att = assembler.att();
 		
-		FileWriter fstream = new FileWriter("runtime/tests/addArray.s");
+		FileWriter fstream = new FileWriter("out/addArray.s");
 		BufferedWriter out = new BufferedWriter(fstream);
 		out.write(att);
 		out.close();
 		reader.close();
 		
 		Runtime rt = Runtime.getRuntime();
-		Process proc = rt.exec(new String[] {"./linkxi.sh", "tests/addArray.s",  "-o", "tests/addArray"},
+		Process proc = rt.exec(new String[] {"./linkxi.sh", "../out/addArray.s",  "-o", "../out/addArray"},
 				null, new File("runtime"));
 	
 		if( proc.waitFor() != 0 ) {
@@ -197,22 +215,82 @@ public class TestExecution extends TestCase {
 			fail();
 		}
 		
-		
 		String line = null;
 		BufferedReader input = new BufferedReader(new InputStreamReader(proc.getInputStream()));
 		while ((line=input.readLine()) != null) {
 			System.out.println(line);
-			fail();
 		}
 		
-		Process exec = rt.exec(new String[] {"runtime/tests/addArray"});
+		Reader r2 = new FileReader("out/addArray.exp");
+		String exp = "";
+		BufferedReader i2 = new BufferedReader(r2);
+		while ((line=i2.readLine()) != null) {
+			exp += (line + "\n");
+		}
+		
+		Process exec = rt.exec("out/addArray");
+		//BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(exec.getOutputStream()));
+		//writer.write("10\n");
+		//writer.close();
 		
 		BufferedReader execReader = new BufferedReader(new InputStreamReader(exec.getInputStream()));
 		
-		assertEquals("hello ABCFGHIJK", execReader.readLine());
+		assertEquals(exp, execReader.readLine());
 		execReader.close();
 	}
 	
+	private void optimize(Seq stmt) {
+		for (VisualizableTreeNode s : new ArrayList<VisualizableTreeNode>(stmt.children)){
+			if (!(s instanceof Func)) 
+				continue;
+			int which = stmt.children.indexOf(s);
+			Func func = (Func)s;
+			new CreateBlocks(func).analyze();
+			CFG cfg = CFG.cfg(func);
+			
+			AvailableExpressions ae = new AvailableExpressions(cfg);
+			ae.analyze();
+			CSE cse = new CSE(cfg);
+			cse.analyze();
+			cfg.recompute();
+			
+			HashSet<Move> last_ac = new HashSet<Move>();
+			// this goes into a loop until we stabilizes or after 20 iterations
+			int i = 0;
+			while(true){
+				cfg.reset();
+				
+				AvailableCopies ac = new AvailableCopies(cfg);
+				ac.analyze();
+				cfg.recompute();
+				
+				VariablePropagation cp = new VariablePropagation(cfg);
+				cp.analyze();
+				cfg.recompute();
+				
+				CFGConstantFolding.foldConstants(cfg);
+				
+				HashSet<Move> cur_ac = ac.get_all(cfg, new HashSet<Move>(), new HashSet<CFG>());
+				if (cur_ac.equals(last_ac) || i >= 20)
+					break;
+				last_ac = cur_ac;
+				i++;
+			}
+			
+			IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
+			la.analyze();
+			
+			DeadCodeElimination dce = new DeadCodeElimination(cfg);
+			dce.analyze();
+			cfg.recompute();
+			
+			Trace lin = new Trace(cfg);
+			Func f = new Func(func.name);
+			lin.flatten(f);
+			stmt.children.set(which, f);
+		}
+	}
+
 	public void testContest1() throws Exception {
 		Reader reader = new FileReader("2011-contest/contest1.xi");
 		Seq stmnt = gen(reader);

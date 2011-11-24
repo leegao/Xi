@@ -156,6 +156,7 @@ _I_c_internal_strdup_aii:
 	movq %r14, %r12		# movq %r(t27), %r(56)
 	addq %rbx, %r12		# addq %r(55), %r(56)
 	movq %r12, %rax		# movq %r(56), %rax
+	.L26:		# .L26:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -166,6 +167,26 @@ _I_c_internal_strdup_aii:
 	popq %rbp
 	ret
 	
+#.section .rodata
+.align 8
+.L23:
+	.quad 14
+	.quad 73
+	.quad 110
+	.quad 118
+	.quad 97
+	.quad 108
+	.quad 105
+	.quad 100
+	.quad 32
+	.quad 105
+	.quad 110
+	.quad 112
+	.quad 117
+	.quad 116
+	.quad 33
+	.text
+
 #.section .rodata
 .align 8
 .L20:
@@ -203,25 +224,5 @@ _I_c_internal_strdup_aii:
 	.quad 32
 	.quad 58
 	.quad 32
-	.text
-
-#.section .rodata
-.align 8
-.L23:
-	.quad 14
-	.quad 73
-	.quad 110
-	.quad 118
-	.quad 97
-	.quad 108
-	.quad 105
-	.quad 100
-	.quad 32
-	.quad 105
-	.quad 110
-	.quad 112
-	.quad 117
-	.quad 116
-	.quad 33
 	.text
 
