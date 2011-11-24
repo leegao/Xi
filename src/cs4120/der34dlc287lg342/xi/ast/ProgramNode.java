@@ -241,7 +241,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 						new LabelNode(label(".dynamL23")),
 						new Move(new Temp(TempRegister.RV),reg("list")),
 						new Jump(label(".dynamL9")),
-						new LabelNode(label(".dynamL9"))
+						new Return(label(".dynamL9"))
 					);
 			seq.add(dynamalloc_method);
 			stack.abort = true;
@@ -274,7 +274,8 @@ public class ProgramNode extends AbstractSyntaxTree {
 					new Move(reg("t10"), new Binop(Binop.MINUS, reg("t10"), new Const(1))),
 					new Cjump(new Binop(Binop.GE, reg("t10"), new Const(0)), label(".L9"), label(".Lnull")),
 					new LabelNode(label(".Lnull")),
-					new Move(new Temp(TempRegister.RV), new Binop(Binop.PLUS, reg("t27"), new Const(8)))
+					new Move(new Temp(TempRegister.RV), new Binop(Binop.PLUS, reg("t27"), new Const(8))),
+					new Return(label(".retstrdup"))
 				);
 			}
 			seq.add(strdup);
@@ -331,7 +332,8 @@ public class ProgramNode extends AbstractSyntaxTree {
 					new Move(i, new Binop(Binop.PLUS, i, new Const(1))),
 					new Jump(a_.label),
 					c_, // end
-					new Move(new Temp(TempRegister.RV), arr)
+					new Move(new Temp(TempRegister.RV), arr),
+					new Return(label(".retstrcat"))
 				);
 			}
 			seq.add(strcat);

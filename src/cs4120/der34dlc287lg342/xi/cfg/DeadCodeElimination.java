@@ -35,6 +35,7 @@ public class DeadCodeElimination {
 			worklist.remove(0);
 			//System.out.println(node);
 			TempRegister r = ((Temp)((Move)node.ir).dest).temp;
+			if (r.equals(TempRegister.RV)) continue;
 			//System.out.println(r + " "+ live_out(node));
 			if (!live_out(node).contains(r)){
 				

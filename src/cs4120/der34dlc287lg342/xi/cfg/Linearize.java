@@ -13,7 +13,29 @@ public class Linearize {
 		add_labels(node, new HashSet<CFG>());
 	}
 	
+	public void flatten(Func f){
+		flatten(node, f, new HashSet<CFG>());
+	}
 	
+	public void flatten(CFG node, Func f, HashSet<CFG> seen){
+		if (node == null) return;
+		if (seen.contains(node))
+			return;
+		seen.add(node);
+		
+		//System.out.println(node.ir.prettyPrint());
+		f.add(node.ir);
+		
+		for (CFG next : node.succ()){
+			if (seen.contains(next) && !(node.ir instanceof Jump || node.ir instanceof Cjump)){
+				// insert jump, assume it's a label
+				Label to = ((LabelNode)next.ir).label;
+				f.add(new Jump(to));
+			}
+			
+			flatten(next, f, seen);
+		}
+	}
 	
 	public boolean is_child2(ArrayList<CFG> parents, CFG node){
 		for (CFG prev : parents){
@@ -46,8 +68,14 @@ public class Linearize {
 			for (CFG parent : node.pred()){
 				if (parent.child1 == node){
 					parent.child1 = label;
+					if (parent.ir instanceof Jump){
+						((Jump)parent.ir).label = ((LabelNode)label.ir).label;
+					}
 				} else{
 					parent.child2 = label;
+					if (parent.ir instanceof Cjump){
+						((Cjump)parent.ir).to = ((LabelNode)label.ir).label;
+					}
 				}
 			}
 			label.parents = node.parents;

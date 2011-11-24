@@ -8,6 +8,7 @@ import java.util.Hashtable;
 
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.assembly.LABEL;
+import cs4120.der34dlc287lg342.xi.assembly.RETURN;
 import cs4120.der34dlc287lg342.xi.ir.Arg;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
 import cs4120.der34dlc287lg342.xi.ir.Exp;
@@ -241,7 +242,8 @@ public class AssemblyCFG {
 			AssemblyCFG next = jumps.get(to);
 			
 			// remove child1.parent that is equal to current
-			node.child1.parents.remove(node);
+			if (node.child1 != null)
+				node.child1.parents.remove(node);
 			
 			// make child1 next
 			next.parents.add(node);
@@ -257,6 +259,13 @@ public class AssemblyCFG {
 				
 			// update child1 as well
 			traverse(node.child1, jumps, memoize);
+		} else if (node.asm instanceof RETURN){
+			for (AssemblyCFG next : node.succ()){
+				next.parents.remove(node);
+			}
+			AssemblyCFG child1 = node.child1;
+			traverse(child1, jumps, memoize);
+			return node;
 		} else {
 			traverse(node.child1, jumps, memoize);
 		}

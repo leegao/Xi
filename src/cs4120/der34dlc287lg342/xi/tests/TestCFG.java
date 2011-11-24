@@ -38,6 +38,7 @@ import cs4120.der34dlc287lg342.xi.ir.Stmt;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
@@ -46,6 +47,7 @@ import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.parser.Parser;
 import junit.framework.TestCase;
@@ -111,12 +113,11 @@ public class TestCFG extends TestCase {
 		File[] valid = new File("2011-contest").listFiles();
 		
 		for (File validFile: valid) {
-			Seq f = null;
 			Tile t = null;
 			try{
 			if (validFile.getName().contains(".xi")){
 				//System.out.println(validFile.getName());
-				System.out.println("./linkxi.sh -o "+validFile.getName().replace(".xi", "")+" "+validFile.getName().replace("xi", "s"));
+				System.out.println("./../runtime/linkxi.sh -o "+validFile.getName().replace(".xi", "")+" "+validFile.getName().replace("xi", "s"));
 				System.out.println("./"+validFile.getName().replace(".xi", "")+" > "+validFile.getName().replace("xi", "act"));
 				System.out.println("diff "+validFile.getName().replace("xi", "exp")+" "+validFile.getName().replace("xi", "act"));
 				Reader reader = null;
@@ -125,7 +126,67 @@ public class TestCFG extends TestCase {
 				
 				Seq stmt = gen(reader);
 				stmt = ConstantFolding.foldConstants(stmt);
-				f = stmt;
+
+				stmt = ConstantFolding.foldConstants(stmt);
+				for (VisualizableTreeNode s : new ArrayList<VisualizableTreeNode>(stmt.children)){
+					if (!(s instanceof Func)) 
+						continue;
+					int which = stmt.children.indexOf(s);
+					Func func = (Func)s;
+					CFG cfg = CFG.cfg(func);
+					CFGConstantFolding.foldConstants(cfg);
+					for (int n = 0; n < 1; n++){
+						AvailableExpressions ae = new AvailableExpressions(cfg);
+						ae.analyze();
+						CSE cse = new CSE(cfg);
+						cse.analyze();
+						
+						HashSet<Move> last_ac = new HashSet<Move>();
+						
+						// this goes into a loop until we stabilizes or after 20 iterations
+						int i = 0;
+						while(true){
+							//cfg.reset();
+							
+							AvailableCopies ac = new AvailableCopies(cfg);
+							ac.analyze();
+							
+							VariablePropagation cp = new VariablePropagation(cfg);
+							cp.analyze();
+							
+							CFGConstantFolding.foldConstants(cfg);
+							
+							//System.out.println(cfg.dot_edge());
+							//break;
+							
+			//				
+			//				System.out.println(cfg.dot_edge());
+			//				
+							HashSet<Move> cur_ac = ac.get_all(cfg, new HashSet<Move>(), new HashSet<CFG>());
+							if (cur_ac.equals(last_ac) || i >= 20)
+								break;
+							last_ac = cur_ac;
+							i++;
+							cfg.reset();
+						}
+						
+						IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
+						la.analyze();
+						
+						DeadCodeElimination dce = new DeadCodeElimination(cfg);
+						dce.analyze();
+						
+						
+					}
+					
+					Linearize lin = new Linearize(cfg);
+					Func f = new Func(func.name);
+					lin.flatten(f);
+					
+					stmt.children.set(which, f);
+				}
+				
+				
 		//		System.out.println(func.prettyPrint());
 		//		CFG cfg = CFG.cfg(func);
 		//		AvailableExpressions ae = new AvailableExpressions(cfg);
@@ -152,60 +213,68 @@ public class TestCFG extends TestCase {
 	}
 	
 	public void testCFG(){
-		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 while (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c a = a - 1} print(unparseInt(c))}");
+		Seq stmt = gen("use io use conv main(args:int[][]){a:int = 3 b:int = 1 c:int = 3 while (a == 3) {c = a + 3; b = (a + 3) * 4; c = b + c a = a - 1 if (a == 1) {return}} print(unparseInt(c))}");
 		stmt = ConstantFolding.foldConstants(stmt);
-		Func func = (Func) stmt.children.get(0);
-//		System.out.println(func.prettyPrint());
-		CFG cfg = CFG.cfg(func);
-		CFGConstantFolding.foldConstants(cfg);
-		System.out.println(cfg.dot_edge());
-		for (int n = 0; n < 1; n++){
-			AvailableExpressions ae = new AvailableExpressions(cfg);
-			ae.analyze();
-			CSE cse = new CSE(cfg);
-			cse.analyze();
-			
-			HashSet<Move> last_ac = new HashSet<Move>();
-			
-			// this goes into a loop until we stabilizes or after 20 iterations
-			int i = 0;
-			while(true){
-				//cfg.reset();
+		for (VisualizableTreeNode s : new ArrayList<VisualizableTreeNode>(stmt.children)){
+			if (!(s instanceof Func)) 
+				continue;
+			int which = stmt.children.indexOf(s);
+			Func func = (Func)s;
+			CFG cfg = CFG.cfg(func);
+			CFGConstantFolding.foldConstants(cfg);
+			for (int n = 0; n < 1; n++){
+				AvailableExpressions ae = new AvailableExpressions(cfg);
+				ae.analyze();
+				CSE cse = new CSE(cfg);
+				cse.analyze();
 				
-				AvailableCopies ac = new AvailableCopies(cfg);
-				ac.analyze();
+				HashSet<Move> last_ac = new HashSet<Move>();
 				
-				VariablePropagation cp = new VariablePropagation(cfg);
-				cp.analyze();
+				// this goes into a loop until we stabilizes or after 20 iterations
+				int i = 0;
+				while(true){
+					//cfg.reset();
+					
+					AvailableCopies ac = new AvailableCopies(cfg);
+					ac.analyze();
+					
+					VariablePropagation cp = new VariablePropagation(cfg);
+					cp.analyze();
+					
+					CFGConstantFolding.foldConstants(cfg);
+					
+					//System.out.println(cfg.dot_edge());
+					//break;
+					
+	//				
+	//				System.out.println(cfg.dot_edge());
+	//				
+					HashSet<Move> cur_ac = ac.get_all(cfg, new HashSet<Move>(), new HashSet<CFG>());
+					if (cur_ac.equals(last_ac) || i >= 20)
+						break;
+					last_ac = cur_ac;
+					i++;
+					cfg.reset();
+				}
 				
-				CFGConstantFolding.foldConstants(cfg);
+				IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
+				la.analyze();
 				
-				//System.out.println(cfg.dot_edge());
-				//break;
+				DeadCodeElimination dce = new DeadCodeElimination(cfg);
+				dce.analyze();
 				
-//				
-//				System.out.println(cfg.dot_edge());
-//				
-				HashSet<Move> cur_ac = ac.get_all(cfg, new HashSet<Move>(), new HashSet<CFG>());
-				if (cur_ac.equals(last_ac) || i >= 20)
-					break;
-				last_ac = cur_ac;
-				i++;
-				cfg.reset();
+				
 			}
 			
-			IRLivenessAnalysis la = new IRLivenessAnalysis(cfg);
-			la.analyze();
-			
-			DeadCodeElimination dce = new DeadCodeElimination(cfg);
-			dce.analyze();
-			
 			Linearize lin = new Linearize(cfg);
+			Func f = new Func(func.name);
+			lin.flatten(f);
 			
-			System.out.println(cfg.dot_edge());
+			stmt.children.set(which, f);
 		}
 		
-		
+		Assembler assembler = new Assembler((SeqTile) stmt.munch());
+		System.out.println(assembler.att());
 //		TempRegister r = new TempRegister();
 //		Stmt a = new Move(new Temp(r), new Binop(Binop.MINUS, new Binop(Binop.PLUS, new Temp(r), new Const(3)), new Const(4)));
 //		System.out.println(a);
