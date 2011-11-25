@@ -12,16 +12,16 @@ _Imain_paai:
 	pushq %r15
 	movq %rdi, %rbx		# movq %rdi, %r(args)
 	.L963:		# .L963:
-	movq $1, %rbx		# movq $1, %r(5131)
-	movq %rbx, %rdi		# movq %r(5131), %rdi
+	movq $1, %rbx		# movq $1, %r(5587)
+	movq %rbx, %rdi		# movq %r(5587), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	.L965:		# .L965:
-	movq $1, %rbx		# movq $1, %r(5132)
-	movq %rbx, %rdi		# movq %r(5132), %rdi
+	movq $1, %rbx		# movq $1, %r(5588)
+	movq %rbx, %rdi		# movq %r(5588), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	.L967:		# .L967:
-	movq $1, %rbx		# movq $1, %r(5133)
-	movq %rbx, %rdi		# movq %r(5133), %rdi
+	movq $1, %rbx		# movq $1, %r(5589)
+	movq %rbx, %rdi		# movq %r(5589), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	jmp .L962		# jmp .L962
 	.L962:		# .L962:

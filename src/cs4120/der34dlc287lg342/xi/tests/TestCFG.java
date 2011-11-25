@@ -17,7 +17,7 @@ import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.assembly.RegAlloc;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.cfg.AssemblyCFG;
-import cs4120.der34dlc287lg342.xi.cfg.AvailableCopies;
+import cs4120.der34dlc287lg342.xi.cfg.AvailableCopiesConstants;
 import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
@@ -154,7 +154,7 @@ public class TestCFG extends TestCase {
 						while(true){
 							cfg.reset();
 							
-							AvailableCopies ac = new AvailableCopies(cfg);
+							AvailableCopiesConstants ac = new AvailableCopiesConstants(cfg);
 							ac.analyze();
 							cfg.recompute();
 							
@@ -244,7 +244,7 @@ public class TestCFG extends TestCase {
 				while(true){
 					//cfg.reset();
 					
-					AvailableCopies ac = new AvailableCopies(cfg);
+					AvailableCopiesConstants ac = new AvailableCopiesConstants(cfg);
 					ac.analyze();
 					
 					VariablePropagation cp = new VariablePropagation(cfg);

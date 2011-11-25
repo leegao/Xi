@@ -63,6 +63,18 @@ public class Move extends Stmt {
 		}
 	}
 	
+	public boolean contains(Expr expr){
+		if (dest instanceof Temp){
+			if (val.equals(expr)){
+				return true;
+			} else {
+				return val.contains(expr);
+			}
+		} else {
+			return super.contains(expr);
+		}
+	}
+	
 	@Override
 	public Tile munch() {
 		

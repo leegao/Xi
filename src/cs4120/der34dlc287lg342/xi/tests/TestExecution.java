@@ -16,7 +16,7 @@ import java.util.HashSet;
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.assembly.Assembler;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
-import cs4120.der34dlc287lg342.xi.cfg.AvailableCopies;
+import cs4120.der34dlc287lg342.xi.cfg.AvailableCopiesConstants;
 import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
 import cs4120.der34dlc287lg342.xi.cfg.CFG;
 import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
@@ -128,7 +128,7 @@ public class TestExecution extends TestCase {
 			while(true){
 				cfg.reset();
 				
-				AvailableCopies ac = new AvailableCopies(cfg);
+				AvailableCopiesConstants ac = new AvailableCopiesConstants(cfg);
 				ac.analyze();
 				cfg.recompute();
 				
@@ -140,7 +140,7 @@ public class TestExecution extends TestCase {
 				cfg.recompute();
 				
 				HashSet<Move> cur_ac = ac.get_all(cfg, new HashSet<Move>(), new HashSet<CFG>());
-				if (cur_ac.equals(last_ac) || i >= 20)
+				if (cur_ac.equals(last_ac) || i >= 5)
 					break;
 				last_ac = cur_ac;
 				i++;
@@ -151,6 +151,7 @@ public class TestExecution extends TestCase {
 			
 			DeadCodeElimination dce = new DeadCodeElimination(cfg);
 			dce.analyze();
+			
 			cfg.recompute();
 			
 			Trace lin = new Trace(cfg);

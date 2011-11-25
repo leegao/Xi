@@ -23,7 +23,7 @@ public class Rewrite {
 		for (int i = 0; i < src.length; i ++){
 			if (src[i] != null && src[i].equals(o)){
 				src[i] = n;
-				return;
+				//return;
 			}
 		}
 	}

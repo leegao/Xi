@@ -89,9 +89,9 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = x86_64-apple-darwin10.8.0
-host_triplet = x86_64-apple-darwin10.8.0
-target_triplet = x86_64-apple-darwin10.8.0
+build_triplet = x86_64-unknown-linux-gnu
+host_triplet = x86_64-unknown-linux-gnu
+target_triplet = x86_64-unknown-linux-gnu
 am__append_1 = -I$(top_builddir)/libatomic_ops/src \
 	       -I$(top_srcdir)/libatomic_ops/src
 
@@ -102,7 +102,7 @@ check_PROGRAMS = gctest$(EXEEXT) leaktest$(EXEEXT) middletest$(EXEEXT) \
 # C Library: Architecture Dependent
 # ---------------------------------
 am__append_2 = pthread_start.c pthread_support.c pthread_stop_world.c
-am__append_3 = darwin_stop_world.c
+#am__append_3 = darwin_stop_world.c
 #am__append_4 = win32_threads.c
 
 # C++ Interface
@@ -185,7 +185,7 @@ am__libgc_la_SOURCES_DIST = allchblk.c alloc.c blacklst.c checksums.c \
 	win32_threads.c
 am__objects_1 = pthread_start.lo pthread_support.lo \
 	pthread_stop_world.lo
-am__objects_2 = darwin_stop_world.lo
+#am__objects_2 = darwin_stop_world.lo
 #am__objects_3 = win32_threads.lo
 am_libgc_la_OBJECTS = allchblk.lo alloc.lo blacklst.lo checksums.lo \
 	dbg_mlc.lo dyn_load.lo finalize.lo gc_dlopen.lo gcj_mlc.lo \
@@ -376,14 +376,14 @@ DIST_ARCHIVES = $(distdir).tar.gz $(distdir).tar.bz2
 GZIP_ENV = --best
 distuninstallcheck_listfiles = find . -type f -print
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6/missing --run aclocal-1.11
-AMTAR = ${SHELL} /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6/missing --run tar
+ACLOCAL = ${SHELL} /home/leegao/workspace/Xi/runtime/gc-7.2alpha6/missing --run aclocal-1.11
+AMTAR = ${SHELL} /home/leegao/workspace/Xi/runtime/gc-7.2alpha6/missing --run tar
 AR = ar
 ATOMIC_OPS_LIBS = 
-AUTOCONF = ${SHELL} /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6/missing --run autoconf
-AUTOHEADER = ${SHELL} /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6/missing --run autoheader
-AUTOMAKE = ${SHELL} /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6/missing --run automake-1.11
-AWK = awk
+AUTOCONF = ${SHELL} /home/leegao/workspace/Xi/runtime/gc-7.2alpha6/missing --run autoconf
+AUTOHEADER = ${SHELL} /home/leegao/workspace/Xi/runtime/gc-7.2alpha6/missing --run autoheader
+AUTOMAKE = ${SHELL} /home/leegao/workspace/Xi/runtime/gc-7.2alpha6/missing --run automake-1.11
+AWK = gawk
 CC = gcc
 CCAS = gcc
 CCASDEPMODE = depmode=gcc3
@@ -393,50 +393,50 @@ CFLAGS = -g -O2
 CPP = gcc -E
 CPPFLAGS = 
 CXX = g++
-CXXCPP = g++ -E
-CXXDEPMODE = depmode=gcc3
-CXXFLAGS = -g -O2
+CXXCPP = 
+CXXDEPMODE = depmode=none
+CXXFLAGS = 
 CXXINCLUDES = 
 CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DLLTOOL = false
-DSYMUTIL = dsymutil
+DSYMUTIL = 
 DUMPBIN = 
-ECHO_C = \c
-ECHO_N = 
+ECHO_C = 
+ECHO_N = -n
 ECHO_T = 
-EGREP = /usr/bin/grep -E
+EGREP = /bin/grep -E
 EXEEXT = 
 EXTRA_TEST_LIBS = 
-FGREP = /usr/bin/grep -F
+FGREP = /bin/grep -F
 GC_CFLAGS =  -fexceptions
 GC_VERSION = 
-GREP = /usr/bin/grep
+GREP = /bin/grep
 INCLUDES = 
 INSTALL = /usr/bin/install -c
 INSTALL_DATA = ${INSTALL} -m 644
 INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = $(install_sh) -c -s
-LD = /usr/libexec/gcc/i686-apple-darwin10/4.2.1/ld
+LD = /usr/bin/ld -m elf_x86_64
 LDFLAGS = 
 LIBOBJS = 
 LIBS = 
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
-LIPO = lipo
+LIPO = 
 LN_S = ln -s
 LTLIBOBJS = 
 MAINT = #
-MAKEINFO = ${SHELL} /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/leegao/workspace/Xi/runtime/gc-7.2alpha6/missing --run makeinfo
 MANIFEST_TOOL = :
-MKDIR_P = ./install-sh -c -d
-NM = /usr/bin/nm
-NMEDIT = nmedit
-OBJDUMP = false
+MKDIR_P = /bin/mkdir -p
+NM = /usr/bin/nm -B
+NMEDIT = 
+OBJDUMP = objdump
 OBJEXT = o
-OTOOL = otool
-OTOOL64 = :
+OTOOL = 
+OTOOL64 = 
 PACKAGE = gc
 PACKAGE_BUGREPORT = Hans.Boehm@hp.com
 PACKAGE_NAME = gc
@@ -446,20 +446,20 @@ PACKAGE_URL =
 PACKAGE_VERSION = 7.2alpha6
 PATH_SEPARATOR = :
 RANLIB = ranlib
-SED = /usr/bin/sed
+SED = /bin/sed
 SET_MAKE = 
-SHELL = /bin/sh
+SHELL = /bin/bash
 STRIP = strip
-THREADDLLIBS = -lpthread
+THREADDLLIBS = -lpthread -ldl
 UNWINDLIBS = 
 VERSION = 7.2alpha6
-abs_builddir = /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6
-abs_srcdir = /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6
-abs_top_builddir = /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6
-abs_top_srcdir = /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6
+abs_builddir = /home/leegao/workspace/Xi/runtime/gc-7.2alpha6
+abs_srcdir = /home/leegao/workspace/Xi/runtime/gc-7.2alpha6
+abs_top_builddir = /home/leegao/workspace/Xi/runtime/gc-7.2alpha6
+abs_top_srcdir = /home/leegao/workspace/Xi/runtime/gc-7.2alpha6
 ac_ct_AR = ar
 ac_ct_CC = gcc
-ac_ct_CXX = g++
+ac_ct_CXX = 
 ac_ct_DUMPBIN = 
 addlibs = 
 addobjs =  mach_dep.lo
@@ -469,33 +469,33 @@ am__quote =
 am__tar = ${AMTAR} chof - "$$tardir"
 am__untar = ${AMTAR} xf -
 bindir = ${exec_prefix}/bin
-build = x86_64-apple-darwin10.8.0
+build = x86_64-unknown-linux-gnu
 build_alias = 
 build_cpu = x86_64
-build_os = darwin10.8.0
-build_vendor = apple
+build_os = linux-gnu
+build_vendor = unknown
 builddir = .
 datadir = ${datarootdir}
 datarootdir = ${prefix}/share
 docdir = ${datarootdir}/doc/${PACKAGE_TARNAME}
 dvidir = ${docdir}
 exec_prefix = ${prefix}
-extra_ldflags_libgc = -Wl,-single_module
-host = x86_64-apple-darwin10.8.0
+extra_ldflags_libgc = 
+host = x86_64-unknown-linux-gnu
 host_alias = 
 host_cpu = x86_64
-host_os = darwin10.8.0
-host_vendor = apple
+host_os = linux-gnu
+host_vendor = unknown
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /Users/danchen/Documents/eclipse/workspace/xi/runtime/gc-7.2alpha6/install-sh
+install_sh = ${SHELL} /home/leegao/workspace/Xi/runtime/gc-7.2alpha6/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
 localstatedir = ${prefix}/var
 mandir = ${datarootdir}/man
-mkdir_p = $(top_builddir)/./install-sh -c -d
+mkdir_p = /bin/mkdir -p
 oldincludedir = /usr/include
 pdfdir = ${docdir}
 prefix = /usr/local
@@ -506,12 +506,12 @@ sharedstatedir = ${prefix}/com
 srcdir = .
 subdirs =  libatomic_ops
 sysconfdir = ${prefix}/etc
-target = x86_64-apple-darwin10.8.0
+target = x86_64-unknown-linux-gnu
 target_alias = 
 target_all = libgc.la
 target_cpu = x86_64
-target_os = darwin10.8.0
-target_vendor = apple
+target_os = linux-gnu
+target_vendor = unknown
 top_build_prefix = 
 top_builddir = .
 top_srcdir = .
@@ -1161,39 +1161,39 @@ trace_test.obj: tests/trace_test.c
 #	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o trace_test.obj `if test -f 'tests/trace_test.c'; then $(CYGPATH_W) 'tests/trace_test.c'; else $(CYGPATH_W) '$(srcdir)/tests/trace_test.c'; fi`
 
 .cc.o:
-	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
-#	source='$<' object='$@' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(CXXCOMPILE) -c -o $@ $<
+#	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+#	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+	source='$<' object='$@' libtool=no \
+	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+	$(CXXCOMPILE) -c -o $@ $<
 
 .cc.obj:
-	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
-	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
-#	source='$<' object='$@' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
+#	$(CXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ `$(CYGPATH_W) '$<'`
+#	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Po
+	source='$<' object='$@' libtool=no \
+	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+	$(CXXCOMPILE) -c -o $@ `$(CYGPATH_W) '$<'`
 
 .cc.lo:
-	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
-	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
-#	source='$<' object='$@' libtool=yes \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(LTCXXCOMPILE) -c -o $@ $<
+#	$(LTCXXCOMPILE) -MT $@ -MD -MP -MF $(DEPDIR)/$*.Tpo -c -o $@ $<
+#	$(am__mv) $(DEPDIR)/$*.Tpo $(DEPDIR)/$*.Plo
+	source='$<' object='$@' libtool=yes \
+	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+	$(LTCXXCOMPILE) -c -o $@ $<
 
 test_cpp.o: tests/test_cpp.cc
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_cpp.o -MD -MP -MF $(DEPDIR)/test_cpp.Tpo -c -o test_cpp.o `test -f 'tests/test_cpp.cc' || echo '$(srcdir)/'`tests/test_cpp.cc
-	$(am__mv) $(DEPDIR)/test_cpp.Tpo $(DEPDIR)/test_cpp.Po
-#	source='tests/test_cpp.cc' object='test_cpp.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_cpp.o `test -f 'tests/test_cpp.cc' || echo '$(srcdir)/'`tests/test_cpp.cc
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_cpp.o -MD -MP -MF $(DEPDIR)/test_cpp.Tpo -c -o test_cpp.o `test -f 'tests/test_cpp.cc' || echo '$(srcdir)/'`tests/test_cpp.cc
+#	$(am__mv) $(DEPDIR)/test_cpp.Tpo $(DEPDIR)/test_cpp.Po
+	source='tests/test_cpp.cc' object='test_cpp.o' libtool=no \
+	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_cpp.o `test -f 'tests/test_cpp.cc' || echo '$(srcdir)/'`tests/test_cpp.cc
 
 test_cpp.obj: tests/test_cpp.cc
-	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_cpp.obj -MD -MP -MF $(DEPDIR)/test_cpp.Tpo -c -o test_cpp.obj `if test -f 'tests/test_cpp.cc'; then $(CYGPATH_W) 'tests/test_cpp.cc'; else $(CYGPATH_W) '$(srcdir)/tests/test_cpp.cc'; fi`
-	$(am__mv) $(DEPDIR)/test_cpp.Tpo $(DEPDIR)/test_cpp.Po
-#	source='tests/test_cpp.cc' object='test_cpp.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
-#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_cpp.obj `if test -f 'tests/test_cpp.cc'; then $(CYGPATH_W) 'tests/test_cpp.cc'; else $(CYGPATH_W) '$(srcdir)/tests/test_cpp.cc'; fi`
+#	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT test_cpp.obj -MD -MP -MF $(DEPDIR)/test_cpp.Tpo -c -o test_cpp.obj `if test -f 'tests/test_cpp.cc'; then $(CYGPATH_W) 'tests/test_cpp.cc'; else $(CYGPATH_W) '$(srcdir)/tests/test_cpp.cc'; fi`
+#	$(am__mv) $(DEPDIR)/test_cpp.Tpo $(DEPDIR)/test_cpp.Po
+	source='tests/test_cpp.cc' object='test_cpp.obj' libtool=no \
+	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) \
+	$(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o test_cpp.obj `if test -f 'tests/test_cpp.cc'; then $(CYGPATH_W) 'tests/test_cpp.cc'; else $(CYGPATH_W) '$(srcdir)/tests/test_cpp.cc'; fi`
 
 .s.o:
 	$(CCASCOMPILE) -c -o $@ $<

@@ -330,6 +330,10 @@ public class InterferenceGraph {
 			for (TempRegister b : live){
 				add_adj(new Tuple(b,a));
 			}
+			
+			for (TempRegister b : node.def){
+				add_adj(new Tuple(b,a));
+			}
 		}
 
 		// we want to traverse backwards

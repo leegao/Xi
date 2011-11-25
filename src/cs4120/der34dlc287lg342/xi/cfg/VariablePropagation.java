@@ -2,6 +2,7 @@ package cs4120.der34dlc287lg342.xi.cfg;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Hashtable;
 
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.Move;
@@ -40,6 +41,13 @@ public class VariablePropagation {
 		return intersect == null ? new HashSet<Move>() : intersect;
 	}
 	
+	public TempRegister get_alias(Hashtable<TempRegister, TempRegister> aliases, TempRegister key){
+		if (aliases.containsKey(key)){
+			return get_alias(aliases, aliases.get(key));
+		}
+		return key;
+	}
+	
 	public void analyze(){
 		// one step for now
 		while (!worklist.isEmpty()){
@@ -47,18 +55,28 @@ public class VariablePropagation {
 			worklist.remove(0);
 			
 			// check available exprs
-			HashSet<Move> copies_in = in(node);
-			for (Move move : copies_in){
+			ArrayList<Move> copies_in = new ArrayList<Move>(in(node));
+			while (!copies_in.isEmpty()){
+				Move move = copies_in.get(0);
+				copies_in.remove(0);
 				ArrayList<CFG> chain = new ArrayList<CFG>();
 				make_chain(node, move, chain, new HashSet<CFG>());
 				if (chain.size() > 0){
+					Expr from = move.dest, to = move.val;
 					for (CFG el : chain){
-						Expr from = move.dest, to = move.val;
 						el.ir.replace(from, to);
 					}
+					//node.out_copy.remove(move);
 				}
 			}
 		}
+	}
+	
+	public void remove_register(CFG node, TempRegister r){
+//		for (Move m : new ArrayList<Move>(arr)){
+//			if (((Temp)m.dest).temp.equals(r) || (m.val instanceof Temp && ((Temp)m.val).temp.equals(r)))
+//				arr.remove(m);
+//		}
 	}
 	
 	public void make_chain(CFG node, Move move, ArrayList<CFG> chain, HashSet<CFG> seen){

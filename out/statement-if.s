@@ -13,8 +13,8 @@ _Imain_paai:
 	movq %rdi, %rbx		# movq %rdi, %r(args)
 	.L996:		# .L996:
 	.L997:		# .L997:
-	movq $1, %rbx		# movq $1, %r(5242)
-	movq %rbx, %rdi		# movq %r(5242), %rdi
+	movq $1, %rbx		# movq $1, %r(5720)
+	movq %rbx, %rdi		# movq %r(5720), %rdi
 	call _Iassert_pb		# call _Iassert_pb
 	jmp .L999		# jmp .L999
 	.L999:		# .L999:

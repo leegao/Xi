@@ -8,6 +8,7 @@ import java.util.Hashtable;
 
 import cs4120.der34dlc287lg342.xi.ir.Arg;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
+import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.Func;
@@ -211,7 +212,18 @@ public class CFG {
 		if (pred().isEmpty()){
 			str += "\tstart -> n"+id+"\n";
 		}
-		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live + "\"]\n";
+		
+		String out = "[";
+		for (Move m : this.out_copy){
+			out += "("+((Temp)m.dest).temp+",";
+			if (m.val instanceof Temp){
+				out += ""+((Temp)m.val).temp+") ";
+			} else {
+				out += ""+((Const)m.val).value+") ";
+			}
+		}
+		out += "]";
+		str += "\t"+"n"+id+" [label=\""+ir.prettyPrint()+"\\nlive_in: " + this.in_live + "\\nout_copy: " + out + "\"]\n";
 
 		for (CFG child : succ()){
 			str += "\t"+"n"+id+" -> "+"n"+child.id+"\n";

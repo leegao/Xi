@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.assembly;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import cs4120.der34dlc287lg342.xi.cfg.AssemblyCFG;
 import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
@@ -29,6 +30,7 @@ public class Assembler {
 				
 				LivenessWorklist wl = new LivenessWorklist(cfg);
 				wl.analyze();
+				
 				InterferenceGraph g = new InterferenceGraph(cfg);
 				
 				int n = 0;
@@ -41,6 +43,9 @@ public class Assembler {
 					wl.analyze();
 					g = new InterferenceGraph(cfg);
 				}
+				
+				//if (func.name.name.contains("main"))
+					//System.out.println(cfg.dot_edge(new HashSet<AssemblyCFG>()));
 				
 				int aligned_stack = (n+1)*8;
 				if (aligned_stack % 16 != 0) aligned_stack += 8;
