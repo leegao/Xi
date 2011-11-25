@@ -1,714 +1,1101 @@
 .att_syntax prefix
 .text
-.globl _Imean_iai
-_Imean_iai:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $208, %rsp
-	pushq %r14
-	pushq %r15
-	pushq %rbx
-	pushq %r12
-	pushq %r13
-	movq %rdi, %rbx
-	leaq .L17(%rip), %rdi
-	call _I_c_internal_strdup_aii
-	movq %rax, %r15
-	movq %r15, %r13
-	movq %r13, %rdi
-	call _Iprintln_pai
-	
-	movq $0, %r15
-	movq %r15, -8(%rbp)
-	movq $0, %r15
-	movq %r15, -16(%rbp)
-	.L18:
-	movq %rbx, %r15
-	movq %r15, -24(%rbp)
-	movq $8, %r14
-	subq %r14, -24(%rbp)
-	movq -24(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -32(%rbp)
-	movq -16(%rbp), %r15
-	cmpq -32(%rbp), %r15
-	jge .L20
-	.L19:
-	movq %rbx, %r15
-	movq %r15, -40(%rbp)
-	movq -16(%rbp), %r15
-	movq %r15, -48(%rbp)
-	movq -40(%rbp), %r15
-	movq %r15, -56(%rbp)
-	movq $8, %r14
-	subq %r14, -56(%rbp)
-	movq -56(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -64(%rbp)
-	movq -48(%rbp), %r15
-	cmpq -64(%rbp), %r15
-	jae error_outofbounds
-	movq -48(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -72(%rbp)
-	movq -40(%rbp), %r15
-	movq %r15, -80(%rbp)
-	movq -72(%rbp), %r14
-	addq %r14, -80(%rbp)
-	movq -80(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -88(%rbp)
-	movq -8(%rbp), %r15
-	movq %r15, -96(%rbp)
-	movq -88(%rbp), %r14
-	addq %r14, -96(%rbp)
-	movq -96(%rbp), %r15
-	movq %r15, -8(%rbp)
-	incq -16(%rbp)
-	jmp .L18
-	.L20:
-	movq $1, -104(%rbp)
-	movq -104(%rbp), %rdi
-	movq $2, -112(%rbp)
-	movq -112(%rbp), %rsi
-	movq $3, -120(%rbp)
-	movq -120(%rbp), %rdx
-	movq $4, -128(%rbp)
-	movq -128(%rbp), %rcx
-	movq $5, -136(%rbp)
-	movq -136(%rbp), %r8
-	movq $6, -144(%rbp)
-	movq -144(%rbp), %r9
-	movq $8, -152(%rbp)
-	pushq -152(%rbp)
-	movq $7, -160(%rbp)
-	pushq -160(%rbp)
-	call _Ix_piiiiiiii
-	popq %r15
-	popq %r15
-	
-	movq %rbx, %r15
-	movq %r15, -168(%rbp)
-	movq $8, %r14
-	subq %r14, -168(%rbp)
-	movq -168(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -176(%rbp)
-	movq %rdx, -184(%rbp)
-	movq %rax, -192(%rbp)
-	movq -8(%rbp), %rax
-	movq $0, %rdx
-	movq -176(%rbp), %r14
-	idivq %r14
-	movq %rax, -200(%rbp)
-	movq -184(%rbp), %rdx
-	movq -192(%rbp), %rax
-	movq -200(%rbp), %r15
-	movq %r15, %rax
-	jmp .L16
-	.L16:
-	popq %r13
-	popq %r12
-	popq %rbx
-	popq %r15
-	popq %r14
-	addq $208, %rsp
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	
-.globl _Ix_piiiiiiii
-_Ix_piiiiiiii:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $288, %rsp
-	pushq %r14
-	pushq %r15
-	pushq %rbx
-	pushq %r12
-	pushq %r13
-	movq %rdi, %rbx
-	movq %rsi, %r12
-	movq %rdx, %r13
-	movq %rcx, -8(%rbp)
-	movq %r8, -16(%rbp)
-	movq %r9, -24(%rbp)
-	movq %rbp, %r15
-	movq 24(%r15), %r15
-	movq %r15, -40(%rbp)
-	movq %rbp, %r15
-	movq 16(%r15), %r15
-	movq %r15, -48(%rbp)
-	leaq .L24(%rip), %rdi
-	call _I_c_internal_strdup_aii
-	movq %rax, %r15
-	movq %r15, -64(%rbp)
-	movq -64(%rbp), %r15
-	movq %r15, -72(%rbp)
-	movq $0, %r15
-	movq %r15, -80(%rbp)
-	movq -72(%rbp), %r15
-	movq %r15, -88(%rbp)
-	movq -72(%rbp), %r15
-	movq %r15, -96(%rbp)
-	movq -88(%rbp), %r15
-	movq %r15, -104(%rbp)
-	movq $8, %r14
-	subq %r14, -104(%rbp)
-	movq -104(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -112(%rbp)
-	movq -112(%rbp), %r15
-	movq %r15, -120(%rbp)
-	movq -96(%rbp), %r15
-	movq %r15, -128(%rbp)
-	movq $8, %r14
-	subq %r14, -128(%rbp)
-	movq -128(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -136(%rbp)
-	movq -120(%rbp), %r15
-	movq %r15, -144(%rbp)
-	movq -136(%rbp), %r14
-	addq %r14, -144(%rbp)
-	movq -144(%rbp), %r15
-	movq %r15, -152(%rbp)
-	movq -152(%rbp), %r15
-	movq %r15, -160(%rbp)
-	movq $1, %r14
-	addq %r14, -160(%rbp)
-	movq -160(%rbp), %rdi
-	call _I_alloc_i
-	movq %rax, %r15
-	movq %r15, -168(%rbp)
-	movq -168(%rbp), %r15
-	movq %r15, -176(%rbp)
-	movq -176(%rbp), %r15
-	movq -152(%rbp), %r14
-	movq %r14, (%r15)
-	movq -176(%rbp), %r15
-	movq %r15, -184(%rbp)
-	movq $8, %r14
-	addq %r14, -184(%rbp)
-	movq -184(%rbp), %r15
-	movq %r15, -192(%rbp)
-	.L25:
-	movq -80(%rbp), %r15
-	cmpq -120(%rbp), %r15
-	jge .L27
-	.L26:
-	movq -80(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -200(%rbp)
-	movq -192(%rbp), %r15
-	movq %r15, -208(%rbp)
-	movq -200(%rbp), %r14
-	addq %r14, -208(%rbp)
-	movq -80(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -216(%rbp)
-	movq -88(%rbp), %r15
-	movq %r15, -224(%rbp)
-	movq -216(%rbp), %r14
-	addq %r14, -224(%rbp)
-	movq -224(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -232(%rbp)
-	movq -208(%rbp), %r15
-	movq -232(%rbp), %r14
-	movq %r14, (%r15)
-	incq -80(%rbp)
-	jmp .L25
-	.L27:
-	.L28:
-	movq -80(%rbp), %r15
-	cmpq -152(%rbp), %r15
-	jge .L30
-	.L29:
-	movq -80(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -240(%rbp)
-	movq -192(%rbp), %r15
-	movq %r15, -248(%rbp)
-	movq -240(%rbp), %r14
-	addq %r14, -248(%rbp)
-	movq -80(%rbp), %r15
-	movq %r15, -256(%rbp)
-	movq -120(%rbp), %r14
-	subq %r14, -256(%rbp)
-	movq -256(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -264(%rbp)
-	movq -96(%rbp), %r15
-	movq %r15, -272(%rbp)
-	movq -264(%rbp), %r14
-	addq %r14, -272(%rbp)
-	movq -272(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -280(%rbp)
-	movq -248(%rbp), %r15
-	movq -280(%rbp), %r14
-	movq %r14, (%r15)
-	incq -80(%rbp)
-	jmp .L28
-	.L30:
-	movq -192(%rbp), %r15
-	movq %r15, -72(%rbp)
-	.L23:
-	popq %r13
-	popq %r12
-	popq %rbx
-	popq %r15
-	popq %r14
-	addq $288, %rsp
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	
-.globl _If_t2iii
-_If_t2iii:
-	pushq %rbp
-	movq %rsp, %rbp
-	subq $32, %rsp
-	pushq %r14
-	pushq %r15
-	pushq %rbx
-	pushq %r12
-	pushq %r13
-	movq %rdi, %rbx
-	movq %rsi, %r12
-	movq %rbx, %r15
-	movq %r15, %r13
-	movq $0, %r14
-	addq %r14, %r13
-	movq $1, -8(%rbp)
-	movq %r13, %r15
-	movq -8(%rbp), %r14
-	movq %r14, (%r15)
-	movq %rbx, %r15
-	movq %r15, -16(%rbp)
-	movq $8, %r14
-	addq %r14, -16(%rbp)
-	movq $2, -24(%rbp)
-	movq -16(%rbp), %r15
-	movq -24(%rbp), %r14
-	movq %r14, (%r15)
-	jmp .L31
-	.L31:
-	popq %r13
-	popq %r12
-	popq %rbx
-	popq %r15
-	popq %r14
-	addq $32, %rsp
-	movq %rbp, %rsp
-	popq %rbp
-	ret
-	
 .globl _Imain_paai
 _Imain_paai:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $528, %rsp
-	pushq %r14
-	pushq %r15
+	subq $16, %rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-	movq %rdi, %rbx
-	movq $48, %r12
-	movq %r12, %rdi
-	call _I_alloc_i
-	movq %rax, %r15
-	movq %r15, -8(%rbp)
-	movq -8(%rbp), %r15
-	movq %r15, -16(%rbp)
-	movq $5, -24(%rbp)
-	movq -16(%rbp), %r15
-	movq -24(%rbp), %r14
-	movq %r14, (%r15)
-	movq -16(%rbp), %r15
-	movq %r15, -32(%rbp)
-	movq $8, %r14
-	addq %r14, -32(%rbp)
-	movq -32(%rbp), %r15
-	movq %r15, -40(%rbp)
-	movq -40(%rbp), %r15
-	movq %r15, -48(%rbp)
-	movq $0, %r14
-	addq %r14, -48(%rbp)
-	movq $1, -56(%rbp)
-	movq -48(%rbp), %r15
-	movq -56(%rbp), %r14
-	movq %r14, (%r15)
-	movq -40(%rbp), %r15
-	movq %r15, -64(%rbp)
-	movq $8, %r14
-	addq %r14, -64(%rbp)
-	movq $2, -72(%rbp)
-	movq -64(%rbp), %r15
-	movq -72(%rbp), %r14
-	movq %r14, (%r15)
-	movq -40(%rbp), %r15
-	movq %r15, -80(%rbp)
-	movq $16, %r14
-	addq %r14, -80(%rbp)
-	movq $3, -88(%rbp)
-	movq -80(%rbp), %r15
-	movq -88(%rbp), %r14
-	movq %r14, (%r15)
-	movq -40(%rbp), %r15
-	movq %r15, -96(%rbp)
-	movq $24, %r14
-	addq %r14, -96(%rbp)
-	movq $4, -104(%rbp)
-	movq -96(%rbp), %r15
-	movq -104(%rbp), %r14
-	movq %r14, (%r15)
-	movq -40(%rbp), %r15
-	movq %r15, -112(%rbp)
-	movq $32, %r14
-	addq %r14, -112(%rbp)
-	movq $5, -120(%rbp)
-	movq -112(%rbp), %r15
-	movq -120(%rbp), %r14
-	movq %r14, (%r15)
-	movq -40(%rbp), %rdi
-	call _Imean_iai
-	movq %rax, %r15
-	movq %r15, -128(%rbp)
-	movq -128(%rbp), %r15
-	movq %r15, -136(%rbp)
-	movq $2, -144(%rbp)
-	movq %rdx, -152(%rbp)
-	movq %rax, -160(%rbp)
-	movq -136(%rbp), %rax
-	movq $0, %rdx
-	movq -144(%rbp), %r14
-	idivq %r14
-	movq %rdx, -168(%rbp)
-	movq -152(%rbp), %rdx
-	movq -160(%rbp), %rax
-	movq -168(%rbp), %rdi
-	call _IunparseInt_aii
-	movq %rax, %r15
-	movq %r15, -176(%rbp)
-	movq -176(%rbp), %rdi
-	call _Iprintln_pai
-	
-	call _Ireadln_ai
-	movq %rax, %r15
-	movq %r15, -184(%rbp)
-	movq -184(%rbp), %r15
-	movq %r15, -192(%rbp)
-	movq $16, -200(%rbp)
-	movq -200(%rbp), %rdi
-	call _I_alloc_i
-	movq %rax, %r15
-	movq %r15, -208(%rbp)
-	movq -208(%rbp), %r15
-	movq %r15, -216(%rbp)
-	movq -216(%rbp), %rdi
-	movq -192(%rbp), %rsi
-	call _IparseInt_t2ibai
-	
-	movq -216(%rbp), %r15
-	movq 0(%r15), %r15
-	movq %r15, -224(%rbp)
-	movq $16, -232(%rbp)
-	movq -232(%rbp), %rdi
-	call _I_alloc_i
-	movq %rax, %r15
-	movq %r15, -240(%rbp)
-	movq -240(%rbp), %r15
-	movq %r15, -248(%rbp)
-	movq -248(%rbp), %rdi
-	movq $1, -256(%rbp)
-	movq -256(%rbp), %rsi
-	call _If_t2iii
-	
-	movq -248(%rbp), %r15
-	movq 0(%r15), %r15
-	movq %r15, -264(%rbp)
-	movq -248(%rbp), %r15
-	movq 8(%r15), %r15
-	movq %r15, -272(%rbp)
-	movq -272(%rbp), %rdi
-	call _IunparseInt_aii
-	movq %rax, %r15
-	movq %r15, -280(%rbp)
-	movq -280(%rbp), %rdi
-	call _Iprintln_pai
-	
-	movq $10, -288(%rbp)
-	movq -224(%rbp), %r15
-	cmpq -288(%rbp), %r15
-	jle .L34
-	.L33:
-	leaq .L35(%rip), %rdi
-	call _I_c_internal_strdup_aii
-	movq %rax, %r15
-	movq %r15, -296(%rbp)
-	movq -296(%rbp), %rdi
-	call _Iprintln_pai
-	
-	jmp .L36
-	.L34:
-	movq $0, %r15
-	movq %r15, -304(%rbp)
-	leaq .L37(%rip), %rdi
-	call _I_c_internal_strdup_aii
-	movq %rax, %r15
-	movq %r15, -312(%rbp)
-	movq -312(%rbp), %r15
-	movq %r15, -320(%rbp)
-	movq -224(%rbp), %rdi
-	call _IunparseInt_aii
-	movq %rax, %r15
-	movq %r15, -328(%rbp)
-	movq -328(%rbp), %r15
-	movq %r15, -336(%rbp)
-	movq -320(%rbp), %r15
-	movq %r15, -344(%rbp)
-	movq $8, %r14
-	subq %r14, -344(%rbp)
-	movq -344(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -352(%rbp)
-	movq -352(%rbp), %r15
-	movq %r15, -360(%rbp)
-	movq -336(%rbp), %r15
-	movq %r15, -368(%rbp)
-	movq $8, %r14
-	subq %r14, -368(%rbp)
-	movq -368(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -376(%rbp)
-	movq -360(%rbp), %r15
-	movq %r15, -384(%rbp)
-	movq -376(%rbp), %r14
-	addq %r14, -384(%rbp)
-	movq -384(%rbp), %r15
-	movq %r15, -392(%rbp)
-	movq -392(%rbp), %r15
-	movq %r15, -400(%rbp)
-	movq $1, %r14
-	addq %r14, -400(%rbp)
-	movq -400(%rbp), %rdi
-	call _I_alloc_i
-	movq %rax, %r15
-	movq %r15, -408(%rbp)
-	movq -408(%rbp), %r15
-	movq %r15, -416(%rbp)
-	movq -416(%rbp), %r15
-	movq -392(%rbp), %r14
-	movq %r14, (%r15)
-	movq -416(%rbp), %r15
-	movq %r15, -424(%rbp)
-	movq $8, %r14
-	addq %r14, -424(%rbp)
-	movq -424(%rbp), %r15
-	movq %r15, -432(%rbp)
-	.L38:
-	movq -304(%rbp), %r15
-	cmpq -360(%rbp), %r15
-	jge .L40
-	.L39:
-	movq -304(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -440(%rbp)
-	movq -432(%rbp), %r15
-	movq %r15, -448(%rbp)
-	movq -440(%rbp), %r14
-	addq %r14, -448(%rbp)
-	movq -304(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -456(%rbp)
-	movq -320(%rbp), %r15
-	movq %r15, -464(%rbp)
-	movq -456(%rbp), %r14
-	addq %r14, -464(%rbp)
-	movq -464(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -472(%rbp)
-	movq -448(%rbp), %r15
-	movq -472(%rbp), %r14
-	movq %r14, (%r15)
-	incq -304(%rbp)
-	jmp .L38
-	.L40:
-	.L41:
-	movq -304(%rbp), %r15
-	cmpq -392(%rbp), %r15
-	jge .L43
-	.L42:
-	movq -304(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -480(%rbp)
-	movq -432(%rbp), %r15
-	movq %r15, -488(%rbp)
-	movq -480(%rbp), %r14
-	addq %r14, -488(%rbp)
-	movq -304(%rbp), %r15
-	movq %r15, -496(%rbp)
-	movq -360(%rbp), %r14
-	subq %r14, -496(%rbp)
-	movq -496(%rbp), %r15
-	salq $3, %r15
-	movq %r15, -504(%rbp)
-	movq -336(%rbp), %r15
-	movq %r15, -512(%rbp)
-	movq -504(%rbp), %r14
-	addq %r14, -512(%rbp)
-	movq -512(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -520(%rbp)
-	movq -488(%rbp), %r15
-	movq -520(%rbp), %r14
-	movq %r14, (%r15)
-	incq -304(%rbp)
-	jmp .L41
-	.L43:
-	movq -432(%rbp), %rdi
-	call _Iprintln_pai
-	
-	.L36:
-	.L32:
+	pushq %r14
+	pushq %r15
+	movq %rdi, %rbx		# movq %rdi, %r(9)
+	movq $168, %rbx		# movq $168, %r(93)
+	movq %rbx, %rdi		# movq %r(93), %rdi
+	call _I_alloc_i		# call _I_alloc_i
+	movq %rax, %r14		# movq %rax, %r(80)
+	movq $20, %rbx		# movq $20, %r(94)
+	movq %rbx, (%r14)		# movq %r(94), (%r(80))
+	movq $8, %rbx		# movq $8, %r(95)
+	movq %r14, %r13		# movq %r(80), %r(96)
+	addq %rbx, %r13		# addq %r(95), %r(96)
+	movq %r13, %r15		# movq %r(96), %r(11)
+	movq $0, %rbx		# movq $0, %r(97)
+	movq %r15, %r13		# movq %r(11), %r(98)
+	addq %rbx, %r13		# addq %r(97), %r(98)
+	movq $20, %rbx		# movq $20, %r(99)
+	movq %rbx, (%r13)		# movq %r(99), (%r(98))
+	movq $8, %rbx		# movq $8, %r(100)
+	movq %r15, %r13		# movq %r(11), %r(101)
+	addq %rbx, %r13		# addq %r(100), %r(101)
+	movq $19, %rbx		# movq $19, %r(102)
+	movq %rbx, (%r13)		# movq %r(102), (%r(101))
+	movq $16, %rbx		# movq $16, %r(103)
+	movq %r15, %r13		# movq %r(11), %r(104)
+	addq %rbx, %r13		# addq %r(103), %r(104)
+	movq $18, %rbx		# movq $18, %r(105)
+	movq %rbx, (%r13)		# movq %r(105), (%r(104))
+	movq $24, %rbx		# movq $24, %r(106)
+	movq %r15, %r13		# movq %r(11), %r(107)
+	addq %rbx, %r13		# addq %r(106), %r(107)
+	movq $14, %rbx		# movq $14, %r(108)
+	movq %rbx, (%r13)		# movq %r(108), (%r(107))
+	movq $32, %rbx		# movq $32, %r(109)
+	movq %r15, %r13		# movq %r(11), %r(110)
+	addq %rbx, %r13		# addq %r(109), %r(110)
+	movq $2, %rbx		# movq $2, %r(111)
+	movq %rbx, (%r13)		# movq %r(111), (%r(110))
+	movq $40, %rbx		# movq $40, %r(112)
+	movq %r15, %r13		# movq %r(11), %r(113)
+	addq %rbx, %r13		# addq %r(112), %r(113)
+	movq $3, %rbx		# movq $3, %r(114)
+	movq %rbx, (%r13)		# movq %r(114), (%r(113))
+	movq $48, %rbx		# movq $48, %r(115)
+	movq %r15, %r13		# movq %r(11), %r(116)
+	addq %rbx, %r13		# addq %r(115), %r(116)
+	movq $6, %rbx		# movq $6, %r(117)
+	movq %rbx, (%r13)		# movq %r(117), (%r(116))
+	movq $56, %rbx		# movq $56, %r(118)
+	movq %r15, %r13		# movq %r(11), %r(119)
+	addq %rbx, %r13		# addq %r(118), %r(119)
+	movq $5, %rbx		# movq $5, %r(120)
+	movq %rbx, (%r13)		# movq %r(120), (%r(119))
+	movq $64, %rbx		# movq $64, %r(121)
+	movq %r15, %r13		# movq %r(11), %r(122)
+	addq %rbx, %r13		# addq %r(121), %r(122)
+	movq $1, %rbx		# movq $1, %r(123)
+	movq %rbx, (%r13)		# movq %r(123), (%r(122))
+	movq $72, %rbx		# movq $72, %r(124)
+	movq %r15, %r13		# movq %r(11), %r(125)
+	addq %rbx, %r13		# addq %r(124), %r(125)
+	movq $15, %rbx		# movq $15, %r(126)
+	movq %rbx, (%r13)		# movq %r(126), (%r(125))
+	movq $80, %rbx		# movq $80, %r(127)
+	movq %r15, %r13		# movq %r(11), %r(128)
+	addq %rbx, %r13		# addq %r(127), %r(128)
+	movq $16, %rbx		# movq $16, %r(129)
+	movq %rbx, (%r13)		# movq %r(129), (%r(128))
+	movq $88, %rbx		# movq $88, %r(130)
+	movq %r15, %r13		# movq %r(11), %r(131)
+	addq %rbx, %r13		# addq %r(130), %r(131)
+	movq $11, %rbx		# movq $11, %r(132)
+	movq %rbx, (%r13)		# movq %r(132), (%r(131))
+	movq $96, %rbx		# movq $96, %r(133)
+	movq %r15, %r13		# movq %r(11), %r(134)
+	addq %rbx, %r13		# addq %r(133), %r(134)
+	movq $13, %rbx		# movq $13, %r(135)
+	movq %rbx, (%r13)		# movq %r(135), (%r(134))
+	movq $104, %rbx		# movq $104, %r(136)
+	movq %r15, %r13		# movq %r(11), %r(137)
+	addq %rbx, %r13		# addq %r(136), %r(137)
+	movq $12, %rbx		# movq $12, %r(138)
+	movq %rbx, (%r13)		# movq %r(138), (%r(137))
+	movq $112, %rbx		# movq $112, %r(139)
+	movq %r15, %r13		# movq %r(11), %r(140)
+	addq %rbx, %r13		# addq %r(139), %r(140)
+	movq $7, %rbx		# movq $7, %r(141)
+	movq %rbx, (%r13)		# movq %r(141), (%r(140))
+	movq $120, %rbx		# movq $120, %r(142)
+	movq %r15, %r13		# movq %r(11), %r(143)
+	addq %rbx, %r13		# addq %r(142), %r(143)
+	movq $8, %rbx		# movq $8, %r(144)
+	movq %rbx, (%r13)		# movq %r(144), (%r(143))
+	movq $128, %rbx		# movq $128, %r(145)
+	movq %r15, %r13		# movq %r(11), %r(146)
+	addq %rbx, %r13		# addq %r(145), %r(146)
+	movq $9, %rbx		# movq $9, %r(147)
+	movq %rbx, (%r13)		# movq %r(147), (%r(146))
+	movq $136, %rbx		# movq $136, %r(148)
+	movq %r15, %r13		# movq %r(11), %r(149)
+	addq %rbx, %r13		# addq %r(148), %r(149)
+	movq $17, %rbx		# movq $17, %r(150)
+	movq %rbx, (%r13)		# movq %r(150), (%r(149))
+	movq $144, %rbx		# movq $144, %r(151)
+	movq %r15, %r13		# movq %r(11), %r(152)
+	addq %rbx, %r13		# addq %r(151), %r(152)
+	movq $10, %rbx		# movq $10, %r(153)
+	movq %rbx, (%r13)		# movq %r(153), (%r(152))
+	movq $152, %rbx		# movq $152, %r(154)
+	movq %r15, %r13		# movq %r(11), %r(155)
+	addq %rbx, %r13		# addq %r(154), %r(155)
+	movq $4, %rbx		# movq $4, %r(156)
+	movq %rbx, (%r13)		# movq %r(156), (%r(155))
+	movq $168, %rbx		# movq $168, %r(157)
+	movq %rbx, %rdi		# movq %r(157), %rdi
+	call _I_alloc_i		# call _I_alloc_i
+	movq %rax, %r13		# movq %rax, %r(81)
+	movq $20, %rbx		# movq $20, %r(158)
+	movq %rbx, (%r13)		# movq %r(158), (%r(81))
+	movq $8, %r12		# movq $8, %r(159)
+	movq %r13, %rbx		# movq %r(81), %r(160)
+	addq %r12, %rbx		# addq %r(159), %r(160)
+	movq %rbx, %r12		# movq %r(160), %r(223)
+	movq %r12, -8(%rbp)		# movq %r(223), -8(%rbp)
+	movq $0, %rbx		# movq $0, %r(161)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(224)
+	movq %r12, %r13		# movq %r(224), %r(162)
+	addq %rbx, %r13		# addq %r(161), %r(162)
+	movq $1, %rbx		# movq $1, %r(163)
+	movq %rbx, (%r13)		# movq %r(163), (%r(162))
+	movq $8, %rbx		# movq $8, %r(164)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(225)
+	movq %r12, %r13		# movq %r(225), %r(165)
+	addq %rbx, %r13		# addq %r(164), %r(165)
+	movq $2, %rbx		# movq $2, %r(166)
+	movq %rbx, (%r13)		# movq %r(166), (%r(165))
+	movq $16, %rbx		# movq $16, %r(167)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(226)
+	movq %r12, %r13		# movq %r(226), %r(168)
+	addq %rbx, %r13		# addq %r(167), %r(168)
+	movq $3, %rbx		# movq $3, %r(169)
+	movq %rbx, (%r13)		# movq %r(169), (%r(168))
+	movq $24, %rbx		# movq $24, %r(170)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(227)
+	movq %r12, %r13		# movq %r(227), %r(171)
+	addq %rbx, %r13		# addq %r(170), %r(171)
+	movq $4, %rbx		# movq $4, %r(172)
+	movq %rbx, (%r13)		# movq %r(172), (%r(171))
+	movq $32, %rbx		# movq $32, %r(173)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(228)
+	movq %r12, %r13		# movq %r(228), %r(174)
+	addq %rbx, %r13		# addq %r(173), %r(174)
+	movq $5, %rbx		# movq $5, %r(175)
+	movq %rbx, (%r13)		# movq %r(175), (%r(174))
+	movq $40, %rbx		# movq $40, %r(176)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(229)
+	movq %r12, %r13		# movq %r(229), %r(177)
+	addq %rbx, %r13		# addq %r(176), %r(177)
+	movq $6, %rbx		# movq $6, %r(178)
+	movq %rbx, (%r13)		# movq %r(178), (%r(177))
+	movq $48, %rbx		# movq $48, %r(179)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(230)
+	movq %r12, %r13		# movq %r(230), %r(180)
+	addq %rbx, %r13		# addq %r(179), %r(180)
+	movq $7, %rbx		# movq $7, %r(181)
+	movq %rbx, (%r13)		# movq %r(181), (%r(180))
+	movq $56, %rbx		# movq $56, %r(182)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(231)
+	movq %r12, %r13		# movq %r(231), %r(183)
+	addq %rbx, %r13		# addq %r(182), %r(183)
+	movq $8, %rbx		# movq $8, %r(184)
+	movq %rbx, (%r13)		# movq %r(184), (%r(183))
+	movq $64, %rbx		# movq $64, %r(185)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(232)
+	movq %r12, %r13		# movq %r(232), %r(186)
+	addq %rbx, %r13		# addq %r(185), %r(186)
+	movq $9, %rbx		# movq $9, %r(187)
+	movq %rbx, (%r13)		# movq %r(187), (%r(186))
+	movq $72, %rbx		# movq $72, %r(188)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(233)
+	movq %r12, %r13		# movq %r(233), %r(189)
+	addq %rbx, %r13		# addq %r(188), %r(189)
+	movq $10, %rbx		# movq $10, %r(190)
+	movq %rbx, (%r13)		# movq %r(190), (%r(189))
+	movq $80, %rbx		# movq $80, %r(191)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(234)
+	movq %r12, %r13		# movq %r(234), %r(192)
+	addq %rbx, %r13		# addq %r(191), %r(192)
+	movq $11, %rbx		# movq $11, %r(193)
+	movq %rbx, (%r13)		# movq %r(193), (%r(192))
+	movq $88, %rbx		# movq $88, %r(194)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(235)
+	movq %r12, %r13		# movq %r(235), %r(195)
+	addq %rbx, %r13		# addq %r(194), %r(195)
+	movq $12, %rbx		# movq $12, %r(196)
+	movq %rbx, (%r13)		# movq %r(196), (%r(195))
+	movq $96, %rbx		# movq $96, %r(197)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(236)
+	movq %r12, %r13		# movq %r(236), %r(198)
+	addq %rbx, %r13		# addq %r(197), %r(198)
+	movq $13, %rbx		# movq $13, %r(199)
+	movq %rbx, (%r13)		# movq %r(199), (%r(198))
+	movq $104, %rbx		# movq $104, %r(200)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(237)
+	movq %r12, %r13		# movq %r(237), %r(201)
+	addq %rbx, %r13		# addq %r(200), %r(201)
+	movq $14, %rbx		# movq $14, %r(202)
+	movq %rbx, (%r13)		# movq %r(202), (%r(201))
+	movq $112, %rbx		# movq $112, %r(203)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(238)
+	movq %r12, %r13		# movq %r(238), %r(204)
+	addq %rbx, %r13		# addq %r(203), %r(204)
+	movq $15, %rbx		# movq $15, %r(205)
+	movq %rbx, (%r13)		# movq %r(205), (%r(204))
+	movq $120, %rbx		# movq $120, %r(206)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(239)
+	movq %r12, %r13		# movq %r(239), %r(207)
+	addq %rbx, %r13		# addq %r(206), %r(207)
+	movq $16, %rbx		# movq $16, %r(208)
+	movq %rbx, (%r13)		# movq %r(208), (%r(207))
+	movq $128, %rbx		# movq $128, %r(209)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(240)
+	movq %r12, %r13		# movq %r(240), %r(210)
+	addq %rbx, %r13		# addq %r(209), %r(210)
+	movq $17, %rbx		# movq $17, %r(211)
+	movq %rbx, (%r13)		# movq %r(211), (%r(210))
+	movq $136, %rbx		# movq $136, %r(212)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(241)
+	movq %r12, %r13		# movq %r(241), %r(213)
+	addq %rbx, %r13		# addq %r(212), %r(213)
+	movq $18, %rbx		# movq $18, %r(214)
+	movq %rbx, (%r13)		# movq %r(214), (%r(213))
+	movq $144, %rbx		# movq $144, %r(215)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(242)
+	movq %r12, %r13		# movq %r(242), %r(216)
+	addq %rbx, %r13		# addq %r(215), %r(216)
+	movq $19, %rbx		# movq $19, %r(217)
+	movq %rbx, (%r13)		# movq %r(217), (%r(216))
+	movq $152, %rbx		# movq $152, %r(218)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(243)
+	movq %r12, %r13		# movq %r(243), %r(219)
+	addq %rbx, %r13		# addq %r(218), %r(219)
+	movq $20, %rbx		# movq $20, %r(220)
+	movq %rbx, (%r13)		# movq %r(220), (%r(219))
+	movq $0, %rbx		# movq $0, %r(221)
+	movq $19, %r12		# movq $19, %r(222)
+	movq %r15, %rdi		# movq %r(11), %rdi
+	movq %rbx, %rsi		# movq %r(221), %rsi
+	movq %r12, %rdx		# movq %r(222), %rdx
+	call _Imerge_paiii		# call _Imerge_paiii
+	movq %r15, %rdi		# movq %r(11), %rdi
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(244)
+	movq %rbx, %rsi		# movq %r(244), %rsi
+	call _IassertEqual_paiai		# call _IassertEqual_paiai
+	jmp .L10		# jmp .L10
+	.L10:		# .L10:
+	popq %r15
+	popq %r14
 	popq %r13
 	popq %r12
 	popq %rbx
-	popq %r15
-	popq %r14
-	addq $528, %rsp
+	addq $16, %rsp
 	movq %rbp, %rsp
 	popq %rbp
 	ret
 	
-.globl _I_c_internal_strdup_aii
-_I_c_internal_strdup_aii:
+.globl _Imerge_paiii
+_Imerge_paiii:
 	pushq %rbp
 	movq %rsp, %rbp
-	subq $112, %rsp
-	pushq %r14
-	pushq %r15
+	subq $352, %rsp
 	pushq %rbx
 	pushq %r12
 	pushq %r13
-	movq %rdi, %rbx
-	movq %rbx, %r15
-	movq (%r15), %r15
-	movq %r15, %r12
-	movq %r12, %r15
-	movq %r15, %r13
-	movq %r13, %r15
-	salq $3, %r15
-	movq %r15, -8(%rbp)
-	movq -8(%rbp), %r15
-	movq %r15, -16(%rbp)
-	movq $8, %r14
-	addq %r14, -16(%rbp)
-	movq -16(%rbp), %rdi
-	call _I_alloc_i
-	movq %rax, %r15
-	movq %r15, -32(%rbp)
-	movq -32(%rbp), %r15
-	movq %r15, -40(%rbp)
-	.L44:
-	movq %r13, %r15
-	salq $3, %r15
-	movq %r15, -48(%rbp)
-	movq -40(%rbp), %r15
-	movq %r15, -56(%rbp)
-	movq -48(%rbp), %r14
-	addq %r14, -56(%rbp)
-	movq %r13, %r15
-	salq $3, %r15
-	movq %r15, -64(%rbp)
-	movq %rbx, %r15
-	movq %r15, -72(%rbp)
-	movq -64(%rbp), %r14
-	addq %r14, -72(%rbp)
-	movq -72(%rbp), %r15
-	movq (%r15), %r15
-	movq %r15, -80(%rbp)
-	movq -56(%rbp), %r15
-	movq -80(%rbp), %r14
-	movq %r14, (%r15)
-	decq %r13
-	movq $0, -88(%rbp)
-	movq %r13, %r15
-	cmpq -88(%rbp), %r15
-	jge .L44
-	.L45:
-	movq -40(%rbp), %r15
-	movq %r15, -96(%rbp)
-	movq $8, %r14
-	addq %r14, -96(%rbp)
-	movq -96(%rbp), %r15
-	movq %r15, %rax
+	pushq %r14
+	pushq %r15
+	movq %rdi, %rbx		# movq %rdi, %r(338)
+	movq %rbx, -64(%rbp)		# movq %r(338), -64(%rbp)
+	movq %rsi, %rbx		# movq %rsi, %r(339)
+	movq %rbx, -296(%rbp)		# movq %r(339), -296(%rbp)
+	movq %rdx, %rbx		# movq %rdx, %r(340)
+	movq %rbx, -232(%rbp)		# movq %r(340), -232(%rbp)
+	movq -296(%rbp), %rbx		# movq -296(%rbp), %r(341)
+	movq -232(%rbp), %r12		# movq -232(%rbp), %r(342)
+	cmpq %r12, %rbx		# cmpq %r(342), %r(341)
+	jl .L13		# jl .L13
+	.L12:		# .L12:
+	jmp .L11		# jmp .L11
+	.L11:		# .L11:
+	popq %r15
+	popq %r14
 	popq %r13
 	popq %r12
 	popq %rbx
+	addq $352, %rsp
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+	.L13:		# .L13:
+	movq -232(%rbp), %r13		# movq -232(%rbp), %r(343)
+	movq %r13, %r14		# movq %r(343), %r(245)
+	movq -296(%rbp), %rbx		# movq -296(%rbp), %r(344)
+	addq %rbx, %r14		# addq %r(344), %r(245)
+	movq $2, %rbx		# movq $2, %r(246)
+	movq %r14, %rax		# movq %r(245), %rax
+	cqto		# cqto
+	idivq %rbx		# idivq %r(246)
+	movq %rax, %r13		# movq %rax, %r(247)
+	movq %r13, %rbx		# movq %r(247), %r(345)
+	movq %rbx, -288(%rbp)		# movq %r(345), -288(%rbp)
+	movq -64(%rbp), %rbx		# movq -64(%rbp), %r(346)
+	movq %rbx, %rdi		# movq %r(346), %rdi
+	movq -296(%rbp), %rbx		# movq -296(%rbp), %r(347)
+	movq %rbx, %rsi		# movq %r(347), %rsi
+	movq -288(%rbp), %rbx		# movq -288(%rbp), %r(348)
+	movq %rbx, %rdx		# movq %r(348), %rdx
+	call _Imerge_paiii		# call _Imerge_paiii
+	movq $1, %rbx		# movq $1, %r(248)
+	movq -288(%rbp), %r14		# movq -288(%rbp), %r(349)
+	movq %r14, %r12		# movq %r(349), %r(249)
+	addq %rbx, %r12		# addq %r(248), %r(249)
+	movq -64(%rbp), %rbx		# movq -64(%rbp), %r(350)
+	movq %rbx, %rdi		# movq %r(350), %rdi
+	movq %r12, %rsi		# movq %r(249), %rsi
+	movq -232(%rbp), %rbx		# movq -232(%rbp), %r(351)
+	movq %rbx, %rdx		# movq %r(351), %rdx
+	call _Imerge_paiii		# call _Imerge_paiii
+	movq $16, %rbx		# movq $16, %r(250)
+	movq %rbx, %rdi		# movq %r(250), %rdi
+	call _I_alloc_i		# call _I_alloc_i
+	movq %rax, %r14		# movq %rax, %r(86)
+	movq $1, %rbx		# movq $1, %r(251)
+	movq %rbx, (%r14)		# movq %r(251), (%r(86))
+	movq $8, %r13		# movq $8, %r(252)
+	movq %r14, %r12		# movq %r(86), %r(352)
+	movq %r12, -152(%rbp)		# movq %r(352), -152(%rbp)
+	movq -152(%rbp), %rbx		# movq -152(%rbp), %r(353)
+	addq %r13, %rbx		# addq %r(252), %r(353)
+	movq %rbx, -152(%rbp)		# movq %r(353), -152(%rbp)
+	movq -152(%rbp), %r13		# movq -152(%rbp), %r(354)
+	movq %r13, %rbx		# movq %r(354), %r(355)
+	movq %rbx, -280(%rbp)		# movq %r(355), -280(%rbp)
+	movq $0, %r13		# movq $0, %r(254)
+	movq -280(%rbp), %r14		# movq -280(%rbp), %r(356)
+	movq %r14, %rbx		# movq %r(356), %r(357)
+	movq %rbx, -96(%rbp)		# movq %r(357), -96(%rbp)
+	movq -96(%rbp), %rbx		# movq -96(%rbp), %r(358)
+	addq %r13, %rbx		# addq %r(254), %r(358)
+	movq %rbx, -96(%rbp)		# movq %r(358), -96(%rbp)
+	movq -232(%rbp), %r13		# movq -232(%rbp), %r(359)
+	movq %r13, %r12		# movq %r(359), %r(256)
+	movq -296(%rbp), %rbx		# movq -296(%rbp), %r(360)
+	subq %rbx, %r12		# subq %r(360), %r(256)
+	movq $1, %rbx		# movq $1, %r(361)
+	movq %rbx, -216(%rbp)		# movq %r(361), -216(%rbp)
+	movq %r12, %r13		# movq %r(256), %r(362)
+	movq %r13, -240(%rbp)		# movq %r(362), -240(%rbp)
+	movq -216(%rbp), %rbx		# movq -216(%rbp), %r(363)
+	movq -240(%rbp), %r12		# movq -240(%rbp), %r(364)
+	addq %rbx, %r12		# addq %r(363), %r(364)
+	movq %r12, -240(%rbp)		# movq %r(364), -240(%rbp)
+	movq -96(%rbp), %rbx		# movq -96(%rbp), %r(365)
+	movq -240(%rbp), %r12		# movq -240(%rbp), %r(366)
+	movq %r12, (%rbx)		# movq %r(366), (%r(365))
+	movq -280(%rbp), %rbx		# movq -280(%rbp), %r(367)
+	movq %rbx, %rdi		# movq %r(367), %rdi
+	call _I_c_dynamalloc_aiai		# call _I_c_dynamalloc_aiai
+	movq %rax, %rbx		# movq %rax, %r(368)
+	movq %rbx, -264(%rbp)		# movq %r(368), -264(%rbp)
+	movq $0, %r13		# movq $0, %r(259)
+	movq %r13, %rbx		# movq %r(259), %r(369)
+	movq %rbx, -304(%rbp)		# movq %r(369), -304(%rbp)
+	movq -296(%rbp), %r13		# movq -296(%rbp), %r(370)
+	movq %r13, %rbx		# movq %r(370), %r(371)
+	movq %rbx, -184(%rbp)		# movq %r(371), -184(%rbp)
+	movq $1, %r13		# movq $1, %r(260)
+	movq -288(%rbp), %r14		# movq -288(%rbp), %r(372)
+	movq %r14, %rbx		# movq %r(372), %r(373)
+	movq %rbx, -16(%rbp)		# movq %r(373), -16(%rbp)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(374)
+	addq %r13, %rbx		# addq %r(260), %r(374)
+	movq %rbx, -16(%rbp)		# movq %r(374), -16(%rbp)
+	movq -16(%rbp), %r13		# movq -16(%rbp), %r(375)
+	movq %r13, %rbx		# movq %r(375), %r(376)
+	movq %rbx, -32(%rbp)		# movq %r(376), -32(%rbp)
+	jmp .L15		# jmp .L15
+	.L15:		# .L15:
+	movq $1, %r13		# movq $1, %r(262)
+	movq %r13, %rbx		# movq %r(262), %r(377)
+	movq %rbx, -248(%rbp)		# movq %r(377), -248(%rbp)
+	movq -184(%rbp), %rbx		# movq -184(%rbp), %r(378)
+	movq -288(%rbp), %r12		# movq -288(%rbp), %r(379)
+	cmpq %r12, %rbx		# cmpq %r(379), %r(378)
+	jle .L18		# jle .L18
+	.L19:		# .L19:
+	movq $0, %r13		# movq $0, %r(263)
+	movq %r13, %rbx		# movq %r(263), %r(380)
+	movq %rbx, -248(%rbp)		# movq %r(380), -248(%rbp)
+	jmp .L18		# jmp .L18
+	.L18:		# .L18:
+	movq $1, %r13		# movq $1, %r(264)
+	movq -248(%rbp), %r14		# movq -248(%rbp), %r(381)
+	movq %r14, %rbx		# movq %r(381), %r(382)
+	movq %rbx, -8(%rbp)		# movq %r(382), -8(%rbp)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(383)
+	xorq %r13, %rbx		# xorq %r(264), %r(383)
+	movq %rbx, -8(%rbp)		# movq %r(383), -8(%rbp)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(384)
+	testq $1, %rbx		# testq $1, %r(384)
+	jne .L17		# jne .L17
+	.L22:		# .L22:
+	movq $1, %r13		# movq $1, %r(266)
+	movq %r13, %rbx		# movq %r(266), %r(385)
+	movq %rbx, -144(%rbp)		# movq %r(385), -144(%rbp)
+	movq -232(%rbp), %rbx		# movq -232(%rbp), %r(386)
+	movq -32(%rbp), %r12		# movq -32(%rbp), %r(387)
+	cmpq %rbx, %r12		# cmpq %r(386), %r(387)
+	jle .L20		# jle .L20
+	.L21:		# .L21:
+	movq $0, %r13		# movq $0, %r(267)
+	movq %r13, %rbx		# movq %r(267), %r(388)
+	movq %rbx, -144(%rbp)		# movq %r(388), -144(%rbp)
+	jmp .L20		# jmp .L20
+	.L20:		# .L20:
+	movq $1, %r13		# movq $1, %r(268)
+	movq -144(%rbp), %r14		# movq -144(%rbp), %r(389)
+	movq %r14, %rbx		# movq %r(389), %r(390)
+	movq %rbx, -80(%rbp)		# movq %r(390), -80(%rbp)
+	movq -80(%rbp), %rbx		# movq -80(%rbp), %r(391)
+	xorq %r13, %rbx		# xorq %r(268), %r(391)
+	movq %rbx, -80(%rbp)		# movq %r(391), -80(%rbp)
+	movq -80(%rbp), %rbx		# movq -80(%rbp), %r(392)
+	testq $1, %rbx		# testq $1, %r(392)
+	jne .L17		# jne .L17
+	.L16:		# .L16:
+	movq $8, %r13		# movq $8, %r(270)
+	movq -64(%rbp), %r14		# movq -64(%rbp), %r(393)
+	movq %r14, %rbx		# movq %r(393), %r(394)
+	movq %rbx, -120(%rbp)		# movq %r(394), -120(%rbp)
+	movq -120(%rbp), %rbx		# movq -120(%rbp), %r(395)
+	subq %r13, %rbx		# subq %r(270), %r(395)
+	movq %rbx, -120(%rbp)		# movq %r(395), -120(%rbp)
+	movq -120(%rbp), %rbx		# movq -120(%rbp), %r(396)
+	movq (%rbx), %r12		# movq (%r(396)), %r(272)
+	movq -184(%rbp), %rbx		# movq -184(%rbp), %r(397)
+	cmpq %r12, %rbx		# cmpq %r(272), %r(397)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $8, %r13		# movq $8, %r(273)
+	movq -64(%rbp), %r14		# movq -64(%rbp), %r(398)
+	movq %r14, %rbx		# movq %r(398), %r(399)
+	movq %rbx, -24(%rbp)		# movq %r(399), -24(%rbp)
+	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(400)
+	subq %r13, %rbx		# subq %r(273), %r(400)
+	movq %rbx, -24(%rbp)		# movq %r(400), -24(%rbp)
+	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(401)
+	movq (%rbx), %r12		# movq (%r(401)), %r(275)
+	movq -32(%rbp), %rbx		# movq -32(%rbp), %r(402)
+	cmpq %r12, %rbx		# cmpq %r(275), %r(402)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -184(%rbp), %r12		# movq -184(%rbp), %r(403)
+	movq %r12, %r14		# movq %r(403), %r(276)
+	salq $3, %r14		# salq $3, %r(276)
+	movq -64(%rbp), %r13		# movq -64(%rbp), %r(404)
+	movq %r13, %rbx		# movq %r(404), %r(405)
+	movq %rbx, -72(%rbp)		# movq %r(405), -72(%rbp)
+	movq -72(%rbp), %rbx		# movq -72(%rbp), %r(406)
+	addq %r14, %rbx		# addq %r(276), %r(406)
+	movq %rbx, -72(%rbp)		# movq %r(406), -72(%rbp)
+	movq -72(%rbp), %rbx		# movq -72(%rbp), %r(407)
+	movq (%rbx), %r12		# movq (%r(407)), %r(408)
+	movq %r12, -328(%rbp)		# movq %r(408), -328(%rbp)
+	movq -32(%rbp), %r12		# movq -32(%rbp), %r(409)
+	movq %r12, %r14		# movq %r(409), %r(279)
+	salq $3, %r14		# salq $3, %r(279)
+	movq -64(%rbp), %r13		# movq -64(%rbp), %r(410)
+	movq %r13, %rbx		# movq %r(410), %r(411)
+	movq %rbx, -48(%rbp)		# movq %r(411), -48(%rbp)
+	movq -48(%rbp), %rbx		# movq -48(%rbp), %r(412)
+	addq %r14, %rbx		# addq %r(279), %r(412)
+	movq %rbx, -48(%rbp)		# movq %r(412), -48(%rbp)
+	movq -48(%rbp), %rbx		# movq -48(%rbp), %r(413)
+	movq (%rbx), %r12		# movq (%r(413)), %r(281)
+	movq -328(%rbp), %rbx		# movq -328(%rbp), %r(414)
+	cmpq %r12, %rbx		# cmpq %r(281), %r(414)
+	jg .L28		# jg .L28
+	.L27:		# .L27:
+	movq $8, %r13		# movq $8, %r(282)
+	movq -64(%rbp), %r14		# movq -64(%rbp), %r(415)
+	movq %r14, %rbx		# movq %r(415), %r(416)
+	movq %rbx, -312(%rbp)		# movq %r(416), -312(%rbp)
+	movq -312(%rbp), %rbx		# movq -312(%rbp), %r(417)
+	subq %r13, %rbx		# subq %r(282), %r(417)
+	movq %rbx, -312(%rbp)		# movq %r(417), -312(%rbp)
+	movq -312(%rbp), %rbx		# movq -312(%rbp), %r(418)
+	movq (%rbx), %r12		# movq (%r(418)), %r(284)
+	movq -184(%rbp), %rbx		# movq -184(%rbp), %r(419)
+	cmpq %r12, %rbx		# cmpq %r(284), %r(419)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $8, %r13		# movq $8, %r(285)
+	movq -264(%rbp), %r14		# movq -264(%rbp), %r(420)
+	movq %r14, %rbx		# movq %r(420), %r(421)
+	movq %rbx, -256(%rbp)		# movq %r(421), -256(%rbp)
+	movq -256(%rbp), %rbx		# movq -256(%rbp), %r(422)
+	subq %r13, %rbx		# subq %r(285), %r(422)
+	movq %rbx, -256(%rbp)		# movq %r(422), -256(%rbp)
+	movq -256(%rbp), %rbx		# movq -256(%rbp), %r(423)
+	movq (%rbx), %r12		# movq (%r(423)), %r(287)
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(424)
+	cmpq %r12, %rbx		# cmpq %r(287), %r(424)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -304(%rbp), %r12		# movq -304(%rbp), %r(425)
+	movq %r12, %r14		# movq %r(425), %r(288)
+	salq $3, %r14		# salq $3, %r(288)
+	movq -264(%rbp), %r13		# movq -264(%rbp), %r(426)
+	movq %r13, %rbx		# movq %r(426), %r(427)
+	movq %rbx, -200(%rbp)		# movq %r(427), -200(%rbp)
+	movq -200(%rbp), %rbx		# movq -200(%rbp), %r(428)
+	addq %r14, %rbx		# addq %r(288), %r(428)
+	movq %rbx, -200(%rbp)		# movq %r(428), -200(%rbp)
+	movq -184(%rbp), %r12		# movq -184(%rbp), %r(429)
+	movq %r12, %r14		# movq %r(429), %r(290)
+	salq $3, %r14		# salq $3, %r(290)
+	movq -64(%rbp), %r13		# movq -64(%rbp), %r(430)
+	movq %r13, %rbx		# movq %r(430), %r(431)
+	movq %rbx, -112(%rbp)		# movq %r(431), -112(%rbp)
+	movq -112(%rbp), %rbx		# movq -112(%rbp), %r(432)
+	addq %r14, %rbx		# addq %r(290), %r(432)
+	movq %rbx, -112(%rbp)		# movq %r(432), -112(%rbp)
+	movq -112(%rbp), %rbx		# movq -112(%rbp), %r(433)
+	movq (%rbx), %r12		# movq (%r(433)), %r(292)
+	movq -200(%rbp), %rbx		# movq -200(%rbp), %r(434)
+	movq %r12, (%rbx)		# movq %r(292), (%r(434))
+	movq -184(%rbp), %rbx		# movq -184(%rbp), %r(435)
+	incq %rbx		# incq %r(435)
+	movq %rbx, -184(%rbp)		# movq %r(435), -184(%rbp)
+	jmp .L33		# jmp .L33
+	.L33:		# .L33:
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(436)
+	incq %rbx		# incq %r(436)
+	movq %rbx, -304(%rbp)		# movq %r(436), -304(%rbp)
+	jmp .L15		# jmp .L15
+	.L28:		# .L28:
+	movq $8, %r13		# movq $8, %r(293)
+	movq -64(%rbp), %r14		# movq -64(%rbp), %r(437)
+	movq %r14, %rbx		# movq %r(437), %r(438)
+	movq %rbx, -136(%rbp)		# movq %r(438), -136(%rbp)
+	movq -136(%rbp), %rbx		# movq -136(%rbp), %r(439)
+	subq %r13, %rbx		# subq %r(293), %r(439)
+	movq %rbx, -136(%rbp)		# movq %r(439), -136(%rbp)
+	movq -136(%rbp), %rbx		# movq -136(%rbp), %r(440)
+	movq (%rbx), %r12		# movq (%r(440)), %r(295)
+	movq -32(%rbp), %rbx		# movq -32(%rbp), %r(441)
+	cmpq %r12, %rbx		# cmpq %r(295), %r(441)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $8, %r13		# movq $8, %r(296)
+	movq -264(%rbp), %r14		# movq -264(%rbp), %r(442)
+	movq %r14, %rbx		# movq %r(442), %r(443)
+	movq %rbx, -176(%rbp)		# movq %r(443), -176(%rbp)
+	movq -176(%rbp), %rbx		# movq -176(%rbp), %r(444)
+	subq %r13, %rbx		# subq %r(296), %r(444)
+	movq %rbx, -176(%rbp)		# movq %r(444), -176(%rbp)
+	movq -176(%rbp), %rbx		# movq -176(%rbp), %r(445)
+	movq (%rbx), %r12		# movq (%r(445)), %r(298)
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(446)
+	cmpq %r12, %rbx		# cmpq %r(298), %r(446)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -304(%rbp), %r12		# movq -304(%rbp), %r(447)
+	movq %r12, %r14		# movq %r(447), %r(299)
+	salq $3, %r14		# salq $3, %r(299)
+	movq -264(%rbp), %r13		# movq -264(%rbp), %r(448)
+	movq %r13, %rbx		# movq %r(448), %r(449)
+	movq %rbx, -344(%rbp)		# movq %r(449), -344(%rbp)
+	movq -344(%rbp), %rbx		# movq -344(%rbp), %r(450)
+	addq %r14, %rbx		# addq %r(299), %r(450)
+	movq %rbx, -344(%rbp)		# movq %r(450), -344(%rbp)
+	movq -32(%rbp), %r12		# movq -32(%rbp), %r(451)
+	movq %r12, %r14		# movq %r(451), %r(301)
+	salq $3, %r14		# salq $3, %r(301)
+	movq -64(%rbp), %r13		# movq -64(%rbp), %r(452)
+	movq %r13, %rbx		# movq %r(452), %r(453)
+	movq %rbx, -320(%rbp)		# movq %r(453), -320(%rbp)
+	movq -320(%rbp), %rbx		# movq -320(%rbp), %r(454)
+	addq %r14, %rbx		# addq %r(301), %r(454)
+	movq %rbx, -320(%rbp)		# movq %r(454), -320(%rbp)
+	movq -320(%rbp), %rbx		# movq -320(%rbp), %r(455)
+	movq (%rbx), %r12		# movq (%r(455)), %r(303)
+	movq -344(%rbp), %rbx		# movq -344(%rbp), %r(456)
+	movq %r12, (%rbx)		# movq %r(303), (%r(456))
+	movq -32(%rbp), %rbx		# movq -32(%rbp), %r(457)
+	incq %rbx		# incq %r(457)
+	movq %rbx, -32(%rbp)		# movq %r(457), -32(%rbp)
+	jmp .L33		# jmp .L33
+	.L17:		# .L17:
+	jmp .L38		# jmp .L38
+	.L38:		# .L38:
+	movq -184(%rbp), %rbx		# movq -184(%rbp), %r(458)
+	movq -288(%rbp), %r12		# movq -288(%rbp), %r(459)
+	cmpq %r12, %rbx		# cmpq %r(459), %r(458)
+	jg .L40		# jg .L40
+	.L39:		# .L39:
+	movq $8, %r13		# movq $8, %r(304)
+	movq -64(%rbp), %r14		# movq -64(%rbp), %r(460)
+	movq %r14, %rbx		# movq %r(460), %r(461)
+	movq %rbx, -192(%rbp)		# movq %r(461), -192(%rbp)
+	movq -192(%rbp), %rbx		# movq -192(%rbp), %r(462)
+	subq %r13, %rbx		# subq %r(304), %r(462)
+	movq %rbx, -192(%rbp)		# movq %r(462), -192(%rbp)
+	movq -192(%rbp), %rbx		# movq -192(%rbp), %r(463)
+	movq (%rbx), %r12		# movq (%r(463)), %r(306)
+	movq -184(%rbp), %rbx		# movq -184(%rbp), %r(464)
+	cmpq %r12, %rbx		# cmpq %r(306), %r(464)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $8, %r13		# movq $8, %r(307)
+	movq -264(%rbp), %r14		# movq -264(%rbp), %r(465)
+	movq %r14, %rbx		# movq %r(465), %r(466)
+	movq %rbx, -160(%rbp)		# movq %r(466), -160(%rbp)
+	movq -160(%rbp), %rbx		# movq -160(%rbp), %r(467)
+	subq %r13, %rbx		# subq %r(307), %r(467)
+	movq %rbx, -160(%rbp)		# movq %r(467), -160(%rbp)
+	movq -160(%rbp), %rbx		# movq -160(%rbp), %r(468)
+	movq (%rbx), %r12		# movq (%r(468)), %r(309)
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(469)
+	cmpq %r12, %rbx		# cmpq %r(309), %r(469)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -304(%rbp), %r12		# movq -304(%rbp), %r(470)
+	movq %r12, %r14		# movq %r(470), %r(310)
+	salq $3, %r14		# salq $3, %r(310)
+	movq -264(%rbp), %r13		# movq -264(%rbp), %r(471)
+	movq %r13, %rbx		# movq %r(471), %r(472)
+	movq %rbx, -224(%rbp)		# movq %r(472), -224(%rbp)
+	movq -224(%rbp), %rbx		# movq -224(%rbp), %r(473)
+	addq %r14, %rbx		# addq %r(310), %r(473)
+	movq %rbx, -224(%rbp)		# movq %r(473), -224(%rbp)
+	movq -184(%rbp), %r12		# movq -184(%rbp), %r(474)
+	movq %r12, %r14		# movq %r(474), %r(312)
+	salq $3, %r14		# salq $3, %r(312)
+	movq -64(%rbp), %r13		# movq -64(%rbp), %r(475)
+	movq %r13, %rbx		# movq %r(475), %r(476)
+	movq %rbx, -168(%rbp)		# movq %r(476), -168(%rbp)
+	movq -168(%rbp), %rbx		# movq -168(%rbp), %r(477)
+	addq %r14, %rbx		# addq %r(312), %r(477)
+	movq %rbx, -168(%rbp)		# movq %r(477), -168(%rbp)
+	movq -168(%rbp), %rbx		# movq -168(%rbp), %r(478)
+	movq (%rbx), %r12		# movq (%r(478)), %r(314)
+	movq -224(%rbp), %rbx		# movq -224(%rbp), %r(479)
+	movq %r12, (%rbx)		# movq %r(314), (%r(479))
+	movq -184(%rbp), %rbx		# movq -184(%rbp), %r(480)
+	incq %rbx		# incq %r(480)
+	movq %rbx, -184(%rbp)		# movq %r(480), -184(%rbp)
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(481)
+	incq %rbx		# incq %r(481)
+	movq %rbx, -304(%rbp)		# movq %r(481), -304(%rbp)
+	jmp .L38		# jmp .L38
+	.L40:		# .L40:
+	jmp .L45		# jmp .L45
+	.L45:		# .L45:
+	movq -232(%rbp), %rbx		# movq -232(%rbp), %r(482)
+	movq -32(%rbp), %r12		# movq -32(%rbp), %r(483)
+	cmpq %rbx, %r12		# cmpq %r(482), %r(483)
+	jg .L47		# jg .L47
+	.L46:		# .L46:
+	movq $8, %r13		# movq $8, %r(315)
+	movq -64(%rbp), %r14		# movq -64(%rbp), %r(484)
+	movq %r14, %rbx		# movq %r(484), %r(485)
+	movq %rbx, -128(%rbp)		# movq %r(485), -128(%rbp)
+	movq -128(%rbp), %rbx		# movq -128(%rbp), %r(486)
+	subq %r13, %rbx		# subq %r(315), %r(486)
+	movq %rbx, -128(%rbp)		# movq %r(486), -128(%rbp)
+	movq -128(%rbp), %rbx		# movq -128(%rbp), %r(487)
+	movq (%rbx), %r12		# movq (%r(487)), %r(317)
+	movq -32(%rbp), %rbx		# movq -32(%rbp), %r(488)
+	cmpq %r12, %rbx		# cmpq %r(317), %r(488)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $8, %r13		# movq $8, %r(318)
+	movq -264(%rbp), %r14		# movq -264(%rbp), %r(489)
+	movq %r14, %rbx		# movq %r(489), %r(490)
+	movq %rbx, -208(%rbp)		# movq %r(490), -208(%rbp)
+	movq -208(%rbp), %rbx		# movq -208(%rbp), %r(491)
+	subq %r13, %rbx		# subq %r(318), %r(491)
+	movq %rbx, -208(%rbp)		# movq %r(491), -208(%rbp)
+	movq -208(%rbp), %rbx		# movq -208(%rbp), %r(492)
+	movq (%rbx), %r12		# movq (%r(492)), %r(320)
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(493)
+	cmpq %r12, %rbx		# cmpq %r(320), %r(493)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -304(%rbp), %r12		# movq -304(%rbp), %r(494)
+	movq %r12, %r14		# movq %r(494), %r(321)
+	salq $3, %r14		# salq $3, %r(321)
+	movq -264(%rbp), %r13		# movq -264(%rbp), %r(495)
+	movq %r13, %rbx		# movq %r(495), %r(496)
+	movq %rbx, -272(%rbp)		# movq %r(496), -272(%rbp)
+	movq -272(%rbp), %rbx		# movq -272(%rbp), %r(497)
+	addq %r14, %rbx		# addq %r(321), %r(497)
+	movq %rbx, -272(%rbp)		# movq %r(497), -272(%rbp)
+	movq -32(%rbp), %r12		# movq -32(%rbp), %r(498)
+	movq %r12, %r14		# movq %r(498), %r(323)
+	salq $3, %r14		# salq $3, %r(323)
+	movq -64(%rbp), %r13		# movq -64(%rbp), %r(499)
+	movq %r13, %rbx		# movq %r(499), %r(500)
+	movq %rbx, -336(%rbp)		# movq %r(500), -336(%rbp)
+	movq -336(%rbp), %rbx		# movq -336(%rbp), %r(501)
+	addq %r14, %rbx		# addq %r(323), %r(501)
+	movq %rbx, -336(%rbp)		# movq %r(501), -336(%rbp)
+	movq -336(%rbp), %rbx		# movq -336(%rbp), %r(502)
+	movq (%rbx), %r12		# movq (%r(502)), %r(325)
+	movq -272(%rbp), %rbx		# movq -272(%rbp), %r(503)
+	movq %r12, (%rbx)		# movq %r(325), (%r(503))
+	movq -32(%rbp), %rbx		# movq -32(%rbp), %r(504)
+	incq %rbx		# incq %r(504)
+	movq %rbx, -32(%rbp)		# movq %r(504), -32(%rbp)
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(505)
+	incq %rbx		# incq %r(505)
+	movq %rbx, -304(%rbp)		# movq %r(505), -304(%rbp)
+	jmp .L45		# jmp .L45
+	.L47:		# .L47:
+	movq $0, %r13		# movq $0, %r(326)
+	movq %r13, %rbx		# movq %r(326), %r(506)
+	movq %rbx, -304(%rbp)		# movq %r(506), -304(%rbp)
+	jmp .L52		# jmp .L52
+	.L52:		# .L52:
+	movq -296(%rbp), %rbx		# movq -296(%rbp), %r(507)
+	movq -232(%rbp), %r12		# movq -232(%rbp), %r(508)
+	cmpq %r12, %rbx		# cmpq %r(508), %r(507)
+	jg .L54		# jg .L54
+	.L53:		# .L53:
+	movq $8, %r13		# movq $8, %r(327)
+	movq -264(%rbp), %r14		# movq -264(%rbp), %r(509)
+	movq %r14, %rbx		# movq %r(509), %r(510)
+	movq %rbx, -56(%rbp)		# movq %r(510), -56(%rbp)
+	movq -56(%rbp), %rbx		# movq -56(%rbp), %r(511)
+	subq %r13, %rbx		# subq %r(327), %r(511)
+	movq %rbx, -56(%rbp)		# movq %r(511), -56(%rbp)
+	movq -56(%rbp), %rbx		# movq -56(%rbp), %r(512)
+	movq (%rbx), %r12		# movq (%r(512)), %r(329)
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(513)
+	cmpq %r12, %rbx		# cmpq %r(329), %r(513)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $8, %r13		# movq $8, %r(330)
+	movq -64(%rbp), %r14		# movq -64(%rbp), %r(514)
+	movq %r14, %rbx		# movq %r(514), %r(515)
+	movq %rbx, -88(%rbp)		# movq %r(515), -88(%rbp)
+	movq -88(%rbp), %rbx		# movq -88(%rbp), %r(516)
+	subq %r13, %rbx		# subq %r(330), %r(516)
+	movq %rbx, -88(%rbp)		# movq %r(516), -88(%rbp)
+	movq -88(%rbp), %rbx		# movq -88(%rbp), %r(517)
+	movq (%rbx), %r12		# movq (%r(517)), %r(332)
+	movq -296(%rbp), %rbx		# movq -296(%rbp), %r(518)
+	cmpq %r12, %rbx		# cmpq %r(332), %r(518)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -296(%rbp), %r12		# movq -296(%rbp), %r(519)
+	movq %r12, %r14		# movq %r(519), %r(333)
+	salq $3, %r14		# salq $3, %r(333)
+	movq -64(%rbp), %r13		# movq -64(%rbp), %r(520)
+	movq %r13, %rbx		# movq %r(520), %r(521)
+	movq %rbx, -40(%rbp)		# movq %r(521), -40(%rbp)
+	movq -40(%rbp), %rbx		# movq -40(%rbp), %r(522)
+	addq %r14, %rbx		# addq %r(333), %r(522)
+	movq %rbx, -40(%rbp)		# movq %r(522), -40(%rbp)
+	movq -304(%rbp), %r12		# movq -304(%rbp), %r(523)
+	movq %r12, %r14		# movq %r(523), %r(335)
+	salq $3, %r14		# salq $3, %r(335)
+	movq -264(%rbp), %r13		# movq -264(%rbp), %r(524)
+	movq %r13, %rbx		# movq %r(524), %r(525)
+	movq %rbx, -104(%rbp)		# movq %r(525), -104(%rbp)
+	movq -104(%rbp), %rbx		# movq -104(%rbp), %r(526)
+	addq %r14, %rbx		# addq %r(335), %r(526)
+	movq %rbx, -104(%rbp)		# movq %r(526), -104(%rbp)
+	movq -104(%rbp), %rbx		# movq -104(%rbp), %r(527)
+	movq (%rbx), %r12		# movq (%r(527)), %r(337)
+	movq -40(%rbp), %rbx		# movq -40(%rbp), %r(528)
+	movq %r12, (%rbx)		# movq %r(337), (%r(528))
+	movq -304(%rbp), %rbx		# movq -304(%rbp), %r(529)
+	incq %rbx		# incq %r(529)
+	movq %rbx, -304(%rbp)		# movq %r(529), -304(%rbp)
+	movq -296(%rbp), %rbx		# movq -296(%rbp), %r(530)
+	incq %rbx		# incq %r(530)
+	movq %rbx, -296(%rbp)		# movq %r(530), -296(%rbp)
+	jmp .L52		# jmp .L52
+	.L54:		# .L54:
+	jmp .L11		# jmp .L11
+	
+.globl _IassertEqual_paiai
+_IassertEqual_paiai:
+	pushq %rbp
+	movq %rsp, %rbp
+	subq $96, %rsp
+	pushq %rbx
+	pushq %r12
+	pushq %r13
+	pushq %r14
+	pushq %r15
+	movq %rdi, %rbx		# movq %rdi, %r(549)
+	movq %rbx, -24(%rbp)		# movq %r(549), -24(%rbp)
+	movq %rsi, %rbx		# movq %rsi, %r(550)
+	movq %rbx, -8(%rbp)		# movq %r(550), -8(%rbp)
+	movq $0, %r13		# movq $0, %r(531)
+	movq %r13, %rbx		# movq %r(531), %r(551)
+	movq %rbx, -64(%rbp)		# movq %r(551), -64(%rbp)
+	movq $8, %rbx		# movq $8, %r(532)
+	movq -24(%rbp), %r14		# movq -24(%rbp), %r(552)
+	movq %r14, %r12		# movq %r(552), %r(533)
+	subq %rbx, %r12		# subq %r(532), %r(533)
+	movq (%r12), %r13		# movq (%r(533)), %r(534)
+	movq %r13, %rbx		# movq %r(534), %r(553)
+	movq %rbx, -48(%rbp)		# movq %r(553), -48(%rbp)
+	jmp .L60		# jmp .L60
+	.L60:		# .L60:
+	movq -48(%rbp), %rbx		# movq -48(%rbp), %r(554)
+	movq -64(%rbp), %r12		# movq -64(%rbp), %r(555)
+	cmpq %rbx, %r12		# cmpq %r(554), %r(555)
+	jge .L62		# jge .L62
+	.L61:		# .L61:
+	movq $1, %r13		# movq $1, %r(535)
+	movq %r13, %rbx		# movq %r(535), %r(556)
+	movq %rbx, -32(%rbp)		# movq %r(556), -32(%rbp)
+	movq $8, %r13		# movq $8, %r(536)
+	movq -24(%rbp), %r14		# movq -24(%rbp), %r(557)
+	movq %r14, %rbx		# movq %r(557), %r(558)
+	movq %rbx, -80(%rbp)		# movq %r(558), -80(%rbp)
+	movq -80(%rbp), %rbx		# movq -80(%rbp), %r(559)
+	subq %r13, %rbx		# subq %r(536), %r(559)
+	movq %rbx, -80(%rbp)		# movq %r(559), -80(%rbp)
+	movq -80(%rbp), %rbx		# movq -80(%rbp), %r(560)
+	movq (%rbx), %r12		# movq (%r(560)), %r(538)
+	movq -64(%rbp), %rbx		# movq -64(%rbp), %r(561)
+	cmpq %r12, %rbx		# cmpq %r(538), %r(561)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $8, %r13		# movq $8, %r(539)
+	movq -8(%rbp), %r14		# movq -8(%rbp), %r(562)
+	movq %r14, %rbx		# movq %r(562), %r(563)
+	movq %rbx, -72(%rbp)		# movq %r(563), -72(%rbp)
+	movq -72(%rbp), %rbx		# movq -72(%rbp), %r(564)
+	subq %r13, %rbx		# subq %r(539), %r(564)
+	movq %rbx, -72(%rbp)		# movq %r(564), -72(%rbp)
+	movq -72(%rbp), %rbx		# movq -72(%rbp), %r(565)
+	movq (%rbx), %r12		# movq (%r(565)), %r(541)
+	movq -64(%rbp), %rbx		# movq -64(%rbp), %r(566)
+	cmpq %r12, %rbx		# cmpq %r(541), %r(566)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -64(%rbp), %r12		# movq -64(%rbp), %r(567)
+	movq %r12, %r14		# movq %r(567), %r(542)
+	salq $3, %r14		# salq $3, %r(542)
+	movq -24(%rbp), %r13		# movq -24(%rbp), %r(568)
+	movq %r13, %rbx		# movq %r(568), %r(569)
+	movq %rbx, -56(%rbp)		# movq %r(569), -56(%rbp)
+	movq -56(%rbp), %rbx		# movq -56(%rbp), %r(570)
+	addq %r14, %rbx		# addq %r(542), %r(570)
+	movq %rbx, -56(%rbp)		# movq %r(570), -56(%rbp)
+	movq -56(%rbp), %rbx		# movq -56(%rbp), %r(571)
+	movq (%rbx), %r12		# movq (%r(571)), %r(572)
+	movq %r12, -16(%rbp)		# movq %r(572), -16(%rbp)
+	movq -64(%rbp), %r12		# movq -64(%rbp), %r(573)
+	movq %r12, %r14		# movq %r(573), %r(545)
+	salq $3, %r14		# salq $3, %r(545)
+	movq -8(%rbp), %r13		# movq -8(%rbp), %r(574)
+	movq %r13, %rbx		# movq %r(574), %r(575)
+	movq %rbx, -40(%rbp)		# movq %r(575), -40(%rbp)
+	movq -40(%rbp), %rbx		# movq -40(%rbp), %r(576)
+	addq %r14, %rbx		# addq %r(545), %r(576)
+	movq %rbx, -40(%rbp)		# movq %r(576), -40(%rbp)
+	movq -40(%rbp), %rbx		# movq -40(%rbp), %r(577)
+	movq (%rbx), %r12		# movq (%r(577)), %r(547)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(578)
+	cmpq %r12, %rbx		# cmpq %r(547), %r(578)
+	je .L67		# je .L67
+	.L68:		# .L68:
+	movq $0, %r13		# movq $0, %r(548)
+	movq %r13, %rbx		# movq %r(548), %r(579)
+	movq %rbx, -32(%rbp)		# movq %r(579), -32(%rbp)
+	jmp .L67		# jmp .L67
+	.L67:		# .L67:
+	movq -32(%rbp), %rbx		# movq -32(%rbp), %r(580)
+	movq %rbx, %rdi		# movq %r(580), %rdi
+	call _Iassert_pb		# call _Iassert_pb
+	movq -64(%rbp), %rbx		# movq -64(%rbp), %r(581)
+	incq %rbx		# incq %r(581)
+	movq %rbx, -64(%rbp)		# movq %r(581), -64(%rbp)
+	jmp .L60		# jmp .L60
+	.L62:		# .L62:
+	jmp .L59		# jmp .L59
+	.L59:		# .L59:
 	popq %r15
 	popq %r14
+	popq %r13
+	popq %r12
+	popq %rbx
+	addq $96, %rsp
+	movq %rbp, %rsp
+	popq %rbp
+	ret
+	
+.globl _I_c_dynamalloc_aiai
+_I_c_dynamalloc_aiai:
+	pushq %rbp
+	movq %rsp, %rbp
+	subq $112, %rsp
+	pushq %rbx
+	pushq %r12
+	pushq %r13
+	pushq %r14
+	pushq %r15
+	movq %rdi, %rbx		# movq %rdi, %r(625)
+	movq %rbx, -8(%rbp)		# movq %r(625), -8(%rbp)
+	movq $8, %rbx		# movq $8, %r(582)
+	movq -8(%rbp), %r14		# movq -8(%rbp), %r(626)
+	movq %r14, %r12		# movq %r(626), %r(583)
+	subq %rbx, %r12		# subq %r(582), %r(583)
+	movq (%r12), %r13		# movq (%r(583)), %r(584)
+	movq %r13, %rbx		# movq %r(584), %r(627)
+	movq %rbx, -40(%rbp)		# movq %r(627), -40(%rbp)
+	movq $1, %r13		# movq $1, %r(585)
+	movq %r13, %rbx		# movq %r(585), %r(628)
+	movq %rbx, -16(%rbp)		# movq %r(628), -16(%rbp)
+	movq $0, %rbx		# movq $0, %r(586)
+	movq -40(%rbp), %r12		# movq -40(%rbp), %r(629)
+	cmpq %rbx, %r12		# cmpq %r(586), %r(629)
+	jne .L69		# jne .L69
+	.L70:		# .L70:
+	movq $0, %rbx		# movq $0, %r(587)
+	movq %rbx, %rax		# movq %r(587), %rax
+	jmp .L71		# jmp .L71
+	.L71:		# .L71:
+	popq %r15
+	popq %r14
+	popq %r13
+	popq %r12
+	popq %rbx
 	addq $112, %rsp
 	movq %rbp, %rsp
 	popq %rbp
 	ret
+	.L69:		# .L69:
+	movq -40(%rbp), %r13		# movq -40(%rbp), %r(630)
+	movq %r13, %rbx		# movq %r(630), %r(588)
+	salq $3, %rbx		# salq $3, %r(588)
+	movq %rbx, %rdi		# movq %r(588), %rdi
+	call _I_alloc_i		# call _I_alloc_i
+	movq %rax, %rbx		# movq %rax, %r(631)
+	movq %rbx, -96(%rbp)		# movq %r(631), -96(%rbp)
+	movq $1, %rbx		# movq $1, %r(589)
+	movq -40(%rbp), %r14		# movq -40(%rbp), %r(632)
+	movq %r14, %r12		# movq %r(632), %r(590)
+	subq %rbx, %r12		# subq %r(589), %r(590)
+	movq -96(%rbp), %rbx		# movq -96(%rbp), %r(633)
+	movq %r12, (%rbx)		# movq %r(590), (%r(633))
+	movq $8, %rbx		# movq $8, %r(591)
+	movq -96(%rbp), %r14		# movq -96(%rbp), %r(634)
+	movq %r14, %r13		# movq %r(634), %r(592)
+	addq %rbx, %r13		# addq %r(591), %r(592)
+	movq %r13, %r12		# movq %r(592), %r(635)
+	movq %r12, -32(%rbp)		# movq %r(635), -32(%rbp)
+	jmp .L72		# jmp .L72
+	.L72:		# .L72:
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(636)
+	movq -40(%rbp), %r12		# movq -40(%rbp), %r(637)
+	cmpq %r12, %rbx		# cmpq %r(637), %r(636)
+	jge .L73		# jge .L73
+	.L74:		# .L74:
+	movq $8, %rbx		# movq $8, %r(593)
+	movq -8(%rbp), %r14		# movq -8(%rbp), %r(638)
+	movq %r14, %r12		# movq %r(638), %r(594)
+	subq %rbx, %r12		# subq %r(593), %r(594)
+	movq (%r12), %rbx		# movq (%r(594)), %r(595)
+	movq -16(%rbp), %r12		# movq -16(%rbp), %r(639)
+	cmpq %rbx, %r12		# cmpq %r(595), %r(639)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $1, %rbx		# movq $1, %r(596)
+	movq -16(%rbp), %r14		# movq -16(%rbp), %r(640)
+	movq %r14, %r13		# movq %r(640), %r(597)
+	subq %rbx, %r13		# subq %r(596), %r(597)
+	movq %r13, %r12		# movq %r(597), %r(641)
+	movq %r12, -64(%rbp)		# movq %r(641), -64(%rbp)
+	movq $8, %rbx		# movq $8, %r(598)
+	movq -32(%rbp), %r14		# movq -32(%rbp), %r(642)
+	movq %r14, %r12		# movq %r(642), %r(599)
+	subq %rbx, %r12		# subq %r(598), %r(599)
+	movq (%r12), %rbx		# movq (%r(599)), %r(600)
+	movq -64(%rbp), %r12		# movq -64(%rbp), %r(643)
+	cmpq %rbx, %r12		# cmpq %r(600), %r(643)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -64(%rbp), %r13		# movq -64(%rbp), %r(644)
+	movq %r13, %r14		# movq %r(644), %r(601)
+	salq $3, %r14		# salq $3, %r(601)
+	movq -32(%rbp), %r12		# movq -32(%rbp), %r(645)
+	movq %r12, %r15		# movq %r(645), %r(602)
+	addq %r14, %r15		# addq %r(601), %r(602)
+	movq -16(%rbp), %r13		# movq -16(%rbp), %r(646)
+	movq %r13, %rbx		# movq %r(646), %r(677)
+	movq %rbx, -104(%rbp)		# movq %r(677), -104(%rbp)
+	movq -104(%rbp), %rbx		# movq -104(%rbp), %r(678)
+	salq $3, %rbx		# salq $3, %r(678)
+	movq %rbx, -104(%rbp)		# movq %r(678), -104(%rbp)
+	movq -8(%rbp), %r13		# movq -8(%rbp), %r(647)
+	movq %r13, %rbx		# movq %r(647), %r(648)
+	movq %rbx, -72(%rbp)		# movq %r(648), -72(%rbp)
+	movq -72(%rbp), %rbx		# movq -72(%rbp), %r(649)
+	movq -104(%rbp), %r12		# movq -104(%rbp), %r(679)
+	addq %r12, %rbx		# addq %r(679), %r(649)
+	movq %rbx, -72(%rbp)		# movq %r(649), -72(%rbp)
+	movq -72(%rbp), %rbx		# movq -72(%rbp), %r(650)
+	movq (%rbx), %r12		# movq (%r(650)), %r(605)
+	movq %r12, (%r15)		# movq %r(605), (%r(602))
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(651)
+	incq %rbx		# incq %r(651)
+	movq %rbx, -16(%rbp)		# movq %r(651), -16(%rbp)
+	jmp .L72		# jmp .L72
+	.L73:		# .L73:
+	movq $0, %r13		# movq $0, %r(606)
+	movq $8, %rbx		# movq $8, %r(607)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(652)
+	movq %r12, %r14		# movq %r(652), %r(608)
+	subq %rbx, %r14		# subq %r(607), %r(608)
+	movq (%r14), %rbx		# movq (%r(608)), %r(609)
+	cmpq %rbx, %r13		# cmpq %r(609), %r(606)
+	jae error_outofbounds		# jae error_outofbounds
+	movq $0, %r13		# movq $0, %r(610)
+	movq %r13, %r14		# movq %r(610), %r(611)
+	salq $3, %r14		# salq $3, %r(611)
+	movq -8(%rbp), %r12		# movq -8(%rbp), %r(653)
+	movq %r12, %r15		# movq %r(653), %r(612)
+	addq %r14, %r15		# addq %r(611), %r(612)
+	movq (%r15), %r13		# movq (%r(612)), %r(613)
+	movq %r13, %rbx		# movq %r(613), %r(654)
+	movq %rbx, -16(%rbp)		# movq %r(654), -16(%rbp)
+	movq $1, %rbx		# movq $1, %r(614)
+	movq -16(%rbp), %r14		# movq -16(%rbp), %r(655)
+	movq %r14, %r13		# movq %r(655), %r(615)
+	addq %rbx, %r13		# addq %r(614), %r(615)
+	movq %r13, %r12		# movq %r(615), %r(616)
+	salq $3, %r12		# salq $3, %r(616)
+	movq %r12, %rdi		# movq %r(616), %rdi
+	call _I_alloc_i		# call _I_alloc_i
+	movq %rax, %r14		# movq %rax, %r(90)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(656)
+	movq %rbx, (%r14)		# movq %r(656), (%r(90))
+	movq $8, %r13		# movq $8, %r(617)
+	movq %r14, %r12		# movq %r(90), %r(657)
+	movq %r12, -56(%rbp)		# movq %r(657), -56(%rbp)
+	movq -56(%rbp), %rbx		# movq -56(%rbp), %r(658)
+	addq %r13, %rbx		# addq %r(617), %r(658)
+	movq %rbx, -56(%rbp)		# movq %r(658), -56(%rbp)
+	movq -56(%rbp), %r13		# movq -56(%rbp), %r(659)
+	movq %r13, %rbx		# movq %r(659), %r(660)
+	movq %rbx, -24(%rbp)		# movq %r(660), -24(%rbp)
+	jmp .L78		# jmp .L78
+	.L78:		# .L78:
+	movq $0, %rbx		# movq $0, %r(619)
+	movq -16(%rbp), %r12		# movq -16(%rbp), %r(661)
+	cmpq %rbx, %r12		# cmpq %r(619), %r(661)
+	jle .L79		# jle .L79
+	.L80:		# .L80:
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(662)
+	decq %rbx		# decq %r(662)
+	movq %rbx, -16(%rbp)		# movq %r(662), -16(%rbp)
+	movq -32(%rbp), %rbx		# movq -32(%rbp), %r(663)
+	movq %rbx, %rdi		# movq %r(663), %rdi
+	call _I_c_dynamalloc_aiai		# call _I_c_dynamalloc_aiai
+	movq %rax, %rbx		# movq %rax, %r(664)
+	movq %rbx, -80(%rbp)		# movq %r(664), -80(%rbp)
+	movq $8, %r13		# movq $8, %r(620)
+	movq -24(%rbp), %r14		# movq -24(%rbp), %r(665)
+	movq %r14, %rbx		# movq %r(665), %r(666)
+	movq %rbx, -48(%rbp)		# movq %r(666), -48(%rbp)
+	movq -48(%rbp), %rbx		# movq -48(%rbp), %r(667)
+	subq %r13, %rbx		# subq %r(620), %r(667)
+	movq %rbx, -48(%rbp)		# movq %r(667), -48(%rbp)
+	movq -48(%rbp), %rbx		# movq -48(%rbp), %r(668)
+	movq (%rbx), %r12		# movq (%r(668)), %r(622)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(669)
+	cmpq %r12, %rbx		# cmpq %r(622), %r(669)
+	jae error_outofbounds		# jae error_outofbounds
+	movq -16(%rbp), %r12		# movq -16(%rbp), %r(670)
+	movq %r12, %r14		# movq %r(670), %r(623)
+	salq $3, %r14		# salq $3, %r(623)
+	movq -24(%rbp), %r13		# movq -24(%rbp), %r(671)
+	movq %r13, %rbx		# movq %r(671), %r(672)
+	movq %rbx, -88(%rbp)		# movq %r(672), -88(%rbp)
+	movq -88(%rbp), %rbx		# movq -88(%rbp), %r(673)
+	addq %r14, %rbx		# addq %r(623), %r(673)
+	movq %rbx, -88(%rbp)		# movq %r(673), -88(%rbp)
+	movq -88(%rbp), %rbx		# movq -88(%rbp), %r(674)
+	movq -80(%rbp), %r12		# movq -80(%rbp), %r(675)
+	movq %r12, (%rbx)		# movq %r(675), (%r(674))
+	jmp .L78		# jmp .L78
+	.L79:		# .L79:
+	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(676)
+	movq %rbx, %rax		# movq %r(676), %rax
+	jmp .L71		# jmp .L71
 	
-.section .rodata
-.align 8
-.L17:
-	.quad 4
-	.quad 116
-	.quad 101
-	.quad 115
-	.quad 116
-	.text
-
-.section .rodata
-.align 8
-.L35:
-	.quad 20
-	.quad 105
-	.quad 32
-	.quad 105
-	.quad 115
-	.quad 32
-	.quad 103
-	.quad 114
-	.quad 101
-	.quad 97
-	.quad 116
-	.quad 101
-	.quad 114
-	.quad 32
-	.quad 116
-	.quad 104
-	.quad 97
-	.quad 110
-	.quad 32
-	.quad 49
-	.quad 48
-	.text
-
-.section .rodata
-.align 8
-.L37:
-	.quad 4
-	.quad 105
-	.quad 32
-	.quad 105
-	.quad 115
-	.text
-
-.section .rodata
-.align 8
-.L24:
-	.quad 1
-	.quad 49
-	.text
-
 error_outofbounds:
 call _I_outOfBounds_p
-
