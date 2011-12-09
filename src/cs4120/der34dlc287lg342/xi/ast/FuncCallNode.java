@@ -22,9 +22,9 @@ import edu.cornell.cs.cs4120.xi.Position;
 public class FuncCallNode extends ExpressionNode {
 
 	protected Position position;
-	protected IdNode id;
+	protected AbstractSyntaxTree id;
 	protected ArrayList<VisualizableTreeNode> children, args;
-	public FuncCallNode(IdNode id, ArrayList<VisualizableTreeNode> args, Position position){
+	public FuncCallNode(AbstractSyntaxTree id, ArrayList<VisualizableTreeNode> args, Position position){
 		this.id = id;
 		this.args = args;
 		this.position = position;
@@ -50,7 +50,6 @@ public class FuncCallNode extends ExpressionNode {
 
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
-		IdNode id = (IdNode)this.id;
 		XiType t = id.typecheck(stack);
 		if (!(t instanceof XiFunctionType))
 			throw new CompilationException("Attempt to call a nonfunction object", position());
@@ -58,7 +57,7 @@ public class FuncCallNode extends ExpressionNode {
 		// make sure that args agree
 		
 		if (func.args.size() != args.size()){
-			throw new CompilationException("Incorrect number of arguments applied to the function '"+id.id+"': expected "+args.size() + " but got "+func.args.size()+" instead", position());
+			throw new CompilationException("Incorrect number of arguments applied to the function '"+id+"': expected "+args.size() + " but got "+func.args.size()+" instead", position());
 		}
 		int i = 0;
 		for (VisualizableTreeNode child : args){
@@ -67,7 +66,7 @@ public class FuncCallNode extends ExpressionNode {
 				XiType arg_type = expr.typecheck(stack);
 				XiPrimitiveType expected = func.args.get(i++);
 				if (!arg_type.equals(expected))
-					throw new CompilationException("Invalid argument("+(i-1)+") of function '"+id.id+"': expected "+expected+", but got "+arg_type+" instead", position());
+					throw new CompilationException("Invalid argument("+(i-1)+") of function '"+id+"': expected "+expected+", but got "+arg_type+" instead", position());
 			} else {
 				throw new CompilationException("Expected an expression type but got "+child.label()+" instead", position());
 			}
@@ -109,7 +108,7 @@ public class FuncCallNode extends ExpressionNode {
 		 * Call(Name(id), args)
 		 */
 		
-		Label f = stack.find_name(id.id).label;
+		Label f = stack.find_name(IRContextStack.mangle(id)).label;
 		
 		Call call = new Call(new Name(f));
 		

@@ -1,5 +1,7 @@
 package cs4120.der34dlc287lg342.xi.tests;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
@@ -339,9 +341,17 @@ public class TestParser extends TestCase {
 	}
 	
 	public void testClasses() throws Exception{
-		Parser p = gen("class Point { x,y:int "+
-						"move(dx:int, dy:int){x = x + dx y = y + dy} }");
-		AbstractSyntaxNode program = p.parse();
+		String inputFile = "test2.xi";
+		FileReader reader = new FileReader(inputFile);
+		String src = "";
+		BufferedReader input =  new BufferedReader(reader);
+		String line = null;
+		while (( line = input.readLine()) != null){
+	          src += line + "\n";
+	    }
+		Parser parser = new XiParser(new StringReader(src), inputFile);
+		AbstractSyntaxNode program = parser.parse();
+		
 		printtree(program, "");
 	}
 }

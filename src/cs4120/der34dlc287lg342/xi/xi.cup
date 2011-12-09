@@ -44,7 +44,7 @@ terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
 
 nonterminal AbstractSyntaxTree program, use_list;
 // expr components
-nonterminal AbstractSyntaxTree expr, uop, func_call, 
+nonterminal AbstractSyntaxTree expr, uop, func_call, expr_subset, 
 	arr_index, arr_create, arr_elements, id, id_brackets, allowed_element_assign, usable_id;
 // statement components
 nonterminal AbstractSyntaxTree stmt, stmt_w_semi, if_stmt, while_stmt, return_stmt, return_list, 
@@ -57,11 +57,14 @@ nonterminal ArrayList<VisualizableTreeNode> var_list, func_list, func_callargs;
 nonterminal ArrayList<VisualizableTreeNode> varclass_list, class_block;
 nonterminal ArrayList<IdNode> idclass_list;
 
-nonterminal AbstractSyntaxTree bool_literal;
+nonterminal AbstractSyntaxTree bool_literal, attr;
 // top level
 nonterminal AbstractSyntaxTree func_decl, use_stmt;
 nonterminal AbstractSyntaxTree class_decl, varclass_decl, varclass_inst;
 
+precedence nonassoc NEW;
+precedence nonassoc PERIOD;
+precedence nonassoc OPEN_PAREN;
 precedence nonassoc IF;
 precedence nonassoc ELSE; // we want to shift else rather than reduce on if
 precedence nonassoc SEMICOLON;
@@ -90,8 +93,26 @@ id ::= IDENTIFIER:o
 usable_id ::= id:id
 	{: RESULT = id; :}
 	| THIS:t
-	{: RESULT = new ThisNode(t.position()); :}
+	{: RESULT = new ThisNode(t.position()); :};
+	
+expr_subset ::= func_call:a
+	| arr_index:a
+	| usable_id:a
+	| NEW:n id:id
+	| OPEN_PAREN expr CLOSE_PAREN
+	;
+/*	
+attr ::= func_call:a PERIOD id:b
+	| arr_index:a PERIOD id:b
 	| usable_id:a PERIOD id:b
+	| attr:a PERIOD id:b
+	| NEW:n id:id PERIOD id:b
+	| OPEN_PAREN expr CLOSE_PAREN PERIOD id:b
+	{: RESULT = new AttrNode(a, b, span(a.position(), b.position())); :};
+	*/
+	
+
+attr ::= expr:a PERIOD id:b
 	{: RESULT = new AttrNode(a, b, span(a.position(), b.position())); :};
 
 expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
@@ -165,8 +186,22 @@ expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
 	| arr_create:e
 	{: RESULT = e; :}
 	
+	| NULL:t
+	{: RESULT = new NullNode(t.position());:}
+	
 	| usable_id:e
 	{: RESULT = e; :}
+	
+	| attr:attr
+	{: RESULT = attr; :}
+	
+	| attr:attr OPEN_PAREN func_callargs:args CLOSE_PAREN:t
+	{: RESULT = new FuncCallNode(attr, args, span(attr.position(), t.position())); :}
+	
+	
+	
+	| NEW:n id:id
+	{: RESULT = new NewNode((IdNode)id, span(n.position(), id.position())); :}
 	
 	| OPEN_PAREN expr:expr CLOSE_PAREN
 	{: RESULT = expr; :};
@@ -178,7 +213,7 @@ uop ::= NOT:t {: RESULT = new UnNotNode(t.position());  :}
 
 func_call ::= id:id OPEN_PAREN func_callargs:args CLOSE_PAREN:o
 	{:	Token t = (Token)o;
-		RESULT = new FuncCallNode((IdNode)id, args, span(id.position(), t.position())); :}
+		RESULT = new FuncCallNode(id, args, span(id.position(), t.position())); :}
 	| LENGTH:len OPEN_PAREN expr:expr CLOSE_PAREN:o
 	{:	Token t1 = (Token)len, t2 = (Token)o;
 		RESULT = new LengthNode(expr, span(t1.position(), t2.position())); :};
@@ -224,7 +259,8 @@ stmt ::= if_stmt:s
 	| var_inst:s
 	{: RESULT = s; :}
 	| var_set:s
-	{: RESULT = s; :};
+	{: RESULT = s; :}
+	;
 
 stmt_or_block ::= stmt:stmt
 	{: RESULT = stmt; :}
@@ -329,10 +365,11 @@ var_inst ::= var_list:list GETS expr:e
 		InstNode inst = new InstNode(list, e, span(n.position(), e.position()));
 		RESULT = inst;:};
 
-allowed_element_assign ::= usable_id:id 
+allowed_element_assign ::= id:id 
 	{: RESULT = id; :}
 	| func_call:e
-	{: RESULT = e; :};
+	{: RESULT = e; :}
+	;
 
 id_brackets ::= allowed_element_assign:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
 	{: RESULT = new ListIndexNode(id, i, span(id.position(), t.position())); :}
@@ -340,7 +377,7 @@ id_brackets ::= allowed_element_assign:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
 	{: ListIndexNode base = (ListIndexNode)id;
 	   RESULT = new ListIndexNode(base, i, span(base.position(), t.position())); :};
 
-var_set ::= usable_id:id GETS expr:expr
+var_set ::= id:id GETS expr:expr
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :}
 	| id_brackets:id GETS expr:expr
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :};
@@ -458,6 +495,8 @@ class_decl ::= CLASS:c id:id OPEN_BRACE:t class_block:b CLOSE_BRACE:e
 		class_node.ex = (IdNode)ex;
 		RESULT = class_node;
 	:};
+	
+
 
 program ::= use_list:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;

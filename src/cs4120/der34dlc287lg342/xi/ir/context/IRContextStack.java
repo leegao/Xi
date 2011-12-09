@@ -3,9 +3,13 @@ package cs4120.der34dlc287lg342.xi.ir.context;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
+import cs4120.der34dlc287lg342.xi.ast.AttrNode;
 import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
+import cs4120.der34dlc287lg342.xi.ast.IdNode;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
 
 public class IRContextStack extends ArrayList<IRContext>{
@@ -100,5 +104,17 @@ public class IRContextStack extends ArrayList<IRContext>{
 		if (this.isEmpty())
 			throw new InvalidIRContextException("Cannot pop context from an empty stack");
 		this.remove(this.size()-1);
+	}
+
+	public static String mangle(AbstractSyntaxTree id) {
+		if (id instanceof IdNode){
+			return ((IdNode)id).id;
+		} else if (id instanceof AttrNode) {
+			AttrNode attr = (AttrNode)id;
+			XiType t = attr.parent.type;
+			return "_"+t.toString()+"_"+mangle(attr.attr);
+		}
+		System.out.println("DEBUG: oh no! mangle");
+		return null;
 	}
 }
