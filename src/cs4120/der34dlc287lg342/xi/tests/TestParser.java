@@ -330,4 +330,18 @@ public class TestParser extends TestCase {
 		});
 	
 	}
+	
+	public void printtree(VisualizableTreeNode node, String tab){
+		System.out.println(tab + node);
+		for (VisualizableTreeNode child : node.children()){
+			printtree(child, tab+" ");
+		}
+	}
+	
+	public void testClasses() throws Exception{
+		Parser p = gen("class Point { x,y:int "+
+						"move(dx:int, dy:int){x = x + dx y = y + dy} }");
+		AbstractSyntaxNode program = p.parse();
+		printtree(program, "");
+	}
 }

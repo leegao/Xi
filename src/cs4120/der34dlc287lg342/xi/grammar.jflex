@@ -100,6 +100,11 @@ IntegerLiteral    = {DecIntegerLiteral} | {NegIntegerLiteral}
 <YYINITIAL> "bool"               { return token(TokenType.BOOL); }
 <YYINITIAL> "true"               { return token(TokenType.TRUE); }
 <YYINITIAL> "false"              { return token(TokenType.FALSE); }
+<YYINITIAL> "new"                { return token(TokenType.NEW); }
+<YYINITIAL> "class"              { return token(TokenType.CLASS); }
+<YYINITIAL> "extends"            { return token(TokenType.EXTENDS); }
+<YYINITIAL> "this"               { return token(TokenType.THIS); }
+<YYINITIAL> "null"               { return token(TokenType.NULL); }
 
 <YYINITIAL> {
   /* identifiers */ 
@@ -142,6 +147,7 @@ IntegerLiteral    = {DecIntegerLiteral} | {NegIntegerLiteral}
   ","                            { return token(TokenType.COMMA); }
   ";"                            { return token(TokenType.SEMICOLON); }
   "_"                            { return token(TokenType.UNDERSCORE); }
+  "."                            { return token(TokenType.PERIOD); }
 
   '[^']'                         { String s = yytext().substring(1,yytext().length()-1); 
                                    return token(TokenType.CHARACTER_LITERAL, s); }

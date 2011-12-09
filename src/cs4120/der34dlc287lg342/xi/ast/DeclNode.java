@@ -37,7 +37,8 @@ public class DeclNode extends AbstractSyntaxTree {
 	/**If this represents an array declaration than this field contains any dimension
 	 * specifiers.*/
 	public ArrayList<VisualizableTreeNode> brackets;
-	protected ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
+	public ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
+	
 	
 	public DeclNode(IdNode id, String type, ArrayList<VisualizableTreeNode> brackets, Position position){
 		this.id = id;
