@@ -26,6 +26,6 @@ class Point{
 }
 
 createPoint(x:int, y:int): Point {
-	x.y = 3
+	x.y[3][4] = x.y.z
 	return new Point.init(x,y)
 }

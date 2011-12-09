@@ -63,7 +63,7 @@ nonterminal AbstractSyntaxTree func_decl, use_stmt;
 nonterminal AbstractSyntaxTree class_decl, varclass_decl, varclass_inst;
 
 precedence nonassoc NEW;
-precedence nonassoc PERIOD;
+precedence left PERIOD;
 precedence nonassoc OPEN_PAREN;
 precedence nonassoc IF;
 precedence nonassoc ELSE; // we want to shift else rather than reduce on if
@@ -371,13 +371,20 @@ allowed_element_assign ::= id:id
 	{: RESULT = e; :}
 	;
 
-id_brackets ::= allowed_element_assign:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
+id_brackets ::= id:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
 	{: RESULT = new ListIndexNode(id, i, span(id.position(), t.position())); :}
+	| func_call:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
+	{: RESULT = new ListIndexNode(id, i, span(id.position(), t.position())); :}
+	| attr:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
+	{: RESULT = new ListIndexNode(id, i, span(id.position(), t.position())); :}
+	
 	| id_brackets:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
 	{: ListIndexNode base = (ListIndexNode)id;
 	   RESULT = new ListIndexNode(base, i, span(base.position(), t.position())); :};
 
 var_set ::= id:id GETS expr:expr
+	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :}
+	| attr:id GETS expr:expr
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :}
 	| id_brackets:id GETS expr:expr
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :};
@@ -404,7 +411,8 @@ types ::= {: RESULT = new ArrayList<XiPrimitiveType>(); :}
 	{: RESULT = new ArrayList<XiPrimitiveType>(); RESULT.add(new XiPrimitiveType(type, dim)); :}
 	| types:arr COMMA type:type bracket_list:dim
 	{:	RESULT = arr;
-		arr.add(new XiPrimitiveType(type, dim)); :}; 		
+		arr.add(new XiPrimitiveType(type, dim)); :}
+	; 		
 
 func_decl ::= id:id OPEN_PAREN func_list:list CLOSE_PAREN types:types block:block
 	{:	FuncDeclNode func_decl = new FuncDeclNode((IdNode)id, list, types, (BlockNode)block, span(id.position(), block.position()));
