@@ -226,7 +226,9 @@ public class XiTypechecker {
 			for (int i = 1; i < e.getPosition().columnEnd(); i++) str += " ";
 			str += "^ @ position "+e.getPosition();
 		}
-		return new CompilationException(str, e.getPosition());
+		CompilationException ne = new CompilationException(str, e.getPosition());
+		ne.setStackTrace(e.getStackTrace());
+		return ne;
 	}
 	
 	public CompilationException formatException(CompilationException e){

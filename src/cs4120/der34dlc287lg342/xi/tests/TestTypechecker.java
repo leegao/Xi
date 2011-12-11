@@ -268,7 +268,8 @@ public class TestTypechecker extends TestCase {
 		try{
 			tc.typecheck();
 		} catch (Exception e){
-			System.out.println(e);
+			e.printStackTrace();
 		}
+		TestParser.printtree(program,"");
 	}
 }

@@ -56,7 +56,7 @@ public class AttrNode extends ExpressionNode {
 			return type;
 		} else if (object.layout.var_table.containsKey(attr)){
 			ClassDeclNode cvar = object.layout.var_table.get(attr);
-			if (!cvar.typecheck(stack.top.class_context.get(object.type)).equals(XiPrimitiveType.UNIT))
+			if (cvar.type == null && !cvar.typecheck(stack.top.class_context.get(object.type)).equals(XiPrimitiveType.UNIT))
 				throw new CompilationException("Class variable declaration should be unit."+attr, position);
 			try {
 				type = stack.top.class_context.get(object.type).find_id(attr);

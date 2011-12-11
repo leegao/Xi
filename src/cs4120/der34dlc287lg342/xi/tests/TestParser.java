@@ -333,7 +333,7 @@ public class TestParser extends TestCase {
 	
 	}
 	
-	public void printtree(VisualizableTreeNode node, String tab){
+	public static void printtree(VisualizableTreeNode node, String tab){
 		System.out.println(tab + node);
 		for (VisualizableTreeNode child : node.children()){
 			printtree(child, tab+" ");

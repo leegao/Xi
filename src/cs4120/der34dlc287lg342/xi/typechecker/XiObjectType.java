@@ -9,6 +9,7 @@ import cs4120.der34dlc287lg342.xi.ast.ClassNode;
 import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
 import cs4120.der34dlc287lg342.xi.ast.IdNode;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
+import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 
 public class XiObjectType implements XiType {
 	public ClassLayout layout;
@@ -83,5 +84,15 @@ public class XiObjectType implements XiType {
 			return t.dimension.size() == dimension.size();
 		}
 		return false;
+	}
+
+	@Override
+	public String toString() {
+		String t = "O_"+type;
+		for (VisualizableTreeNode i : dimension){
+			AbstractSyntaxNode node = (AbstractSyntaxNode) i;
+			t += "["+(node != null?node.label():"")+"]";
+		}
+		return t;
 	}
 }
