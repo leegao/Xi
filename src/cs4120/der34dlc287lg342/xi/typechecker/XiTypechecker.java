@@ -53,6 +53,7 @@ public class XiTypechecker {
 		stack = new ContextList();
 		init();
 		stack.add(globalContext);
+		stack.top = globalContext;
 	}
 	
 	public XiTypechecker(AbstractSyntaxNode ast) throws InvalidXiTypeException{
@@ -144,6 +145,14 @@ public class XiTypechecker {
 		HashSet<String> seen = new HashSet<String>();
 		for (ClassNode klass : classes){
 			make_classmethods(klass, classes, seen);
+			
+			ContextList stack = new ContextList();
+			stack.top = globalContext;
+			stack.add(globalContext);
+			XiTypeContext context = new XiTypeContext(false);
+			stack.add(context);
+			globalContext.class_context = new HashMap<String, ContextList>();
+			globalContext.class_context.put(klass.id.id, stack);
 		}
 	}
 	

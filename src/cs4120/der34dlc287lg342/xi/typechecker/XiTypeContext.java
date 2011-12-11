@@ -10,6 +10,7 @@ public class XiTypeContext {
 	public boolean isBreakable;
 	public HashMap<String, XiObjectType> classes;
 	public HashMap<FuncDeclNode, XiObjectType> method_classes;
+	public HashMap<String, ContextList> class_context;
 	
 	public XiTypeContext(XiFunctionType r, boolean b){
 		returnType = r;
