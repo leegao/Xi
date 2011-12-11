@@ -35,6 +35,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
@@ -85,6 +86,11 @@ public class ProgramNode extends AbstractSyntaxTree {
 				
 				if(!(childType instanceof XiFunctionType))
 					throw new CompilationException("Invalid program",position);
+			} else if (childTree instanceof ClassNode){
+				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
+				
+				if(!(childType instanceof XiObjectType))
+					throw new CompilationException("Invalid program, expected Object type but got "+childType+" instead.",position);
 			}
 		}
 		

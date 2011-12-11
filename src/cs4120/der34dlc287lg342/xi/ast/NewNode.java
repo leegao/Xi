@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -33,7 +34,16 @@ public class NewNode extends ExpressionNode {
 
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
+		// first test that we're in the source file, this should be easily remedied by adding interface_classes
 		
-		throw new CompilationException("Unimplemented yet: new.typecheck", position);
+		// next make sure that Class is valid
+		if (!stack.top.classes.containsKey(klass.id))
+			throw new CompilationException("Cannot initialize instance of an undefined class "+klass.id, position);
+		
+		XiObjectType t = stack.top.classes.get(klass.id);
+		type = t;
+		return type;
+		
+		//throw new CompilationException("Unimplemented yet: new.typecheck", position);
 	}
 }
