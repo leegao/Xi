@@ -121,4 +121,14 @@ public class XiPrimitiveType implements XiType {
 		}
 		return false;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((dimension == null) ? 0 : dimension.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
 }

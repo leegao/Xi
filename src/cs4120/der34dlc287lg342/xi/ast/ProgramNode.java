@@ -82,6 +82,7 @@ public class ProgramNode extends AbstractSyntaxTree {
  	public XiType typecheck(ContextList stack) throws CompilationException {
 		for( VisualizableTreeNode childTree : children) {
 			if( childTree instanceof FuncDeclNode) {
+				((FuncDeclNode) childTree).make_type();
 				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
 				
 				if(!(childType instanceof XiFunctionType))

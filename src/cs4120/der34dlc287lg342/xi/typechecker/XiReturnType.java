@@ -3,19 +3,19 @@ package cs4120.der34dlc287lg342.xi.typechecker;
 import java.util.ArrayList;
 
 public class XiReturnType implements XiType {
-public ArrayList<XiPrimitiveType> ret;
+public ArrayList<XiType> ret;
 	
-	public XiReturnType(ArrayList<XiPrimitiveType> ret){
-		this.ret = ret;
+	public XiReturnType(ArrayList<XiType> arrayList){
+		this.ret = arrayList;
 	}
 	
 	public XiReturnType(XiPrimitiveType ret){
-		this.ret = new ArrayList<XiPrimitiveType>();
+		this.ret = new ArrayList<XiType>();
 		this.ret.add(ret);
 	}
 	
 	public XiReturnType(){
-		this(new ArrayList<XiPrimitiveType>());
+		this(new ArrayList<XiType>());
 	}
 	
 	public XiType coerce(){
@@ -29,7 +29,7 @@ public ArrayList<XiPrimitiveType> ret;
 	@Override
 	public String toString(){
 		String t = "";
-		for (XiPrimitiveType r : ret){
+		for (XiType r : ret){
 			t += r + ",";
 		}
 		return t;
@@ -38,7 +38,7 @@ public ArrayList<XiPrimitiveType> ret;
 	@SuppressWarnings("unchecked")
 	@Override
 	public Object clone(){
-		ArrayList<XiPrimitiveType>  r = (ArrayList<XiPrimitiveType>) ret.clone();
+		ArrayList<XiType>  r = (ArrayList<XiType>) ret.clone();
 		return new XiReturnType(r);
 	}
 }

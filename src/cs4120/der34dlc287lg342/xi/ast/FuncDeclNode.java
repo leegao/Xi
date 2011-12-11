@@ -35,10 +35,10 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 	public BlockNode block;
 	/**The return types of this function declaration represented as a
 	 * list of  XiPrimitiveTypes. Note this is not a Node in the AST. */
-	public ArrayList<XiPrimitiveType> types;
+	public ArrayList<XiType> types;
 	
 	/**Sets all fields including the type field which is part of the super class AbstractSyntaxTree*/
-	public FuncDeclNode(IdNode id, ArrayList<VisualizableTreeNode> args, ArrayList<XiPrimitiveType> types, BlockNode block, Position position){
+	public FuncDeclNode(IdNode id, ArrayList<VisualizableTreeNode> args, ArrayList<XiType> types, BlockNode block, Position position){
 		this.id = id;
 		this.args = args;
 		this.position = position;
@@ -49,10 +49,11 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		children.addAll(args);
 		children.add(block);
 		
-		ArrayList<XiPrimitiveType> argumentList = new ArrayList<XiPrimitiveType>();
+		ArrayList<XiType> argumentList = new ArrayList<XiType>();
 		for (VisualizableTreeNode arg : this.args){
 			DeclNode decl = (DeclNode) arg;
 			argumentList.add(new XiPrimitiveType(decl.type_name, decl.brackets));
+			
 		}
 		
 		this.type = new XiFunctionType(argumentList, this.types);;
@@ -73,6 +74,23 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		return "FUNCDECL";
 	}
 
+	public void make_type(){
+		ArrayList<XiType> argumentList = new ArrayList<XiType>();
+		for (VisualizableTreeNode arg : this.args){
+			DeclNode decl = (DeclNode) arg;
+			argumentList.add(XiTypeContext.make_type(decl.type_name, decl.brackets));
+		}
+		
+		for (XiType ret : new ArrayList<XiType>(this.types)){
+			if (ret instanceof XiPrimitiveType){
+				int i = this.types.indexOf(ret);
+				this.types.set(i, XiTypeContext.make_type(((XiPrimitiveType) ret).type, ((XiPrimitiveType) ret).dimension));
+			}
+		}
+		
+		this.type = new XiFunctionType(argumentList, this.types);
+	}
+	
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		// push a new context frame onto the stack
 		XiTypeContext frame = new XiTypeContext((XiFunctionType) type);
@@ -80,6 +98,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		 * before type checking this function we need to add the arguments to the
 		 * current context
 		 */
+		make_type();
 		for (VisualizableTreeNode arg : this.args){ 
 			DeclNode decl = (DeclNode) arg;
 			IdNode id = (IdNode)decl.id;
@@ -101,6 +120,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		
 		// ensure that we're already on the stack
 		XiType our_type = ((AbstractSyntaxTree)id).typecheck(stack);
+		//System.out.println(our_type + " " + type);
 		if (!our_type.equals(type))
 			throw new CompilationException("Invalid function declaration: signature doesn't match actual type", position());
 		

@@ -148,12 +148,20 @@ public class XiTypechecker {
 			
 			ContextList stack = new ContextList();
 			stack.in_class = true;
+			stack.klass = klass;
 			stack.top = globalContext;
 			stack.add(globalContext);
 			XiTypeContext context = new XiTypeContext(false);
 			stack.add(context);
 			globalContext.class_context = new HashMap<String, ContextList>();
 			globalContext.class_context.put(klass.id.id, stack);
+		}
+		
+		for (VisualizableTreeNode child : ast.children()){
+			// third pass: rewrite the function signatures
+			if (child instanceof FuncDeclNode){ //FUNCTION DECLARATION NODE
+				((FuncDeclNode) child).make_type();
+			}
 		}
 	}
 	
@@ -188,6 +196,7 @@ public class XiTypechecker {
 		for (VisualizableTreeNode child : klass.children){
 			if (child instanceof FuncDeclNode){ // method
 				FuncDeclNode func = (FuncDeclNode)child;
+				func.make_type();
 				IdNode identifier = (IdNode)func.id;
 				try {
 					globalContext.add(type.mangle(identifier.id), func.type);

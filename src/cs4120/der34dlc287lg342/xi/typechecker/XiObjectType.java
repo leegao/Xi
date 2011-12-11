@@ -64,6 +64,16 @@ public class XiObjectType implements XiType {
 		return this;
 	}
 	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((dimension == null) ? 0 : dimension.hashCode());
+		result = prime * result + ((layout == null) ? 0 : layout.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
+		return result;
+	}
 	
 	@Override
 	public boolean equals(Object o){

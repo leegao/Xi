@@ -8,6 +8,7 @@ import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.lexer.Token;
 import edu.cornell.cs.cs4120.xi.Position;
 import cs4120.der34dlc287lg342.xi.ast.*;
+import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
@@ -51,7 +52,7 @@ nonterminal AbstractSyntaxTree stmt, stmt_w_semi, if_stmt, while_stmt, return_st
 	block, stmt_list, block_stmt, stmt_or_block, var_decl, var_inst, var_item, var_set;
 nonterminal AbstractSyntaxTree dimension;
 nonterminal String type;
-nonterminal ArrayList<XiPrimitiveType> types;
+nonterminal ArrayList<XiType> types;
 nonterminal ArrayList<VisualizableTreeNode> bracket_list;
 nonterminal ArrayList<VisualizableTreeNode> var_list, func_list, func_callargs;
 nonterminal ArrayList<VisualizableTreeNode> varclass_list, class_block;
@@ -406,9 +407,9 @@ func_list ::=
 	{:	list.add(s);
 		RESULT = list; :};
 
-types ::= {: RESULT = new ArrayList<XiPrimitiveType>(); :}
+types ::= {: RESULT = new ArrayList<XiType>(); :}
 	| COLON type:type bracket_list:dim
-	{: RESULT = new ArrayList<XiPrimitiveType>(); RESULT.add(new XiPrimitiveType(type, dim)); :}
+	{: RESULT = new ArrayList<XiType>(); RESULT.add(new XiPrimitiveType(type, dim)); :}
 	| types:arr COMMA type:type bracket_list:dim
 	{:	RESULT = arr;
 		arr.add(new XiPrimitiveType(type, dim)); :}

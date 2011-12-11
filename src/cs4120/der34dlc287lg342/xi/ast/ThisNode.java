@@ -27,7 +27,10 @@ public class ThisNode extends ExpressionNode {
 	
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
-		
-		throw new CompilationException("Unimplemented yet: this.typecheck", position);
+		if (!stack.in_class)
+			throw new CompilationException("Cannot refer to this outside of an instance method.", position);
+		type = stack.top.classes.get(stack.klass.id.id);
+		return type;
+		//throw new CompilationException("Unimplemented yet: this.typecheck", position);
 	}
 }

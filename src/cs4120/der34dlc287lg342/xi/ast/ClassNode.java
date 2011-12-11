@@ -45,6 +45,7 @@ public class ClassNode extends AbstractSyntaxTree{
 						throw new CompilationException("ClassDeclNodes are expected to typecheck to unit", position);
 				}
 			} else if (child instanceof FuncDeclNode){
+				((FuncDeclNode) child).make_type();
 				XiType t = ((FuncDeclNode)child).typecheck(stack);
 				
 				if(!(t instanceof XiFunctionType))
@@ -53,7 +54,9 @@ public class ClassNode extends AbstractSyntaxTree{
 				throw new CompilationException("Not expecting "+child.getClass().getSimpleName()+" here in the AST.", position);
 			}
 		}
-		throw new CompilationException("Unimplemented yet: class.typecheck", position);
+		this.type = stack.top.classes.get(id.id);
+		return type;
+		//throw new CompilationException("Unimplemented yet: class.typecheck", position);
 	}
 	
 	

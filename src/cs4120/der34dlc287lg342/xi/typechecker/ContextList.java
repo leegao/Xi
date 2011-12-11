@@ -2,11 +2,14 @@ package cs4120.der34dlc287lg342.xi.typechecker;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ast.ClassNode;
+
 public class ContextList extends ArrayList<XiTypeContext> {
 	private static final long serialVersionUID = 1802449172139979643L;
 
 	public XiTypeContext top = null;
 	public boolean in_class = false;
+	public ClassNode klass = null;
 	
 	public XiTypeContext top() throws InvalidXiTypeException{
 		if (this.isEmpty())

@@ -51,6 +51,7 @@ public class AttrNode extends ExpressionNode {
 		String attr = ((IdNode)this.attr).id;
 		if (object.layout.method_table.containsKey(object.mangle(attr))){
 			FuncDeclNode func = object.layout.method_table.get(object.mangle(attr));
+			func.make_type();
 			type = func.type;
 			return type;
 		} else if (object.layout.var_table.containsKey(attr)){

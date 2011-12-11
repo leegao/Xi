@@ -1,8 +1,10 @@
 package cs4120.der34dlc287lg342.xi.typechecker;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
 public class XiTypeContext {
 	public HashMap<String, XiType> symbols;
@@ -53,5 +55,13 @@ public class XiTypeContext {
 		XiTypeContext c = new XiTypeContext(func, isBreakable);
 		c.symbols = (HashMap<String, XiType>) symbols.clone();
 		return c;
+	}
+	
+	public static XiType make_type(String type,  ArrayList<VisualizableTreeNode> brackets){
+		if (type.equals("int") || type.equals("bool") || type.equals("void") || type.equals("unit") || type.equals("*")){
+			return new XiPrimitiveType(type, brackets);
+		} else {
+			return new XiObjectType(XiTypechecker.globalContext.classes.get(type), brackets);
+		}
 	}
 }

@@ -64,7 +64,7 @@ public class FuncCallNode extends ExpressionNode {
 			if (child instanceof ExpressionNode){
 				ExpressionNode expr = (ExpressionNode)child;
 				XiType arg_type = expr.typecheck(stack);
-				XiPrimitiveType expected = func.args.get(i++);
+				XiType expected = func.args.get(i++);
 				if (!arg_type.equals(expected))
 					throw new CompilationException("Invalid argument("+(i-1)+") of function '"+id+"': expected "+expected+", but got "+arg_type+" instead", position());
 			} else {

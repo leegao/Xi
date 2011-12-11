@@ -9,6 +9,7 @@ import edu.cornell.cs.cs4120.xi.lexer.Token;
 import edu.cornell.cs.cs4120.xi.Position;
 import cs4120.der34dlc287lg342.xi.ast.*;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
 
@@ -49,7 +50,7 @@ nonterminal AbstractSyntaxNode id;
 nonterminal AbstractSyntaxNode var_decl;
 nonterminal VisualizableTreeNode dimension;
 nonterminal String type;
-nonterminal ArrayList<XiPrimitiveType> types;
+nonterminal ArrayList<XiType> types;
 nonterminal ArrayList<VisualizableTreeNode> bracket_list;
 nonterminal ArrayList<VisualizableTreeNode> func_list;
 nonterminal ArrayList<VisualizableTreeNode> varclass_list, class_block;
@@ -96,9 +97,9 @@ func_list ::=
 	{:	list.add(s);
 		RESULT = list; :};
 
-types ::= {: RESULT = new ArrayList<XiPrimitiveType>(); :}
+types ::= {: RESULT = new ArrayList<XiType>(); :}
 	| COLON type:type bracket_list:dim
-	{: RESULT = new ArrayList<XiPrimitiveType>(); RESULT.add(new XiPrimitiveType(type, dim)); :}
+	{: RESULT = new ArrayList<XiType>(); RESULT.add(new XiType(type, dim)); :}
 	| types:arr COMMA type:type bracket_list:dim
 	{:	RESULT = arr;
 		arr.add(new XiPrimitiveType(type, dim)); :}; 		
