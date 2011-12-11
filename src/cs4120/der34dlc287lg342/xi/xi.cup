@@ -63,7 +63,7 @@ nonterminal AbstractSyntaxTree func_decl, use_stmt;
 nonterminal AbstractSyntaxTree class_decl, varclass_decl, varclass_inst;
 
 precedence nonassoc NEW;
-precedence left PERIOD;
+
 precedence nonassoc OPEN_PAREN;
 precedence nonassoc IF;
 precedence nonassoc ELSE; // we want to shift else rather than reduce on if
@@ -77,7 +77,7 @@ precedence left LT, LEQ, GT, GEQ;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODULO;
 precedence nonassoc UMINUS, UNOT;
-
+precedence left PERIOD;
 precedence nonassoc OPEN_BRACKET;
 
 
