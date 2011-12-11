@@ -52,8 +52,11 @@ nonterminal String type;
 nonterminal ArrayList<XiPrimitiveType> types;
 nonterminal ArrayList<VisualizableTreeNode> bracket_list;
 nonterminal ArrayList<VisualizableTreeNode> func_list;
+nonterminal ArrayList<VisualizableTreeNode> varclass_list, class_block;
+nonterminal ArrayList<IdNode> idclass_list;
 // top level
 nonterminal AbstractSyntaxNode func_decl;
+nonterminal AbstractSyntaxNode class_decl, varclass_decl;
 
 
 start with program;
@@ -62,7 +65,9 @@ id ::= IDENTIFIER:o
 	{:  Token id = (Token)o;
 		RESULT = new IdNode(id.value(), id.position());:};
 
-type ::= INT:o {: RESULT = o.value(); :} | BOOL:o {: RESULT = o.value(); :};
+type ::= INT:o {: RESULT = o.value(); :} | BOOL:o {: RESULT = o.value(); :}
+		| id:id {: RESULT = ((IdNode)id).id; :};
+		
 dimension ::= | INTEGER_LITERAL:t 
 	{:	String s = t.value();
 		RESULT = new IntegerLiteralNode(Long.parseLong(s), t.position()); :};
@@ -102,11 +107,87 @@ func_decl ::= id:id OPEN_PAREN func_list:list CLOSE_PAREN types:types
 	{:	FuncDeclNode func_decl = new FuncDeclNode((IdNode)id, list, types, null, id.position());
 		RESULT = func_decl; :};
 
+class_decl ::= CLASS:c id:id OPEN_BRACE:t class_block:b CLOSE_BRACE:e
+	{:
+		ClassNode class_node = new ClassNode((IdNode)id, span(c.position(), e.position()));
+		class_node.children.addAll(b);
+		RESULT = class_node;
+	:}
+	| CLASS:c id:id EXTENDS id:ex OPEN_BRACE:t class_block:b CLOSE_BRACE:e
+	{:
+		ClassNode class_node = new ClassNode((IdNode)id, span(c.position(), e.position()));
+		class_node.children.addAll(b);
+		class_node.ex = (IdNode)ex;
+		RESULT = class_node;
+	:};
+	
+class_block ::= varclass_list:list
+	{:
+		RESULT = list;
+	:}
+	| func_decl:s
+	{:
+		ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(s);
+		RESULT = list;
+	:}
+	| class_block:list varclass_list:decls
+	{:
+		list.addAll(decls);
+		RESULT = list;
+	:}
+	| class_block:list func_decl:s
+	{:
+		list.add(s);
+		RESULT = list;
+	:};
+	
+varclass_list ::= varclass_decl:s 
+	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(s);
+		RESULT = list; :}
+	| idclass_list:idlist COLON type:t bracket_list:arr
+	{:	
+		ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		for (IdNode id : idlist){
+			list.add(new ClassDeclNode(id, t, arr, id.position()));
+		}
+		RESULT = list; :};
+	
+varclass_decl ::= id:id COLON type:t bracket_list:arr
+	{:	// check that arr is empty
+		ClassDeclNode decl = new ClassDeclNode((IdNode)id, t, arr, id.position());
+		RESULT = decl;:};
+		
+
+		
+idclass_list ::= id:id1 COMMA id:id2
+	{:
+		ArrayList<IdNode> list = new ArrayList<IdNode>();
+		list.add((IdNode)id1);
+		list.add((IdNode)id2);
+		RESULT = list;
+	:}
+	| idclass_list:list COMMA id:id
+	{:
+		list.add((IdNode)id);
+		RESULT = list;
+	:};
+
 program ::= func_decl:s
 	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
 		RESULT = program; :}
+	| class_decl:s
+	{:	ProgramNode program = new ProgramNode(s.position());
+		program.add(s);
+		RESULT = program; :}
 	| program:p func_decl:s
+	{:	ProgramNode program = (ProgramNode)p;
+		program.add(s);
+		program.position = span(p.position(), s.position());
+		RESULT = program; :}
+	| program:p class_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
 		program.position = span(p.position(), s.position());
