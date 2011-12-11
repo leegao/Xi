@@ -26,6 +26,7 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
+// class instance variable declaration
 public class ClassDeclNode extends AbstractSyntaxTree {
 	public Position position;
 	/**The id of this variable declaration.*/

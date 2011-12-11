@@ -10,10 +10,10 @@ _If_i:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq $-3, %rbx		# movq $-3, %r(3161)
-	movq %rbx, %rax		# movq %r(3161), %rax
-	jmp .L623		# jmp .L623
-	.L623:		# .L623:
+	movq $-3, %rbx		# movq $-3, %r(2263)
+	movq %rbx, %rax		# movq %r(2263), %rax
+	jmp .L359		# jmp .L359
+	.L359:		# .L359:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -34,10 +34,10 @@ _Ig_i:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq $2, %rbx		# movq $2, %r(3162)
-	movq %rbx, %rax		# movq %r(3162), %rax
-	jmp .L624		# jmp .L624
-	.L624:		# .L624:
+	movq $2, %rbx		# movq $2, %r(2264)
+	movq %rbx, %rax		# movq %r(2264), %rax
+	jmp .L360		# jmp .L360
+	.L360:		# .L360:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -58,49 +58,49 @@ _Imain_paai:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $1, %r12		# movq $1, %r(3163)
-	movq %r12, %r13		# movq %r(3163), %r(3153)
+	movq %rdi, %rbx		# movq %rdi, %r(2254)
+	movq $1, %r12		# movq $1, %r(2265)
+	movq %r12, %r13		# movq %r(2265), %r(2255)
 	call _If_i		# call _If_i
-	movq %rax, %rbx		# movq %rax, %r(3155)
+	movq %rax, %rbx		# movq %rax, %r(2257)
 	call _Ig_i		# call _Ig_i
-	movq %rax, %r12		# movq %rax, %r(3156)
-	movq %rbx, %rax		# movq %r(3155), %rax
+	movq %rax, %r12		# movq %rax, %r(2258)
+	movq %rbx, %rax		# movq %r(2257), %rax
 	cqto		# cqto
-	idivq %r12		# idivq %r(3156)
-	movq %rax, %rbx		# movq %rax, %r(3164)
-	movq $-1, %r12		# movq $-1, %r(3165)
-	cmpq %r12, %rbx		# cmpq %r(3165), %r(3164)
-	je .L626		# je .L626
-	.L627:		# .L627:
-	movq $0, %r12		# movq $0, %r(3166)
-	movq %r12, %r13		# movq %r(3166), %r(3153)
-	jmp .L626		# jmp .L626
-	.L626:		# .L626:
-	movq %r13, %rdi		# movq %r(3153), %rdi
+	idivq %r12		# idivq %r(2258)
+	movq %rax, %rbx		# movq %rax, %r(2266)
+	movq $-1, %r12		# movq $-1, %r(2267)
+	cmpq %r12, %rbx		# cmpq %r(2267), %r(2266)
+	je .L362		# je .L362
+	.L363:		# .L363:
+	movq $0, %r12		# movq $0, %r(2268)
+	movq %r12, %r13		# movq %r(2268), %r(2255)
+	jmp .L362		# jmp .L362
+	.L362:		# .L362:
+	movq %r13, %rdi		# movq %r(2255), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	movq $1, %r12		# movq $1, %r(3167)
-	movq %r12, %r13		# movq %r(3167), %r(3154)
+	movq $1, %r12		# movq $1, %r(2269)
+	movq %r12, %r13		# movq %r(2269), %r(2256)
 	call _If_i		# call _If_i
-	movq %rax, %rbx		# movq %rax, %r(3158)
+	movq %rax, %rbx		# movq %rax, %r(2260)
 	call _Ig_i		# call _Ig_i
-	movq %rax, %r12		# movq %rax, %r(3159)
-	movq %rbx, %rax		# movq %r(3158), %rax
+	movq %rax, %r12		# movq %rax, %r(2261)
+	movq %rbx, %rax		# movq %r(2260), %rax
 	cqto		# cqto
-	idivq %r12		# idivq %r(3159)
-	movq %rdx, %rbx		# movq %rdx, %r(3168)
-	movq $-1, %r12		# movq $-1, %r(3169)
-	cmpq %r12, %rbx		# cmpq %r(3169), %r(3168)
-	je .L628		# je .L628
-	.L629:		# .L629:
-	movq $0, %r12		# movq $0, %r(3170)
-	movq %r12, %r13		# movq %r(3170), %r(3154)
-	jmp .L628		# jmp .L628
-	.L628:		# .L628:
-	movq %r13, %rdi		# movq %r(3154), %rdi
+	idivq %r12		# idivq %r(2261)
+	movq %rdx, %rbx		# movq %rdx, %r(2270)
+	movq $-1, %r12		# movq $-1, %r(2271)
+	cmpq %r12, %rbx		# cmpq %r(2271), %r(2270)
+	je .L364		# je .L364
+	.L365:		# .L365:
+	movq $0, %r12		# movq $0, %r(2272)
+	movq %r12, %r13		# movq %r(2272), %r(2256)
+	jmp .L364		# jmp .L364
+	.L364:		# .L364:
+	movq %r13, %rdi		# movq %r(2256), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	jmp .L625		# jmp .L625
-	.L625:		# .L625:
+	jmp .L361		# jmp .L361
+	.L361:		# .L361:
 	popq %r15
 	popq %r14
 	popq %r13

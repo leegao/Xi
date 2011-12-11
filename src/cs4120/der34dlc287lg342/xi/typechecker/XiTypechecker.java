@@ -5,10 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Stack;
 
 import cs4120.der34dlc287lg342.xi.*;
 import cs4120.der34dlc287lg342.xi.ast.*;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -96,9 +100,10 @@ public class XiTypechecker {
 	 * an InvalidXiTypeException is thrown.*/
 	private void init() throws InvalidXiTypeException{
 		// first pass
+		ArrayList<ClassNode> classes = new ArrayList<ClassNode>();
 		// precondition: ast is a program node
 		for (VisualizableTreeNode child : ast.children()){
-			// either UseNode or FuncDeclNode
+			// either UseNode or FuncDeclNode or ClassNode
 			if (child instanceof FuncDeclNode){ //FUNCTION DECLARATION NODE
 				FuncDeclNode func = (FuncDeclNode)child;
 				IdNode identifier = (IdNode)func.id;
@@ -123,8 +128,67 @@ public class XiTypechecker {
 				} catch (InvalidXiTypeException e) {
 					throw new CompilationException(e.getMessage(), use.position());
 				}
+			} else if (child instanceof ClassNode){ 
+				ClassNode klass = (ClassNode)child;
+				XiObjectType type = new XiObjectType(klass);
+				
+				if (globalContext.classes.containsKey(klass.id.id))
+					throw new CompilationException("Classtype "+klass.id.id+" already exists", klass.position());
+				globalContext.classes.put(klass.id.id, type);
+				classes.add(klass);
 			} else {
 				throw new CompilationException("Invalid Abstract Syntax Tree", ((AbstractSyntaxNode)child).position());
+			}
+		}
+		
+		HashSet<String> seen = new HashSet<String>();
+		for (ClassNode klass : classes){
+			make_classmethods(klass, classes, seen);
+		}
+	}
+	
+	void make_classmethods(ClassNode klass, ArrayList<ClassNode> classes, HashSet<String> seen) throws InvalidXiTypeException{
+		if (seen.contains(klass.id.id))
+			return;
+		seen.add(klass.id.id);
+		
+		XiObjectType type = globalContext.classes.get(klass.id.id);
+		
+		if (type.layout.parent != null){
+			XiObjectType parent_type = globalContext.classes.get(type.layout.parent);
+			if (parent_type == null){
+				throw new CompilationException("Class type "+type.layout.parent+" is undefined.", klass.position());
+			}
+			ClassNode parent = null;
+			for (ClassNode parentclass : classes){
+				if (parentclass.id.id.equals(type.layout.parent)){
+					parent = parentclass;
+					break;
+				}
+			}
+			
+			if (parent == null)
+				throw new CompilationException("Class type "+type.layout.parent+" is undefined.", klass.position());
+			
+			make_classmethods(parent, classes, seen);
+			type.layout.parent_type = (XiObjectType) parent.type;
+		}
+		
+		
+		for (VisualizableTreeNode child : klass.children){
+			if (child instanceof FuncDeclNode){ // method
+				FuncDeclNode func = (FuncDeclNode)child;
+				IdNode identifier = (IdNode)func.id;
+				try {
+					globalContext.add(type.mangle(identifier.id), func.type);
+				} catch (InvalidXiTypeException e) {
+					throw new CompilationException(e.getMessage(), func.position());
+				}
+				globalContext.method_classes.put(func, type);
+				type.add_method(type.mangle(identifier.id), func);
+			} else if (child instanceof ClassDeclNode){
+				// add it into the decl table
+				type.add_variable(((ClassDeclNode)child).id.id, (ClassDeclNode)child);
 			}
 		}
 	}

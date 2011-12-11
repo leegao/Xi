@@ -10,18 +10,18 @@ _Imain_paai:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq %rdi, %rbx		# movq %rdi, %r(args)
-	movq $5, %rbx		# movq $5, %r(3298)
-	movq %rbx, %rdi		# movq %r(3298), %rdi
+	movq %rdi, %rbx		# movq %rdi, %r(4058)
+	movq $5, %rbx		# movq $5, %r(4066)
+	movq %rbx, %rdi		# movq %r(4066), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(3292)
-	movq %rbx, %rdi		# movq %r(3292), %rdi
+	movq %rax, %rbx		# movq %rax, %r(4060)
+	movq %rbx, %rdi		# movq %r(4060), %rdi
 	call _IunparseInt_aii		# call _IunparseInt_aii
-	movq %rax, %rbx		# movq %rax, %r(3293)
-	movq %rbx, %rdi		# movq %r(3293), %rdi
+	movq %rax, %rbx		# movq %rax, %r(4061)
+	movq %rbx, %rdi		# movq %r(4061), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
-	jmp .L671		# jmp .L671
-	.L671:		# .L671:
+	jmp .L713		# jmp .L713
+	.L713:		# .L713:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -42,20 +42,20 @@ _Ifact_ii:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq %rdi, %r15		# movq %rdi, %r(a)
-	movq %r15, %rdi		# movq %r(a), %rdi
+	movq %rdi, %r15		# movq %rdi, %r(4059)
+	movq %r15, %rdi		# movq %r(4059), %rdi
 	call _IunparseInt_aii		# call _IunparseInt_aii
-	movq %rax, %rbx		# movq %rax, %r(3295)
-	movq %rbx, %rdi		# movq %r(3295), %rdi
+	movq %rax, %rbx		# movq %rax, %r(4063)
+	movq %rbx, %rdi		# movq %r(4063), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
-	movq $1, %rbx		# movq $1, %r(3299)
-	cmpq %rbx, %r15		# cmpq %r(3299), %r(a)
-	jne .L674		# jne .L674
-	.L673:		# .L673:
-	movq $1, %rbx		# movq $1, %r(3300)
-	movq %rbx, %rax		# movq %r(3300), %rax
-	jmp .L672		# jmp .L672
-	.L672:		# .L672:
+	movq $1, %rbx		# movq $1, %r(4067)
+	cmpq %rbx, %r15		# cmpq %r(4067), %r(4059)
+	jne .L716		# jne .L716
+	.L715:		# .L715:
+	movq $1, %rbx		# movq $1, %r(4068)
+	movq %rbx, %rax		# movq %r(4068), %rax
+	jmp .L714		# jmp .L714
+	.L714:		# .L714:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -65,15 +65,15 @@ _Ifact_ii:
 	movq %rbp, %rsp
 	popq %rbp
 	ret
-	.L674:		# .L674:
-	movq $1, %rbx		# movq $1, %r(3301)
-	movq %r15, %r13		# movq %r(a), %r(3302)
-	subq %rbx, %r13		# subq %r(3301), %r(3302)
-	movq %r13, %rdi		# movq %r(3302), %rdi
+	.L716:		# .L716:
+	movq $1, %rbx		# movq $1, %r(4069)
+	movq %r15, %r13		# movq %r(4059), %r(4070)
+	subq %rbx, %r13		# subq %r(4069), %r(4070)
+	movq %r13, %rdi		# movq %r(4070), %rdi
 	call _Ifact_ii		# call _Ifact_ii
-	movq %rax, %rbx		# movq %rax, %r(3297)
-	movq %r15, %r13		# movq %r(a), %r(3303)
-	imulq %rbx, %r13		# imulq %r(3297), %r(3303)
-	movq %r13, %rax		# movq %r(3303), %rax
-	jmp .L672		# jmp .L672
+	movq %rax, %rbx		# movq %rax, %r(4065)
+	movq %r15, %r13		# movq %r(4059), %r(4071)
+	imulq %rbx, %r13		# imulq %r(4065), %r(4071)
+	movq %r13, %rax		# movq %r(4071), %rax
+	jmp .L714		# jmp .L714
 	

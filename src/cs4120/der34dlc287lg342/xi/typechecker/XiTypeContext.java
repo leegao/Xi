@@ -2,16 +2,22 @@ package cs4120.der34dlc287lg342.xi.typechecker;
 
 import java.util.HashMap;
 
+import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
+
 public class XiTypeContext {
 	public HashMap<String, XiType> symbols;
 	public XiFunctionType returnType;
 	public boolean isBreakable;
+	public HashMap<String, XiObjectType> classes;
+	public HashMap<FuncDeclNode, XiObjectType> method_classes;
 	
 	public XiTypeContext(XiFunctionType r, boolean b){
 		returnType = r;
 		isBreakable = b;
 		
 		symbols = new HashMap<String, XiType>();
+		classes = new HashMap<String, XiObjectType>();
+		method_classes = new HashMap<FuncDeclNode, XiObjectType>();
 	}
 	
 	public XiTypeContext(XiFunctionType r){
