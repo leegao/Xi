@@ -147,6 +147,7 @@ public class XiTypechecker {
 			make_classmethods(klass, classes, seen);
 			
 			ContextList stack = new ContextList();
+			stack.in_class = true;
 			stack.top = globalContext;
 			stack.add(globalContext);
 			XiTypeContext context = new XiTypeContext(false);

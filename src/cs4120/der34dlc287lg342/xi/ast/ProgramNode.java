@@ -87,7 +87,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 				if(!(childType instanceof XiFunctionType))
 					throw new CompilationException("Invalid program",position);
 			} else if (childTree instanceof ClassNode){
-				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
+				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack.top.class_context.get(((ClassNode)childTree).id.id));
 				
 				if(!(childType instanceof XiObjectType))
 					throw new CompilationException("Invalid program, expected Object type but got "+childType+" instead.",position);

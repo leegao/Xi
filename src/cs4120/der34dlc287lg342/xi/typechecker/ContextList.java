@@ -6,6 +6,7 @@ public class ContextList extends ArrayList<XiTypeContext> {
 	private static final long serialVersionUID = 1802449172139979643L;
 
 	public XiTypeContext top = null;
+	public boolean in_class = false;
 	
 	public XiTypeContext top() throws InvalidXiTypeException{
 		if (this.isEmpty())

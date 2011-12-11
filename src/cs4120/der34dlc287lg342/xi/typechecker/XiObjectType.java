@@ -28,7 +28,8 @@ public class XiObjectType implements XiType {
 	}
 	
 	public String mangle(String id) {
-		return "_"+layout.name+"_"+id;
+		return id;
+		//return "_"+layout.name+"_"+id;
 	}
 
 
