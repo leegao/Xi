@@ -13,9 +13,9 @@ public abstract class ExpressionNode extends AbstractSyntaxTree {
 
 	
 	@Override
-	public XiType typecheck(ContextList stack) throws CompilationException{
+	public abstract XiType typecheck(ContextList stack) throws CompilationException;/*{
 		return type;
-	}
+	}*/
 
 	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
 		return null;

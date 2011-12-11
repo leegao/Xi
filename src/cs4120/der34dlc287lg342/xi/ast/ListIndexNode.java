@@ -22,6 +22,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
@@ -63,8 +64,8 @@ public class ListIndexNode extends ExpressionNode {
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		// typecheck id
 		XiType expr_type = ((AbstractSyntaxTree)expr).typecheck(stack);
-		if (!(expr_type instanceof XiPrimitiveType))
-			throw new CompilationException("Cannot index into a non-primitive type",position());
+		if (!(expr_type instanceof XiPrimitiveType || expr_type instanceof XiObjectType))
+			throw new CompilationException("Cannot index into a non-primitive/object type",position());
 		if (!((XiPrimitiveType)expr_type).isArrayType())
 			throw new CompilationException("Cannot index into a non-array type",position());
 		XiPrimitiveType t = (XiPrimitiveType)((XiPrimitiveType)expr_type).clone();

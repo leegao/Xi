@@ -40,9 +40,7 @@ public abstract class AbstractSyntaxTree implements AbstractSyntaxNode {
 	 * @param stack 	A list of Contexts that contain the most up to date bindings.
 	 * @return The type of this node. If the type check fails a CompilationException
 	 * is thrown.*/
-	public XiType typecheck(ContextList stack) throws CompilationException{
-		return null;
-	}
+	public abstract XiType typecheck(ContextList stack) throws CompilationException;
 
 	// return null if not actually constant folding, return ast if expression can be folded
 	public AbstractSyntaxTree foldConstants(){

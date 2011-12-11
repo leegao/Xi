@@ -20,6 +20,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
@@ -80,10 +81,17 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 		}
 		
 		try {
-			XiType t = new XiPrimitiveType(type_name, brackets);
-			stack.add_id(id.id, t);
-			if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
-				throw new CompilationException("Cannot match the type of the object to the declared type", position());
+			if (stack.top.classes.containsKey(type_name)){
+				XiType t = new XiObjectType(stack.top.classes.get(type_name), brackets);
+				stack.add_id(id.id, t);
+				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
+					throw new CompilationException("Cannot match the type of the object to the declared type", position());
+			} else {
+				XiType t = new XiPrimitiveType(type_name, brackets);
+				stack.add_id(id.id, t);
+				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
+					throw new CompilationException("Cannot match the type of the object to the declared type", position());
+			}
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());
 		}
