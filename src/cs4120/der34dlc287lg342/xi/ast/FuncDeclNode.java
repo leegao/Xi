@@ -84,7 +84,16 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 			DeclNode decl = (DeclNode) arg;
 			IdNode id = (IdNode)decl.id;
 			try {
-				frame.add(id.id, new XiPrimitiveType(decl.type_name, decl.brackets));
+				
+				if (stack.top.classes.containsKey(decl.type_name)){
+					XiType t = new XiObjectType(stack.top.classes.get(decl.type_name), decl.brackets);
+					frame.add(id.id, t);
+				} else {
+					XiType t = new XiPrimitiveType(decl.type_name, decl.brackets);
+					frame.add(id.id, t);
+				}
+				
+				//frame.add(id.id, new XiPrimitiveType(decl.type_name, decl.brackets));
 			} catch (InvalidXiTypeException e) {
 				throw new CompilationException(e.getMessage(), position());
 			}
