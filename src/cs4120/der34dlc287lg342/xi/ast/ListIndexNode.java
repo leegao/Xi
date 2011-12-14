@@ -66,19 +66,38 @@ public class ListIndexNode extends ExpressionNode {
 		XiType expr_type = ((AbstractSyntaxTree)expr).typecheck(stack);
 		if (!(expr_type instanceof XiPrimitiveType || expr_type instanceof XiObjectType))
 			throw new CompilationException("Cannot index into a non-primitive/object type",position());
-		if (!((XiPrimitiveType)expr_type).isArrayType())
-			throw new CompilationException("Cannot index into a non-array type",position());
-		XiPrimitiveType t = (XiPrimitiveType)((XiPrimitiveType)expr_type).clone();
-		t.dimension.remove(0);
 		
-		XiType index_type = ((AbstractSyntaxTree)index).typecheck(stack);
-		if (!(index_type instanceof XiPrimitiveType))
-			throw new CompilationException("Cannot use nonprimitive indices",position());
-		if (!((XiPrimitiveType)index_type).equals(XiPrimitiveType.INT))
-			throw new CompilationException("Cannot use noninteger indices",position());
+		if (expr_type instanceof XiPrimitiveType){
+			if (!((XiPrimitiveType)expr_type).isArrayType())
+				throw new CompilationException("Cannot index into a non-array type",position());
+			XiPrimitiveType t = (XiPrimitiveType)((XiPrimitiveType)expr_type).clone();
+			t.dimension.remove(0);
+			
+			XiType index_type = ((AbstractSyntaxTree)index).typecheck(stack);
+			if (!(index_type instanceof XiPrimitiveType))
+				throw new CompilationException("Cannot use nonprimitive indices",position());
+			if (!((XiPrimitiveType)index_type).equals(XiPrimitiveType.INT))
+				throw new CompilationException("Cannot use noninteger indices",position());
+			
+			type = t;
+			return t;
+		} else if (expr_type instanceof XiObjectType){
+			if (!((XiObjectType)expr_type).isArrayType())
+				throw new CompilationException("Cannot index into a non-array type",position());
+			XiObjectType t = new XiObjectType((XiObjectType) expr_type, new ArrayList<VisualizableTreeNode>(((XiObjectType) expr_type).dimension));
+			t.dimension.remove(0);
+			
+			XiType index_type = ((AbstractSyntaxTree)index).typecheck(stack);
+			if (!(index_type instanceof XiPrimitiveType))
+				throw new CompilationException("Cannot use nonprimitive indices",position());
+			if (!((XiPrimitiveType)index_type).equals(XiPrimitiveType.INT))
+				throw new CompilationException("Cannot use noninteger indices",position());
+			
+			type = t;
+			return t;
+		}
 		
-		type = t;
-		return t;
+		return null;
 	}
 	
 	@Override

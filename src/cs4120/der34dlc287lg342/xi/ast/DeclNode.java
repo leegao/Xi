@@ -140,7 +140,7 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 		// check that brackets is dimensionless
 		if (brackets.isEmpty())
-			return new IRTranslationStmt(new Seq());
+			return new IRTranslationStmt(new Seq(new Move(r, new Const(0))));
 		
 		// check that our dimensions are not undefined
 		if (brackets.get(0) == null){

@@ -16,6 +16,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
@@ -94,29 +95,54 @@ public class ListNode extends ExpressionNode {
 			type = XiPrimitiveType.WILDCARD_ARR;
 			return type;
 		} else {
-			// case 2: int/bool primitive 
+			// case 2: int/bool primitive
 			XiType t = null;
 			for (VisualizableTreeNode child : children){
 				AbstractSyntaxTree node = (AbstractSyntaxTree)child;
 				XiType new_t = node.typecheck(stack);
-				if (!(new_t instanceof XiPrimitiveType))
+				if (!(new_t instanceof XiPrimitiveType || new_t instanceof XiObjectType))
 					throw new CompilationException("Lists must have primitive base types", position());
 				if (t == null){
 					t = new_t;
 				} else {
 					// check t = new_t
-					if (!t.equals(new_t))
-						throw new CompilationException("List construction expected type "+t+", but got "+new_t+" instead", position());
-					if (((XiPrimitiveType)t).sameBaseType((XiPrimitiveType) XiPrimitiveType.WILDCARD_ARR)){
-						t = new_t;
+					if ((t instanceof XiPrimitiveType && new_t instanceof XiObjectType) || (new_t instanceof XiPrimitiveType && t instanceof XiObjectType)){
+						throw new CompilationException("Cannot mix primitive types and object types in list construction.", position());
+					}
+					
+					if (t instanceof XiPrimitiveType){
+						if (!t.equals(new_t))
+							throw new CompilationException("List construction expected type "+t+", but got "+new_t+" instead", position());
+						if (((XiPrimitiveType)t).sameBaseType((XiPrimitiveType) XiPrimitiveType.WILDCARD_ARR)){
+							t = new_t;
+						}
+					} else {
+						// both are object types
+						// first check equality
+						if (!((XiObjectType) t).ge(new_t)){
+							// if new_t is get than t, t = new_t
+							if (((XiObjectType) new_t).ge(t)){
+								t = new_t;
+							} else {
+								throw new CompilationException("List construction expected type "+t+" or derived, but got "+new_t+" instead", position());
+							}
+						}
 					}
 				}
 			}
-			XiPrimitiveType base = XiPrimitiveType.array((XiPrimitiveType) t);
 			
+			XiType base = null;
+			
+			if (t instanceof XiPrimitiveType)
+				base = XiPrimitiveType.array((XiPrimitiveType) t);
+			else{
+				ArrayList<VisualizableTreeNode> dim = new ArrayList<VisualizableTreeNode>();
+				dim.add(null);
+				base = new XiObjectType((XiObjectType) t, dim);
+			}
 			type = base;
 			return type;
-		}
+		} 
 	}
 	
 	@Override

@@ -78,9 +78,9 @@ precedence left LT, LEQ, GT, GEQ;
 precedence left PLUS, MINUS;
 precedence left TIMES, DIVIDE, MODULO;
 precedence nonassoc UMINUS, UNOT;
-precedence left PERIOD;
-precedence nonassoc OPEN_BRACKET;
 
+precedence nonassoc OPEN_BRACKET;
+precedence nonassoc PERIOD;
 
 start with program;
 
