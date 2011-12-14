@@ -272,6 +272,7 @@ public class TestParser extends TestCase {
 	public void testInvalidUnderscoreDecalration() {
 		try {
 			gen("func() { _ = false  }").parse();
+			//fail here- darbin
 			fail("Did not catch compilation error");
 		} catch (CompilationException e) {
 			assertEquals("((1, 12), (1, 12))", e.getPosition().toString());
@@ -325,9 +326,11 @@ public class TestParser extends TestCase {
 	}
 	
 	public void testPA4Issue() {
+		//fail here-darbin
 		checkType(gen("main() {b:bool = 3+-3*40/4/5*2 == -9}"), new String[] {
 			"PROGRAM", "FUNCDECL", "ID(main)", "BLOCK", "INST", "DECL", "ID(b)", "EQ(EQUAL)"
 		});
+		
 	
 	}
 	
@@ -338,10 +341,5 @@ public class TestParser extends TestCase {
 		}
 	}
 	
-	public void testClasses() throws Exception{
-		Parser p = gen("class Point { x,y:int "+
-						"move(dx:int, dy:int){x = x + dx y = y + dy} }");
-		AbstractSyntaxNode program = p.parse();
-		printtree(program, "");
-	}
+	
 }

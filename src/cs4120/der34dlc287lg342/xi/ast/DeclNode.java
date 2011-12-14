@@ -34,16 +34,24 @@ public class DeclNode extends AbstractSyntaxTree {
 	public IdNode id;
 	/**The base type of this variable declaration*/
 	public String type_name;
-	/**If this represents an array declaration than this field contains any dimension
+	/**If this represents an array declaration then this field contains any dimension
 	 * specifiers.*/
 	public ArrayList<VisualizableTreeNode> brackets;
 	public ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
-	
-	
+		
 	public DeclNode(IdNode id, String type, ArrayList<VisualizableTreeNode> brackets, Position position){
 		this.id = id;
 		this.type_name = type;
 		this.brackets = brackets;
+		this.position = position;
+		children.add(id);
+	}
+	
+	/** non array decl*/
+	public DeclNode(IdNode id, String type, Position position){
+		this.id = id;
+		this.type_name = type;
+		this.brackets = new ArrayList<VisualizableTreeNode>();
 		this.position = position;
 		children.add(id);
 	}
@@ -79,10 +87,13 @@ public class DeclNode extends AbstractSyntaxTree {
 				throw new CompilationException("Cannot declare arrays with non-integer dimension", position());
 		}
 		
+		//add the id and its type to the context stack
 		try {
 			XiType t = new XiPrimitiveType(type_name, brackets);
 			stack.add_id(id.id, t);
-			if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
+			AbstractSyntaxTree temp=(AbstractSyntaxTree)id;
+			XiType temptype=temp.typecheck(stack);
+			if (! t.equals(temptype))
 				throw new CompilationException("Cannot match the type of the object to the declared type", position());
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());
@@ -210,4 +221,9 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 		return new Eseq(base, seq);
 	}
+	
+	public String toString(){
+		return label()+"["+type_name+"]";
+	}
+	
 }

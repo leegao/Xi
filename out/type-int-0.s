@@ -10,19 +10,19 @@ _Itest_paib:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq %rdi, %rbx		# movq %rdi, %r(msg)
-	movq %rsi, %r12		# movq %rsi, %r(result)
-	leaq .L319(%rip), %rdi		# leaq .L319(%rip), %rdi
+	movq %rdi, %rbx		# movq %rdi, %r(6119)
+	movq %rsi, %r12		# movq %rsi, %r(6120)
+	leaq .L1004(%rip), %rdi		# leaq .L1004(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %r13		# movq %rax, %r(1948)
-	movq %r13, %rdi		# movq %r(1948), %rdi
+	movq %rax, %r13		# movq %rax, %r(6131)
+	movq %r13, %rdi		# movq %r(6131), %rdi
 	call _Iprint_pai		# call _Iprint_pai
-	movq %rbx, %rdi		# movq %r(msg), %rdi
+	movq %rbx, %rdi		# movq %r(6119), %rdi
 	call _Iprintln_pai		# call _Iprintln_pai
-	movq %r12, %rdi		# movq %r(result), %rdi
+	movq %r12, %rdi		# movq %r(6120), %rdi
 	call _Iassert_pb		# call _Iassert_pb
-	jmp .L318		# jmp .L318
-	.L318:		# .L318:
+	jmp .L1003		# jmp .L1003
+	.L1003:		# .L1003:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -43,65 +43,65 @@ _Imain_paai:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq %rdi, %rbx		# movq %rdi, %r(args)
-	leaq .L321(%rip), %rdi		# leaq .L321(%rip), %rdi
+	movq %rdi, %rbx		# movq %rdi, %r(6121)
+	leaq .L1006(%rip), %rdi		# leaq .L1006(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %rbx		# movq %rax, %r(1952)
-	.L322:		# .L322:
-	movq $1, %r12		# movq $1, %r(1969)
-	movq %rbx, %rdi		# movq %r(1952), %rdi
-	movq %r12, %rsi		# movq %r(1969), %rsi
+	movq %rax, %rbx		# movq %rax, %r(6135)
+	.L1007:		# .L1007:
+	movq $1, %r12		# movq $1, %r(6152)
+	movq %rbx, %rdi		# movq %r(6135), %rdi
+	movq %r12, %rsi		# movq %r(6152), %rsi
 	call _Itest_paib		# call _Itest_paib
-	leaq .L324(%rip), %rdi		# leaq .L324(%rip), %rdi
+	leaq .L1009(%rip), %rdi		# leaq .L1009(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %rbx		# movq %rax, %r(1954)
-	.L325:		# .L325:
-	movq $1, %r12		# movq $1, %r(1971)
-	movq %rbx, %rdi		# movq %r(1954), %rdi
-	movq %r12, %rsi		# movq %r(1971), %rsi
+	movq %rax, %rbx		# movq %rax, %r(6137)
+	.L1010:		# .L1010:
+	movq $1, %r12		# movq $1, %r(6154)
+	movq %rbx, %rdi		# movq %r(6137), %rdi
+	movq %r12, %rsi		# movq %r(6154), %rsi
 	call _Itest_paib		# call _Itest_paib
-	leaq .L327(%rip), %rdi		# leaq .L327(%rip), %rdi
+	leaq .L1012(%rip), %rdi		# leaq .L1012(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %rbx		# movq %rax, %r(1956)
-	.L328:		# .L328:
-	movq $1, %r12		# movq $1, %r(1973)
-	movq %rbx, %rdi		# movq %r(1956), %rdi
-	movq %r12, %rsi		# movq %r(1973), %rsi
+	movq %rax, %rbx		# movq %rax, %r(6139)
+	.L1013:		# .L1013:
+	movq $1, %r12		# movq $1, %r(6156)
+	movq %rbx, %rdi		# movq %r(6139), %rdi
+	movq %r12, %rsi		# movq %r(6156), %rsi
 	call _Itest_paib		# call _Itest_paib
-	leaq .L330(%rip), %rdi		# leaq .L330(%rip), %rdi
+	leaq .L1015(%rip), %rdi		# leaq .L1015(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %rbx		# movq %rax, %r(1958)
-	.L331:		# .L331:
-	movq $1, %r12		# movq $1, %r(1975)
-	movq %rbx, %rdi		# movq %r(1958), %rdi
-	movq %r12, %rsi		# movq %r(1975), %rsi
+	movq %rax, %rbx		# movq %rax, %r(6141)
+	.L1016:		# .L1016:
+	movq $1, %r12		# movq $1, %r(6158)
+	movq %rbx, %rdi		# movq %r(6141), %rdi
+	movq %r12, %rsi		# movq %r(6158), %rsi
 	call _Itest_paib		# call _Itest_paib
-	leaq .L333(%rip), %rdi		# leaq .L333(%rip), %rdi
+	leaq .L1018(%rip), %rdi		# leaq .L1018(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %rbx		# movq %rax, %r(1960)
-	.L334:		# .L334:
-	movq $1, %r12		# movq $1, %r(1977)
-	movq %rbx, %rdi		# movq %r(1960), %rdi
-	movq %r12, %rsi		# movq %r(1977), %rsi
+	movq %rax, %rbx		# movq %rax, %r(6143)
+	.L1019:		# .L1019:
+	movq $1, %r12		# movq $1, %r(6160)
+	movq %rbx, %rdi		# movq %r(6143), %rdi
+	movq %r12, %rsi		# movq %r(6160), %rsi
 	call _Itest_paib		# call _Itest_paib
-	leaq .L336(%rip), %rdi		# leaq .L336(%rip), %rdi
+	leaq .L1021(%rip), %rdi		# leaq .L1021(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %rbx		# movq %rax, %r(1962)
-	.L337:		# .L337:
-	movq $1, %r12		# movq $1, %r(1979)
-	movq %rbx, %rdi		# movq %r(1962), %rdi
-	movq %r12, %rsi		# movq %r(1979), %rsi
+	movq %rax, %rbx		# movq %rax, %r(6145)
+	.L1022:		# .L1022:
+	movq $1, %r12		# movq $1, %r(6162)
+	movq %rbx, %rdi		# movq %r(6145), %rdi
+	movq %r12, %rsi		# movq %r(6162), %rsi
 	call _Itest_paib		# call _Itest_paib
-	leaq .L339(%rip), %rdi		# leaq .L339(%rip), %rdi
+	leaq .L1024(%rip), %rdi		# leaq .L1024(%rip), %rdi
 	call _I_c_internal_strdup_aii		# call _I_c_internal_strdup_aii
-	movq %rax, %rbx		# movq %rax, %r(1964)
-	.L340:		# .L340:
-	movq $1, %r12		# movq $1, %r(1981)
-	movq %rbx, %rdi		# movq %r(1964), %rdi
-	movq %r12, %rsi		# movq %r(1981), %rsi
+	movq %rax, %rbx		# movq %rax, %r(6147)
+	.L1025:		# .L1025:
+	movq $1, %r12		# movq $1, %r(6164)
+	movq %rbx, %rdi		# movq %r(6147), %rdi
+	movq %r12, %rsi		# movq %r(6164), %rsi
 	call _Itest_paib		# call _Itest_paib
-	jmp .L320		# jmp .L320
-	.L320:		# .L320:
+	jmp .L1005		# jmp .L1005
+	.L1005:		# .L1005:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -122,54 +122,54 @@ _I_c_internal_strdup_aii:
 	pushq %r13
 	pushq %r14
 	pushq %r15
-	movq %rdi, %rbx		# movq %rdi, %r(1994)
-	movq %rbx, -24(%rbp)		# movq %r(1994), -24(%rbp)
-	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(1995)
-	movq (%rbx), %r13		# movq (%r(1995)), %r(1982)
-	movq %r13, %r12		# movq %r(1982), %r(1996)
-	movq %r12, -8(%rbp)		# movq %r(1996), -8(%rbp)
-	movq -8(%rbp), %r12		# movq -8(%rbp), %r(1997)
-	movq %r12, %r13		# movq %r(1997), %r(1983)
-	salq $3, %r13		# salq $3, %r(1983)
-	movq $8, %rbx		# movq $8, %r(1984)
-	movq %r13, %r14		# movq %r(1983), %r(1985)
-	addq %rbx, %r14		# addq %r(1984), %r(1985)
-	movq %r14, %rdi		# movq %r(1985), %rdi
+	movq %rdi, %rbx		# movq %rdi, %r(6177)
+	movq %rbx, -24(%rbp)		# movq %r(6177), -24(%rbp)
+	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(6178)
+	movq (%rbx), %r13		# movq (%r(6178)), %r(6165)
+	movq %r13, %r12		# movq %r(6165), %r(6179)
+	movq %r12, -16(%rbp)		# movq %r(6179), -16(%rbp)
+	movq -16(%rbp), %r12		# movq -16(%rbp), %r(6180)
+	movq %r12, %r13		# movq %r(6180), %r(6166)
+	salq $3, %r13		# salq $3, %r(6166)
+	movq $8, %rbx		# movq $8, %r(6167)
+	movq %r13, %r14		# movq %r(6166), %r(6168)
+	addq %rbx, %r14		# addq %r(6167), %r(6168)
+	movq %r14, %rdi		# movq %r(6168), %rdi
 	call _I_alloc_i		# call _I_alloc_i
-	movq %rax, %r15		# movq %rax, %r(1966)
-	jmp .L111		# jmp .L111
-	.L111:		# .L111:
-	movq -8(%rbp), %r13		# movq -8(%rbp), %r(1998)
-	movq %r13, %rbx		# movq %r(1998), %r(1986)
-	salq $3, %rbx		# salq $3, %r(1986)
-	movq %r15, %r13		# movq %r(1966), %r(1987)
-	addq %rbx, %r13		# addq %r(1986), %r(1987)
-	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(1999)
-	movq %rbx, %r12		# movq %r(1999), %r(1988)
-	salq $3, %r12		# salq $3, %r(1988)
-	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(2000)
-	movq %rbx, %r14		# movq %r(2000), %r(2001)
-	movq %r14, -16(%rbp)		# movq %r(2001), -16(%rbp)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(2002)
-	addq %r12, %rbx		# addq %r(1988), %r(2002)
-	movq %rbx, -16(%rbp)		# movq %r(2002), -16(%rbp)
-	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(2003)
-	movq (%rbx), %r12		# movq (%r(2003)), %r(1990)
-	movq %r12, (%r13)		# movq %r(1990), (%r(1987))
-	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(2004)
-	decq %rbx		# decq %r(2004)
-	movq %rbx, -8(%rbp)		# movq %r(2004), -8(%rbp)
-	movq $0, %rbx		# movq $0, %r(1991)
-	movq -8(%rbp), %r12		# movq -8(%rbp), %r(2005)
-	cmpq %rbx, %r12		# cmpq %r(1991), %r(2005)
-	jge .L111		# jge .L111
-	.L112:		# .L112:
-	movq $8, %rbx		# movq $8, %r(1992)
-	movq %r15, %r13		# movq %r(1966), %r(1993)
-	addq %rbx, %r13		# addq %r(1992), %r(1993)
-	movq %r13, %rax		# movq %r(1993), %rax
-	jmp .L113		# jmp .L113
-	.L113:		# .L113:
+	movq %rax, %r15		# movq %rax, %r(6149)
+	jmp .L14		# jmp .L14
+	.L14:		# .L14:
+	movq -16(%rbp), %r13		# movq -16(%rbp), %r(6181)
+	movq %r13, %rbx		# movq %r(6181), %r(6169)
+	salq $3, %rbx		# salq $3, %r(6169)
+	movq %r15, %r13		# movq %r(6149), %r(6170)
+	addq %rbx, %r13		# addq %r(6169), %r(6170)
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(6182)
+	movq %rbx, %r12		# movq %r(6182), %r(6171)
+	salq $3, %r12		# salq $3, %r(6171)
+	movq -24(%rbp), %rbx		# movq -24(%rbp), %r(6183)
+	movq %rbx, %r14		# movq %r(6183), %r(6184)
+	movq %r14, -8(%rbp)		# movq %r(6184), -8(%rbp)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(6185)
+	addq %r12, %rbx		# addq %r(6171), %r(6185)
+	movq %rbx, -8(%rbp)		# movq %r(6185), -8(%rbp)
+	movq -8(%rbp), %rbx		# movq -8(%rbp), %r(6186)
+	movq (%rbx), %r12		# movq (%r(6186)), %r(6173)
+	movq %r12, (%r13)		# movq %r(6173), (%r(6170))
+	movq -16(%rbp), %rbx		# movq -16(%rbp), %r(6187)
+	decq %rbx		# decq %r(6187)
+	movq %rbx, -16(%rbp)		# movq %r(6187), -16(%rbp)
+	movq $0, %rbx		# movq $0, %r(6174)
+	movq -16(%rbp), %r12		# movq -16(%rbp), %r(6188)
+	cmpq %rbx, %r12		# cmpq %r(6174), %r(6188)
+	jge .L14		# jge .L14
+	.L15:		# .L15:
+	movq $8, %rbx		# movq $8, %r(6175)
+	movq %r15, %r13		# movq %r(6149), %r(6176)
+	addq %rbx, %r13		# addq %r(6175), %r(6176)
+	movq %r13, %rax		# movq %r(6176), %rax
+	jmp .L16		# jmp .L16
+	.L16:		# .L16:
 	popq %r15
 	popq %r14
 	popq %r13
@@ -182,36 +182,14 @@ _I_c_internal_strdup_aii:
 	
 #.section .rodata
 .align 8
-.L339:
-	.quad 2
-	.quad 37
-	.quad 50
-	.text
-
-#.section .rodata
-.align 8
-.L324:
+.L1015:
 	.quad 1
-	.quad 45
+	.quad 47
 	.text
 
 #.section .rodata
 .align 8
-.L336:
-	.quad 1
-	.quad 37
-	.text
-
-#.section .rodata
-.align 8
-.L327:
-	.quad 1
-	.quad 42
-	.text
-
-#.section .rodata
-.align 8
-.L319:
+.L1004:
 	.quad 8
 	.quad 84
 	.quad 101
@@ -225,7 +203,7 @@ _I_c_internal_strdup_aii:
 
 #.section .rodata
 .align 8
-.L333:
+.L1018:
 	.quad 2
 	.quad 47
 	.quad 50
@@ -233,15 +211,37 @@ _I_c_internal_strdup_aii:
 
 #.section .rodata
 .align 8
-.L330:
+.L1021:
 	.quad 1
-	.quad 47
+	.quad 37
 	.text
 
 #.section .rodata
 .align 8
-.L321:
+.L1024:
+	.quad 2
+	.quad 37
+	.quad 50
+	.text
+
+#.section .rodata
+.align 8
+.L1012:
+	.quad 1
+	.quad 42
+	.text
+
+#.section .rodata
+.align 8
+.L1006:
 	.quad 1
 	.quad 43
+	.text
+
+#.section .rodata
+.align 8
+.L1009:
+	.quad 1
+	.quad 45
 	.text
 

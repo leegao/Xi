@@ -39,6 +39,7 @@ public class TestTypechecker extends TestCase {
 	}
 	
 	public void testXiTypechecker() {
+		/*
 		try {
 			XiTypechecker tc = gen("use io main(a:int,b:int[][3]):int[2][]{c:int, d:bool = f();print(((),(2,2),(3,3,4))[1]); while (!(1 == -1)) {print((1,2,3,4,5,6,7)); a:int = (10,)[1]; break; if (true) {return ((),)} else if(false) {return ((),)} else {return ((),)} }} \n"+
 					" f():int,bool{a:bool = (true, false)[1] return 1,true}");
@@ -51,9 +52,11 @@ public class TestTypechecker extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 	}
 	
 	public void testXiTypecheckerArrArrIndex() {
+		/*
 		try {
 //			XiTypechecker tc = gen("use io main(){if (1 > 2 & true){}}");
 //			tc.typecheck();
@@ -75,6 +78,7 @@ public class TestTypechecker extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 	}
 	
 	public void testInvalidBreakAndPosition() {
@@ -245,5 +249,22 @@ public class TestTypechecker extends TestCase {
 		} catch (Exception e) {
 			System.out.println(e);
 		}
+	}
+	
+	public void testFinalTypechecking() {
+		System.out.println("--------------------------------");
+		
+		try {
+			XiTypechecker tc = gen("main():int{ x: final int=true  y: int  y=1 return x}");
+			tc.typecheck();
+		} catch (CompilationException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e);
+			fail();
+		} catch (InvalidXiTypeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -17,14 +17,35 @@ public class XiPrimitiveType implements XiType {
 	 * if they are specified in the declaration. */
 	ArrayList<Integer> static_dimension;
 	
+	/** is a constant primitive*/
+	public boolean is_final;
+	public boolean is_initialized;
+	
 	public XiPrimitiveType(String type, ArrayList<VisualizableTreeNode> dimension){
-		this.type = type;
+		
+		//set is_final
+		String temp[]=type.split(" ");
+		if(temp.length==2 && temp[0].equals("final")){
+			this.type=temp[1];
+			is_final=true;
+		}
+		else{
+			this.type = type;
+			is_final=false;
+		}
+		
+		is_initialized=false;
 		this.dimension = dimension;
 		this.static_dimension = null;
 	}
 	
+	
 	public XiPrimitiveType(String type){
 		this(type, new ArrayList<VisualizableTreeNode>());
+	}
+	
+	public void setInitialized(){
+		is_initialized=true;
 	}
 	
 //	public ArrayList<Integer> staticDimension(){
@@ -99,6 +120,23 @@ public class XiPrimitiveType implements XiType {
 	 * @return True if the base types of this and t2 are the same, false
 	 * otherwise.*/
 	public boolean sameBaseType(XiPrimitiveType t2){
+		/*
+		if(this.type.equals("final int") || t2.type.equals("final int")){
+			//one type is final
+			if(this.type.equals("final int")){ //this is final
+				if(t2.type.equals("int"))
+					return true;
+				else
+					return false;
+			}
+			else{ //t2 is final
+				if(this.type.equals("int"))
+					return true;
+				else
+					return false;
+			}
+		}
+		*/
 		return type.equals(t2.type) || type.equals("*") || t2.type.equals("*");
 	}
 	
