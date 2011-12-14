@@ -22,7 +22,7 @@ import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
-
+import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
@@ -39,12 +39,16 @@ public class DeclNode extends AbstractSyntaxTree {
 	public ArrayList<VisualizableTreeNode> brackets;
 	public ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 		
+	/**if this decl was part of an final var instantiation then this is its value else null*/
+	public AbstractSyntaxTree initial_value;
+	
 	public DeclNode(IdNode id, String type, ArrayList<VisualizableTreeNode> brackets, Position position){
 		this.id = id;
 		this.type_name = type;
 		this.brackets = brackets;
 		this.position = position;
 		children.add(id);
+		initial_value=null;
 	}
 	
 	/** non array decl*/
@@ -54,6 +58,12 @@ public class DeclNode extends AbstractSyntaxTree {
 		this.brackets = new ArrayList<VisualizableTreeNode>();
 		this.position = position;
 		children.add(id);
+	}
+	
+	/**called only when this decl is final var*/
+	public void setInitialValue(AbstractSyntaxNode v){
+		id.setInitialValue((AbstractSyntaxTree)v);
+		initial_value=(AbstractSyntaxTree)v;
 	}
 	
 	@Override
@@ -90,6 +100,10 @@ public class DeclNode extends AbstractSyntaxTree {
 		//add the id and its type to the context stack
 		try {
 			XiType t = new XiPrimitiveType(type_name, brackets);
+			
+			if(((XiPrimitiveType)t).is_final) //only valid if force init at decl time with parser
+				((XiPrimitiveType)t).setInitialValue(this.initial_value);
+			
 			stack.add_id(id.id, t);
 			AbstractSyntaxTree temp=(AbstractSyntaxTree)id;
 			XiType temptype=temp.typecheck(stack);

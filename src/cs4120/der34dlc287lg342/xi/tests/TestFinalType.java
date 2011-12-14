@@ -53,11 +53,7 @@ public class TestFinalType extends TestCase {
 	}
 	
 	public void testParse(){
-		final int x;
-		x=1;
-		tt(5);
 		String code="main():int{y : final bool=1;  y=1 return y}";
-		//printTokens(code);
 		AbstractSyntaxNode astRoot = getAST(code);	
 		printtree(astRoot," ");
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 
 public class XiPrimitiveType implements XiType {
 	/**Represents a primitive type as a string
@@ -19,14 +20,18 @@ public class XiPrimitiveType implements XiType {
 	
 	/** is a constant primitive*/
 	public boolean is_final;
+	/**is final type and inital_value is set*/
 	public boolean is_initialized;
+	/**value set at declaration time*/
+	public AbstractSyntaxTree initial_value;
 	
 	public XiPrimitiveType(String type, ArrayList<VisualizableTreeNode> dimension){
 		
 		//set is_final
 		String temp[]=type.split(" ");
 		if(temp.length==2 && temp[0].equals("final")){
-			this.type=temp[1];
+			//this is a final type
+			this.type=temp[1]; //treat like normal prim type
 			is_final=true;
 		}
 		else{
@@ -37,8 +42,13 @@ public class XiPrimitiveType implements XiType {
 		is_initialized=false;
 		this.dimension = dimension;
 		this.static_dimension = null;
+		this.initial_value=null;
 	}
 	
+	public void setInitialValue(AbstractSyntaxTree ival){
+		initial_value=ival;
+		setInitialized();
+	}
 	
 	public XiPrimitiveType(String type){
 		this(type, new ArrayList<VisualizableTreeNode>());

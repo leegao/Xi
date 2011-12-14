@@ -350,35 +350,21 @@ final_type ::= FINAL:token1 INT:token2
 	 {:RESULT= token1.value()+" "+token2.value();:};
 
 
-final_var_decl ::= id:id COLON final_type:t 
-		{:DeclNode decl = new DeclNode((IdNode)id, t, id.position());
+final_var_decl ::= id:id COLON final_type:t bracket_list:arr
+		{:DeclNode decl = new DeclNode((IdNode)id, t, arr,id.position());
 		  RESULT = decl; :};
 
-final_var_init ::= final_var_decl:fv GETS INTEGER_LITERAL:lit
+final_var_init ::= final_var_decl:fvd GETS expr:e
 		{:ArrayList<VisualizableTreeNode> list= new ArrayList<VisualizableTreeNode>();
-		  list.add(fv);
-		  Token tok = (Token)lit;
-	       	  long v = Long.parseLong(tok.value());
-		  Position p = tok.position();
-		  IntegerLiteralNode valnode = new IntegerLiteralNode(v, p); 
-		  InstNode inst = new InstNode(list, valnode , span(fv.position(), valnode.position()));
-		  RESULT=inst; :}
-		| final_var_decl:fv GETS bool_literal:lit
-		{:ArrayList<VisualizableTreeNode> list= new ArrayList<VisualizableTreeNode>();
-		  list.add(fv);
-		  InstNode inst = new InstNode(list, lit , span(fv.position(), lit.position()));
-		  RESULT=inst; :}
-		| final_var_decl:fv GETS array_literal:lit
-		{:ArrayList<VisualizableTreeNode> list= new ArrayList<VisualizableTreeNode>();
-		  list.add(fv);
-		  InstNode inst = new InstNode(list, lit , span(fv.position(), lit.position()));
+		  ((DeclNode)fvd).setInitialValue(e);
+		  list.add(fvd);
+		  InstNode inst = new InstNode(list, e, span(fvd.position(), e.position()));
 		  RESULT=inst; :}
 		| error 		
 		{: 
 		  RESULT= new ErrorNode(null);
 		:};
 
-	
 		 
 bracket_list ::= 
 	{: RESULT = new ArrayList<VisualizableTreeNode>(); :}

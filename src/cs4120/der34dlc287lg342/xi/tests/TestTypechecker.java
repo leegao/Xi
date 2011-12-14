@@ -255,7 +255,27 @@ public class TestTypechecker extends TestCase {
 		System.out.println("--------------------------------");
 		
 		try {
-			XiTypechecker tc = gen("main():int{ x: final int=true  y: int  y=1 return x}");
+			//the type here should all match
+			String code="main():int{ " +
+			"x1 : final bool=true;" +
+			"x2: final int=1;"+
+			"x3: final int[]=(1,2);"+
+			"x30: final int[][]=((1,2),(1,2));"+
+			"x4: final bool=false;"+
+			"x5:final bool[]=(false,true);"+
+			"x6:final bool[][]=((false,false),(true,true));"+
+			"x7:final int[]=\"hello\";"+
+			"x8:final int='a';"+
+			"x9:final int[]=(1,2,3);"+
+			"x10:final bool[]=(true,false,true);"+
+			"x11:final int[]=('a','s','d','c');"+
+			"x12:final int=1+2"+
+			"x13:final int=x12+1;"+
+			"x14:final int=1*3;"+
+			"x15: final int=(1*3)+3"+
+			"y:int=1 "+
+			"return y}";
+			XiTypechecker tc = gen(code);
 			tc.typecheck();
 		} catch (CompilationException e) {
 			// TODO Auto-generated catch block
@@ -265,6 +285,6 @@ public class TestTypechecker extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		hello
+		
 	}
 }

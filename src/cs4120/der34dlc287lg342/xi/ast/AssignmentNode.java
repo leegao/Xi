@@ -50,9 +50,12 @@ public class AssignmentNode extends AbstractSyntaxTree {
 		// push a new context frame onto the stack
 		XiType idType = ((AbstractSyntaxTree)id).typecheck(stack);
 		
+		//dont allow assignments to final vars
 		if((idType instanceof XiPrimitiveType) && (id instanceof IdNode )){
-		if(((XiPrimitiveType)idType).is_final)
-			throw new CompilationException("The final local variable "+ ((IdNode)id).id +" cannot be assigned.",position);
+			if(((XiPrimitiveType)idType).is_final){
+				System.err.println(((XiPrimitiveType)idType).is_initialized);
+				throw new CompilationException("The xx final local variable "+ ((IdNode)id).id +" cannot be assigned.",id.position());
+			}
 		}
 		
 		XiType exprType = ((AbstractSyntaxTree)expr).typecheck(stack);

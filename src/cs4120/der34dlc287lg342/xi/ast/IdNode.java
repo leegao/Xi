@@ -10,7 +10,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
-
+import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
@@ -19,10 +19,17 @@ public class IdNode extends ExpressionNode {
 
 	protected Position position;
 	public String id;
+	public AbstractSyntaxTree initial_value;
 	
 	public IdNode(String id, Position position){
 		this.id = id;
 		this.position = position;
+		initial_value=null;
+	}
+	
+	//called only when this id is final var
+	public void setInitialValue(AbstractSyntaxTree v){
+		initial_value=v;
 	}
 	
 	@Override
@@ -53,7 +60,17 @@ public class IdNode extends ExpressionNode {
 	
 	@Override
 	public AbstractSyntaxTree foldConstants(){
-		return null;
+		//if this is a final var
+		try{
+			if(((XiPrimitiveType)this.type).is_final) //is final type
+				return this;
+			else
+				return null;
+			}
+		catch(Exception e){
+			//the type of this id is not primitive
+			return null;
+		}
 	}
 	
 	@Override

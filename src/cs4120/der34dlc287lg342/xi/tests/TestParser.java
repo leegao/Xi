@@ -334,6 +334,38 @@ public class TestParser extends TestCase {
 	
 	}
 	
+	public AbstractSyntaxNode getAST(String code){
+		Reader reader = new StringReader(code);
+		XiParser p = new XiParser(reader);
+		p.setDoDebug(false);
+		AbstractSyntaxNode ast = p.parse();
+		return ast;
+	}
+	
+	public void testFinalTypes(){
+
+			String code="main():int{ " +
+						"x : final bool=1;" +
+						"x: final int=1;"+
+						"x : final int[]=1;"+
+						"x: final int[][]=1;"+
+						"x: final bool=1;"+
+						"x:final bool[]=1;"+
+						"x:final bool[][]=1;"+
+						"x:final int=\"hello\";"+
+						"x:final int='a';"+
+						"x:final int=(1,2,3);"+
+						"x:final int=(true,false,true);"+
+						"x:final int=('a','s','d','c');"+
+						"x:final int=1+2"+
+						"x:final int=z+1;"+
+						"x:final int=1*3;"+
+						"x: final int=(1*3)+3"+
+						"y=1 "+
+						"return y}";
+			getAST(code);	
+	}
+	
 	public void printtree(VisualizableTreeNode node, String tab){
 		System.out.println(tab + node);
 		for (VisualizableTreeNode child : node.children()){

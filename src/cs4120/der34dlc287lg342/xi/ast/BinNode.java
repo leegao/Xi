@@ -101,7 +101,29 @@ public class BinNode extends ExpressionNode {
 		e2 = resolve_const(1,rhs,e2);
 		
 		// Scheme: if e1 and e2 are int literals, return int literal
-		if (e1 instanceof IntegerLiteralNode && e2 instanceof IntegerLiteralNode){
+		//Treat final vars like int literals too (assumes type checking
+		//has already been done)
+		boolean e1_isfinal=false;
+		boolean e2_isfinal=false;
+		XiPrimitiveType lhs_type=null;
+		XiPrimitiveType rhs_type=null;
+				
+		if(lhs!=null ){
+			//System.err.println("Node is"+lhs);
+			lhs_type=(XiPrimitiveType)lhs.type;
+			e1_isfinal=lhs_type.is_final && (lhs_type.initial_value instanceof IntegerLiteralNode);
+		}
+		if(rhs !=null){
+			rhs_type=(XiPrimitiveType)rhs.type;
+			e2_isfinal=rhs_type.is_final && (rhs_type.initial_value instanceof IntegerLiteralNode);
+		}
+		
+		if(e1_isfinal)
+			e1=lhs_type.initial_value;
+		if(e2_isfinal)
+			e2=rhs_type.initial_value;
+			
+		if ((e1 instanceof IntegerLiteralNode)  && (e2 instanceof IntegerLiteralNode)){
 			long value = ((IntegerLiteralNode)e1).value;
 			long rvalue = ((IntegerLiteralNode)e2).value;
 			if (op.equals("PLUS")){
