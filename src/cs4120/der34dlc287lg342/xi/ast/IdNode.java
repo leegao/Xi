@@ -61,6 +61,7 @@ public class IdNode extends ExpressionNode {
 		/*
 		 * return stack.resolve
 		 */
+		//System.out.println(this);
 		Expr e = stack.find_register(id);
 		return new IRTranslationExpr(e);
 	}

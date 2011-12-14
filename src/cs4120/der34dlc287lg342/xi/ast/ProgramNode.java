@@ -124,6 +124,8 @@ public class ProgramNode extends AbstractSyntaxTree {
 		}
 	}
 	
+	
+	
 	@Override
 	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
 		/*
@@ -147,6 +149,11 @@ public class ProgramNode extends AbstractSyntaxTree {
 			} else if (child instanceof FuncDeclNode){
 				FuncDeclNode func = (FuncDeclNode) child;
 				stack.add_name(func);
+			} else if (child instanceof ClassNode){
+				for (VisualizableTreeNode c : ((ClassNode) child).children){
+					if (c instanceof FuncDeclNode)
+						stack.add_name("_"+((ClassNode)child).id.id+"_", (FuncDeclNode) c);
+				}
 			}
 		}
 		
@@ -156,6 +163,9 @@ public class ProgramNode extends AbstractSyntaxTree {
 			if (child instanceof FuncDeclNode){
 				FuncDeclNode func = (FuncDeclNode) child;
 				IRTranslation tr = func.to_ir(stack);
+				seq.add(tr.stmt());
+			} else if (child instanceof ClassNode){
+				IRTranslation tr =((ClassNode) child).to_ir(stack);
 				seq.add(tr.stmt());
 			}
 		}

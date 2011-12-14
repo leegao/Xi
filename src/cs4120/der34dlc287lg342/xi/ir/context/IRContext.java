@@ -38,7 +38,7 @@ public class IRContext {
 		
 		//if (i < 6){
 			//TempRegister r = new TempRegister();
-			return new Seq(new Arg(temp.temp, i, n));
+		return new Seq(new Arg(temp.temp, i, n));
 //		} else{
 //			Expr arg = new Mem(new Binop(Binop.PLUS, new Temp(TempRegister.FP), new Const((n-i)*8+8)));
 //			return new Move(temp, arg);
@@ -59,5 +59,11 @@ public class IRContext {
 	
 	public LabelNode find_name(String name){
 		return names.get(name);
+	}
+
+	public LabelNode add_name(String name, FuncDeclNode decl) {
+		LabelNode l = new LabelNode(new Label(decl.type().mangle(name, decl.id.id)));
+		names.put(decl.id.id, l);
+		return l;
 	}
 }

@@ -17,7 +17,5 @@ public abstract class ExpressionNode extends AbstractSyntaxTree {
 		return type;
 	}*/
 
-	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
-		return null;
-	}
+	public abstract IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException;
 }

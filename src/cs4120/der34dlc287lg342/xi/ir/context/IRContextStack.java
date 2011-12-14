@@ -5,10 +5,17 @@ import java.util.HashMap;
 
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.ast.AttrNode;
+import cs4120.der34dlc287lg342.xi.ast.ClassNode;
 import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
 import cs4120.der34dlc287lg342.xi.ast.IdNode;
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.Name;
+import cs4120.der34dlc287lg342.xi.typechecker.ClassLayout;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
 
@@ -20,6 +27,7 @@ public class IRContextStack extends ArrayList<IRContext>{
 	public boolean strcat = false;
 	public HashMap<Label, byte[]> ro_data;
 	public boolean abort = false;
+	public ClassNode current_class = null;
 
 	public IRContextStack(){
 		ro_data = new HashMap<Label, byte[]>();
@@ -41,24 +49,49 @@ public class IRContextStack extends ArrayList<IRContext>{
 		return top.add_name(name);
 	}
 	
+	public LabelNode add_name(String name, FuncDeclNode decl) throws InvalidIRContextException{
+		IRContext top = top();
+		return top.add_name(name, decl);
+	}
+	
 	public Expr find_register(String id) throws InvalidIRContextException{
 		if (this.isEmpty())
 			throw new InvalidIRContextException("Cannot find a context frame to work with");
+		
+		if (this.current_class != null && ((XiObjectType)current_class.type).layout.contains_variable(id)){
+			// return this.x
+			ClassLayout layout = ((XiObjectType)current_class.type).layout;
+			Expr this_ = find_register("this");
+			//System.out.println(layout.var_index(id));
+			return new Mem(new Binop(Binop.PLUS, this_, new Const(8+8*layout.var_index(id))));
+		}
+		
 		for (int i = this.size()-1; i >= 0; i--){
 			Expr r = get(i).find_register(id);
 			if (r != null)
 				return r;
 		}
-		throw new InvalidIRContextException("Cannot find register associated with symbol id");
+		throw new InvalidIRContextException("Cannot find register associated with symbol "+id+".");
 	} 
 	
-	public LabelNode find_name(String id) throws InvalidIRContextException{
+	public Expr find_name(String id) throws InvalidIRContextException{
 		if (this.isEmpty())
 			throw new InvalidIRContextException("Cannot find a context frame to work with");
+		
+//		if (this.current_class != null && ((XiObjectType)current_class.type).layout.contains_method(id)){
+//			ClassLayout layout = ((XiObjectType)current_class.type).layout;
+//			Expr this_ = find_register("this");
+//			return new Mem((new Binop(Binop.PLUS, new Mem(this_), new Const(8+8*layout.method_index(id)))));
+//		}
+		
 		for (int i = this.size()-1; i >= 0; i--){
-			LabelNode r = get(i).find_name(id);
+			//System.out.println(mangle_method(id));
+			LabelNode r = get(i).find_name(mangle_method(id));
 			if (r != null)
-				return r;
+				return new Name(r.label);
+			r = get(i).find_name(id);
+			if (r != null)
+				return new Name(r.label);
 		}
 		throw new InvalidIRContextException("Cannot find register associated with symbol id");
 	} 
@@ -106,15 +139,23 @@ public class IRContextStack extends ArrayList<IRContext>{
 		this.remove(this.size()-1);
 	}
 
-	public static String mangle(AbstractSyntaxTree id) {
-		if (id instanceof IdNode){
-			return ((IdNode)id).id;
-		} else if (id instanceof AttrNode) {
-			AttrNode attr = (AttrNode)id;
-			XiType t = attr.parent.type;
-			return "_"+t.toString()+"_"+mangle(attr.attr);
+	public String mangle_method(String method){
+		if (current_class == null){
+			return method;
+		} else {
+			return current_class.id.id+"_"+method;
 		}
-		System.out.println("DEBUG: oh no! mangle");
-		return null;
 	}
+	
+//	public static String mangle(AbstractSyntaxTree id) {
+//		if (id instanceof IdNode){
+//			return ((IdNode)id).id;
+//		} else if (id instanceof AttrNode) {
+//			AttrNode attr = (AttrNode)id;
+//			XiType t = attr.left.type;
+//			return "_"+((XiObjectType)t).type+"_"+mangle(attr.attr);
+//		}
+//		System.out.println("DEBUG: oh no! mangle");
+//		return null;
+//	}
 }

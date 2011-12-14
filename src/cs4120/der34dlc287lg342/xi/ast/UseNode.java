@@ -2,6 +2,9 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -47,4 +50,13 @@ public class UseNode extends AbstractSyntaxTree {
 	public AbstractSyntaxTree foldConstants(){
 		return null;
 	}
+
+	@Override
+	public IRTranslation to_ir(IRContextStack stack)
+			throws InvalidIRContextException {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 }

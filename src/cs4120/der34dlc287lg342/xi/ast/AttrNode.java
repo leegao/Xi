@@ -2,6 +2,15 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
+import cs4120.der34dlc287lg342.xi.typechecker.ClassLayout;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
@@ -13,12 +22,13 @@ import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
 
 public class AttrNode extends ExpressionNode {
-	public AbstractSyntaxTree parent, attr;
+	public AbstractSyntaxTree left;
+	public IdNode attr;
 	public Position position;
 	public ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 	public AttrNode(AbstractSyntaxTree parent, AbstractSyntaxTree attr, Position pos){
-		this.parent = parent;
-		this.attr = attr;
+		this.left = parent;
+		this.attr = (IdNode) attr;
 		this.position = pos;
 		children.add(parent);
 		children.add(attr);
@@ -37,7 +47,7 @@ public class AttrNode extends ExpressionNode {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
 		// we need to make sure that lhs is an object type
-		XiType lhs = parent.typecheck(stack);
+		XiType lhs = left.typecheck(stack);
 		if (!(lhs instanceof XiObjectType)){
 			throw new CompilationException("Cannot access attribute of nonobject type.", position);
 		}
@@ -67,5 +77,21 @@ public class AttrNode extends ExpressionNode {
 		} else {
 			throw new CompilationException("Objects of type ["+object.type+"] contains no such attribute "+attr, position);
 		}
+	}
+	@Override
+	public IRTranslation to_ir(IRContextStack stack)
+			throws InvalidIRContextException {
+		// lhs is class, has object type
+		// 1 check if is method
+		ClassLayout layout = ((XiObjectType)left.type).layout;
+		IRTranslation tr = left.to_ir(stack);
+		Expr lhs = tr.expr();
+		if (layout.contains_method(attr.id)){
+			return new IRTranslationExpr(new Mem(new Binop(Binop.PLUS, new Mem(lhs), new Const(8+8*layout.method_index(attr.id)))));
+		} else {
+			// this is a variable
+			return new IRTranslationExpr(new Mem(new Binop(Binop.PLUS, lhs, new Const(8+8*layout.var_index(attr.id)))));
+		}
+		//throw new InvalidIRContextException("Unimplemented: attr");
 	}
 }

@@ -182,7 +182,7 @@ public class InstNode extends AbstractSyntaxTree {
 				Temp heap_addr = new Temp(new TempRegister());
 				seq.add(new Move(heap_addr, alloc));
 				call.tuple = heap_addr.temp;
-				System.out.println(call.tuple);
+				//System.out.println(call.tuple);
 				seq.add(new Exp(call));
 				
 				for (int i = 0; i < list.size(); i++){

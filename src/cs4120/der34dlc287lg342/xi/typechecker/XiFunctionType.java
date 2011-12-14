@@ -70,7 +70,7 @@ public class XiFunctionType implements XiType {
 	}
 	
 	public String str_of_object(XiObjectType t){
-		String str = "o"+t.type.length()+t;
+		String str = "o"+t.type.length()+t.type;
 		for (int i = 0; i < t.dimension.size(); i++)
 			str = "a"+str;
 		return str;
@@ -117,5 +117,27 @@ public class XiFunctionType implements XiType {
 					&& new HashSet<XiType>(this.ret).equals(new HashSet<XiType>(other.ret));
 		}
 		return false;
+	}
+
+	public String mangle(String name, String id) {
+		String str = "_I"+name+id+"_";
+		
+		// encode return
+		if (ret.isEmpty())
+			str += "p";
+		else if (ret.size() == 1){
+			str += str_of(ret.get(0));
+		} else {
+			str += "t"+ret.size();
+			for (XiType t : ret)
+				str += str_of(t);
+		}
+		
+		// encode args
+		for (XiType t : args){
+			str += str_of(t);
+		}
+		
+		return str;
 	}
 }

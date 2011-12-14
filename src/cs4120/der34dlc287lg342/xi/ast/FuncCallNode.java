@@ -3,14 +3,17 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Call;
+import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
+import cs4120.der34dlc287lg342.xi.typechecker.ClassLayout;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiReturnType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -107,22 +110,43 @@ public class FuncCallNode extends ExpressionNode {
 		/*
 		 * Call(Name(id), args)
 		 */
-		
-		Label f = stack.find_name(IRContextStack.mangle(id)).label;
-		
-		Call call = new Call(new Name(f));
-		
-//		for (VisualizableTreeNode arg : args){
-//			IRTranslation tr = ((AbstractSyntaxTree)arg).to_ir(stack);
-//			call.add(tr.expr());
-//		}
-		
-		for (int i = 0; i < (args.size()); i++){
-			VisualizableTreeNode arg = args.get(i);
-			IRTranslation tr = ((AbstractSyntaxTree)arg).to_ir(stack);
-			call.add(tr.expr());
+		if (id instanceof IdNode){
+			Expr f = stack.find_name(((IdNode) id).id);
+			
+			Call call = new Call(f);
+			
+	//		for (VisualizableTreeNode arg : args){
+	//			IRTranslation tr = ((AbstractSyntaxTree)arg).to_ir(stack);
+	//			call.add(tr.expr());
+	//		}
+			
+			if (stack.current_class != null && ((XiObjectType)stack.current_class.type).layout.contains_method(((IdNode) id).id)){
+				ClassLayout layout = ((XiObjectType)stack.current_class.type).layout;
+				Expr arg = stack.find_name("this");
+				call.add(arg);
+			}
+			
+			for (int i = 0; i < (args.size()); i++){
+				VisualizableTreeNode arg = args.get(i);
+				IRTranslation tr = ((AbstractSyntaxTree)arg).to_ir(stack);
+				call.add(tr.expr());
+			}
+			
+			return new IRTranslationExpr(call);
+		} else if (id instanceof AttrNode) {
+			Expr attr = id.to_ir(stack).expr();
+			Call call = new Call(attr);
+			
+			call.add(attr);
+			
+			for (int i = 0; i < (args.size()); i++){
+				VisualizableTreeNode arg = args.get(i);
+				IRTranslation tr = ((AbstractSyntaxTree)arg).to_ir(stack);
+				call.add(tr.expr());
+			}
+			
+			return new IRTranslationExpr(call);
 		}
-		
-		return new IRTranslationExpr(call);
+		throw new InvalidIRContextException("Unimplemented: func_call of attr");
 	}
 }

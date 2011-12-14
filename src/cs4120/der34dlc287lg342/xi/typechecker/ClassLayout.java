@@ -87,7 +87,7 @@ public class ClassLayout {
 		if (parent_type != null){
 			variables.addAll(parent_type.layout.var_dv());
 		}
-		for (String variable : this.method_vector){
+		for (String variable : this.var_vector){
 			if (!variables.contains(variable))
 				variables.add(variable);
 		}

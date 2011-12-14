@@ -12,6 +12,7 @@ import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.Temp;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
@@ -39,6 +40,7 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 	public ArrayList<VisualizableTreeNode> brackets;
 	public ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
 	public AbstractSyntaxTree expr;
+	public IRContext c = null;
 	
 	public ClassDeclNode(IdNode id, String type, ArrayList<VisualizableTreeNode> brackets, Position position){
 		this.id = id;
@@ -141,72 +143,72 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 		return null;
 	}
 
-	@Override
-	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
-		/*
-		 * 2 Cases:
-		 * 
-		 * Primitive only:
-		 * 	stack.register(id)
-		 * 
-		 * Array:
-		 *  stack.register(id) // reference to the 
-		 *  move(id, register(heap))
-		 *  
-		 *  if dimensions are present:
-		 *  for each bracket:
-		 *    register(heap, n+1) 
-		 */
-		String id = ((IdNode)this.id).id;
-		Expr r = stack.add_register(id);
-		
-		// check that brackets is dimensionless
-		if (brackets.isEmpty())
-			return new IRTranslationStmt(new Seq());
-		
-		// check that our dimensions are not undefined
-		if (brackets.get(0) == null){
-			return new IRTranslationStmt(new Seq(new Move(r, new Const(0))));
-		}
-		
-		Seq seq = new Seq();
-		ArrayList<Expr> exprs = new ArrayList<Expr>();
-		boolean static_array = true;
-		int tot = 1;
-		for (int i = 0; i < brackets.size(); i++){
-			AbstractSyntaxTree node = (AbstractSyntaxTree)brackets.get(i);
-			
-			if (node == null){
-				break;
-			} else {
-				IRTranslation tr = node.to_ir(stack);
-				Expr n = tr.expr();
-				
-				exprs.add(n);
-				if (!(n instanceof Const))
-					static_array = false;
-				else {
-					if (((Const)n).value > 10)
-						static_array = false;
-					tot *= (((Const)n).value+1);
-					if (tot > 50) static_array = false;
-				}
-				
-			}
-		}
-		
-		if (static_array){
-			Expr arr = generate_array(exprs);
-			seq.add(new Move(r, arr));
-		} else {
-			// pass
-			stack.dynamic_allocation = true;
-			Expr args = create_args(exprs);
-			seq.add(new Move(r, new Call(new Name(new Label("_I_c_dynamalloc_aiai")), args)));
-		}
-		
-		return new IRTranslationStmt(seq);
-	}
+//	@Override
+//	public IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException{
+//		/*
+//		 * 2 Cases:
+//		 * 
+//		 * Primitive only:
+//		 * 	stack.register(id)
+//		 * 
+//		 * Array:
+//		 *  stack.register(id) // reference to the 
+//		 *  move(id, register(heap))
+//		 *  
+//		 *  if dimensions are present:
+//		 *  for each bracket:
+//		 *    register(heap, n+1) 
+//		 */
+//		String id = ((IdNode)this.id).id;
+//		Expr r = stack.add_register(id);
+//		
+//		// check that brackets is dimensionless
+//		if (brackets.isEmpty())
+//			return new IRTranslationStmt(new Seq());
+//		
+//		// check that our dimensions are not undefined
+//		if (brackets.get(0) == null){
+//			return new IRTranslationStmt(new Seq(new Move(r, new Const(0))));
+//		}
+//		
+//		Seq seq = new Seq();
+//		ArrayList<Expr> exprs = new ArrayList<Expr>();
+//		boolean static_array = true;
+//		int tot = 1;
+//		for (int i = 0; i < brackets.size(); i++){
+//			AbstractSyntaxTree node = (AbstractSyntaxTree)brackets.get(i);
+//			
+//			if (node == null){
+//				break;
+//			} else {
+//				IRTranslation tr = node.to_ir(stack);
+//				Expr n = tr.expr();
+//				
+//				exprs.add(n);
+//				if (!(n instanceof Const))
+//					static_array = false;
+//				else {
+//					if (((Const)n).value > 10)
+//						static_array = false;
+//					tot *= (((Const)n).value+1);
+//					if (tot > 50) static_array = false;
+//				}
+//				
+//			}
+//		}
+//		
+//		if (static_array){
+//			Expr arr = generate_array(exprs);
+//			seq.add(new Move(r, arr));
+//		} else {
+//			// pass
+//			stack.dynamic_allocation = true;
+//			Expr args = create_args(exprs);
+//			seq.add(new Move(r, new Call(new Name(new Label("_I_c_dynamalloc_aiai")), args)));
+//		}
+//		
+//		return new IRTranslationStmt(seq);
+//	}
 
 	private Expr create_args(ArrayList<Expr> exprs){
 		Expr base = new Temp(new TempRegister());
@@ -240,5 +242,22 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 		}
 		
 		return new Eseq(base, seq);
+	}
+
+	@Override
+	public IRTranslation to_ir(IRContextStack stack)
+			throws InvalidIRContextException {
+		//System.out.println(this);
+		Expr this_ = c.find_register("this");
+		Expr attr = new Mem(new Binop(Binop.PLUS, this_, new Const(8+8*((XiObjectType)stack.current_class.type).layout.var_index(id.id))));
+		if (this.expr == null){
+			// initialize to const(0)
+			return new IRTranslationStmt(new Move(attr, new Const(0)));
+		} else {
+			// the rhs should be an expression
+			Expr rhs = expr.to_ir(stack).expr();
+			return new IRTranslationStmt(new Move(attr, rhs));
+			//throw new InvalidIRContextException("unimplemented: class variables with instantiated values");
+		}
 	}
 }

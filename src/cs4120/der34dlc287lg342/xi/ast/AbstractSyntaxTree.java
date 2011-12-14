@@ -72,7 +72,5 @@ public abstract class AbstractSyntaxTree implements AbstractSyntaxNode {
 		}
 	}
 	
-	public IRTranslation to_ir(IRContextStack stack)  throws InvalidIRContextException{
-		return null;
-	}
+	public abstract IRTranslation to_ir(IRContextStack stack) throws InvalidIRContextException;
 }

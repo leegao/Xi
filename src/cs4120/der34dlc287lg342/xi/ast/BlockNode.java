@@ -104,7 +104,6 @@ public class BlockNode extends AbstractSyntaxTree {
 		/*
 		 * SEQ(S(s1), S(s2), S(s3), ...)
 		 */
-		
 		// push a new context onto the stack
 		IRContext c;
 		if (new_ircontext != null)

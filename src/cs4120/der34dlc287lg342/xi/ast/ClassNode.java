@@ -2,6 +2,19 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Arg;
+import cs4120.der34dlc287lg342.xi.ir.Func;
+import cs4120.der34dlc287lg342.xi.ir.Name;
+import cs4120.der34dlc287lg342.xi.ir.Return;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
@@ -57,6 +70,44 @@ public class ClassNode extends AbstractSyntaxTree{
 		this.type = stack.top.classes.get(id.id);
 		return type;
 		//throw new CompilationException("Unimplemented yet: class.typecheck", position);
+	}
+
+	@Override
+	public IRTranslation to_ir(IRContextStack stack)
+			throws InvalidIRContextException {
+		stack.current_class = this;
+		Seq seq = new Seq();
+		for (VisualizableTreeNode child : children){
+			//System.out.println(child);
+			// we can init class later
+			if (child instanceof FuncDeclNode){
+				seq.add(((FuncDeclNode) child).to_ir(stack).stmt());
+			}
+		}
+		
+		Func init_func = new Func(new Label("_I_init_"+this.id.id));
+		
+		IRContext c = new IRContext();
+		Label return_to = new Label();
+		c.return_to = return_to;
+		
+		Temp this_ = new Temp(new TempRegister("this"));
+		init_func.add(c.add_arg("this", 0, 1));
+		for (VisualizableTreeNode child : children){
+			if (child instanceof ClassDeclNode){
+				((ClassDeclNode) child).c = c;
+				init_func.add(((ClassDeclNode) child).to_ir(stack).stmt());
+			}
+		}
+		
+		// add a return label
+		init_func.add(new Return(return_to));
+		
+		seq.add(init_func);
+		
+		return new IRTranslationStmt(seq);
+		//throw new InvalidIRContextException("Unimplemented!");
+		
 	}
 	
 	

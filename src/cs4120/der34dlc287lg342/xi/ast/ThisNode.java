@@ -2,6 +2,10 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
+import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
@@ -32,5 +36,11 @@ public class ThisNode extends ExpressionNode {
 		type = stack.top.classes.get(stack.klass.id.id);
 		return type;
 		//throw new CompilationException("Unimplemented yet: this.typecheck", position);
+	}
+	@Override
+	public IRTranslation to_ir(IRContextStack stack)
+			throws InvalidIRContextException {
+		return new IRTranslationExpr(stack.find_register("this"));
+		//throw new InvalidIRContextException("Unimplemented: this");
 	}
 }

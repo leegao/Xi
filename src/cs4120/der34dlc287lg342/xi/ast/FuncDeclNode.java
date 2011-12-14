@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Return;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
@@ -154,11 +155,16 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		Label return_to = new Label();
 		c.return_to = return_to;
 		int i = 0;
-		Func seq = new Func(stack.find_name(id.id).label);
+		Func seq = new Func(((Name)stack.find_name(id.id)).label);
 		int size = args.size();
 		if (types.size()>1){
 			seq.add(c.add_arg("_tuple", i++, ++size));
 		}
+		
+		if (stack.current_class != null){
+			seq.add(c.add_arg("this", i++, ++size));
+		}
+		
 		for (VisualizableTreeNode child : args){
 			DeclNode arg = (DeclNode)child;
 			seq.add(c.add_arg(arg.id.id, i++, size));
