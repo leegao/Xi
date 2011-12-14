@@ -69,4 +69,36 @@ public class ClassLayout {
 			return parent_type.layout.get_variable(method);
 		return null;
 	}
+	
+	public ArrayList<String> method_dv(){
+		ArrayList<String> methods = new ArrayList<String>();
+		if (parent_type != null){
+			methods.addAll(parent_type.layout.method_dv());
+		}
+		for (String method : this.method_vector){
+			if (!methods.contains(method))
+				methods.add(method);
+		}
+		return methods;
+	}
+	
+	public ArrayList<String> var_dv(){
+		ArrayList<String> variables = new ArrayList<String>();
+		if (parent_type != null){
+			variables.addAll(parent_type.layout.var_dv());
+		}
+		for (String variable : this.method_vector){
+			if (!variables.contains(variable))
+				variables.add(variable);
+		}
+		return variables;
+	}
+	
+	public int method_index(String method){
+		return method_dv().indexOf(method);
+	}
+	
+	public int var_index(String var){
+		return var_dv().indexOf(var);
+	}
 }
