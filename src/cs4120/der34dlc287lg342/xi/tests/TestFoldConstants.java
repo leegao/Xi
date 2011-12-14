@@ -43,9 +43,12 @@ public class TestFoldConstants extends TestCase {
 	public void testConstantConstructionWithFinalVars(){
 		XiTypechecker tc;
 		try {
-			tc = gen("main(){ cvar:final int=1;  cvar=1; xx:int=cvar+1; b:int[1+3+cvar] a:bool = (0,4+2+cvar,2+cvar,3+cvar)[2+cvar+(-(1*0+1+cvar))] == length((1,2,3,4,5,6+cvar))}\n");
+			//test that constant folding works with final types
+			//like the original constant folding the final type initial value
+			//must an integer_literal or bool_literal
+			tc = gen("main(){ cvar:final int=1; cvar2: bool[]=(true,false); zz: bool= (true,false)[0] | false; xx:int=cvar+1; b:int[1+3+cvar] a:bool = (0,4+2+cvar,2+cvar,3+cvar)[2+cvar+(-(1*0+1+cvar))] == length((1,2,3,4,5,6+cvar))}\n");
 			tc.typecheck();
-			((AbstractSyntaxTree)tc.ast).foldConstants();
+			//((AbstractSyntaxTree)tc.ast).foldConstants();
 			//((AbstractSyntaxTree)tc.ast).foldConstants();
 			System.out.println(tc.ast);
 			TypeAnnotatedTreePrinter printer = new TypeAnnotatedTreePrinter(System.out);
