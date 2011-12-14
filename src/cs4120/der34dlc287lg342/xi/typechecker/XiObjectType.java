@@ -88,11 +88,31 @@ public class XiObjectType implements XiType {
 
 	@Override
 	public String toString() {
-		String t = "O_"+type;
+		String t = "o"+type;
 		for (VisualizableTreeNode i : dimension){
 			AbstractSyntaxNode node = (AbstractSyntaxNode) i;
 			t += "["+(node != null?node.label():"")+"]";
 		}
 		return t;
 	}
+
+	public static XiObjectType Null = new XiObjectType(new ClassNode(new IdNode("null", null), null));
+	
+	public boolean ge(XiType actual_type) {
+		if (actual_type == Null)
+			return true;
+		if (this.isArrayType())
+			return equals(actual_type);
+		if (sameBaseType(actual_type))
+			return true;
+		if (actual_type instanceof XiObjectType){
+			XiObjectType pt = ((XiObjectType) actual_type).layout.parent_type;
+			if (pt != null){
+				return ge(pt);
+			}
+		}
+		return false;
+	}
+	
+	
 }

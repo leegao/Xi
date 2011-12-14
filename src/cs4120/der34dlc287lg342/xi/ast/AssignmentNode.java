@@ -8,6 +8,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
@@ -48,16 +49,21 @@ public class AssignmentNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		// push a new context frame onto the stack
-		XiType idType = ((AbstractSyntaxTree)id).typecheck(stack);
+		XiType t = ((AbstractSyntaxTree)id).typecheck(stack);
 		XiType exprType = ((AbstractSyntaxTree)expr).typecheck(stack);
 		
-		if( idType.equals(exprType)) {
-			type = XiPrimitiveType.UNIT;
-			return type;
-		} else {
-			throw new CompilationException("Invalid assignment type",position);
-		
+		if (t instanceof XiObjectType){
+			if (!((XiObjectType)t).ge(exprType)){
+				throw new CompilationException("Invalid type in assignment: expected ["+t+"] or a derived type, but got ["+exprType+"] instead", 
+						((AbstractSyntaxTree)expr).position());
+			}
+		}else if (!t.equals(exprType)){
+			throw new CompilationException("Invalid type in assignment: expected ["+t+"] but got ["+exprType+"] instead", 
+					((AbstractSyntaxTree)expr).position());
 		}
+		
+		type = XiPrimitiveType.UNIT;
+		return type;
 	}
 	
 	@Override

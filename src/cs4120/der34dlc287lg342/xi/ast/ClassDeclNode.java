@@ -80,14 +80,30 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 				throw new CompilationException("Cannot declare arrays with non-integer dimension", position());
 		}
 		
+		
+		XiType actual_type = null;
+		if (expr != null){
+			actual_type = expr.typecheck(stack);
+		}
+		
 		try {
 			if (stack.top.classes.containsKey(type_name)){
-				XiType t = new XiObjectType(stack.top.classes.get(type_name), brackets);
+				XiObjectType t = new XiObjectType(stack.top.classes.get(type_name), brackets);
+				
+				if (actual_type != null && !t.ge(actual_type)){
+					throw new CompilationException("Cannot assign a type of "+actual_type+" to an object of type "+t, position());
+				}
+				
 				stack.add_id(id.id, t);
 				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
 					throw new CompilationException("Cannot match the type of the object to the declared type", position());
 			} else {
-				XiType t = new XiPrimitiveType(type_name, brackets);
+				XiPrimitiveType t = new XiPrimitiveType(type_name, brackets);
+				
+				if (actual_type != null && !t.equals(actual_type)){
+					throw new CompilationException("Cannot assign a type of "+actual_type+" to a class variable of type "+t, position());
+				}
+				
 				stack.add_id(id.id, t);
 				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
 					throw new CompilationException("Cannot match the type of the object to the declared type", position());

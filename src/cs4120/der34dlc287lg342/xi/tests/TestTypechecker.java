@@ -264,7 +264,7 @@ public class TestTypechecker extends TestCase {
 		
 		XiTypechecker tc = new XiTypechecker(program, src);
 		
-		System.out.println(tc.globalContext.classes.get("Point").layout.method_vector);
+		//System.out.println(tc.globalContext.classes.get("Point").layout.method_vector);
 		try{
 			tc.typecheck();
 		} catch (Exception e){

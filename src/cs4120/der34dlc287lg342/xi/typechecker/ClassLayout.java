@@ -38,5 +38,35 @@ public class ClassLayout {
 		var_table.put(id, var);
 	}
 	
+	public boolean contains_method(String method){
+		if (method_table.containsKey(method))
+			return true;
+		if (parent_type != null)
+			return parent_type.layout.contains_method(method);
+		return false;
+	}
 	
+	public boolean contains_variable(String method){
+		if (var_table.containsKey(method))
+			return true;
+		if (parent_type != null)
+			return parent_type.layout.contains_variable(method);
+		return false;
+	}
+	
+	public FuncDeclNode get_method(String method){
+		if (method_table.containsKey(method))
+			return method_table.get(method);
+		if (parent_type != null)
+			return parent_type.layout.get_method(method);
+		return null;
+	}
+	
+	public ClassDeclNode get_variable(String method){
+		if (var_table.containsKey(method))
+			return var_table.get(method);
+		if (parent_type != null)
+			return parent_type.layout.get_variable(method);
+		return null;
+	}
 }

@@ -49,13 +49,13 @@ public class AttrNode extends ExpressionNode {
 			throw new CompilationException("Cannot access attribute of array type.", position);
 		
 		String attr = ((IdNode)this.attr).id;
-		if (object.layout.method_table.containsKey(object.mangle(attr))){
-			FuncDeclNode func = object.layout.method_table.get(object.mangle(attr));
+		if (object.layout.contains_method(object.mangle(attr))){
+			FuncDeclNode func = object.layout.get_method(object.mangle(attr));
 			func.make_type();
 			type = func.type;
 			return type;
-		} else if (object.layout.var_table.containsKey(attr)){
-			ClassDeclNode cvar = object.layout.var_table.get(attr);
+		} else if (object.layout.contains_variable(attr)){
+			ClassDeclNode cvar = object.layout.get_variable(attr);
 			if (cvar.type == null && !cvar.typecheck(stack.top.class_context.get(object.type)).equals(XiPrimitiveType.UNIT))
 				throw new CompilationException("Class variable declaration should be unit."+attr, position);
 			try {

@@ -20,6 +20,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiReturnType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -74,9 +75,16 @@ public class InstNode extends AbstractSyntaxTree {
 				} catch (InvalidXiTypeException e1) {
 					throw new CompilationException(e1.getMessage(), position());
 				}
-				if (!t.equals(exprType))
+				
+				if (t instanceof XiObjectType){
+					if (!((XiObjectType)t).ge(exprType)){
+						throw new CompilationException("Invalid type in instantiation: expected ["+t+"] or a derived type, but got ["+exprType+"] instead", 
+								((AbstractSyntaxTree)e).position());
+					}
+				}else if (!t.equals(exprType)){
 					throw new CompilationException("Invalid type in instantiation: expected ["+t+"] but got ["+exprType+"] instead", 
 							((AbstractSyntaxTree)e).position());
+				}
 				
 				type = XiPrimitiveType.UNIT;
 				return type;

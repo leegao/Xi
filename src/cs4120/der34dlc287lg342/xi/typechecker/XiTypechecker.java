@@ -141,7 +141,7 @@ public class XiTypechecker {
 				throw new CompilationException("Invalid Abstract Syntax Tree", ((AbstractSyntaxNode)child).position());
 			}
 		}
-		
+		globalContext.class_context = new HashMap<String, ContextList>();
 		HashSet<String> seen = new HashSet<String>();
 		for (ClassNode klass : classes){
 			make_classmethods(klass, classes, seen);
@@ -153,7 +153,7 @@ public class XiTypechecker {
 			stack.add(globalContext);
 			XiTypeContext context = new XiTypeContext(false);
 			stack.add(context);
-			globalContext.class_context = new HashMap<String, ContextList>();
+			
 			globalContext.class_context.put(klass.id.id, stack);
 		}
 		
