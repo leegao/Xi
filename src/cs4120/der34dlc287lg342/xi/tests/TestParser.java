@@ -327,8 +327,10 @@ public class TestParser extends TestCase {
 	}
 	
 	public void testPA4Issue() {
-		checkType(gen("main() {b:bool = 3+-3*40/4/5*2 == -9}"), new String[] {
-			"PROGRAM", "FUNCDECL", "ID(main)", "BLOCK", "INST", "DECL", "ID(b)", "EQ(EQUAL)"
+		Parser p = gen("main() {b:bool = 3+-3*40/4/5*2 == -9}");
+		checkType(p, new String[] {
+			"PROGRAM", "FUNCDECL", "ID(main)", "BLOCK", "INST", "DECL", "ID(b)", "EQ(EQUAL)", "BIN(PLUS)", "3",
+			"BIN(TIMES)", "BIN(DIVIDE)", "BIN(DIVIDE)", "BIN(TIMES)", "UNEG", "3", "40", "4", "5", "2", "UNEG", "9"
 		});
 	
 	}
