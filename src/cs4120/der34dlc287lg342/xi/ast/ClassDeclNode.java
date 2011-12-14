@@ -131,6 +131,13 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 			}
 			i++;
 		}
+		
+		// rhs can be a constant
+		if (expr != null){
+			AbstractSyntaxTree rhs = ((AbstractSyntaxTree)expr).foldConstants();
+			expr = resolve_const(1,rhs,expr);
+		}
+		
 		return null;
 	}
 

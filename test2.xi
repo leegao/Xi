@@ -1,6 +1,6 @@
 class Point{
 	x,y:int
-	z:int = 3
+	z:int = 3 + 4
 	tail:Point = new Point.init(0,0)
 	
 	move(dx:int, dy:int){

@@ -1,5 +1,7 @@
 package cs4120.der34dlc287lg342.xi.tests;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.Reader;
 import java.io.StringReader;
 
@@ -35,5 +37,30 @@ public class TestFoldConstants extends TestCase {
 			e.printStackTrace();
 		}
 		
+	}
+	
+	public void testClass() throws Exception{
+		String inputFile = "test2.xi";
+		FileReader reader = new FileReader(inputFile);
+		String src = "";
+		BufferedReader input =  new BufferedReader(reader);
+		String line = null;
+		while (( line = input.readLine()) != null){
+	          src += line + "\n";
+	    }
+		Parser parser = new XiParser(new StringReader(src), inputFile);
+		AbstractSyntaxNode program = parser.parse();
+		
+		XiTypechecker tc = new XiTypechecker(program, src);
+		
+		//System.out.println(tc.globalContext.classes.get("Point").layout.method_vector);
+		try{
+			tc.typecheck();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		((AbstractSyntaxTree)tc.ast).foldConstants();
+		TestParser.printtree(program,"");
 	}
 }
