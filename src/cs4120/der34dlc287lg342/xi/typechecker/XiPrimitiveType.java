@@ -28,6 +28,17 @@ public class XiPrimitiveType implements XiType {
 	public XiPrimitiveType(String type, ArrayList<VisualizableTreeNode> dimension){
 		
 		//set is_final
+		this.setType(type);
+		
+		is_initialized=false;
+		this.dimension = dimension;
+		this.static_dimension = null;
+		this.initial_value=null;
+	}
+	
+	private void setType(String type){
+		//check whether this is final type and set is_final if it is
+		//otherwise set the type as usual
 		String temp[]=type.split(" ");
 		if(temp.length==2 && temp[0].equals("final")){
 			//this is a final type
@@ -38,11 +49,6 @@ public class XiPrimitiveType implements XiType {
 			this.type = type;
 			is_final=false;
 		}
-		
-		is_initialized=false;
-		this.dimension = dimension;
-		this.static_dimension = null;
-		this.initial_value=null;
 	}
 	
 	public void setInitialValue(AbstractSyntaxTree ival){
@@ -50,13 +56,15 @@ public class XiPrimitiveType implements XiType {
 		setInitialized();
 	}
 	
+	public void setInitialized(){
+		is_initialized=true;
+	}
+	
 	public XiPrimitiveType(String type){
 		this(type, new ArrayList<VisualizableTreeNode>());
 	}
 	
-	public void setInitialized(){
-		is_initialized=true;
-	}
+	
 	
 //	public ArrayList<Integer> staticDimension(){
 //		// check if dimension is static
