@@ -41,8 +41,8 @@ class Point{
 class P2 extends Point{
 	z:int = 3
 	init(x0:int, y0:int): Point{
-		x = 2*x0
-		y = 3*y0
+		this.x = 2*x0
+		this.y = 3*y0
 		return this
 	}
 }
