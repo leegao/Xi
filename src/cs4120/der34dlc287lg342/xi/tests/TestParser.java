@@ -393,6 +393,7 @@ public class TestParser extends TestCase {
 	          src += line + "\n";
 	    }
 		Parser parser = new XiParser(new StringReader(src), inputFile);
+		((XiParser)parser).setDoDebug(true);
 		AbstractSyntaxNode program = parser.parse();
 		
 		printtree(program, "");

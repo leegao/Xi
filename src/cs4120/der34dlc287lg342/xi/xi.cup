@@ -61,7 +61,8 @@ parser code {:
 		 		m.find();
 		 		int tokid=Integer.parseInt(m.group(0));
 		 		String tokname="debug mess error";
-		 		for(Field tid : sym.class.getFields()){
+		 		for(Field tid : sym.class.getDeclaredFields()){
+		 			tid.setAccessible(true);
 		 			if(tid.getInt(tid)==tokid){
 		 				tokname=tid.getName();
 		 				break;
@@ -400,7 +401,8 @@ stmt_list ::= block_stmt:s
 		RESULT = block; :};
 
 type ::= INT:o {: RESULT = o.value(); :} 
-	| BOOL:o {: RESULT = o.value(); :};
+	| BOOL:o {: RESULT = o.value(); :}
+	| id:id {: RESULT = ((IdNode)id).id; :};
 
 dimension ::= | expr:o {: RESULT = o; :};
 
