@@ -309,6 +309,14 @@ public class TestTypechecker extends TestCase {
 		
 	}
 	
+	public void testTypeCheckSameVarNameMethod() throws Exception {
+		
+		XiTypechecker tc = gen("x:int main(x:int){}");
+		tc.typecheck();
+		fail("did not catch compilation error");
+	
+}
+	
 	public void testInterfaceClassCreate() throws Exception{ 
 		XiTypechecker tc = gen("use point main(){x:Point = createPoint(0,0)}");
 		tc.typecheck();
