@@ -152,7 +152,7 @@ public class TestTiles extends TestCase{
 	}
 	
 	public void testClass() throws Exception{
-		String inputFile = "test3.xi";
+		String inputFile = "test2.xi";
 		FileReader reader = new FileReader(inputFile);
 		String src = "";
 		BufferedReader input =  new BufferedReader(reader);

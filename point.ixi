@@ -7,7 +7,7 @@ class Point {
 
 	// Initialize this to contain (x,y).
 	// Requires: this is uninitialized.
-	initPoint(x: int, y:int)
+	init(x: int, y:int)
 }
 
 // Create the point (x,y).

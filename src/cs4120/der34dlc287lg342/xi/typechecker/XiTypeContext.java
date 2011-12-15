@@ -15,6 +15,8 @@ public class XiTypeContext {
 	public HashMap<FuncDeclNode, XiObjectType> method_classes;
 	public HashMap<String, ContextList> class_context;
 	public HashMap<String, ClassNode> class_map;
+	public HashMap<String, XiType> interfaces = new HashMap<String, XiType>();
+	public HashMap<String, XiObjectType> iclasses = new HashMap<String, XiObjectType>();
 	
 	public XiTypeContext(XiFunctionType r, boolean b){
 		returnType = r;
@@ -34,13 +36,16 @@ public class XiTypeContext {
 	}
 	
 	public void add(String id, XiType t) throws InvalidXiTypeException{
-		if (symbols.containsKey(id)) 
+		
+		if (symbols.containsKey(id) && !interfaces.containsKey(id)) 
 			throw new InvalidXiTypeException("Variable "+id+" already exists");
 		symbols.put(id, t);
 	}
 	
 	public void add(HashMap<String, XiType> h) throws InvalidXiTypeException{
 		for (String s : h.keySet()){
+			if (interfaces.containsKey(s))
+				throw new InvalidXiTypeException("Variable "+s+" already exists");
 			add(s, h.get(s));
 		}
 	}

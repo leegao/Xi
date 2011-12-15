@@ -159,8 +159,10 @@ public class ProgramNode extends AbstractSyntaxTree {
 			throw new InvalidIRContextException(e.getMessage());
 		}
 		for (VisualizableTreeNode child : declarations.children()){
-			FuncDeclNode decl = (FuncDeclNode)child;
-			stack.add_name(decl);
+			if (child instanceof FuncDeclNode){
+				FuncDeclNode decl = (FuncDeclNode)child;
+				stack.add_name(decl);
+			}
 		}
 	}
 	
