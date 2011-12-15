@@ -143,7 +143,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 		for (XiType type : stack.top.interfaces.values()){
 			if (type instanceof XiFunctionType){
 				make_type((XiFunctionType) type);
-				System.out.println(type);
+				//System.out.println(type);
 			}
 		}
 		
@@ -203,6 +203,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 			if (child instanceof FuncDeclNode){
 				FuncDeclNode decl = (FuncDeclNode)child;
 				stack.add_name(decl);
+				stack.interfaces.add(decl);
 			}
 		}
 	}
@@ -243,6 +244,13 @@ public class ProgramNode extends AbstractSyntaxTree {
 				stack.globals.put(((GblDeclNode) child).id.id, new Mem(new EffectiveAddress(new Label("_I_g_"+((GblDeclNode) child).id.id+"_"+XiFunctionType.str_of(((GblDeclNode) child).id.type)))));
 				
 			}
+		}
+		
+		for (FuncDeclNode func : stack.interfaces){
+			//System.out.println(func);
+			func.make_type();
+			stack.set_name(func);
+			//System.out.println(func);
 		}
 		
 		// Second pass: build translation rules

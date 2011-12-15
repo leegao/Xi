@@ -119,7 +119,7 @@ public class FuncCallNode extends ExpressionNode {
 		 */
 		if (id instanceof IdNode){
 			Expr f = stack.find_name(((IdNode) id).id);
-			
+			//System.out.println(f);
 			Call call = new Call(f);
 			
 	//		for (VisualizableTreeNode arg : args){

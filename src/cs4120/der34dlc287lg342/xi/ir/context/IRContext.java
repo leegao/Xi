@@ -54,6 +54,11 @@ public class IRContext {
 		return l;
 	}
 	
+	public void set_name(FuncDeclNode decl){
+		LabelNode l = new LabelNode(new Label(decl.type().mangle(decl.id.id)));
+		names.put(decl.id.id, l);
+	}
+	
 	public Expr find_register(String id){
 		return symbols.get(id);
 	}
