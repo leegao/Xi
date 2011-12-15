@@ -384,7 +384,7 @@ public class TestParser extends TestCase {
 	}
 	
 	public void testClasses() throws Exception{
-		String inputFile = "test2.xi";
+		String inputFile = "mandelbrot.xi";
 		FileReader reader = new FileReader(inputFile);
 		String src = "";
 		BufferedReader input =  new BufferedReader(reader);

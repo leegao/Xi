@@ -90,10 +90,15 @@ public class XiTypechecker {
 				FuncDeclNode decl = (FuncDeclNode)child;
 				IdNode identifier = (IdNode)decl.id;
 				interfaces.put(identifier.id, decl.type);
-			} else if (child instanceof ClassDeclNode) {
-				ClassDeclNode decl = (ClassDeclNode)child;
-				IdNode identifier = (IdNode)decl.id;
+			} else if (child instanceof ClassNode) {
+				ClassNode klass = (ClassNode)child;
+				// cache the interface class in
+				XiObjectType type = new XiObjectType(klass);
 				
+				if (globalContext.classes.containsKey(klass.id.id))
+					throw new CompilationException("Classtype "+klass.id.id+" already exists", klass.position());
+				globalContext.iclasses.put(klass.id.id, type);
+				globalContext.classes.put(klass.id.id, type);
 			}
 
 		}
@@ -133,6 +138,7 @@ public class XiTypechecker {
 				}
 				try {
 					globalContext.add(interfaces);
+					globalContext.interfaces.putAll(interfaces);
 				} catch (InvalidXiTypeException e) {
 					throw new CompilationException(e.getMessage(), use.position());
 				}
@@ -140,8 +146,29 @@ public class XiTypechecker {
 				ClassNode klass = (ClassNode)child;
 				XiObjectType type = new XiObjectType(klass);
 				
-				if (globalContext.classes.containsKey(klass.id.id))
-					throw new CompilationException("Classtype "+klass.id.id+" already exists", klass.position());
+				if (globalContext.classes.containsKey(klass.id.id) && !globalContext.iclasses.containsKey(klass.id.id))
+					throw new CompilationException("Class type "+klass.id.id+" already exists", klass.position());
+//				else if (globalContext.iclasses.containsKey(klass.id.id)){
+//
+//					// line up the layout
+//					XiObjectType ideal = globalContext.iclasses.get(klass.id.id);
+//					ArrayList<String> arr = new ArrayList<String>();
+//					for (String s : ideal.layout.method_vector){
+//						if (type.layout.method_vector.contains(s)){
+//							arr.add(s);
+//						} else {
+//							throw new InvalidXiTypeException("Declared method in the interface is not concretely implemented in the source.");
+//						}
+//					}
+//					
+//					for (String s : type.layout.method_vector){
+//						if (!arr.contains(s)){
+//							arr.add(s);
+//						}
+//					}
+//					type.layout.method_vector = arr;
+//					System.out.println(ideal.layout.method_vector);
+//				}
 				globalContext.classes.put(klass.id.id, type);
 				classes.add(klass);
 			} else if (child instanceof GblDeclNode) {

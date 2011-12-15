@@ -28,6 +28,7 @@ import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
+import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
@@ -84,6 +85,30 @@ public class ClassNode extends AbstractSyntaxTree{
 			}
 		}
 		this.type = stack.top.classes.get(id.id);
+		
+		if (stack.top.iclasses.containsKey(this.id.id)){
+			System.out.println(this);
+			// line up the layout
+			XiObjectType ideal = stack.top.iclasses.get(this.id.id);
+			ArrayList<String> arr = new ArrayList<String>();
+			for (String s : ideal.layout.method_vector){
+				if (((XiObjectType)type).layout.method_vector.contains(s)){
+					arr.add(s);
+				} else {
+					throw new CompilationException("Declared method in the interface is not concretely implemented in the source.", position);
+				}
+			}
+			
+			for (String s : ((XiObjectType)type).layout.method_vector){
+				if (!arr.contains(s)){
+					arr.add(s);
+				}
+			}
+			((XiObjectType)type).layout.method_vector = arr;
+			System.out.println(ideal.layout.method_vector);
+		}
+		
+		
 		return type;
 		//throw new CompilationException("Unimplemented yet: class.typecheck", position);
 	}
@@ -99,6 +124,7 @@ public class ClassNode extends AbstractSyntaxTree{
 				seq.add(((FuncDeclNode) child).to_ir(stack).stmt());
 			}
 		}
+		
 		
 		Func new_func = new Func(new Label("_I_new_"+this.id.id));
 		

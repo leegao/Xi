@@ -1,11 +1,9 @@
 use io
 use conv
-
-t:int
+use point
 
 class Point{
 	x,y:int
-	z:Point[]
 	
 	move(dx:int, dy:int){
 		x = x + dx
@@ -13,11 +11,6 @@ class Point{
 	}
 	
 	coords(): int, int{
-		//a:int[1] b:int[1]
-		//a[0] = 1
-		//b[0] = 2
-		//a[0] = b[0]
-		//println(unparseInt(a[0]));
 		return x,y
 	}
 	

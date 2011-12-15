@@ -326,6 +326,8 @@ stmt ::= if_stmt:s
 	{: RESULT = new ContinueNode(c.position()); :}
 	| func_call:e
 	{: RESULT = new ProcedureCallNode(e); :}
+	| attr:attr OPEN_PAREN func_callargs:args CLOSE_PAREN:t
+	{: RESULT = new ProcedureCallNode(new FuncCallNode(attr, args, span(attr.position(), t.position()))); :}
 	| block:b
 	{: RESULT = b; :}
 	|  final_var_init:s
