@@ -17,10 +17,11 @@ public class CallArbitraryTile extends CallTile {
 	}
 
 	public ArrayList<Assembly> att(){
-ArrayList<Assembly> asm = new ArrayList<Assembly>();
+		ArrayList<Assembly> asm = new ArrayList<Assembly>();
 		
 		// we want to move to args after all the att()
 		for (Tile arg : args){
+			//System.out.println(args);
 			ArrayList<Assembly> instrs = arg.att();
 			if (instrs != null)
 				asm.addAll(instrs);

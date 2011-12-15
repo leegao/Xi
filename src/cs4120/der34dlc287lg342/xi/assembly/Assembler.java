@@ -83,6 +83,12 @@ public class Assembler {
 			}
 		}
 		
+		for (ArrayList<Assembly> instrs : class_instrs){
+			for (Assembly instr : instrs){
+				att += (instr.assem+"\n");
+			}
+		}
+		
 		return (".att_syntax prefix\n.text\n"+att);
 	}
 }

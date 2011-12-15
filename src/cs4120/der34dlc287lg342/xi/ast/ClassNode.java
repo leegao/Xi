@@ -125,6 +125,7 @@ public class ClassNode extends AbstractSyntaxTree{
 			}
 		}
 		vt.size = ((XiObjectType)this.type).layout.var_vector.size()*8+8;
+		vt.need_methods = ((XiObjectType)type).layout.parent_type != null ? ((XiObjectType)type).layout.parent_type.layout.method_dv().size() : 0;
 		if (ex != null){
 			vt.need_init = true;
 		}
@@ -166,7 +167,7 @@ public class ClassNode extends AbstractSyntaxTree{
 		init_func.add(new Return(return_to));
 		
 		seq.add(init_func);
-		
+		stack.current_class = null;
 		return new IRTranslationStmt(seq);
 		//throw new InvalidIRContextException("Unimplemented!");
 		
