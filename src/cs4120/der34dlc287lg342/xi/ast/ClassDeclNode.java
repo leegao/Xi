@@ -92,8 +92,8 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 			if (stack.top.classes.containsKey(type_name)){
 				XiObjectType t = new XiObjectType(stack.top.classes.get(type_name), brackets);
 				
-				if (actual_type != null && !t.ge(actual_type)){
-					throw new CompilationException("Cannot assign a type of "+actual_type+" to an object of type "+t, position());
+				if (actual_type != null){
+					throw new CompilationException("Cannot assign an object into a class variable", position());
 				}
 				
 				stack.add_id(id.id, t);
@@ -105,6 +105,10 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 				if (actual_type != null && !t.equals(actual_type)){
 					throw new CompilationException("Cannot assign a type of "+actual_type+" to a class variable of type "+t, position());
 				}
+				
+				// need to make sure that expr is a const
+				if (expr != null && !(expr instanceof IntegerLiteralNode || expr instanceof BoolLiteralNode))
+					throw new CompilationException("Cannot assign a non-constant expression into a class variable.", position());
 				
 				stack.add_id(id.id, t);
 				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))

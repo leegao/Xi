@@ -1,6 +1,6 @@
 class Point{
 	x,y:int
-	z:int = 3 + 4
+	z:int = 7
 	
 	move(dx:int, dy:int){
 		x = x + dx
