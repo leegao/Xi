@@ -49,8 +49,8 @@ class P2 extends Point{
 	}
 }
 
-createPoint(t:int, y:int): Point {
-	np2:Point = new P2.init(t,y);
+createPoint(x:int, y:int): Point {
+	np2:Point = new P2.init(x,y);
 	return np2;
 }
 
