@@ -108,6 +108,15 @@ public class ProgramNode extends AbstractSyntaxTree {
 	@Override
  	public XiType typecheck(ContextList stack) throws CompilationException {
 		HashSet<ClassNode> typechecked = new HashSet<ClassNode>();
+		for (VisualizableTreeNode childTree : children) {
+			if (childTree instanceof GblDeclNode) {
+				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
+				
+				if (!childType.equals(XiPrimitiveType.UNIT))
+					throw new CompilationException("GblDeclNodes are expected to typecheck to unit", position);
+			}
+		}
+		
 		for( VisualizableTreeNode childTree : children) {
 			if( childTree instanceof FuncDeclNode) {
 				((FuncDeclNode) childTree).make_type();
@@ -122,12 +131,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 				
 //				if(!(childType instanceof XiObjectType))
 //					throw new CompilationException("Invalid program, expected Object type but got "+childType+" instead.",position);
-			} else if (childTree instanceof GblDeclNode) {
-				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
-				
-				if (!childType.equals(XiPrimitiveType.UNIT))
-					throw new CompilationException("GblDeclNodes are expected to typecheck to unit", position);
-			}
+			} 
 		}
 		
 		type = XiPrimitiveType.UNIT;
