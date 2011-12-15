@@ -42,6 +42,8 @@ public class XiTypechecker {
 	
 	public AbstractSyntaxNode ast;
 	public String code;
+
+	private String file;
 	
 	/**This constructor sets the AST field, creates the global context,
 	 * and pushes the global context on to the stack. 
@@ -49,6 +51,7 @@ public class XiTypechecker {
 	public XiTypechecker(AbstractSyntaxNode ast, String code) throws InvalidXiTypeException{
 		this.ast = ast;
 		this.code = code;
+		this.file = "";
 		globalContext = new XiTypeContext(false);
 		stack = new ContextList();
 		init();
@@ -125,6 +128,27 @@ public class XiTypechecker {
 	private void init() throws InvalidXiTypeException{
 		// first pass
 		ArrayList<ClassNode> classes = new ArrayList<ClassNode>();
+		
+		HashMap<String, XiType> interfaces = null;
+		String ixi = this.file.replace("xi", "ixi");
+		
+		try {
+			interfaces = include(ixi);
+		} catch (FileNotFoundException e) {
+			// nothing
+		} catch (IOException e) {
+			throw new CompilationException("Malformed interface file for "+ixi, ast.position());
+		}
+		
+		try {
+			if (interfaces != null){
+				globalContext.add(interfaces);
+				globalContext.interfaces.putAll(interfaces);
+			}
+		} catch (InvalidXiTypeException e) {
+			throw new CompilationException(e.getMessage(), ast.position());
+		}
+		
 		// precondition: ast is a program node
 		for (VisualizableTreeNode child : ast.children()){
 			// either UseNode or FuncDeclNode or ClassNode
@@ -139,7 +163,7 @@ public class XiTypechecker {
 			} else if (child instanceof UseNode){
 				UseNode use = (UseNode)child;
 				IdNode lib = (IdNode)use.lib;
-				HashMap<String, XiType> interfaces;
+				//HashMap<String, XiType> interfaces;
 				try {
 					interfaces = include(lib.id);
 				} catch (FileNotFoundException e) {
