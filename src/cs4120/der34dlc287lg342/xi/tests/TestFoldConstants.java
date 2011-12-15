@@ -89,7 +89,6 @@ public class TestFoldConstants extends TestCase {
 		
 	}
 	
-<<<<<<< HEAD
 	public void testClass() throws Exception{
 		String inputFile = "test2.xi";
 		FileReader reader = new FileReader(inputFile);
@@ -113,7 +112,8 @@ public class TestFoldConstants extends TestCase {
 		
 		((AbstractSyntaxTree)tc.ast).foldConstants();
 		TestParser.printtree(program,"");
-=======
+	}
+
 	public void testFinalParsePosition(){
 		try{
 		XiTypechecker tc;
@@ -131,6 +131,5 @@ public class TestFoldConstants extends TestCase {
 		for (VisualizableTreeNode child : node.children()){
 			printtree(child, tab+" ");
 		}
->>>>>>> finals
 	}
 }

@@ -661,7 +661,7 @@ program ::= use_list:p func_decl:s
 		program.addAll(s);
 		RESULT = program; :}		
 	| func_decl:s
-	{:	ProgramNode program = new ProgramNodse(s.position());
+	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
 		RESULT = program; :}
 	| class_decl:s

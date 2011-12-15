@@ -254,7 +254,6 @@ public class TestTypechecker extends TestCase {
 		}
 	}
 	
-<<<<<<< HEAD
 	public void testClass() throws Exception{
 		String inputFile = "test2.xi";
 		FileReader reader = new FileReader(inputFile);
@@ -311,10 +310,10 @@ public class TestTypechecker extends TestCase {
 	}
 	
 	public void testInterfaceClassCreate() throws Exception{ 
-		
 		XiTypechecker tc = gen("use point main(){x:Point = createPoint(0,0)}");
 		tc.typecheck();
-=======
+	}
+
 	public void testFinalTypechecking() {
 		System.out.println("--------------------------------");
 		
@@ -350,6 +349,5 @@ public class TestTypechecker extends TestCase {
 			e.printStackTrace();
 		}
 		
->>>>>>> finals
 	}
 }

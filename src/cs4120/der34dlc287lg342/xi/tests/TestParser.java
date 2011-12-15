@@ -275,12 +275,9 @@ public class TestParser extends TestCase {
 		
 		try {
 			gen("func() { _ = false  }").parse();
-<<<<<<< HEAD
-			
-=======
+
 			//fail here- darbin
 			//fail("Did not catch compilation error");
->>>>>>> finals
 		} catch (CompilationException e) {
 			assertEquals("((1, 12), (1, 12))", e.getPosition().toString());
 			assertEquals("Syntax Error: Not expecting token GETS(=)", e.getMessage());
@@ -333,12 +330,11 @@ public class TestParser extends TestCase {
 	}
 	
 	public void testPA4Issue() {
-<<<<<<< HEAD
 		Parser p = gen("main() {b:bool = 3+-3*40/4/5*2 == -9}");
 		checkType(p, new String[] {
 			"PROGRAM", "FUNCDECL", "ID(main)", "BLOCK", "INST", "DECL", "ID(b)", "EQ(EQUAL)", "BIN(PLUS)", "3",
 			"BIN(TIMES)", "BIN(DIVIDE)", "BIN(DIVIDE)", "BIN(TIMES)", "UNEG", "3", "40", "4", "5", "2", "UNEG", "9"
-=======
+		});
 		/*
 		//fail here-darbin
 		checkType(gen("main() {b:bool = 3+-3*40/4/5*2 == -9}"), new String[] {
@@ -387,7 +383,6 @@ public class TestParser extends TestCase {
 		}
 	}
 	
-<<<<<<< HEAD
 	public void testClasses() throws Exception{
 		String inputFile = "test2.xi";
 		FileReader reader = new FileReader(inputFile);
@@ -413,7 +408,5 @@ public class TestParser extends TestCase {
 				   "ID(main)", "BLOCK" });
 	
 	}
-=======
-	
->>>>>>> finals
+
 }

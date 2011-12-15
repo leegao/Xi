@@ -87,8 +87,6 @@ public class DeclNode extends AbstractSyntaxTree {
 			if (!t.equals(XiPrimitiveType.INT))
 				throw new CompilationException("Cannot declare arrays with non-integer dimension", position());
 		}
-		
-<<<<<<< HEAD
 		if (stack.klass != null){
 			XiObjectType arg_type = stack.top.classes.get(stack.klass.id.id);
 			
@@ -104,30 +102,28 @@ public class DeclNode extends AbstractSyntaxTree {
 				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
 					throw new CompilationException("Cannot match the type of the object to the declared type", position());
 			} else {
+//				XiType t = new XiPrimitiveType(type_name, brackets);
+//				
+//				
+//				stack.add_id(id.id, t);
+//				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
+//					throw new CompilationException("Cannot match the type of the object to the declared type", position());
+//				
+				//if this is a final type, the XiPrimitiveType constructor its is_final field
 				XiType t = new XiPrimitiveType(type_name, brackets);
+				
+				//setting in type initial value ensures that it is propagated since all typechecks 
+				//following this involve checking the Context stack
+				//if this is a final decl, set initial_value
+				if(((XiPrimitiveType)t).is_final) //only valid if force init at decl time with parser
+					((XiPrimitiveType)t).setInitialValue(this.initial_value);
+				
 				stack.add_id(id.id, t);
-				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
+				AbstractSyntaxTree temp=(AbstractSyntaxTree)id;
+				XiType temptype=temp.typecheck(stack);
+				if (! t.equals(temptype))
 					throw new CompilationException("Cannot match the type of the object to the declared type", position());
 			}
-			
-=======
-		//add the id and its type to the context stack
-		try {
-			//if this is a final type, the XiPrimitiveType constructor its is_final field
-			XiType t = new XiPrimitiveType(type_name, brackets);
-			
-			//setting in type initial value ensures that it is propagated since all typechecks 
-			//following this involve checking the Context stack
-			//if this is a final decl, set initial_value
-			if(((XiPrimitiveType)t).is_final) //only valid if force init at decl time with parser
-				((XiPrimitiveType)t).setInitialValue(this.initial_value);
-			
-			stack.add_id(id.id, t);
-			AbstractSyntaxTree temp=(AbstractSyntaxTree)id;
-			XiType temptype=temp.typecheck(stack);
-			if (! t.equals(temptype))
-				throw new CompilationException("Cannot match the type of the object to the declared type", position());
->>>>>>> finals
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());
 		}

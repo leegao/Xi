@@ -1064,7 +1064,7 @@ class CUP$parser$actions {
 		int sleft = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).left;
 		int sright = ((java_cup.runtime.Symbol)CUP$parser$stack.peek()).right;
 		AbstractSyntaxTree s = (AbstractSyntaxTree)((java_cup.runtime.Symbol) CUP$parser$stack.peek()).value;
-			ProgramNode program = new ProgramNodse(s.position());
+			ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
 		RESULT = program; 
               CUP$parser$result = parser.getSymbolFactory().newSymbol("program",0, ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$parser$stack.peek()), RESULT);
