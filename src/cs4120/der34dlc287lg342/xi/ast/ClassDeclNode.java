@@ -80,6 +80,9 @@ public class ClassDeclNode extends AbstractSyntaxTree {
 			// make sure that t is int type
 			if (!t.equals(XiPrimitiveType.INT))
 				throw new CompilationException("Cannot declare arrays with non-integer dimension", position());
+			// and also make sure that it is a constant
+			if (!(b instanceof IntegerLiteralNode))
+				throw new CompilationException("Cannot declare class variable arrays with non-constant dimension", position());
 		}
 		
 		

@@ -1,6 +1,6 @@
 class Point{
 	x,y:int
-	z:int = 7
+	z:Point[]
 	
 	move(dx:int, dy:int){
 		x = x + dx
@@ -23,6 +23,10 @@ class Point{
 		x = x0;
 		y = y0
 		return this
+	}
+	
+	test(x0:int){
+		x = 3
 	}
 }
 

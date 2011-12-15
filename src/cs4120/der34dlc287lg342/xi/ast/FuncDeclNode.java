@@ -103,6 +103,14 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		for (VisualizableTreeNode arg : this.args){ 
 			DeclNode decl = (DeclNode) arg;
 			IdNode id = (IdNode)decl.id;
+			
+			if (stack.klass != null){
+				XiObjectType arg_type = stack.top.classes.get(stack.klass.id.id);
+				
+				if (arg_type.layout.contains_variable(id.id)){
+					throw new CompilationException("Method argument "+id+" is not allowed to shadow class variables.", decl.position());
+				}
+			}
 			try {
 				
 				if (stack.top.classes.containsKey(decl.type_name)){
