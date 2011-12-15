@@ -46,14 +46,3 @@ createPoint(x:int, y:int): Point {
 	np2:Point = new P2.init(x,y);
 	return np2;
 }
-
-main(args:int[][]){
-	p1:Point = createPoint(1,2)
-	p2:Point = createPoint(3,4)
-	p3:Point = p1.add(p2)
-	
-	x:int,y:int = p3.coords()
-	print(unparseInt(x));
-	print(" ");
-	println(unparseInt(y));
-}

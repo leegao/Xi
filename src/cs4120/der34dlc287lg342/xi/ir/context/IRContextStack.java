@@ -30,6 +30,7 @@ public class IRContextStack extends ArrayList<IRContext>{
 	public ClassNode current_class = null;
 	public HashMap<String, IRContext> classes = new HashMap<String, IRContext>();
 	public HashMap<String, Expr> globals = new HashMap<String, Expr>();
+	public ArrayList<FuncDeclNode> interfaces = new ArrayList<FuncDeclNode>();
 
 	public IRContextStack(){
 		ro_data = new HashMap<Label, byte[]>();
@@ -101,6 +102,19 @@ public class IRContextStack extends ArrayList<IRContext>{
 				return new Name(r.label);
 		}
 		throw new InvalidIRContextException("Cannot find register associated with symbol id");
+	} 
+	
+	public void set_name(FuncDeclNode name) throws InvalidIRContextException{
+		if (this.isEmpty())
+			throw new InvalidIRContextException("Cannot find a context frame to work with");
+
+		for (int i = this.size()-1; i >= 0; i--){
+			LabelNode r = get(i).find_name(name.id.id);
+			if (r != null){
+				get(i).set_name(name);
+			}
+		}
+		//throw new InvalidIRContextException("Cannot find register associated with symbol id");
 	} 
 	
 	public Label set_break() throws InvalidIRContextException{

@@ -40,6 +40,7 @@ import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiTypeContext;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
@@ -101,6 +102,27 @@ public class ProgramNode extends AbstractSyntaxTree {
 			throw new CompilationException("Invalid program, expected Object type but got "+t+" instead.",position);
 	}
 	
+	public void make_type(XiFunctionType t){
+
+		ArrayList<XiType> argumentList = new ArrayList<XiType>();
+		for (XiType arg : t.args){
+			if (arg instanceof XiPrimitiveType)
+				argumentList.add(XiTypeContext.make_type(((XiPrimitiveType) arg).type, ((XiPrimitiveType) arg).dimension));
+			else
+				argumentList.add(arg);
+		}
+		t.args = argumentList;
+		
+		for (XiType ret : new ArrayList<XiType>(t.ret)){
+			if (ret instanceof XiPrimitiveType){
+				int i = t.ret.indexOf(ret);
+				t.ret.set(i, XiTypeContext.make_type(((XiPrimitiveType) ret).type, ((XiPrimitiveType) ret).dimension));
+			}
+		}
+		
+		//this.type = new XiFunctionType(argumentList, this.types);
+	}
+	
 	/** Type checks this program node. A program node type checks if
 	 * all its function declaration children type check as XiFunctionTypes.
 	 * 
@@ -115,6 +137,25 @@ public class ProgramNode extends AbstractSyntaxTree {
 				
 				if (!childType.equals(XiPrimitiveType.UNIT))
 					throw new CompilationException("GblDeclNodes are expected to typecheck to unit", position);
+			}
+		}
+		
+		for (XiType type : stack.top.interfaces.values()){
+			if (type instanceof XiFunctionType){
+				make_type((XiFunctionType) type);
+				//System.out.println(type);
+			}
+		}
+		
+		for (String s : stack.top.iclasses.keySet()){
+			XiObjectType t = stack.top.iclasses.get(s);
+			if (stack.top.iclasses.containsKey(s) && stack.top.classes.get(s) == stack.top.iclasses.get(s)){
+				// only from interface
+				for (FuncDeclNode child : t.layout.method_table.values()){
+					//System.out.println(child);
+					child.make_type();
+					//System.out.println(child);
+				}
 			}
 		}
 		
@@ -162,6 +203,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 			if (child instanceof FuncDeclNode){
 				FuncDeclNode decl = (FuncDeclNode)child;
 				stack.add_name(decl);
+				stack.interfaces.add(decl);
 			}
 		}
 	}
@@ -202,6 +244,13 @@ public class ProgramNode extends AbstractSyntaxTree {
 				stack.globals.put(((GblDeclNode) child).id.id, new Mem(new EffectiveAddress(new Label("_I_g_"+((GblDeclNode) child).id.id+"_"+XiFunctionType.str_of(((GblDeclNode) child).id.type)))));
 				
 			}
+		}
+		
+		for (FuncDeclNode func : stack.interfaces){
+			//System.out.println(func);
+			func.make_type();
+			stack.set_name(func);
+			//System.out.println(func);
 		}
 		
 		// Second pass: build translation rules

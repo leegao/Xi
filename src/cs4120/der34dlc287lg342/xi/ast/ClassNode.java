@@ -65,6 +65,15 @@ public class ClassNode extends AbstractSyntaxTree{
 	public XiType typecheck(ContextList stack) throws CompilationException {
 //		if (this.type != null)
 //			return this.type;
+		//System.out.println(this);
+//		if (stack.top.iclasses.containsKey(this.id.id) && stack.top.classes.get(this.id.id) == stack.top.iclasses.get(this.id.id)){
+//			// only from interface
+//			for (VisualizableTreeNode child : children){
+//				if (child instanceof FuncDeclNode){ 
+//					((FuncDeclNode) child).make_type();
+//				}
+//			}
+//		}
 		
 		for (VisualizableTreeNode child : children){
 			if (child instanceof ClassDeclNode){
@@ -87,7 +96,6 @@ public class ClassNode extends AbstractSyntaxTree{
 		this.type = stack.top.classes.get(id.id);
 		
 		if (stack.top.iclasses.containsKey(this.id.id)){
-			System.out.println(this);
 			// line up the layout
 			XiObjectType ideal = stack.top.iclasses.get(this.id.id);
 			ArrayList<String> arr = new ArrayList<String>();
@@ -105,7 +113,7 @@ public class ClassNode extends AbstractSyntaxTree{
 				}
 			}
 			((XiObjectType)type).layout.method_vector = arr;
-			System.out.println(ideal.layout.method_vector);
+			//System.out.println(ideal.layout.method_vector + "\n\t"+((XiObjectType)type).layout.method_vector);
 		}
 		
 		
@@ -146,12 +154,11 @@ public class ClassNode extends AbstractSyntaxTree{
 		
 		// create the virtual table
 		Class vt = new Class(this.id.id);
-		for (VisualizableTreeNode child : children){
+		for (String method : ((XiObjectType)type).layout.method_vector){
 			//System.out.println(child);
 			// we can init class later
-			if (child instanceof FuncDeclNode){
-				vt.add(((FuncDeclNode) child).type().mangle("_"+this.id.id+"_", ((FuncDeclNode) child).id.id), ((XiObjectType)type).layout.parent_type != null ? ((XiObjectType)type).layout.parent_type.layout.method_index(((FuncDeclNode) child).id.id) : -1);
-			}
+			FuncDeclNode func = (((XiObjectType)type).layout.get_method(method));
+			vt.add(func.type().mangle("_"+this.id.id+"_", method), ((XiObjectType)type).layout.parent_type != null ? ((XiObjectType)type).layout.parent_type.layout.method_index(method) : -1);
 		}
 		vt.size = ((XiObjectType)this.type).layout.var_vector.size()*8+8;
 		vt.need_methods = ((XiObjectType)type).layout.parent_type != null ? ((XiObjectType)type).layout.parent_type.layout.method_dv().size() : 0;
