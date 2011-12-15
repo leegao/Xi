@@ -97,25 +97,26 @@ terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
 
 nonterminal AbstractSyntaxNode program, use_list;
 // expr components
-<<<<<<< HEAD
+
 nonterminal AbstractSyntaxTree expr, uop, func_call, expr_subset, 
 	arr_index, arr_create, arr_elements, id, id_brackets, allowed_element_assign, usable_id;
 // statement components
 nonterminal AbstractSyntaxTree stmt, stmt_w_semi, if_stmt, while_stmt, return_stmt, return_list, 
-	block, stmt_list, block_stmt, stmt_or_block, var_decl, var_inst, var_item, var_set;
+	block, stmt_list, block_stmt, stmt_or_block, var_decl, var_inst, var_item, var_set, final_var_decl,final_var_init;
 nonterminal AbstractSyntaxTree dimension;
-nonterminal String type;
+
 nonterminal ArrayList<XiType> types;
 nonterminal ArrayList<VisualizableTreeNode> bracket_list;
 nonterminal ArrayList<VisualizableTreeNode> var_list, func_list, func_callargs;
 nonterminal ArrayList<VisualizableTreeNode> varclass_list, class_block, gblvar_list;
 nonterminal ArrayList<IdNode> idclass_list, gblid_list;
-
+nonterminal String type, final_type;
 nonterminal AbstractSyntaxTree bool_literal, attr;
 // top level
 nonterminal AbstractSyntaxTree func_decl, use_stmt;
 nonterminal AbstractSyntaxTree class_decl, varclass_decl, varclass_inst, gblvar_decl, gblvar_inst;
-=======
+
+/*=======
 nonterminal AbstractSyntaxNode expr, uop, func_call, 
 	arr_index, arr_create, arr_elements, id, id_brackets, allowed_element_assign;
 // statement components
@@ -129,7 +130,7 @@ nonterminal ArrayList<VisualizableTreeNode> var_list, func_list, func_callargs;
 nonterminal AbstractSyntaxNode bool_literal;
 // top level
 nonterminal AbstractSyntaxNode func_decl, use_stmt;
->>>>>>> finals
+>>>>>>> finals*/
 
 precedence nonassoc NEW;
 
@@ -159,7 +160,6 @@ id ::= IDENTIFIER:o
 	{:  Token id = (Token)o;
 		RESULT = new IdNode(id.value(), id.position());:};
 	
-<<<<<<< HEAD
 usable_id ::= id:id
 	{: RESULT = id; :}
 	| THIS:t
@@ -184,8 +184,7 @@ attr ::= func_call:a PERIOD id:b
 
 attr ::= expr:a PERIOD id:b
 	{: RESULT = new AttrNode(a, b, span(a.position(), b.position())); :};
-=======
->>>>>>> finals
+
 
 expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
       ((BoolOpNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
@@ -258,14 +257,10 @@ expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
 	| arr_create:e
 	{: RESULT = e; :}
 	
-<<<<<<< HEAD
 	| NULL:t
 	{: RESULT = new NullNode(t.position());:}
 	
 	| usable_id:e
-=======
-	| id:e
->>>>>>> finals
 	{: RESULT = e; :}
 	
 	| attr:attr
@@ -429,11 +424,7 @@ final_var_init ::= final_var_decl:fvd GETS expr:e
 		  ((DeclNode)fvd).setInitialValue(e);
 		  list.add(fvd);
 		  InstNode inst = new InstNode(list, e, span(fvd.position(), e.position()));
-		  RESULT=inst; :}
-		| error 		
-		{: 
-		  RESULT= new ErrorNode(null);
-		:};
+		  RESULT=inst; :};
 
 		 
 bracket_list ::= 
@@ -486,11 +477,8 @@ id_brackets ::= id:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
 	   RESULT = new ListIndexNode(base, i, span(base.position(), t.position())); :};
 
 var_set ::= id:id GETS expr:expr
-<<<<<<< HEAD
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :}
 	| attr:id GETS expr:expr
-=======
->>>>>>> finals
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :}
 	| id_brackets:id GETS expr:expr
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :};
@@ -513,12 +501,8 @@ func_list ::= /* nothing */
 	{:	list.add(s);
 		RESULT = list; :};
 
-<<<<<<< HEAD
+
 types ::= {: RESULT = new ArrayList<XiType>(); :}
-=======
-types ::= /* nothing */ 
-	{: RESULT = new ArrayList<XiPrimitiveType>(); :}
->>>>>>> finals
 	| COLON type:type bracket_list:dim
 	{: RESULT = new ArrayList<XiType>(); RESULT.add(new XiPrimitiveType(type, dim)); :}
 	| types:arr COMMA type:type bracket_list:dim
@@ -539,7 +523,7 @@ use_list ::= use_stmt:s
 		program.add(s);
 		RESULT = program; :};
 
-<<<<<<< HEAD
+
 varclass_decl ::= id:id COLON type:t bracket_list:arr
 	{:	// check that arr is empty
 		ClassDeclNode decl = new ClassDeclNode((IdNode)id, t, arr, id.position());
@@ -659,8 +643,7 @@ gblid_list ::= id:id1 COMMA id:id2
 		RESULT = list;
 	:};
 
-=======
->>>>>>> finals
+
 program ::= use_list:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
@@ -678,10 +661,9 @@ program ::= use_list:p func_decl:s
 		program.addAll(s);
 		RESULT = program; :}		
 	| func_decl:s
-	{:	ProgramNode program = new ProgramNode(s.position());
+	{:	ProgramNode program = new ProgramNodse(s.position());
 		program.add(s);
 		RESULT = program; :}
-<<<<<<< HEAD
 	| class_decl:s
 	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
@@ -691,8 +673,6 @@ program ::= use_list:p func_decl:s
 		program.addAll(s);
 		program.position = span(p.position(), ((GblDeclNode)s.get(0)).position());
 		RESULT = program; :}
-=======
->>>>>>> finals
 	| program:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
