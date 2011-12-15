@@ -8,11 +8,22 @@ import java.io.FileWriter;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import cs4120.der34dlc287lg342.xi.XiParser;
 import cs4120.der34dlc287lg342.xi.assembly.Assembler;
 import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
+import cs4120.der34dlc287lg342.xi.cfg.AvailableCopiesConstants;
+import cs4120.der34dlc287lg342.xi.cfg.AvailableExpressions;
+import cs4120.der34dlc287lg342.xi.cfg.CFG;
+import cs4120.der34dlc287lg342.xi.cfg.CFGConstantFolding;
+import cs4120.der34dlc287lg342.xi.cfg.CSE;
+import cs4120.der34dlc287lg342.xi.cfg.CreateBlocks;
+import cs4120.der34dlc287lg342.xi.cfg.DeadCodeElimination;
+import cs4120.der34dlc287lg342.xi.cfg.IRLivenessAnalysis;
+import cs4120.der34dlc287lg342.xi.cfg.Trace;
+import cs4120.der34dlc287lg342.xi.cfg.VariablePropagation;
 import cs4120.der34dlc287lg342.xi.ir.*;
 import cs4120.der34dlc287lg342.xi.ir.context.*;
 import cs4120.der34dlc287lg342.xi.ir.translate.ConstantFolding;
@@ -175,6 +186,20 @@ public class TestTiles extends TestCase{
 		}
 		
 		//System.out.println(stmt.prettyPrint());
+		
+		for (VisualizableTreeNode s : new ArrayList<VisualizableTreeNode>(stmt.children)){
+			if (!(s instanceof Func)) 
+				continue;
+			int which = stmt.children.indexOf(s);
+			Func func = (Func)s;
+			new CreateBlocks(func).analyze();
+			CFG cfg = CFG.cfg(func);
+			
+			Trace lin = new Trace(cfg);
+			Func f = new Func(func.name);
+			lin.flatten(f);
+			stmt.children.set(which, f);
+		}
 		
 		SeqTile tiles = (SeqTile)stmt.munch();
 		Assembler assembler = new Assembler((SeqTile) stmt.munch());
