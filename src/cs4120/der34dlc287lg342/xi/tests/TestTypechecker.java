@@ -299,7 +299,7 @@ public class TestTypechecker extends TestCase {
 	
 	public void testTypeCheckSameVarName() throws Exception {
 		
-			XiTypechecker tc = gen("x:int main(){x:int x:int=0}");
+			XiTypechecker tc = gen("x:int main(){x:int=0}");
 			tc.typecheck();
 			fail("did not catch compilation error");
 		

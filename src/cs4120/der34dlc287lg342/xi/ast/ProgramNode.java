@@ -110,7 +110,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 		HashSet<ClassNode> typechecked = new HashSet<ClassNode>();
 		for (VisualizableTreeNode childTree : children) {
 			if (childTree instanceof GblDeclNode) {
-				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
+				XiType childType = ((GblDeclNode)childTree).typecheck(stack);
 				
 				if (!childType.equals(XiPrimitiveType.UNIT))
 					throw new CompilationException("GblDeclNodes are expected to typecheck to unit", position);
