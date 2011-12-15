@@ -35,7 +35,7 @@ terminal Token STRING_LITERAL;
 terminal Token CHARACTER_LITERAL;
 terminal Token INTEGER_LITERAL;
 terminal Token TRUE, FALSE;
-terminal Token INT, BOOL;
+terminal Token INT, BOOL, FINAL;
 terminal UMINUS, UNOT;
 
 terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,

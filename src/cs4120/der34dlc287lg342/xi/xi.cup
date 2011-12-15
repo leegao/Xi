@@ -679,4 +679,9 @@ program ::= use_list:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
 		program.position = span(p.position(), s.position());
+		RESULT = program; :}
+	| program:p class_decl:s
+	{:	ProgramNode program = (ProgramNode)p;
+		program.add(s);
+		program.position = span(p.position(), s.position());
 		RESULT = program; :};

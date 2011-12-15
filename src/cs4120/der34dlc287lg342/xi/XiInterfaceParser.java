@@ -25,7 +25,7 @@ public class XiInterfaceParser implements Parser {
 	public AbstractSyntaxNode parse() throws CompilationException {
 		XiLexer lexer = new XiLexer(reader);
 		lexer.unit = unit;
-		Scanner cupScanner = new LexerAdapter(lexer, sym.class);
+		Scanner cupScanner = new LexerAdapter(lexer, ixisym.class);
 		ixiparser p = new ixiparser(cupScanner);
 		try {
 			AbstractSyntaxNode node = (AbstractSyntaxNode) p.parse().value;
