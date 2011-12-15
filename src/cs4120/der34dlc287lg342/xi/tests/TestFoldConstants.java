@@ -87,6 +87,17 @@ public class TestFoldConstants extends TestCase {
 		
 	}
 	
+	public void testFinalParsePosition(){
+		try{
+		XiTypechecker tc;
+		tc=gen("main(){ x:final int=1; y: int=true;  }");
+		tc.typecheck();
+		} catch (InvalidXiTypeException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	
 	public void printtree(VisualizableTreeNode node, String tab){
 		System.out.println(tab + node);

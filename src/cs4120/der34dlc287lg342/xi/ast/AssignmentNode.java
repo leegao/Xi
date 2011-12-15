@@ -57,7 +57,7 @@ public class AssignmentNode extends AbstractSyntaxTree {
 			//initialized yet. For now, parser forces init at decl time
 			if(((XiPrimitiveType)idType).is_final && ((XiPrimitiveType)idType).is_initialized){
 				//System.err.println(((XiPrimitiveType)idType).is_initialized); //should always be true for now.
-				throw new CompilationException("The final local variable "+ ((IdNode)id).id +" cannot be assigned- IT IS FINAL (aka CONSTANT)!.",id.position());
+				throw new CompilationException("The final local variable "+ ((IdNode)id).id +" cannot be assigned- IT IS FINAL (aka CONSTANT)!.",this.position());
 			}
 		}
 		
