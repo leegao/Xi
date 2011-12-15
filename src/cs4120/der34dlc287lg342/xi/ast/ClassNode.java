@@ -65,6 +65,15 @@ public class ClassNode extends AbstractSyntaxTree{
 	public XiType typecheck(ContextList stack) throws CompilationException {
 //		if (this.type != null)
 //			return this.type;
+		//System.out.println(this);
+//		if (stack.top.iclasses.containsKey(this.id.id) && stack.top.classes.get(this.id.id) == stack.top.iclasses.get(this.id.id)){
+//			// only from interface
+//			for (VisualizableTreeNode child : children){
+//				if (child instanceof FuncDeclNode){ 
+//					((FuncDeclNode) child).make_type();
+//				}
+//			}
+//		}
 		
 		for (VisualizableTreeNode child : children){
 			if (child instanceof ClassDeclNode){

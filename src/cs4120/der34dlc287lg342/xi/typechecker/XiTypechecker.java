@@ -105,7 +105,7 @@ public class XiTypechecker {
 						}
 					}
 				}
-				
+
 				if (globalContext.classes.containsKey(klass.id.id))
 					throw new CompilationException("Classtype "+klass.id.id+" already exists", klass.position());
 				globalContext.iclasses.put(klass.id.id, type);
@@ -159,6 +159,7 @@ public class XiTypechecker {
 				
 				if (globalContext.classes.containsKey(klass.id.id) && !globalContext.iclasses.containsKey(klass.id.id))
 					throw new CompilationException("Class type "+klass.id.id+" already exists", klass.position());
+				
 //				else if (globalContext.iclasses.containsKey(klass.id.id)){
 //
 //					// line up the layout

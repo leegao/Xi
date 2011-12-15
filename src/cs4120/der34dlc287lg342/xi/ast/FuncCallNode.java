@@ -80,7 +80,9 @@ public class FuncCallNode extends ExpressionNode {
 			}
 		}
 		
+		
 		type = ((XiFunctionType)t).returns().coerce();
+		//System.out.println(stack.top);
 		return type;
 	}
 	
