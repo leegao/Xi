@@ -171,7 +171,10 @@ public class TestTiles extends TestCase{
 			}
 		}
 		
-		System.out.println(stmt.munch());
+		for (Tile t : ((SeqTile)stmt.munch()).tiles){
+			System.out.println(t.getClass().getSimpleName());
+			
+		}
 		
 		//System.out.println(stmt.prettyPrint());
 	}

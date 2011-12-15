@@ -511,6 +511,10 @@ program ::= use_list:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
 		RESULT = program; :}
+	| use_list:p class_decl:s
+	{:	ProgramNode program = (ProgramNode)p;
+		program.add(s);
+		RESULT = program;:}
 	| func_decl:s
 	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);

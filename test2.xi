@@ -1,3 +1,5 @@
+use io
+
 class Point{
 	x,y:int
 	z:Point[]
