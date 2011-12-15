@@ -16,6 +16,7 @@ import cs4120.der34dlc287lg342.xi.ir.Call;
 import cs4120.der34dlc287lg342.xi.ir.Cjump;
 import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Dseq_ro;
+import cs4120.der34dlc287lg342.xi.ir.EffectiveAddress;
 import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.Jump;
@@ -195,6 +196,9 @@ public class ProgramNode extends AbstractSyntaxTree {
 					if (c instanceof FuncDeclNode)
 						class_ctx.add_name("_"+((ClassNode)child).id.id+"_", (FuncDeclNode) c);
 				}
+			} else if (child instanceof GblDeclNode){
+				stack.globals.put(((GblDeclNode) child).id.id, new Mem(new EffectiveAddress(new Label("_I_g_"+((GblDeclNode) child).id.id+"_"+XiFunctionType.str_of(((GblDeclNode) child).id.type)))));
+				
 			}
 		}
 		
@@ -207,8 +211,11 @@ public class ProgramNode extends AbstractSyntaxTree {
 				seq.add(tr.stmt());
 			} else if (child instanceof ClassNode){
 				stack.push(stack.classes.get(((ClassNode) child).id.id));
-				IRTranslation tr =((ClassNode) child).to_ir(stack);
+				IRTranslation tr = ((ClassNode) child).to_ir(stack);
 				stack.pop();
+				seq.add(tr.stmt());
+			} else if (child instanceof GblDeclNode){
+				IRTranslation tr = ((GblDeclNode) child).to_ir(stack);
 				seq.add(tr.stmt());
 			}
 		}

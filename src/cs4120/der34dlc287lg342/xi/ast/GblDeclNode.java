@@ -2,12 +2,18 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.EffectiveAddress;
+import cs4120.der34dlc287lg342.xi.ir.StaticData;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContext;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.Label;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
+import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -116,8 +122,16 @@ public class GblDeclNode extends AbstractSyntaxTree {
 	@Override
 	public IRTranslation to_ir(IRContextStack stack)
 			throws InvalidIRContextException {
-		// TODO Auto-generated method stub
-		return null;
+		
+		// expr is either a const or null
+		long i = 0;
+		if (expr instanceof IntegerLiteralNode){
+			i = ((IntegerLiteralNode) expr).value;
+		} else if (expr instanceof BoolLiteralNode){
+			i = ((BoolLiteralNode) expr).value ? 1 : 0;
+		}
+		
+		return new IRTranslationStmt(new StaticData("_I_g_"+id.id+"_"+XiFunctionType.str_of(id.type), i));
 	}
 
 }

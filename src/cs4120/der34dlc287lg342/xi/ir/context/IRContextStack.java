@@ -29,6 +29,7 @@ public class IRContextStack extends ArrayList<IRContext>{
 	public boolean abort = false;
 	public ClassNode current_class = null;
 	public HashMap<String, IRContext> classes = new HashMap<String, IRContext>();
+	public HashMap<String, Expr> globals = new HashMap<String, Expr>();
 
 	public IRContextStack(){
 		ro_data = new HashMap<Label, byte[]>();
@@ -58,6 +59,10 @@ public class IRContextStack extends ArrayList<IRContext>{
 	public Expr find_register(String id) throws InvalidIRContextException{
 		if (this.isEmpty())
 			throw new InvalidIRContextException("Cannot find a context frame to work with");
+		
+		if (this.globals.containsKey(id)){
+			return this.globals.get(id);
+		}
 		
 		if (this.current_class != null && ((XiObjectType)current_class.type).layout.contains_variable(id)){
 			// return this.x
