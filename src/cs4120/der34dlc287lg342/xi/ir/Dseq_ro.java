@@ -18,6 +18,13 @@ public class Dseq_ro extends Stmt {
 			data.add((int)b);
 	}
 	
+	public Dseq_ro(Label name, int[] bytes) {
+		this.ro_entry = name;
+		this.data = new ArrayList<Integer>();
+		for (int b : bytes)
+			data.add((int)b);
+	}
+
 	@Override
 	public Seq lower(){
 		return new Seq(this);

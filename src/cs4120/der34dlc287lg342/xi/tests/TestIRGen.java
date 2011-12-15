@@ -1540,5 +1540,6 @@ public class TestIRGen extends TestCase {
 		//TestParser.printtree(program,"");
 		
 		IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
+		System.out.println(tr.stmt().lower().prettyPrint());
 	}
 }

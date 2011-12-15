@@ -3,6 +3,8 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Arg;
+import cs4120.der34dlc287lg342.xi.ir.ClassVT;
+import cs4120.der34dlc287lg342.xi.ir.Dseq_ro;
 import cs4120.der34dlc287lg342.xi.ir.Func;
 import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Return;
@@ -17,6 +19,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 
@@ -85,25 +88,40 @@ public class ClassNode extends AbstractSyntaxTree{
 			}
 		}
 		
-		Func init_func = new Func(new Label("_I_init_"+this.id.id));
+		Func new_func = new Func(new Label("_I_new_"+this.id.id));
 		
 		IRContext c = new IRContext();
 		Label return_to = new Label();
 		c.return_to = return_to;
 		
 		Temp this_ = new Temp(new TempRegister("this"));
-		init_func.add(c.add_arg("this", 0, 1));
+		new_func.add(c.add_arg("this", 0, 1));
 		for (VisualizableTreeNode child : children){
 			if (child instanceof ClassDeclNode){
 				((ClassDeclNode) child).c = c;
-				init_func.add(((ClassDeclNode) child).to_ir(stack).stmt());
+				new_func.add(((ClassDeclNode) child).to_ir(stack).stmt());
 			}
 		}
 		
 		// add a return label
-		init_func.add(new Return(return_to));
+		new_func.add(new Return(return_to));
 		
-		seq.add(init_func);
+		seq.add(new_func);
+		
+		// create the virtual table
+		ClassVT vt = new ClassVT("_I_vt_"+this.id.id);
+		for (VisualizableTreeNode child : children){
+			//System.out.println(child);
+			// we can init class later
+			if (child instanceof FuncDeclNode){
+				vt.add(((FuncDeclNode) child).type().mangle("_"+this.id.id+"_", ((FuncDeclNode) child).id.id));
+			}
+		}
+		
+		seq.add(vt);
+		
+		// create the size table
+		Dseq_ro dseq = new Dseq_ro(new Label("_I_size_"+this.id.id), new int[]{((XiObjectType)this.type).layout.var_vector.size()*8+8});
 		
 		return new IRTranslationStmt(seq);
 		//throw new InvalidIRContextException("Unimplemented!");

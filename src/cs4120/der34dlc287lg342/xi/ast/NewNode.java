@@ -53,6 +53,10 @@ public class NewNode extends ExpressionNode {
 	@Override
 	public IRTranslation to_ir(IRContextStack stack)
 			throws InvalidIRContextException {
+		/*
+		 * call(_alloca, new Mem()
+		 */
+		
 		throw new InvalidIRContextException("Unimplemented: new");
 	}
 }

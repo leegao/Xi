@@ -2,9 +2,11 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
+import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
@@ -40,6 +42,7 @@ public class NullNode extends ExpressionNode {
 	@Override
 	public IRTranslation to_ir(IRContextStack stack)
 			throws InvalidIRContextException {
-		throw new InvalidIRContextException("Unimplemented: null");
+		return new IRTranslationExpr(new Const(0));
+		//throw new InvalidIRContextException("Unimplemented: null");
 	}
 }

@@ -21,6 +21,7 @@ import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationStmt;
 import cs4120.der34dlc287lg342.xi.typechecker.ContextList;
 import cs4120.der34dlc287lg342.xi.typechecker.XiFunctionType;
+import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
@@ -68,9 +69,16 @@ public class ReturnNode extends AbstractSyntaxTree {
 			{
 				for (int index = 0; index < function.ret.size(); index++) {
 					XiType t = ((AbstractSyntaxTree)children.get(index)).typecheck(stack);
-					if (!t.equals(function.ret.get(index)))
-						throw new CompilationException("Invalid return type("+(index+1)+"): expected ["+function.ret.get(index)+"] but got ["+t+"] instead", 
-								((AbstractSyntaxTree)children.get(index)).position());
+					XiType ret_type = function.ret.get(index);
+					if (ret_type instanceof XiPrimitiveType){
+						if (!ret_type.equals(t))
+							throw new CompilationException("Invalid return type("+(index+1)+"): expected ["+function.ret.get(index)+"] but got ["+t+"] instead", 
+									((AbstractSyntaxTree)children.get(index)).position());
+					} else {
+						if (!((XiObjectType) ret_type).ge(t))
+							throw new CompilationException("Invalid return type("+(index+1)+"): expected derived types of ["+function.ret.get(index)+"] but got ["+t+"] instead", 
+									((AbstractSyntaxTree)children.get(index)).position());
+					}
 				}
 				
 				type = XiPrimitiveType.VOID;

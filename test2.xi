@@ -1,7 +1,6 @@
 class Point{
 	x,y:int
 	z:int = 3 + 4
-	tail:Point = new Point.init(0,0)
 	
 	move(dx:int, dy:int){
 		x = x + dx
@@ -32,10 +31,11 @@ class P2 extends Point{
 }
 
 createPoint(x:int, y:int): Point {
-	np:Point[] = (new P2.init(x,y),null);
-	_ = np[0].init(x,y)
-	np2:Point = null;
-	z:Point = np[0];
-	z.x = 3;
-	return new Point.init(x,y)
+	//np:Point[] = (new P2.init(x,y),null);
+	//_ = np[0].init(x,y)
+	//np2:Point = null;
+	///z:Point = np[0];
+	//z.x = 3;
+	//return new Point.init(x,y)
+	return null;
 }
