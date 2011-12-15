@@ -80,7 +80,7 @@ public class AttrNode extends ExpressionNode {
 			}
 			return type;
 		} else {
-			System.out.println(object.layout.method_dv());
+			//System.out.println(object.layout.method_dv());
 			throw new CompilationException("Objects of type ["+object.type+"] contains no such attribute "+attr, position);
 		}
 	}

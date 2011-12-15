@@ -66,10 +66,11 @@ public class XiTypechecker {
 	/**Given the file name of an interface ixi file this function uses
 	 * a custom ixi parser to add function bindings defined in the ixi file
 	 * to the global context. This function is a helper to the init() function. 
-	 * @param id 	The file name of the ixi file without the extension.*/
+	 * @param id 	The file name of the ixi file without the extension.
+	 * @param classes */
 	
 	// add function declarations found within interfaces into the global context
-	HashMap<String, XiType> include(String id) throws IOException{
+	HashMap<String, XiType> include(String id, ArrayList<ClassNode> classes) throws IOException{
 		HashMap<String, XiType> interfaces = new HashMap<String, XiType>();
 		
 		FileReader reader = new FileReader(id+".ixi");
@@ -95,19 +96,20 @@ public class XiTypechecker {
 				interfaces.put(identifier.id, decl.type);
 			} else if (child instanceof ClassNode) {
 				ClassNode klass = (ClassNode)child;
+				classes.add(klass);
 				// cache the interface class in
 				XiObjectType type = new XiObjectType(klass);
 				
-				for (VisualizableTreeNode next : klass.children()){
-					if (next instanceof FuncDeclNode){
-						try {
-							type.add_method(((FuncDeclNode) next).id.id, (FuncDeclNode) next);
-						} catch (InvalidXiTypeException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-					}
-				}
+//				for (VisualizableTreeNode next : klass.children()){
+//					if (next instanceof FuncDeclNode){
+//						try {
+//							type.add_method(((FuncDeclNode) next).id.id, (FuncDeclNode) next);
+//						} catch (InvalidXiTypeException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
+//					}
+//				}
 
 				if (globalContext.classes.containsKey(klass.id.id))
 					throw new CompilationException("Classtype "+klass.id.id+" already exists", klass.position());
@@ -128,12 +130,12 @@ public class XiTypechecker {
 	private void init() throws InvalidXiTypeException{
 		// first pass
 		ArrayList<ClassNode> classes = new ArrayList<ClassNode>();
-		
+		ArrayList<ClassNode> iclasses = new ArrayList<ClassNode>();
 		HashMap<String, XiType> interfaces = null;
 		String ixi = this.file.replace("xi", "ixi");
 		
 		try {
-			interfaces = include(ixi);
+			interfaces = include(ixi, iclasses);
 		} catch (FileNotFoundException e) {
 			// nothing
 		} catch (IOException e) {
@@ -165,7 +167,7 @@ public class XiTypechecker {
 				IdNode lib = (IdNode)use.lib;
 				//HashMap<String, XiType> interfaces;
 				try {
-					interfaces = include(lib.id);
+					interfaces = include(lib.id, iclasses);
 				} catch (FileNotFoundException e) {
 					throw new CompilationException("Interface file cannot be found for "+lib.id, use.position());
 				} catch (IOException e) {
@@ -184,29 +186,9 @@ public class XiTypechecker {
 				if (globalContext.classes.containsKey(klass.id.id) && !globalContext.iclasses.containsKey(klass.id.id))
 					throw new CompilationException("Class type "+klass.id.id+" already exists", klass.position());
 				
-//				else if (globalContext.iclasses.containsKey(klass.id.id)){
-//
-//					// line up the layout
-//					XiObjectType ideal = globalContext.iclasses.get(klass.id.id);
-//					ArrayList<String> arr = new ArrayList<String>();
-//					for (String s : ideal.layout.method_vector){
-//						if (type.layout.method_vector.contains(s)){
-//							arr.add(s);
-//						} else {
-//							throw new InvalidXiTypeException("Declared method in the interface is not concretely implemented in the source.");
-//						}
-//					}
-//					
-//					for (String s : type.layout.method_vector){
-//						if (!arr.contains(s)){
-//							arr.add(s);
-//						}
-//					}
-//					type.layout.method_vector = arr;
-//					System.out.println(ideal.layout.method_vector);
-//				}
 				globalContext.classes.put(klass.id.id, type);
-				classes.add(klass);
+				if (!classes.contains(klass))
+					classes.add(klass);
 			} else if (child instanceof GblDeclNode) {
 				//Do nothing
 			} else {
@@ -216,8 +198,14 @@ public class XiTypechecker {
 		globalContext.class_context = new HashMap<String, ContextList>();
 		globalContext.class_map = new HashMap<String, ClassNode>();
 		HashSet<String> seen = new HashSet<String>();
+		//classes.addAll(stack.top.c)
 		for (ClassNode klass : classes){
 			make_classmethods(klass, classes, seen);
+		}
+		
+		//seen = new HashSet<String>();
+		for (ClassNode klass : iclasses){
+			make_classmethods(klass, iclasses, seen);
 		}
 		
 		for (VisualizableTreeNode child : ast.children()){
@@ -256,7 +244,7 @@ public class XiTypechecker {
 			type.layout.parent_type = (XiObjectType) parent.type;
 		}
 		
-		
+		//System.out.println(klass.id);
 		for (VisualizableTreeNode child : klass.children){
 			if (child instanceof FuncDeclNode){ // method
 				FuncDeclNode func = (FuncDeclNode)child;
