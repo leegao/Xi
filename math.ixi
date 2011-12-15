@@ -1,0 +1,39 @@
+// The minimum of x and y. 
+min(x: int, y: int): int
+
+
+// The maximum of x and y. 
+max(x: int, y: int): int
+
+
+// The absolute value of x. 
+abs(x: int): int
+
+
+// x^y (exponentiation) 
+pow(x: int, y: int): int
+
+// *
+//  * A pseudo-random number generator.
+//  *
+//  * Requires: srand has been called at least once.
+//  * Returns: The next pseudo-random number.
+//  * 	It will be in the range [0, 2^31 - 1).
+//  *      
+//  * The algorithm used is a linear congruential generator as
+//  * defined by [Lehmner, 1951].  The variant implemented here  
+//  * is widely used and described in [Lewis et al., 1969].  
+//  *
+//  * The period of this generator (the number of numbers it can
+//  * produce before cycling back and repeating numbers) is
+//  *	2^31 - 2
+rand(): int
+
+
+// *
+//  * Seed the random number generator.
+//  *
+//  * Effects: The random number generator
+//  *    will use the seed to generate the next
+//  *    random number.
+srand(seed: int)

@@ -156,9 +156,10 @@ public class TestSourceFiles extends TestCase{
 		}
 	}
 	
-	public void testMandelbrot() {
+	public void testPicture() {
 		try {
-			Reader reader = new FileReader("out/mandelbrot.xi");
+			String file = "picture.xi";
+			Reader reader = new FileReader(file);
 			Parser p = new XiParser(reader);
 			AbstractSyntaxNode ast = p.parse();
 			XiTypechecker tc = new XiTypechecker(ast);
