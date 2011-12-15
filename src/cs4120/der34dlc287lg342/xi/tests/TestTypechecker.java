@@ -297,6 +297,14 @@ public class TestTypechecker extends TestCase {
 		TestParser.printtree(program,"");
 	}
 	
+	public void testTypeCheckSameVarName() throws Exception {
+		
+			XiTypechecker tc = gen("x:int main(){x:int x:int=0}");
+			tc.typecheck();
+			fail("did not catch compilation error");
+		
+	}
+	
 	public void testInterfaceClassCreate() throws Exception{ 
 		
 		XiTypechecker tc = gen("use point main(){x:Point = createPoint(0,0)}");
