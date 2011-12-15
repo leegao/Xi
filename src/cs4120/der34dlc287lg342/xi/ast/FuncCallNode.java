@@ -137,7 +137,8 @@ public class FuncCallNode extends ExpressionNode {
 			Expr attr = id.to_ir(stack).expr();
 			Call call = new Call(attr);
 			
-			call.add(attr);
+			AbstractSyntaxTree instance = ((AttrNode) id).left;
+			call.add(instance.to_ir(stack).expr());
 			
 			for (int i = 0; i < (args.size()); i++){
 				VisualizableTreeNode arg = args.get(i);

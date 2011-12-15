@@ -4,12 +4,14 @@ import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 
-public class ClassVT extends Stmt {
-	public Label label;
+public class Class extends Stmt {
+	public Label vt_label, size_label;
 	public ArrayList<String> vt;
-	
-	public ClassVT(String string) {
-		label = new Label(string);
+	public int size;
+	public boolean need_init = false;
+	public Class(String string) {
+		vt_label = new Label("_I_vt_"+string);
+		size_label = new Label("_I_size_"+string);
 		vt = new ArrayList<String>();
 	}
 

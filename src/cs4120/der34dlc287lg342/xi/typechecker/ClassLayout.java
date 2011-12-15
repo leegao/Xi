@@ -75,6 +75,7 @@ public class ClassLayout {
 		if (parent_type != null){
 			methods.addAll(parent_type.layout.method_dv());
 		}
+		methods.add(null);
 		for (String method : this.method_vector){
 			if (!methods.contains(method))
 				methods.add(method);

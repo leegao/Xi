@@ -35,4 +35,11 @@ public class Label {
 	public String toString(){
 		return name;
 	}
+	
+	@Override
+	public boolean equals(Object that){
+		if (that instanceof Label)
+			return name.equals(((Label)that).name);
+		return false;
+	}
 }

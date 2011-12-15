@@ -3,9 +3,18 @@ package cs4120.der34dlc287lg342.xi.ast;
 import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Arg;
-import cs4120.der34dlc287lg342.xi.ir.ClassVT;
+import cs4120.der34dlc287lg342.xi.ir.Binop;
+import cs4120.der34dlc287lg342.xi.ir.Call;
+import cs4120.der34dlc287lg342.xi.ir.Cjump;
+import cs4120.der34dlc287lg342.xi.ir.Class;
+import cs4120.der34dlc287lg342.xi.ir.Const;
 import cs4120.der34dlc287lg342.xi.ir.Dseq_ro;
+import cs4120.der34dlc287lg342.xi.ir.EffectiveAddress;
+import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Func;
+import cs4120.der34dlc287lg342.xi.ir.LabelNode;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
 import cs4120.der34dlc287lg342.xi.ir.Return;
 import cs4120.der34dlc287lg342.xi.ir.Seq;
@@ -81,7 +90,6 @@ public class ClassNode extends AbstractSyntaxTree{
 		stack.current_class = this;
 		Seq seq = new Seq();
 		for (VisualizableTreeNode child : children){
-			//System.out.println(child);
 			// we can init class later
 			if (child instanceof FuncDeclNode){
 				seq.add(((FuncDeclNode) child).to_ir(stack).stmt());
@@ -93,7 +101,6 @@ public class ClassNode extends AbstractSyntaxTree{
 		IRContext c = new IRContext();
 		Label return_to = new Label();
 		c.return_to = return_to;
-		
 		Temp this_ = new Temp(new TempRegister("this"));
 		new_func.add(c.add_arg("this", 0, 1));
 		for (VisualizableTreeNode child : children){
@@ -102,14 +109,13 @@ public class ClassNode extends AbstractSyntaxTree{
 				new_func.add(((ClassDeclNode) child).to_ir(stack).stmt());
 			}
 		}
-		
 		// add a return label
 		new_func.add(new Return(return_to));
 		
 		seq.add(new_func);
 		
 		// create the virtual table
-		ClassVT vt = new ClassVT("_I_vt_"+this.id.id);
+		Class vt = new Class(this.id.id);
 		for (VisualizableTreeNode child : children){
 			//System.out.println(child);
 			// we can init class later
@@ -117,11 +123,35 @@ public class ClassNode extends AbstractSyntaxTree{
 				vt.add(((FuncDeclNode) child).type().mangle("_"+this.id.id+"_", ((FuncDeclNode) child).id.id));
 			}
 		}
-		
+		vt.size = ((XiObjectType)this.type).layout.var_vector.size()*8+8;
+		if (ex != null){
+			vt.need_init = true;
+		}
 		seq.add(vt);
 		
-		// create the size table
-		Dseq_ro dseq = new Dseq_ro(new Label("_I_size_"+this.id.id), new int[]{((XiObjectType)this.type).layout.var_vector.size()*8+8});
+		
+		
+		// create the init function
+		Func init_func = new Func(new Label("_I_init_"+this.id.id));
+		return_to = new Label();
+		if (vt.need_init){
+			// set the size of the table
+			Label iftrue = new Label(), L1 = new Label(), L0 = new Label();
+			TempRegister rax = new TempRegister("rax"), rcx = new TempRegister("rcx"), rdx = new TempRegister("rdx");
+			
+			init_func.add(new Cjump(new Binop(Binop.EQ, new EffectiveAddress(vt.size_label), new Const(0)), iftrue, return_to));
+			init_func.add(new LabelNode(iftrue));
+			// call the super's init
+			init_func.add(new Exp(new Call(new Name(new Label("_I_init_"+ex.id)))));
+			init_func.add(new Move(new Mem(new EffectiveAddress(vt.size_label)),new Binop(Binop.PLUS, new Mem(new EffectiveAddress(new Label("_I_size_"+ex.id))), new Const(vt.size))));
+			init_func.add(new Move(new Temp(rcx), new Const(0)));
+			// set the vtable
+			
+			// override with our own vtable
+		}
+		init_func.add(new Return(return_to));
+		
+		seq.add(init_func);
 		
 		return new IRTranslationStmt(seq);
 		//throw new InvalidIRContextException("Unimplemented!");

@@ -87,7 +87,7 @@ public class AttrNode extends ExpressionNode {
 		IRTranslation tr = left.to_ir(stack);
 		Expr lhs = tr.expr();
 		if (layout.contains_method(attr.id)){
-			return new IRTranslationExpr(new Mem(new Binop(Binop.PLUS, new Mem(lhs), new Const(8+8*layout.method_index(attr.id)))));
+			return new IRTranslationExpr(new Mem(new Binop(Binop.PLUS, new Mem(lhs), new Const(8*layout.method_index(attr.id)))));
 		} else {
 			// this is a variable
 			return new IRTranslationExpr(new Mem(new Binop(Binop.PLUS, lhs, new Const(8+8*layout.var_index(attr.id)))));

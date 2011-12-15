@@ -146,15 +146,10 @@ public class XiTypechecker {
 		for (ClassNode klass : classes){
 			make_classmethods(klass, classes, seen);
 			
-			ContextList stack = new ContextList();
-			stack.in_class = true;
-			stack.klass = klass;
-			stack.top = globalContext;
-			stack.add(globalContext);
-			XiTypeContext context = new XiTypeContext(false);
-			stack.add(context);
+			//ContextList stack = globalContext.class_context.get(klass.id.id);
 			
-			globalContext.class_context.put(klass.id.id, stack);
+			
+			//globalContext.class_context.put(klass.id.id, stack);
 		}
 		
 		for (VisualizableTreeNode child : ast.children()){
@@ -199,10 +194,25 @@ public class XiTypechecker {
 				func.make_type();
 				IdNode identifier = (IdNode)func.id;
 				try {
-					globalContext.add(type.mangle(identifier.id), func.type);
+					//System.out.println(globalContext.class_context.get(klass.id.id));
+					
+					ContextList stack = globalContext.class_context.get(klass.id.id);
+					if (stack == null){
+						stack = new ContextList();
+						stack.in_class = true;
+						stack.klass = klass;
+						stack.top = globalContext;
+						stack.add(globalContext);
+						XiTypeContext context = new XiTypeContext(false);
+						stack.add(context);
+						globalContext.class_context.put(klass.id.id, stack);
+					}
+					
+					stack.add_id(type.mangle(identifier.id), func.type);
 				} catch (InvalidXiTypeException e) {
 					throw new CompilationException(e.getMessage(), func.position());
 				}
+				//globalContext.class_context.get(klass.id.id)
 				globalContext.method_classes.put(func, type);
 				type.add_method(type.mangle(identifier.id), func);
 			} else if (child instanceof ClassDeclNode){

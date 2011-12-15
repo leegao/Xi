@@ -21,7 +21,7 @@ public class LabelNode extends Stmt {
 	public boolean equals(Object that){
 		if (that instanceof LabelNode){
 			LabelNode other = (LabelNode)that;
-			return label == other.label;
+			return label.equals(other.label);
 		}
 		return false;
 	}
