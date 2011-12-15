@@ -80,6 +80,14 @@ public class DeclNode extends AbstractSyntaxTree {
 				throw new CompilationException("Cannot declare arrays with non-integer dimension", position());
 		}
 		
+		if (stack.klass != null){
+			XiObjectType arg_type = stack.top.classes.get(stack.klass.id.id);
+			
+			if (arg_type.layout.contains_variable(id.id)){
+				throw new CompilationException("Method variable "+id+" is not allowed to shadow class variables.", position());
+			}
+		}
+		
 		try {
 			if (stack.top.classes.containsKey(type_name)){
 				XiType t = new XiObjectType(stack.top.classes.get(type_name), brackets);

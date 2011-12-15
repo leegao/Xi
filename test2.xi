@@ -26,7 +26,7 @@ class Point{
 	}
 	
 	test(x0:int){
-		x = 3
+		x:int = 3
 	}
 }
 
