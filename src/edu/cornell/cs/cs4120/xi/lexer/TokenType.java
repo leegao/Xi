@@ -150,5 +150,8 @@ public enum TokenType {
   NULL,
   
   /** Final token - for defining immutable variable like in Java */
-  FINAL
+  FINAL,
+  
+  /** Continue token */
+  CONTINUE
 }

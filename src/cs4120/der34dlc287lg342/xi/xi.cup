@@ -88,7 +88,7 @@ terminal Token STRING_LITERAL;
 terminal Token CHARACTER_LITERAL;
 terminal Token INTEGER_LITERAL;
 terminal Token TRUE, FALSE;
-terminal Token INT, BOOL,FINAL;
+terminal Token INT, BOOL,FINAL, CONTINUE;
 terminal UMINUS, UNOT;
 
 terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
@@ -322,6 +322,8 @@ stmt ::= if_stmt:s
 	{: RESULT = s; :}
 	| BREAK:b
 	{: RESULT = new BreakNode(b.position()); :}
+	| CONTINUE:c
+	{: RESULT = new ContinueNode(c.position()); :}
 	| func_call:e
 	{: RESULT = new ProcedureCallNode(e); :}
 	| block:b

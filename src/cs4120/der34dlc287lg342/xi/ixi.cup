@@ -35,7 +35,7 @@ terminal Token STRING_LITERAL;
 terminal Token CHARACTER_LITERAL;
 terminal Token INTEGER_LITERAL;
 terminal Token TRUE, FALSE;
-terminal Token INT, BOOL, FINAL;
+terminal Token INT, BOOL, FINAL, CONTINUE;
 terminal UMINUS, UNOT;
 
 terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
@@ -99,7 +99,7 @@ func_list ::=
 
 types ::= {: RESULT = new ArrayList<XiType>(); :}
 	| COLON type:type bracket_list:dim
-	{: RESULT = new ArrayList<XiType>(); RESULT.add(new XiType(type, dim)); :}
+	{: RESULT = new ArrayList<XiType>(); RESULT.add(new XiPrimitiveType(type, dim)); :}
 	| types:arr COMMA type:type bracket_list:dim
 	{:	RESULT = arr;
 		arr.add(new XiPrimitiveType(type, dim)); :}; 		
