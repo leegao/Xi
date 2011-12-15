@@ -150,9 +150,11 @@ public class ProgramNode extends AbstractSyntaxTree {
 				FuncDeclNode func = (FuncDeclNode) child;
 				stack.add_name(func);
 			} else if (child instanceof ClassNode){
+				IRContext class_ctx = new IRContext();
+				stack.classes.put(((ClassNode)child).id.id, class_ctx);
 				for (VisualizableTreeNode c : ((ClassNode) child).children){
 					if (c instanceof FuncDeclNode)
-						stack.add_name("_"+((ClassNode)child).id.id+"_", (FuncDeclNode) c);
+						class_ctx.add_name("_"+((ClassNode)child).id.id+"_", (FuncDeclNode) c);
 				}
 			}
 		}
@@ -165,7 +167,9 @@ public class ProgramNode extends AbstractSyntaxTree {
 				IRTranslation tr = func.to_ir(stack);
 				seq.add(tr.stmt());
 			} else if (child instanceof ClassNode){
+				stack.push(stack.classes.get(((ClassNode) child).id.id));
 				IRTranslation tr =((ClassNode) child).to_ir(stack);
+				stack.pop();
 				seq.add(tr.stmt());
 			}
 		}

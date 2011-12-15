@@ -28,6 +28,7 @@ public class IRContextStack extends ArrayList<IRContext>{
 	public HashMap<Label, byte[]> ro_data;
 	public boolean abort = false;
 	public ClassNode current_class = null;
+	public HashMap<String, IRContext> classes = new HashMap<String, IRContext>();
 
 	public IRContextStack(){
 		ro_data = new HashMap<Label, byte[]>();
@@ -85,11 +86,12 @@ public class IRContextStack extends ArrayList<IRContext>{
 //		}
 		
 		for (int i = this.size()-1; i >= 0; i--){
-			//System.out.println(mangle_method(id));
-			LabelNode r = get(i).find_name(mangle_method(id));
-			if (r != null)
-				return new Name(r.label);
-			r = get(i).find_name(id);
+			
+			//LabelNode r = get(i).find_name(mangle_method(id));
+			
+			//if (r != null)
+			//	return new Name(r.label);
+			LabelNode r = get(i).find_name(id);
 			if (r != null)
 				return new Name(r.label);
 		}

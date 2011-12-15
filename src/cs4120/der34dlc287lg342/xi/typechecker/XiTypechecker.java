@@ -207,7 +207,7 @@ public class XiTypechecker {
 						stack.add(context);
 						globalContext.class_context.put(klass.id.id, stack);
 					}
-					
+					//System.out.println(klass+" "+type.mangle(identifier.id)+" "+func.type);
 					stack.add_id(type.mangle(identifier.id), func.type);
 				} catch (InvalidXiTypeException e) {
 					throw new CompilationException(e.getMessage(), func.position());

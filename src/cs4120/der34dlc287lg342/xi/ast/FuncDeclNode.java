@@ -145,7 +145,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 			if (types.size() > 0)
 				throw new CompilationException("Function cannot be guaranteed to return, expects return types of " + types + "", position());
 		}
-
+		//System.out.println(id+" "+stack.klass);
 		return type;
 	}
 	
@@ -163,6 +163,7 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 		Label return_to = new Label();
 		c.return_to = return_to;
 		int i = 0;
+		//System.out.println(stack.current_class + " "+stack.find_name(id.id));
 		Func seq = new Func(((Name)stack.find_name(id.id)).label);
 		int size = args.size();
 		if (types.size()>1){
