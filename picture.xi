@@ -1,5 +1,10 @@
 use io
 
+multfixed32(n1:int, n2:int) : int {
+	result:int = n1*n2;
+	return result/134217728
+} 
+
 draw(width:int, height:int):int[] {
 	
 	x_setup:int = 1
@@ -36,10 +41,10 @@ draw(width:int, height:int):int[] {
 			c_real:int = x[x_index] 
 			c_imag:int = y[y_index]
 					
-		
-			while ((z_real*z_real+z_imag*z_imag)<4 & n<termination) {
-				z_real=(z_real*z_real-z_imag*z_imag) + c_imag
-				z_imag=2*z_real*z_imag + c_imag
+			
+			while ((multfixed32(z_real,z_real)+multfixed32(z_imag,z_imag))<536870912 & n<termination) {
+				z_real=multfixed32(z_real,z_real) - multfixed32(z_imag,z_imag) + c_imag
+				z_imag=multfixed32(z_real,z_imag)*268435456 + c_imag
 			
 				n = n+1		
 			}	
