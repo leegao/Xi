@@ -72,9 +72,7 @@ public abstract class Expr implements VisualizableTreeNode {
 		return new Eseq(this, new Seq());
 	}
 	
-	public Tile munch() {
-		return null;
-	}
+	public abstract Tile munch();
 	
 	@Override
 	public boolean equals(Object that){

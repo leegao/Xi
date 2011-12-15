@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Class extends Stmt {
 	public Label vt_label, size_label;
@@ -18,9 +19,14 @@ public class Class extends Stmt {
 	}
 
 	public void add(String mangle, int i) {
-		//System.out.println(mangle);
 		vt.add(mangle);
 		hash.put(mangle, i);
+	}
+
+	@Override
+	public Tile munch() {
+		System.out.println("Not implemented yet!");
+		return null;
 	}
 	
 }

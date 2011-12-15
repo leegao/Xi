@@ -1,5 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
+
 public class Eseq extends Expr {
 	public Stmt stmts;
 	public Expr expr;
@@ -19,5 +21,11 @@ public class Eseq extends Expr {
 		Stmt.add_and_lower(seq, (Seq) eseq.stmts);
 		Stmt.add_and_lower(seq, (Seq) stmts);
 		return new Eseq(eseq.expr, seq);
+	}
+
+	@Override
+	public Tile munch() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

@@ -176,7 +176,5 @@ public abstract class Stmt implements VisualizableTreeNode{
 		return s;
 	}
 	
-	public Tile munch() {
-		return null;
-	}
+	public abstract Tile munch();
 }

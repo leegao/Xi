@@ -1,5 +1,6 @@
 package cs4120.der34dlc287lg342.xi.tests;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -18,6 +19,7 @@ import cs4120.der34dlc287lg342.xi.tiles.*;
 import cs4120.der34dlc287lg342.xi.tiles.naive_asm.NaiveAssemble;
 import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiTypechecker;
+import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.parser.Parser;
@@ -135,5 +137,42 @@ public class TestTiles extends TestCase{
 		}
 	}
 	
-
+	public void testClass() throws Exception{
+		String inputFile = "test2.xi";
+		FileReader reader = new FileReader(inputFile);
+		String src = "";
+		BufferedReader input =  new BufferedReader(reader);
+		String line = null;
+		while (( line = input.readLine()) != null){
+	          src += line + "\n";
+	    }
+		Parser parser = new XiParser(new StringReader(src), inputFile);
+		AbstractSyntaxNode program = parser.parse();
+		
+		XiTypechecker tc = new XiTypechecker(program, src);
+		
+		//System.out.println(tc.globalContext.classes.get("Point").layout.method_vector);
+		try{
+			tc.typecheck();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		((AbstractSyntaxTree)tc.ast).foldConstants();
+		//TestParser.printtree(program,"");
+		
+		IRTranslation tr = ((AbstractSyntaxTree)tc.ast).to_ir(new IRContextStack());
+		Seq stmt = tr.stmt().lower();
+		stmt = LowerCjump.translate(tr.stmt().lower());
+		
+		for (VisualizableTreeNode s : stmt.children){
+			if (s instanceof Func){
+				ConstantFolding.foldConstants((Func) s);
+			}
+		}
+		
+		stmt.munch();
+		
+		//System.out.println(stmt.prettyPrint());
+	}
 }

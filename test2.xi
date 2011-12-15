@@ -39,6 +39,6 @@ class P2 extends Point{
 
 createPoint(x:int, y:int): Point {
 	np2:Point;
-	_ = new Point.init(x,y);
+	_ = new P2.init(x,y);
 	return np2;
 }
