@@ -1,6 +1,8 @@
 use io
 use conv
 
+t:int
+
 class Point{
 	x,y:int
 	z:Point[]

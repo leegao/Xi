@@ -111,6 +111,10 @@ public class FuncDeclNode extends AbstractSyntaxTree {
 					throw new CompilationException("Method argument "+id+" is not allowed to shadow class variables.", decl.position());
 				}
 			}
+			
+			if (stack.top.symbols.containsKey(id.id)){
+				throw new CompilationException("Function argument "+id+" is not allowed to shadow global variables.", decl.position());
+			}
 			try {
 				
 				if (stack.top.classes.containsKey(decl.type_name)){
