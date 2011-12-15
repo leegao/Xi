@@ -62,6 +62,9 @@ public class ClassNode extends AbstractSyntaxTree{
 
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
+//		if (this.type != null)
+//			return this.type;
+		
 		for (VisualizableTreeNode child : children){
 			if (child instanceof ClassDeclNode){
 				ClassDeclNode cdecl = (ClassDeclNode)child;
@@ -142,7 +145,7 @@ public class ClassNode extends AbstractSyntaxTree{
 			TempRegister rax = new TempRegister("rax"), rcx = new TempRegister("rcx"), rdx = new TempRegister("rdx");
 			int n = ((XiObjectType)type).layout.parent_type.layout.method_dv().size();
 			
-			init_func.add(new Cjump(new Binop(Binop.EQ, new EffectiveAddress(vt.size_label), new Const(0)), iftrue, return_to));
+			init_func.add(new Cjump(new Binop(Binop.EQ, new Mem(new EffectiveAddress(vt.size_label)), new Const(0)), iftrue, return_to));
 			init_func.add(new LabelNode(iftrue));
 			// call the super's init
 			init_func.add(new Exp(new Call(new Name(new Label("_I_init_"+ex.id)))));

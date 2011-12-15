@@ -142,6 +142,8 @@ public class BinNode extends ExpressionNode {
 		IRTranslation tr1 = ((AbstractSyntaxTree)e1).to_ir(stack), tr2 = ((AbstractSyntaxTree)e2).to_ir(stack);
 		Expr lhs = tr1.expr(), rhs = tr2.expr();
 		
+		//System.out.println(e1 + " " + e2);
+		
 		// TODO: handle case for lists
 		if (((XiPrimitiveType)((AbstractSyntaxTree)e1).type).isArrayType() && ((XiPrimitiveType)((AbstractSyntaxTree)e2).type).isArrayType()){
 			/* 

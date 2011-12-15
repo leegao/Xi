@@ -25,6 +25,11 @@ public class ContextList extends ArrayList<XiTypeContext> {
 	public XiType find_id(String id) throws InvalidXiTypeException{
 		if (this.isEmpty())
 			throw new InvalidXiTypeException("Cannot find a context environment to typecheck with");
+		
+//		if (in_class && top.classes.get(klass.id.id).layout.contains_variable(id)){
+//			return top.classes.get(klass.id.id).layout.get_variable(id).type;
+//		}
+		
 		for (int i = size()-1; i >= 0; i--){
 			XiTypeContext context = this.get(i);
 			XiType t = context.find(id);

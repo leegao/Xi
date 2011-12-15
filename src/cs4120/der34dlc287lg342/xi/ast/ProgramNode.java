@@ -79,6 +79,13 @@ public class ProgramNode extends AbstractSyntaxTree {
 		return "PROGRAM";
 	}
 	
+	public void resolve_parents(ClassNode child, ContextList stack){
+		if (child.ex != null){
+			//stack.top.
+		}
+		XiType t = child.typecheck(stack.top.class_context.get(child.id.id));
+	}
+	
 	/** Type checks this program node. A program node type checks if
 	 * all its function declaration children type check as XiFunctionTypes.
 	 * 
@@ -103,7 +110,8 @@ public class ProgramNode extends AbstractSyntaxTree {
 				if(!(childType instanceof XiFunctionType))
 					throw new CompilationException("Invalid program",position);
 			} else if (childTree instanceof ClassNode){
-				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack.top.class_context.get(((ClassNode)childTree).id.id));
+				ClassNode cur = (ClassNode) childTree;
+				XiType childType = ((ClassNode)childTree).typecheck(stack.top.class_context.get(((ClassNode)childTree).id.id));
 				
 				if(!(childType instanceof XiObjectType))
 					throw new CompilationException("Invalid program, expected Object type but got "+childType+" instead.",position);

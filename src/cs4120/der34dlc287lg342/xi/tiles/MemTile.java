@@ -29,6 +29,7 @@ public class MemTile extends Tile {
 		asm.addAll(tile.att());
 		out = new TempRegister();
 		asm.add(new OPER("movq (%s0), %d0", tile.out, out));
+		//System.out.println(asm.get(asm.size()-1).simple_assem());
 		return asm;
 	}
 	

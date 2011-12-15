@@ -27,10 +27,12 @@ public class Move_Expr_Mem_Expr extends Tile {
 //		asm += "movq "+src.out+", %r14\n";
 //		asm += "movq %r14, (%r15)";
 //		return asm;
+		
 		ArrayList<Assembly> asm = new ArrayList<Assembly>();
 		asm.addAll(dest.att());
 		asm.addAll(src.att());
 		asm.add(new OPER("movq %s0, (%s1)", new TempRegister[]{src.out, dest.out}, null));
+		//System.out.println(asm.get(asm.size()-1).simple_assem());
 		return asm;
 	}
 	
