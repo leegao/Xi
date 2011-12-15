@@ -47,7 +47,7 @@ ArrayList<Assembly> asm = new ArrayList<Assembly>();
 			asm.add(new OPER("pushq %s0", arg.out, null));
 		}
 		
-		asm.add(new OPER("callq *"+tile.out, new TempRegister[]{tile.out}, null));
+		asm.add(new OPER("callq *%s0", new TempRegister[]{tile.out}, null));
 		if (args.size() > 6)
 			for (int j = 0; j < args.size()-6; j++)
 				//asm += "popq %rdx\n";

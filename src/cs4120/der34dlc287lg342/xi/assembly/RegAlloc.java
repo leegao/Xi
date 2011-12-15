@@ -12,7 +12,7 @@ public class RegAlloc {
 			// remove redundant case:
 			if (asm instanceof MOVE && asm.machine_register(coloring, ((MOVE)asm).src).equals(asm.machine_register(coloring, ((MOVE)asm).dest)))
 				continue;
-			str += asm.simple_assem(coloring) + "\t\t# " + asm.simple_assem()+ "\n";
+			str += asm.simple_assem(coloring) /* + "\t\t# " + asm.simple_assem()*/+ "\n";
 			if (asm instanceof RETURN){
 				str += epilogue;
 			}
