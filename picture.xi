@@ -5,8 +5,8 @@ draw(width:int, height:int):int[] {
 	x_setup:int = 1
 	y_setup:int = 1
 	
-	x:int[] = linespace(-2, 1, width)
-	y:int[] = linespace(-1, 1, height)
+	x:int[width] 
+	y:int[height] 
 	termination:int = 1000;
 
 	x[0] = -8580034592
@@ -18,14 +18,14 @@ draw(width:int, height:int):int[] {
 
 	while (y_setup < height) {
 		y[y_setup] = y[y_setup-1] + 17895697
-		y_setup = y_setupt + 1;
+		y_setup = y_setup + 1;
 	} 
 
 	x_index:int = 1;
 	y_index:int = 1;
 
 	img:int[length(x) * length(y)];
-	img_index = 0;
+	img_index:int = 0;
 
 	while (x_index<length(x)) {
 		while(y_index<length(y)) {
@@ -37,7 +37,7 @@ draw(width:int, height:int):int[] {
 			c_imag:int = y[y_index]
 					
 		
-			while ((z_real*z_real+z_img*z_img)<4 & n<termination) {
+			while ((z_real*z_real+z_imag*z_imag)<4 & n<termination) {
 				z_real=(z_real*z_real-z_imag*z_imag) + c_imag
 				z_imag=2*z_real*z_imag + c_imag
 			
@@ -54,8 +54,8 @@ draw(width:int, height:int):int[] {
 
 
 main() {
-	width:int 640
-	height:int 480
+	width:int = 640
+	height:int = 480
 	out: FileOutput = createFile("pic.bmp")
 	numpadbytesperrow:int=(width*3)%4; //rows must be 4 byte aligned (multiple of 4)
 	pixdataleng:int=width*height*3+width*numpadbytesperrow; //pixel data +padding bytes size
@@ -172,13 +172,13 @@ main() {
 		j = j+3
 		
 	}
-	i =i + totalbytesperrow
+	i =i + totalbytesperow
 	
 	
 	i = 0
 	while (i<fileleng) {
-		outc(c[i]);
-		i++
+		out.putc(c[i]);
+		i = i + 1
 	}
 	
 	out.close();
