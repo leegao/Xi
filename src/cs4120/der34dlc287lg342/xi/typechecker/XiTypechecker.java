@@ -137,6 +137,8 @@ public class XiTypechecker {
 					throw new CompilationException("Classtype "+klass.id.id+" already exists", klass.position());
 				globalContext.classes.put(klass.id.id, type);
 				classes.add(klass);
+			} else if (child instanceof GblDeclNode) {
+				//Do nothing
 			} else {
 				throw new CompilationException("Invalid Abstract Syntax Tree", ((AbstractSyntaxNode)child).position());
 			}

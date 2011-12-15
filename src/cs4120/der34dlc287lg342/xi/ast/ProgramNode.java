@@ -58,6 +58,12 @@ public class ProgramNode extends AbstractSyntaxTree {
 		children.add(expr);
 	}
 	
+	public void addAll(ArrayList<VisualizableTreeNode> exprs) {
+		for( VisualizableTreeNode expr : exprs) {
+			children.add(expr);
+		}
+	}
+	
 	@Override
 	public Position position() {
 		return position;
@@ -92,6 +98,11 @@ public class ProgramNode extends AbstractSyntaxTree {
 				
 				if(!(childType instanceof XiObjectType))
 					throw new CompilationException("Invalid program, expected Object type but got "+childType+" instead.",position);
+			} else if (childTree instanceof GblDeclNode) {
+				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
+				
+				if (!childType.equals(XiPrimitiveType.UNIT))
+					throw new CompilationException("GblDeclNodes are expected to typecheck to unit", position);
 			}
 		}
 		

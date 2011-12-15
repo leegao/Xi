@@ -55,13 +55,13 @@ nonterminal String type;
 nonterminal ArrayList<XiType> types;
 nonterminal ArrayList<VisualizableTreeNode> bracket_list;
 nonterminal ArrayList<VisualizableTreeNode> var_list, func_list, func_callargs;
-nonterminal ArrayList<VisualizableTreeNode> varclass_list, class_block;
-nonterminal ArrayList<IdNode> idclass_list;
+nonterminal ArrayList<VisualizableTreeNode> varclass_list, class_block, gblvar_list;
+nonterminal ArrayList<IdNode> idclass_list, gblid_list;
 
 nonterminal AbstractSyntaxTree bool_literal, attr;
 // top level
 nonterminal AbstractSyntaxTree func_decl, use_stmt;
-nonterminal AbstractSyntaxTree class_decl, varclass_decl, varclass_inst;
+nonterminal AbstractSyntaxTree class_decl, varclass_decl, varclass_inst, gblvar_decl, gblvar_inst;
 
 precedence nonassoc NEW;
 
@@ -505,7 +505,47 @@ class_decl ::= CLASS:c id:id OPEN_BRACE:t class_block:b CLOSE_BRACE:e
 		RESULT = class_node;
 	:};
 	
+gblvar_list ::= gblvar_decl:s 
+	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(s);
+		RESULT = list; :}
+	| gblvar_inst:s
+	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		list.add(s);
+		RESULT = list; :}
+	| gblid_list:idlist COLON type:t bracket_list:arr
+	{:	
+		ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
+		for (IdNode id : idlist){
+			list.add(new GblDeclNode(id, t, arr, id.position()));
+		}
+		RESULT = list; :};
 
+gblvar_inst ::= gblvar_decl:decl GETS expr:e
+	{:	// we assume that var_list cannot be empty
+		GblDeclNode gdecl = (GblDeclNode)decl;
+		gdecl.position = span(decl.position(), e.position());
+		gdecl.expr = e;
+		gdecl.children.add(e);
+		RESULT = gdecl;:};
+
+gblvar_decl ::= id:id COLON type:t bracket_list:arr
+	{:	// check that arr is empty
+		GblDeclNode decl = new GblDeclNode((IdNode)id, t, arr, id.position());
+		RESULT = decl;:};
+
+gblid_list ::= id:id1 COMMA id:id2
+	{:
+		ArrayList<IdNode> list = new ArrayList<IdNode>();
+		list.add((IdNode)id1);
+		list.add((IdNode)id2);
+		RESULT = list;
+	:}
+	| gblid_list:list COMMA id:id
+	{:
+		list.add((IdNode)id);
+		RESULT = list;
+	:};
 
 program ::= use_list:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
@@ -515,14 +555,14 @@ program ::= use_list:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
 		RESULT = program;:}
-	| use_list:p varclass_list:s
+	| use_list:p gblvar_list:s
 	{:	ProgramNode program = (ProgramNode)p;
-		program.add(s);
+		program.addAll(s);
 		RESULT = program;:}
-	| varclass_list:s
-	{:	ProgramNode program = new ProgramNode(s.position());
-		program.add(s);
-		RESULT = program; :}	
+	| gblvar_list:s
+	{:	ProgramNode program = new ProgramNode(((GblDeclNode)s.get(0)).position());
+		program.addAll(s);
+		RESULT = program; :}		
 	| func_decl:s
 	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
@@ -530,6 +570,11 @@ program ::= use_list:p func_decl:s
 	| class_decl:s
 	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
+		RESULT = program; :}
+	| program:p gblvar_list:s
+	{:	ProgramNode program = (ProgramNode)p;
+		program.addAll(s);
+		program.position = span(p.position(), ((GblDeclNode)s.get(0)).position());
 		RESULT = program; :}
 	| program:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
