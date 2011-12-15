@@ -171,7 +171,7 @@ public class TestTiles extends TestCase{
 			}
 		}
 		
-		stmt.munch();
+		System.out.println(stmt.munch());
 		
 		//System.out.println(stmt.prettyPrint());
 	}
