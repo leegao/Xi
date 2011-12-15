@@ -72,6 +72,7 @@ public class ClassLayout {
 	
 	public ArrayList<String> method_dv(){
 		ArrayList<String> methods = new ArrayList<String>();
+		
 		if (parent_type != null){
 			methods.addAll(parent_type.layout.method_dv());
 		}
@@ -80,6 +81,7 @@ public class ClassLayout {
 			if (!methods.contains(method))
 				methods.add(method);
 		}
+		//System.out.println(methods);
 		return methods;
 	}
 	

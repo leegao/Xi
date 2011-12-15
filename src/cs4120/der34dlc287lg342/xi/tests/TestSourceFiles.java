@@ -170,6 +170,8 @@ public class TestSourceFiles extends TestCase{
 			
 			optimize(stmnt);
 			
+			//System.out.println(stmnt.prettyPrint());
+			
 			Tile t = stmnt.munch();
 			Assembler assembler = new Assembler((SeqTile) t);
 			String att = assembler.att();
