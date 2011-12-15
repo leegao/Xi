@@ -8,6 +8,7 @@ import cs4120.der34dlc287lg342.xi.cfg.InterferenceGraph;
 import cs4120.der34dlc287lg342.xi.cfg.LivenessWorklist;
 import cs4120.der34dlc287lg342.xi.cfg.Register;
 import cs4120.der34dlc287lg342.xi.cfg.Rewrite;
+import cs4120.der34dlc287lg342.xi.tiles.ClassTile;
 import cs4120.der34dlc287lg342.xi.tiles.FuncTile;
 import cs4120.der34dlc287lg342.xi.tiles.SeqTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
@@ -20,6 +21,7 @@ public class Assembler {
 	
 	public String att(){
 		String att = "";
+		ArrayList<ArrayList<Assembly>> class_instrs = new ArrayList<ArrayList<Assembly>>();
 		for (Tile tile : main.tiles){
 			if (tile instanceof FuncTile){
 				
@@ -66,7 +68,10 @@ public class Assembler {
 					  func.name+":\n\t";
 				asm += function.replace("\n", "\n\t");
 				att += (asm+"\n");
-			}else{
+			} else if (tile instanceof ClassTile) {
+				ArrayList<Assembly> instrs = tile.att();
+				class_instrs.add(instrs);
+			} else {
 				ArrayList<Assembly> instrs = tile.att();
 				if (instrs != null){
 					for (Assembly instr : instrs){
