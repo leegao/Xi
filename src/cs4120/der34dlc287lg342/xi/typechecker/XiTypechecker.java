@@ -95,6 +95,17 @@ public class XiTypechecker {
 				// cache the interface class in
 				XiObjectType type = new XiObjectType(klass);
 				
+				for (VisualizableTreeNode next : klass.children()){
+					if (next instanceof FuncDeclNode){
+						try {
+							type.add_method(((FuncDeclNode) next).id.id, (FuncDeclNode) next);
+						} catch (InvalidXiTypeException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+				}
+				
 				if (globalContext.classes.containsKey(klass.id.id))
 					throw new CompilationException("Classtype "+klass.id.id+" already exists", klass.position());
 				globalContext.iclasses.put(klass.id.id, type);
