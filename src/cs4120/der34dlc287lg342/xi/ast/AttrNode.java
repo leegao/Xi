@@ -4,10 +4,15 @@ import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Const;
+import cs4120.der34dlc287lg342.xi.ir.Eseq;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.Move;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
+import cs4120.der34dlc287lg342.xi.ir.Temp;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
+import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslation;
 import cs4120.der34dlc287lg342.xi.ir.translate.IRTranslationExpr;
 import cs4120.der34dlc287lg342.xi.typechecker.ClassLayout;
@@ -86,12 +91,16 @@ public class AttrNode extends ExpressionNode {
 		ClassLayout layout = ((XiObjectType)left.type).layout;
 		IRTranslation tr = left.to_ir(stack);
 		Expr lhs = tr.expr();
+		Temp t = new Temp(new TempRegister()), f = new Temp(new TempRegister());
+		Seq seq = new Seq(new Move(t, lhs));
 		if (layout.contains_method(attr.id)){
-			return new IRTranslationExpr(new Mem(new Binop(Binop.PLUS, new Mem(lhs), new Const(8*layout.method_index(attr.id)))));
+			seq.add(new Move(f, new Mem(new Binop(Binop.PLUS, new Mem(t), new Const(8*layout.method_index(attr.id))))));
 		} else {
 			// this is a variable
-			return new IRTranslationExpr(new Mem(new Binop(Binop.PLUS, lhs, new Const(8+8*layout.var_index(attr.id)))));
+			seq.add(new Move(f, new Mem(new Binop(Binop.PLUS, t, new Const(8+8*layout.var_index(attr.id))))));
 		}
+		Eseq eseq = new Eseq(f, seq);
+		return new IRTranslationExpr(eseq);
 		//throw new InvalidIRContextException("Unimplemented: attr");
 	}
 }

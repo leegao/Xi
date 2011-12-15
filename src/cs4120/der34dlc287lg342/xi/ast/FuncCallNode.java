@@ -2,9 +2,14 @@ package cs4120.der34dlc287lg342.xi.ast;
 
 import java.util.ArrayList;
 
+import cs4120.der34dlc287lg342.xi.ir.Binop;
 import cs4120.der34dlc287lg342.xi.ir.Call;
+import cs4120.der34dlc287lg342.xi.ir.Eseq;
 import cs4120.der34dlc287lg342.xi.ir.Expr;
+import cs4120.der34dlc287lg342.xi.ir.Mem;
+import cs4120.der34dlc287lg342.xi.ir.Move;
 import cs4120.der34dlc287lg342.xi.ir.Name;
+import cs4120.der34dlc287lg342.xi.ir.Seq;
 import cs4120.der34dlc287lg342.xi.ir.context.IRContextStack;
 import cs4120.der34dlc287lg342.xi.ir.context.InvalidIRContextException;
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
@@ -134,11 +139,18 @@ public class FuncCallNode extends ExpressionNode {
 			
 			return new IRTranslationExpr(call);
 		} else if (id instanceof AttrNode) {
-			Expr attr = id.to_ir(stack).expr();
+			Eseq attr = (Eseq)id.to_ir(stack).expr();
 			Call call = new Call(attr);
 			
-			AbstractSyntaxTree instance = ((AttrNode) id).left;
-			call.add(instance.to_ir(stack).expr());
+			//AbstractSyntaxTree instance = ((AttrNode) id).left;
+			//call.add(instance.to_ir(stack).expr());
+			
+			// find the instance from attr
+			System.out.println(this + " " +attr.prettyPrint());
+			Seq seq = (Seq)attr.stmts;
+			Move mov = (Move)seq.children.get(1);
+			Expr instance = ((Binop)(((Mem)mov.val).expr)).left;
+			call.add(instance);
 			
 			for (int i = 0; i < (args.size()); i++){
 				VisualizableTreeNode arg = args.get(i);

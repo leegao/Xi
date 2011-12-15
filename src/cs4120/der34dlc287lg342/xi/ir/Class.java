@@ -1,12 +1,14 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
 
 public class Class extends Stmt {
 	public Label vt_label, size_label;
 	public ArrayList<String> vt;
+	public HashMap<String, Integer> hash = new HashMap<String, Integer>();
 	public int size;
 	public boolean need_init = false;
 	public Class(String string) {
@@ -15,9 +17,10 @@ public class Class extends Stmt {
 		vt = new ArrayList<String>();
 	}
 
-	public void add(String mangle) {
+	public void add(String mangle, int i) {
 		//System.out.println(mangle);
 		vt.add(mangle);
+		hash.put(mangle, i);
 	}
 	
 }

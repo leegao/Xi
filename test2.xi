@@ -38,12 +38,7 @@ class P2 extends Point{
 }
 
 createPoint(x:int, y:int): Point {
-	//np:Point[] = (new P2.init(x,y),null);
-	//_ = np[0].init(x,y)
-	np2:Point = null;
-	_ = np2.init(x,y)
-	///z:Point = np[0];
-	//z.x = 3;
-	//return new Point.init(x,y)
-	return null;
+	np2:Point;
+	_ = new Point.init(x,y);
+	return np2;
 }

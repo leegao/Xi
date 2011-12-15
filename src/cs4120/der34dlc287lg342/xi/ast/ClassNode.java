@@ -12,6 +12,7 @@ import cs4120.der34dlc287lg342.xi.ir.Dseq_ro;
 import cs4120.der34dlc287lg342.xi.ir.EffectiveAddress;
 import cs4120.der34dlc287lg342.xi.ir.Exp;
 import cs4120.der34dlc287lg342.xi.ir.Func;
+import cs4120.der34dlc287lg342.xi.ir.Jump;
 import cs4120.der34dlc287lg342.xi.ir.LabelNode;
 import cs4120.der34dlc287lg342.xi.ir.Mem;
 import cs4120.der34dlc287lg342.xi.ir.Move;
@@ -120,7 +121,7 @@ public class ClassNode extends AbstractSyntaxTree{
 			//System.out.println(child);
 			// we can init class later
 			if (child instanceof FuncDeclNode){
-				vt.add(((FuncDeclNode) child).type().mangle("_"+this.id.id+"_", ((FuncDeclNode) child).id.id));
+				vt.add(((FuncDeclNode) child).type().mangle("_"+this.id.id+"_", ((FuncDeclNode) child).id.id), ((XiObjectType)type).layout.parent_type != null ? ((XiObjectType)type).layout.parent_type.layout.method_index(((FuncDeclNode) child).id.id) : -1);
 			}
 		}
 		vt.size = ((XiObjectType)this.type).layout.var_vector.size()*8+8;
@@ -136,7 +137,7 @@ public class ClassNode extends AbstractSyntaxTree{
 		return_to = new Label();
 		if (vt.need_init){
 			// set the size of the table
-			Label iftrue = new Label(), L1 = new Label(), L0 = new Label();
+			Label iftrue = new Label(), L1 = new Label(), L0 = new Label(), L2 = new Label();
 			TempRegister rax = new TempRegister("rax"), rcx = new TempRegister("rcx"), rdx = new TempRegister("rdx");
 			int n = ((XiObjectType)type).layout.parent_type.layout.method_dv().size();
 			
@@ -147,8 +148,20 @@ public class ClassNode extends AbstractSyntaxTree{
 			init_func.add(new Move(new Mem(new EffectiveAddress(vt.size_label)),new Binop(Binop.PLUS, new Mem(new EffectiveAddress(new Label("_I_size_"+ex.id))), new Const(vt.size))));
 			init_func.add(new Move(new Temp(rcx), new Const(0)));
 			// set the vtable
+			init_func.add(new LabelNode(L1));
+			init_func.add(new Cjump(new Binop(Binop.LT, new Temp(rcx), new Const(n)), L2, L0));
+			init_func.add(new LabelNode(L2));
 			
+			init_func.add(new Move(new Temp(rdx), new Mem(new Binop(Binop.PLUS, new EffectiveAddress(new Label("_I_vt_"+ex.id)), new Binop(Binop.MUL, new Const(8), new Temp(rcx))))));
+			init_func.add(new Move(new Mem(new Binop(Binop.PLUS, new EffectiveAddress(vt.vt_label), new Binop(Binop.MUL, new Const(8), new Temp(rcx)))), new Temp(rdx)));
+			init_func.add(new Move(new Temp(rcx), new Binop(Binop.PLUS, new Temp(rcx), new Const(1))));
+			
+			init_func.add(new Jump(L1));
+			init_func.add(new LabelNode(L0));
 			// override with our own vtable
+			for (String entry : vt.vt){
+				init_func.add(new Move(new Mem(new Binop(Binop.PLUS, new EffectiveAddress(vt.vt_label), new Const(vt.hash.get(entry)*8))),new EffectiveAddress(new Label(entry))));
+			}
 		}
 		init_func.add(new Return(return_to));
 		
