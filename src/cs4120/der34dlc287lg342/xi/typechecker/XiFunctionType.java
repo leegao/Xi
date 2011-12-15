@@ -62,21 +62,21 @@ public class XiFunctionType implements XiType {
 		return new XiFunctionType(a,r);
 	}
 	
-	public String str_of_primitive(XiPrimitiveType t){
+	public static String str_of_primitive(XiPrimitiveType t){
 		String str = t.type.equals("int") ? "i" : "b";
 		for (int i = 0; i < t.dimension.size(); i++)
 			str = "a"+str;
 		return str;
 	}
 	
-	public String str_of_object(XiObjectType t){
+	public static String str_of_object(XiObjectType t){
 		String str = "o"+t.type.length()+t.type;
 		for (int i = 0; i < t.dimension.size(); i++)
 			str = "a"+str;
 		return str;
 	}
 	
-	public String str_of(XiType t){
+	public static String str_of(XiType t){
 		if (t instanceof XiPrimitiveType){
 			return str_of_primitive((XiPrimitiveType) t);
 		} else {

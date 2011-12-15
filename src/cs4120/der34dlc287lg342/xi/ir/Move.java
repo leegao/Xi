@@ -1,6 +1,7 @@
 package cs4120.der34dlc287lg342.xi.ir;
 
 
+import cs4120.der34dlc287lg342.xi.tiles.MoveMemEA_Tile;
 import cs4120.der34dlc287lg342.xi.tiles.MoveTile;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Const;
 import cs4120.der34dlc287lg342.xi.tiles.Move_Dec_Mem_Expr;
@@ -99,6 +100,8 @@ public class Move extends Stmt {
 				long constant = ((Const)(((Binop)((Mem)val).expr).left)).value;
 				//System.out.println(constant);
 				return new Move_Mem_Add_Const_Expr_Expr(constant, ((Binop)((Mem)val).expr).right.munch(), dest.munch());
+		} else if (dest instanceof Mem && ((Mem)dest).expr instanceof EffectiveAddress){
+			return new MoveMemEA_Tile(((Mem)dest).expr.munch(), val.munch());
 		}
 		// Const into an expr
 		else if (val instanceof Const) {

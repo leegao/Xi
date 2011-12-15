@@ -105,6 +105,11 @@ public class AssignmentNode extends AbstractSyntaxTree {
 			Move mov = (Move) seq.children.get(1);
 			seq.children.remove(1);
 			eseq.expr = mov.val;
+		} else if (id instanceof IdNode){
+			if (stack.globals.containsKey(((IdNode) id).id)){
+				Mem mem = (Mem) stack.globals.get(((IdNode) id).id);
+				lhs = mem;
+			}
 		}
 		
 		// if lhs is a mem type, remove the first one
