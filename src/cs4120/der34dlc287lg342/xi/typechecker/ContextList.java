@@ -34,6 +34,9 @@ public class ContextList extends ArrayList<XiTypeContext> {
 //		}
 		// we are ensured that superclasses are typechecked before derived classes
 		// also ensured no shadowing is allowed
+		if (top.symbols.containsKey(id)) {
+			return top.symbols.get(id);
+		}
 		
 		for (int i = size()-1; i >= 0; i--){
 			XiTypeContext context = this.get(i);
