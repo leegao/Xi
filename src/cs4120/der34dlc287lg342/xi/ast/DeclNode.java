@@ -41,29 +41,19 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 	/**if this decl was part of an final var instantiation then this is its value else null*/
 	public AbstractSyntaxTree initial_value;
-	
+	public boolean is_initialized;
 	public DeclNode(IdNode id, String type, ArrayList<VisualizableTreeNode> brackets, Position position){
 		this.id = id;
-		this.type_name = type;
+		this.type_name = type; //==e.g "final int" if is final type
 		this.brackets = brackets;
 		this.position = position;
 		children.add(id);
 		initial_value=null;
 	}
 	
-	/** non array decl*/
-	public DeclNode(IdNode id, String type, Position position){
-		this.id = id;
-		this.type_name = type;
-		this.brackets = new ArrayList<VisualizableTreeNode>();
-		this.position = position;
-		children.add(id);
-	}
-	
 	/**called only when this decl is final var*/
 	public void setInitialValue(AbstractSyntaxNode v){
-		id.setInitialValue((AbstractSyntaxTree)v);
-		initial_value=(AbstractSyntaxTree)v;
+		this.initial_value=(AbstractSyntaxTree)v;
 	}
 	
 	@Override
@@ -99,8 +89,12 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 		//add the id and its type to the context stack
 		try {
+			//if this is a final type, the XiPrimitiveType constructor its is_final field
 			XiType t = new XiPrimitiveType(type_name, brackets);
 			
+			//setting in type initial value ensures that it is propagated since all typechecks 
+			//following this involve checking the Context stack
+			//if this is a final decl, set initial_value
 			if(((XiPrimitiveType)t).is_final) //only valid if force init at decl time with parser
 				((XiPrimitiveType)t).setInitialValue(this.initial_value);
 			

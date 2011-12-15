@@ -25,11 +25,12 @@ public class TestFoldConstants extends TestCase {
 	}
 	
 	public void testConstantConstruction(){
+		/*
 		XiTypechecker tc;
 		try {
-			tc = gen("use io main(){b:int[1+3] a:bool = (0,4+2,2,3)[2+(-(1*0+1))] == length((1,2,3,4,5,6))}\n");
+			tc = gen("use io main(){ b:int[1+3] a:bool = (0,4+2,2,3)[2+(-(1*0+1))] == length((1,2,3,4,5,6))}\n");
 			tc.typecheck();
-			((AbstractSyntaxTree)tc.ast).foldConstants();
+			//((AbstractSyntaxTree)tc.ast).foldConstants();
 			System.out.println(tc.ast);
 			TypeAnnotatedTreePrinter printer = new TypeAnnotatedTreePrinter(System.out);
 			printer.print(tc.ast);
@@ -37,7 +38,7 @@ public class TestFoldConstants extends TestCase {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+		*/
 	}
 	
 	public void testConstantConstructionWithFinalVars(){
@@ -46,11 +47,11 @@ public class TestFoldConstants extends TestCase {
 			//test that constant folding works with final types
 			//like the original constant folding the final type initial value
 			//must an integer_literal or bool_literal
-			tc = gen("main(){ cvar:final int=1; cvar2: bool[]=(true,false); zz: bool= (true,false)[0] | false; xx:int=cvar+1; b:int[1+3+cvar] a:bool = (0,4+2+cvar,2+cvar,3+cvar)[2+cvar+(-(1*0+1+cvar))] == length((1,2,3,4,5,6+cvar))}\n");
+			tc = gen("main(){ cvar:final int=1;  yyy: int=1+cvar; y2:bool=1 > 0; cvar2: bool[]=(true,false); zz: bool= cvar2[0]; xx:int=cvar+1; b:int[1+3+cvar] a:bool = (0,4+2+cvar,2+cvar,3+cvar)[2+cvar+(-(1*0+1+cvar))] == length((1,2,3,4,5,6+cvar))}\n");
+			//tc=gen("main(){ x:final int=1; y: int=1+x;  x1=final bool=}");
 			tc.typecheck();
+			((AbstractSyntaxTree)tc.ast).foldConstants();
 			//((AbstractSyntaxTree)tc.ast).foldConstants();
-			//((AbstractSyntaxTree)tc.ast).foldConstants();
-			System.out.println(tc.ast);
 			TypeAnnotatedTreePrinter printer = new TypeAnnotatedTreePrinter(System.out);
 			printer.print(tc.ast);
 			//printtree(tc.ast," ");

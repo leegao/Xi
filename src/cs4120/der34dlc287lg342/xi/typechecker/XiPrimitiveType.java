@@ -138,23 +138,6 @@ public class XiPrimitiveType implements XiType {
 	 * @return True if the base types of this and t2 are the same, false
 	 * otherwise.*/
 	public boolean sameBaseType(XiPrimitiveType t2){
-		/*
-		if(this.type.equals("final int") || t2.type.equals("final int")){
-			//one type is final
-			if(this.type.equals("final int")){ //this is final
-				if(t2.type.equals("int"))
-					return true;
-				else
-					return false;
-			}
-			else{ //t2 is final
-				if(this.type.equals("int"))
-					return true;
-				else
-					return false;
-			}
-		}
-		*/
 		return type.equals(t2.type) || type.equals("*") || t2.type.equals("*");
 	}
 	

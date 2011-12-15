@@ -50,7 +50,7 @@ public class EqualityNode extends ExpressionNode {
 	
 	@Override
 	public String label() {
-	    return "EQ("+op+")";
+	    return "COMPARISON("+op+")";
 	}
 	
 	@Override

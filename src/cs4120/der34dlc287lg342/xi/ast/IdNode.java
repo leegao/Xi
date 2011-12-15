@@ -19,17 +19,11 @@ public class IdNode extends ExpressionNode {
 
 	protected Position position;
 	public String id;
-	public AbstractSyntaxTree initial_value;
+	
 	
 	public IdNode(String id, Position position){
 		this.id = id;
 		this.position = position;
-		initial_value=null;
-	}
-	
-	//called only when this id is final var
-	public void setInitialValue(AbstractSyntaxTree v){
-		initial_value=v;
 	}
 	
 	@Override
@@ -62,11 +56,19 @@ public class IdNode extends ExpressionNode {
 	public AbstractSyntaxTree foldConstants(){
 		//if this is a final var
 		try{
-			if(((XiPrimitiveType)this.type).is_final) //is final type
-				return this;
-			else
+			XiPrimitiveType temp_type=((XiPrimitiveType)this.type);
+			System.err.println(this +"is_initialized= "+temp_type.is_initialized);
+			if(temp_type.is_final && temp_type.is_initialized) //is final type
+				return temp_type.initial_value; //Just return init_value here?
+			else if(((XiPrimitiveType)this.type).is_final && !temp_type.is_initialized){
+				//should never be called since forcing init at decl time
+				System.err.println("Warning: Using final variable " +id+ " before initialization");
 				return null;
 			}
+			else
+				return null;
+			
+		}
 		catch(Exception e){
 			//the type of this id is not primitive
 			return null;

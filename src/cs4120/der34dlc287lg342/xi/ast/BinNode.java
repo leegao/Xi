@@ -96,13 +96,14 @@ public class BinNode extends ExpressionNode {
 		// rhs can be a constant
 		AbstractSyntaxTree lhs = ((AbstractSyntaxTree)e1).foldConstants();
 		AbstractSyntaxTree rhs = ((AbstractSyntaxTree)e2).foldConstants();
-
+	
 		e1 = resolve_const(0,lhs,e1);
 		e2 = resolve_const(1,rhs,e2);
 		
 		// Scheme: if e1 and e2 are int literals, return int literal
 		//Treat final vars like int literals too (assumes type checking
 		//has already been done)
+		/*
 		boolean e1_isfinal=false;
 		boolean e2_isfinal=false;
 		XiPrimitiveType lhs_type=null;
@@ -122,7 +123,7 @@ public class BinNode extends ExpressionNode {
 			e1=lhs_type.initial_value;
 		if(e2_isfinal)
 			e2=rhs_type.initial_value;
-			
+		*/
 		if ((e1 instanceof IntegerLiteralNode)  && (e2 instanceof IntegerLiteralNode)){
 			long value = ((IntegerLiteralNode)e1).value;
 			long rvalue = ((IntegerLiteralNode)e2).value;
