@@ -138,6 +138,7 @@ public class ClassNode extends AbstractSyntaxTree{
 			// set the size of the table
 			Label iftrue = new Label(), L1 = new Label(), L0 = new Label();
 			TempRegister rax = new TempRegister("rax"), rcx = new TempRegister("rcx"), rdx = new TempRegister("rdx");
+			int n = ((XiObjectType)type).layout.parent_type.layout.method_dv().size();
 			
 			init_func.add(new Cjump(new Binop(Binop.EQ, new EffectiveAddress(vt.size_label), new Const(0)), iftrue, return_to));
 			init_func.add(new LabelNode(iftrue));
