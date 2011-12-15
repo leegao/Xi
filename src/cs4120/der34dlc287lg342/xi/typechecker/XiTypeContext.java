@@ -3,6 +3,7 @@ package cs4120.der34dlc287lg342.xi.typechecker;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cs4120.der34dlc287lg342.xi.ast.ClassNode;
 import cs4120.der34dlc287lg342.xi.ast.FuncDeclNode;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
@@ -13,6 +14,7 @@ public class XiTypeContext {
 	public HashMap<String, XiObjectType> classes;
 	public HashMap<FuncDeclNode, XiObjectType> method_classes;
 	public HashMap<String, ContextList> class_context;
+	public HashMap<String, ClassNode> class_map;
 	
 	public XiTypeContext(XiFunctionType r, boolean b){
 		returnType = r;

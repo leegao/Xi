@@ -29,12 +29,28 @@ public class ContextList extends ArrayList<XiTypeContext> {
 //		if (in_class && top.classes.get(klass.id.id).layout.contains_variable(id)){
 //			return top.classes.get(klass.id.id).layout.get_variable(id).type;
 //		}
+		// we are ensured that superclasses are typechecked before derived classes
+		// also ensured no shadowing is allowed
 		
 		for (int i = size()-1; i >= 0; i--){
 			XiTypeContext context = this.get(i);
 			XiType t = context.find(id);
 			if (t != null){
 				return t;
+			}
+		}
+		
+		if (this.in_class){
+			ClassNode s = top.class_map.get(this.klass.ex.id);
+			while (s != null){
+				ContextList stack = top.class_context.get(s.id.id);
+				try{
+					return stack.find_id(id);
+				} catch (Exception e) {
+					if (s.ex == null)
+						break;
+					s = top.class_map.get(s.ex.id);
+				}
 			}
 		}
 		throw new InvalidXiTypeException("Attempt to use undeclared identifier "+id);

@@ -151,14 +151,10 @@ public class XiTypechecker {
 			}
 		}
 		globalContext.class_context = new HashMap<String, ContextList>();
+		globalContext.class_map = new HashMap<String, ClassNode>();
 		HashSet<String> seen = new HashSet<String>();
 		for (ClassNode klass : classes){
 			make_classmethods(klass, classes, seen);
-			
-			//ContextList stack = globalContext.class_context.get(klass.id.id);
-			
-			
-			//globalContext.class_context.put(klass.id.id, stack);
 		}
 		
 		for (VisualizableTreeNode child : ast.children()){
@@ -173,6 +169,7 @@ public class XiTypechecker {
 		if (seen.contains(klass.id.id))
 			return;
 		seen.add(klass.id.id);
+		globalContext.class_map.put(klass.id.id, klass);
 		
 		XiObjectType type = globalContext.classes.get(klass.id.id);
 		

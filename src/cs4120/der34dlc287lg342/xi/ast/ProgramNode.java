@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map.Entry;
 
 import cs4120.der34dlc287lg342.xi.XiInterfaceParser;
@@ -79,11 +80,24 @@ public class ProgramNode extends AbstractSyntaxTree {
 		return "PROGRAM";
 	}
 	
-	public void resolve_parents(ClassNode child, ContextList stack){
+	public void resolve_parents(ClassNode child, ContextList stack, HashSet<ClassNode> typechecked){
+		if (typechecked.contains(child))
+			return;
+		typechecked.add(child);
+		
 		if (child.ex != null){
-			//stack.top.
+			if (stack.top.class_map.containsKey(child.ex.id)){
+				ClassNode node = stack.top.class_map.get(child.ex.id);
+				ContextList s = stack.top.class_context.get(child.ex.id);
+				resolve_parents(node, s, typechecked);
+			} else {
+				throw new CompilationException("Invalid superclass "+child.ex,child.position);
+			}
 		}
 		XiType t = child.typecheck(stack.top.class_context.get(child.id.id));
+		
+		if(!(t instanceof XiObjectType))
+			throw new CompilationException("Invalid program, expected Object type but got "+t+" instead.",position);
 	}
 	
 	/** Type checks this program node. A program node type checks if
@@ -93,6 +107,7 @@ public class ProgramNode extends AbstractSyntaxTree {
 	 */
 	@Override
  	public XiType typecheck(ContextList stack) throws CompilationException {
+		HashSet<ClassNode> typechecked = new HashSet<ClassNode>();
 		for( VisualizableTreeNode childTree : children) {
 			if( childTree instanceof FuncDeclNode) {
 				((FuncDeclNode) childTree).make_type();
@@ -102,10 +117,11 @@ public class ProgramNode extends AbstractSyntaxTree {
 					throw new CompilationException("Invalid program",position);
 			} else if (childTree instanceof ClassNode){
 				ClassNode cur = (ClassNode) childTree;
-				XiType childType = ((ClassNode)childTree).typecheck(stack.top.class_context.get(((ClassNode)childTree).id.id));
+				resolve_parents(cur, stack, typechecked);
+				//XiType childType = ((ClassNode)childTree).typecheck(stack.top.class_context.get(((ClassNode)childTree).id.id));
 				
-				if(!(childType instanceof XiObjectType))
-					throw new CompilationException("Invalid program, expected Object type but got "+childType+" instead.",position);
+//				if(!(childType instanceof XiObjectType))
+//					throw new CompilationException("Invalid program, expected Object type but got "+childType+" instead.",position);
 			} else if (childTree instanceof GblDeclNode) {
 				XiType childType = ((AbstractSyntaxTree)childTree).typecheck(stack);
 				

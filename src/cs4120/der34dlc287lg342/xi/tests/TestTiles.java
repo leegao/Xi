@@ -174,11 +174,11 @@ public class TestTiles extends TestCase{
 			}
 		}
 		
-		//System.out.println(stmt.prettyPrint());
+		System.out.println(stmt.prettyPrint());
 		
 		SeqTile tiles = (SeqTile)stmt.munch();
 		Assembler assembler = new Assembler((SeqTile) stmt.munch());
-		System.out.println(assembler.att());
+		//System.out.println(assembler.att());
 //		for (Tile t : tiles.tiles){
 //			if (t instanceof FuncTile && ((FuncTile) t).name.name.equals("_IcreatePoint_o5Pointii")){
 //				ArrayList<Assembly> instrs = t.att();
