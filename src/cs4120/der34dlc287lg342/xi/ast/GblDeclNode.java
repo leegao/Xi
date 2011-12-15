@@ -81,7 +81,7 @@ public class GblDeclNode extends AbstractSyntaxTree {
 					throw new CompilationException("Cannot assign an object into a class variable", position());
 				}
 				
-				stack.add_id(id.id, t);
+				stack.top.add(id.id, t);
 				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
 					throw new CompilationException("Cannot match the type of the object to the declared type", position());
 			} else {
@@ -95,7 +95,7 @@ public class GblDeclNode extends AbstractSyntaxTree {
 				if (expr != null && !(expr instanceof IntegerLiteralNode || expr instanceof BoolLiteralNode))
 					throw new CompilationException("Cannot assign a non-constant expression into a class variable.", position());
 				
-				stack.add_id(id.id, t);
+				stack.top.add(id.id, t);
 				if (! t.equals(((AbstractSyntaxTree)id).typecheck(stack)))
 					throw new CompilationException("Cannot match the type of the object to the declared type", position());
 			}

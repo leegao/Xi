@@ -18,6 +18,9 @@ public class ContextList extends ArrayList<XiTypeContext> {
 	}
 	
 	public void add_id(String id, XiType t) throws InvalidXiTypeException{
+		if (top.symbols.containsKey(id)){
+			throw new InvalidXiTypeException("Cannot shadow global variable "+id);
+		}
 		XiTypeContext context = top();
 		context.add(id, t);
 	}
