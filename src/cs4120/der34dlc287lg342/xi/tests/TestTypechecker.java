@@ -273,6 +273,7 @@ public class TestTypechecker extends TestCase {
 		TestParser.printtree(program,"");
 	}
 	
+	
 	public void testGlobalTypeCheck() throws Exception {
 		String inputFile = "test3.xi";
 		FileReader reader = new FileReader(inputFile);
@@ -294,5 +295,11 @@ public class TestTypechecker extends TestCase {
 			e.printStackTrace();
 		}
 		TestParser.printtree(program,"");
+	}
+	
+	public void testInterfaceClassCreate() throws Exception{ 
+		
+		XiTypechecker tc = gen("use point main(){x:Point = createPoint(0,0)}");
+		tc.typecheck();
 	}
 }
