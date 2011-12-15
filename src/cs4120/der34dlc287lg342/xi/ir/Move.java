@@ -103,10 +103,7 @@ public class Move extends Stmt {
 		} else if (dest instanceof Mem && ((Mem)dest).expr instanceof EffectiveAddress){
 			return new MoveMemEA_Tile(((Mem)dest).expr.munch(), val.munch());
 		}
-		// Const into an expr
-		else if (val instanceof Const) {
-			return new Move_Const(((Const)val).value, dest.munch());
-		}
+		
 		
 		// %r = %r + 1
 		// assembly = inc %r
@@ -200,7 +197,14 @@ public class Move extends Stmt {
 		// dest = Mem(Expr)
 		// assembly = movq expr, Mem(expr)
 		else if (dest instanceof Mem) {
+			
 			return new Move_Expr_Mem_Expr(val.munch(), (((Mem)dest).expr).munch());
+		}
+		
+		// Const into an expr
+		else if (val instanceof Const) {
+			
+			return new Move_Const(((Const)val).value, dest.munch());
 		}
 		
 		// src = expr

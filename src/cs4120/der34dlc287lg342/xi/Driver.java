@@ -47,7 +47,7 @@ public class Driver {
 		String inputFile = null;
 		String outputFile = null;
 		
-		boolean dump_ir_initial = false, dump_ir_final = false;
+		boolean dump_ir_initial = true, dump_ir_final = false;
 		boolean dump_cfg_initial = false, dump_cfg_final = false;
 		
 		boolean first_minus = true, first_plus = true;
