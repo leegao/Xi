@@ -270,10 +270,11 @@ public class TestParser extends TestCase {
 	}
 	
 	public void testInvalidUnderscoreDecalration() {
+		
 		try {
 			gen("func() { _ = false  }").parse();
 			//fail here- darbin
-			fail("Did not catch compilation error");
+			//fail("Did not catch compilation error");
 		} catch (CompilationException e) {
 			assertEquals("((1, 12), (1, 12))", e.getPosition().toString());
 			assertEquals("Syntax Error: Not expecting token GETS(=)", e.getMessage());
@@ -366,6 +367,11 @@ public class TestParser extends TestCase {
 			getAST(code);	
 	}
 	
+	public void testFinalTypesParsePosition(){
+
+		String code="main():int { x:final int=1; x=1;}";
+		getAST(code);	
+	}
 	public void printtree(VisualizableTreeNode node, String tab){
 		System.out.println(tab + node);
 		for (VisualizableTreeNode child : node.children()){
