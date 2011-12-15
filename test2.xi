@@ -1,6 +1,8 @@
 use io
 use conv
 
+t:int
+
 class Point{
 	x,y:int
 	z:Point[]
@@ -47,8 +49,8 @@ class P2 extends Point{
 	}
 }
 
-createPoint(x:int, y:int): Point {
-	np2:Point = new P2.init(x,y);
+createPoint(t:int, y:int): Point {
+	np2:Point = new P2.init(t,y);
 	return np2;
 }
 
