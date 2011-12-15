@@ -110,6 +110,13 @@ public class IRContextStack extends ArrayList<IRContext>{
 		return b;
 	}
 	
+	public Label set_continue() throws InvalidIRContextException{
+		IRContext top = top();
+		Label b = new Label();
+		top.continue_to = b;
+		return b;
+	}
+	
 	public Label break_to() throws InvalidIRContextException{
 		if (this.isEmpty())
 			throw new InvalidIRContextException("Cannot find a context frame to work with");
@@ -119,6 +126,17 @@ public class IRContextStack extends ArrayList<IRContext>{
 				return break_to;
 		}
 		throw new InvalidIRContextException("No breaks found within the context stack");
+	}
+	
+	public Label continue_to() throws InvalidIRContextException{
+		if (this.isEmpty())
+			throw new InvalidIRContextException("Cannot find a context frame to work with");
+		for (int i = this.size()-1; i >= 0; i--){
+			Label continue_to = get(i).continue_to;
+			if (continue_to != null)
+				return continue_to;
+		}
+		throw new InvalidIRContextException("No continues found within the context stack");
 	}
 	
 	public Label return_to() throws InvalidIRContextException{

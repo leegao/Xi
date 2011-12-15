@@ -19,6 +19,7 @@ public class IRContext {
 	public HashMap<String, LabelNode> names;
 	public Label break_to;
 	public Label return_to;
+	public Label continue_to;
 	
 	public IRContext(){
 		symbols = new HashMap<String, Expr>();

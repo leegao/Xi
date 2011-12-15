@@ -107,6 +107,7 @@ public class WhileNode extends AbstractSyntaxTree {
 		Label head = new Label(), body = new Label(), end = new Label();
 		IRContext c = new IRContext();
 		c.break_to = end;
+		c.continue_to = head;
 		
 		Seq seq = new Seq(
 			new LabelNode(head),
