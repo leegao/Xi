@@ -57,7 +57,6 @@ public class IdNode extends ExpressionNode {
 		//if this is a final var
 		try{
 			XiPrimitiveType temp_type=((XiPrimitiveType)this.type);
-			System.err.println(this +"is_initialized= "+temp_type.is_initialized);
 			if(temp_type.is_final && temp_type.is_initialized) //is final type
 				return temp_type.initial_value; //Just return init_value here?
 			else if(((XiPrimitiveType)this.type).is_final && !temp_type.is_initialized){

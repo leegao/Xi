@@ -45,13 +45,22 @@ public class TestFinalType extends TestCase {
     	while(lex.hasNext())
     		System.out.println(lex.next().type().name());
 	}
-	
+	/*HERE ARE SOME EXAMPLES OF WHAT JAVA ALLOWS WITH FINALS*/
+	//final int hello;-- error if not init-might be eclipse thing
 	public void tt(final int x)
 	{
-		//x=3;
+		final int z;
+		//int ll=z+1; //must init z
+		//hello=1;
+		//x=3; //not allowed
+		final int t=foo();
 		System.out.println(x);
 	}
 	
+	public int foo(){
+		return 1;
+	}
+	/*----------END JAVA EXAMP-------------*/
 	public void testParse(){
 		String code="main():int{y : final bool=1;  y=1 return y}";
 		AbstractSyntaxNode astRoot = getAST(code);	
