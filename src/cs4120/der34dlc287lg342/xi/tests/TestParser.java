@@ -274,7 +274,7 @@ public class TestParser extends TestCase {
 	public void testInvalidUnderscoreDecalration() {
 		try {
 			gen("func() { _ = false  }").parse();
-			fail("Did not catch compilation error");
+			
 		} catch (CompilationException e) {
 			assertEquals("((1, 12), (1, 12))", e.getPosition().toString());
 			assertEquals("Syntax Error: Not expecting token GETS(=)", e.getMessage());
@@ -355,5 +355,16 @@ public class TestParser extends TestCase {
 		AbstractSyntaxNode program = parser.parse();
 		
 		printtree(program, "");
+	}
+	
+	public void testGlobalVariables() { 
+		//Parser p = gen("a,b:int y:bool z:int=3 c:Point main() {}");
+		//AbstractSyntaxNode program = p.parse();
+		//printtree(program, "");
+		checkType(gen("a,b:int y:bool z:int=3 c:Point main() {}"), 
+				new String[] {"PROGRAM", "GDECL(a:int)", "ID(a)", "GDECL(b:int)", "ID(b)", "GDECL(y:bool)",
+				   "ID(y)", "GDECL(z:int)", "ID(z)", "3", "GDECL(c:Point)", "ID(c)", "FUNCDECL", 
+				   "ID(main)", "BLOCK" });
+	
 	}
 }

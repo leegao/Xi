@@ -272,4 +272,34 @@ public class TestTypechecker extends TestCase {
 		}
 		TestParser.printtree(program,"");
 	}
+	
+	
+	public void testGlobalTypeCheck() throws Exception {
+		String inputFile = "test3.xi";
+		FileReader reader = new FileReader(inputFile);
+		String src = "";
+		BufferedReader input =  new BufferedReader(reader);
+		String line = null;
+		while (( line = input.readLine()) != null){
+	          src += line + "\n";
+	    }
+		Parser parser = new XiParser(new StringReader(src), inputFile);
+		AbstractSyntaxNode program = parser.parse();
+		
+		XiTypechecker tc = new XiTypechecker(program, src);
+		
+		//System.out.println(tc.globalContext.classes.get("Point").layout.method_vector);
+		try{
+			tc.typecheck();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		TestParser.printtree(program,"");
+	}
+	
+	public void testInterfaceClassCreate() throws Exception{ 
+		
+		XiTypechecker tc = gen("use point main(){x:Point = createPoint(0,0)}");
+		tc.typecheck();
+	}
 }

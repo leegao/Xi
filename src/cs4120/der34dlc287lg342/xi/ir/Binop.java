@@ -4,15 +4,20 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
 import cs4120.der34dlc287lg342.xi.tiles.AddTile;
+import cs4120.der34dlc287lg342.xi.tiles.Add_Const_Tile;
 import cs4120.der34dlc287lg342.xi.tiles.AndTile;
 import cs4120.der34dlc287lg342.xi.tiles.BinopTile;
 import cs4120.der34dlc287lg342.xi.tiles.DivTile;
 import cs4120.der34dlc287lg342.xi.tiles.LshTile;
+import cs4120.der34dlc287lg342.xi.tiles.Lsh_Const_Tile;
 import cs4120.der34dlc287lg342.xi.tiles.ModTile;
 import cs4120.der34dlc287lg342.xi.tiles.MulTile;
+import cs4120.der34dlc287lg342.xi.tiles.Mul_Const_Tile;
 import cs4120.der34dlc287lg342.xi.tiles.OrTile;
 import cs4120.der34dlc287lg342.xi.tiles.RshTile;
+import cs4120.der34dlc287lg342.xi.tiles.Rsh_Const_Tile;
 import cs4120.der34dlc287lg342.xi.tiles.SubTile;
+import cs4120.der34dlc287lg342.xi.tiles.Sub_Const_Tile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 import cs4120.der34dlc287lg342.xi.tiles.EqTile;
 import cs4120.der34dlc287lg342.xi.tiles.XorTile;
@@ -170,29 +175,82 @@ public class Binop extends Expr {
 	
 	@Override
 	public BinopTile munch() {
-		Tile left = this.left.munch();
-		Tile right = this.right.munch();
-		switch (op){
-		case PLUS:
-			return new AddTile(left, right);
-		case MINUS:
-			return new SubTile(left, right);
-		case MUL:
-			return new MulTile(left, right);
-		case DIV:
-			return new DivTile(left, right);
-		case MOD:
-			return new ModTile(left, right);
-		case AND:
-			return new AndTile(left, right);
-		case OR:
-			return new OrTile(left, right);
-		case XOR:
-			return new XorTile(left, right);
-		case LSH:
-			return new LshTile(left, right);
-		case RSH:
-			return new RshTile(left, right);
+		if( left instanceof Const && op == PLUS) {
+			return new Add_Const_Tile(((Const)left).value, right.munch());
+		}
+		else if (left instanceof Const && op == MINUS) {
+			return new Sub_Const_Tile(((Const)left).value, right.munch());
+		}
+//		else if (left instanceof Const && op == MUL) {
+//			return new Mul_Const_Tile(((Const)left).value, right.munch());
+//		}
+//			case DIV:
+//				return new DivTile(left, right);
+//			case MOD:
+//				return new ModTile(left, right);
+//			case AND:
+//				return new AndTile(left, right);
+//			case OR:
+//				return new OrTile(left, right);
+//			case XOR:
+//				return new XorTile(left, right);
+//		else if (left instanceof Const && op == LSH) {
+//			return new Lsh_Const_Tile(((Const)left).value, right.munch());
+//		}
+//		else if (left instanceof Const && op == RSH) {
+//			return new Rsh_Const_Tile(((Const)left).value, right.munch());
+//		} 
+//		
+		else if (right instanceof Const && op == PLUS) {
+			return new Add_Const_Tile(((Const)right).value, left.munch());
+		}
+		else if (right instanceof Const && op == MINUS) {
+			return new Sub_Const_Tile(((Const)right).value, left.munch());
+		}
+//		else if (right instanceof Const && op == MUL) {
+//			return new Mul_Const_Tile(((Const)right).value, left.munch());
+//		}
+//			case DIV:
+//				return new DivTile(left, right);
+//			case MOD:
+//				return new ModTile(left, right);
+//			case AND:
+//				return new AndTile(left, right);
+//			case OR:
+//				return new OrTile(left, right);
+//			case XOR:
+//				return new XorTile(left, right);
+//		else if (right instanceof Const && op == LSH) {
+//			return new Lsh_Const_Tile(((Const)right).value, left.munch());
+//		}
+//		else if (right instanceof Const && op == RSH) {
+//				return new Rsh_Const_Tile(((Const)right).value, left.munch());
+//		} 
+		else {
+			Tile left = this.left.munch();
+			Tile right = this.right.munch();
+			switch (op){
+				case PLUS:
+					return new AddTile(left, right);
+				case MINUS:
+					return new SubTile(left, right);
+				case MUL:
+					return new MulTile(left, right);
+				case DIV:
+					return new DivTile(left, right);
+				case MOD:
+					return new ModTile(left, right);
+				case AND:
+					return new AndTile(left, right);
+				case OR:
+					return new OrTile(left, right);
+				case XOR:
+					return new XorTile(left, right);
+				case LSH:
+					return new LshTile(left, right);
+				case RSH:
+					return new RshTile(left, right);
+			}
 		}
 		//System.out.println(label());
 		return null;

@@ -86,9 +86,16 @@ public class XiTypechecker {
 			throw formatException(e, src);
 		}
 		for (VisualizableTreeNode child : declarations.children()){
-			FuncDeclNode decl = (FuncDeclNode)child;
-			IdNode identifier = (IdNode)decl.id;
-			interfaces.put(identifier.id, decl.type);
+			if (child instanceof FuncDeclNode) {
+				FuncDeclNode decl = (FuncDeclNode)child;
+				IdNode identifier = (IdNode)decl.id;
+				interfaces.put(identifier.id, decl.type);
+			} else if (child instanceof ClassDeclNode) {
+				ClassDeclNode decl = (ClassDeclNode)child;
+				IdNode identifier = (IdNode)decl.id;
+				
+			}
+
 		}
 		
 		return interfaces;
@@ -137,6 +144,8 @@ public class XiTypechecker {
 					throw new CompilationException("Classtype "+klass.id.id+" already exists", klass.position());
 				globalContext.classes.put(klass.id.id, type);
 				classes.add(klass);
+			} else if (child instanceof GblDeclNode) {
+				//Do nothing
 			} else {
 				throw new CompilationException("Invalid Abstract Syntax Tree", ((AbstractSyntaxNode)child).position());
 			}
