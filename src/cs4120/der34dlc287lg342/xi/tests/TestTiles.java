@@ -7,8 +7,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
 
 import cs4120.der34dlc287lg342.xi.XiParser;
+import cs4120.der34dlc287lg342.xi.assembly.Assembler;
+import cs4120.der34dlc287lg342.xi.assembly.Assembly;
 import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 import cs4120.der34dlc287lg342.xi.ir.*;
 import cs4120.der34dlc287lg342.xi.ir.context.*;
@@ -171,10 +174,17 @@ public class TestTiles extends TestCase{
 			}
 		}
 		
-		for (Tile t : ((SeqTile)stmt.munch()).tiles){
-			System.out.println(t.getClass().getSimpleName());
-			
-		}
+		SeqTile tiles = (SeqTile)stmt.munch();
+		Assembler assembler = new Assembler((SeqTile) stmt.munch());
+		System.out.println(assembler.att());
+//		for (Tile t : tiles.tiles){
+//			if (t instanceof FuncTile && ((FuncTile) t).name.name.equals("_IcreatePoint_o5Pointii")){
+//				ArrayList<Assembly> instrs = t.att();
+//				for (Assembly asm : instrs){
+//					System.out.println(asm.simple_assem());
+//				}
+//			}
+//		}
 		
 		//System.out.println(stmt.prettyPrint());
 	}

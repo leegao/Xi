@@ -68,8 +68,12 @@ public class Assembler {
 				att += (asm+"\n");
 			}else{
 				ArrayList<Assembly> instrs = tile.att();
-				for (Assembly instr : instrs){
-					att += (instr.assem+"\n");
+				if (instrs != null){
+					for (Assembly instr : instrs){
+						att += (instr.assem+"\n");
+					}
+				} else {
+					System.out.println("not implemented: "+tile);
 				}
 			}
 		}
