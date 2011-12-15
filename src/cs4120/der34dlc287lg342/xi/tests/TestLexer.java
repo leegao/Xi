@@ -23,7 +23,10 @@ public class TestLexer extends TestCase {
 		
 		assertFalse("Too many tokens in stream", lexer.hasNext());
 	}
-	
+	/** create an array of TokenType's from an String array 
+	 * and  compares the them to the lexer output. The string array
+	 * should match the field names inside TokenType. E.g if String types[]={"int"}
+	 * it is converted to TokenType tokens[]={TokenType.INT}*/
 	public void checkType(Lexer lexer, String[] types){
 		TokenType[] tokens = new TokenType[types.length]; 
 		int i = 0;
@@ -41,6 +44,21 @@ public class TestLexer extends TestCase {
 			}
 		}
 		checkType(lexer, tokens);
+	}
+	
+	//space delimited checkType so its easier to write out tokens
+	public void checkType(Lexer lexer, String types){
+		checkType(lexer,types.split(" "));
+	}
+	
+	//allow shorthands for human token testing but can be easily broken
+	public void checkTypeEasy(Lexer lexer, String types){
+		String temp=types.replaceAll(":", "colon");
+		temp=temp.replaceAll("id", "identifier");
+		temp=temp.replaceAll("=", "gets");
+		temp=temp.replaceAll("0", "INTEGER_LITERAL");
+		temp=temp.replaceAll(";", "semicolon");
+		checkType(lexer,temp.split(" "));
 	}
 	
 	public void testLexerConstruction(){
@@ -318,4 +336,51 @@ public class TestLexer extends TestCase {
 		assertEquals("((3, 14), (3, 14))", lex.next().position().toString());
 		assertFalse(lex.hasNext());
     }
+    
+    public void test_FinalType1() {
+    	String input = "x final ";
+    	Lexer lex = new XiLexer(new StringReader(input));
+    	
+    	assertTrue(lex.hasNext());
+    	checkType(lex, "identifier final");
+    	assertFalse(lex.hasNext());
+    }
+    
+    public void test_FinalType2() {
+    	String input = "final x";
+    	Lexer lex = new XiLexer(new StringReader(input));
+    	
+    	assertTrue(lex.hasNext());
+    	checkType(lex, "final identifier");
+    	assertFalse(lex.hasNext());
+    }
+    
+    public void test_FinalType3() {
+    	String input = "y:final int";
+    	Lexer lex = new XiLexer(new StringReader(input));
+    	
+    	assertTrue(lex.hasNext());
+    	checkTypeEasy(lex, "id : final int");
+    	assertFalse(lex.hasNext());
+    }
+    
+    public void test_FinalType4() {
+    	String input = "y:final int; x: final bool";
+    	Lexer lex = new XiLexer(new StringReader(input));
+    	
+    	assertTrue(lex.hasNext());
+    	checkTypeEasy(lex, "id : final int semicolon id : final bool");
+    	assertFalse(lex.hasNext());
+    }
+    
+    public void test_FinalType5() {
+    	String input = "y:final int = 5; x:final bool";
+    	Lexer lex = new XiLexer(new StringReader(input));
+    	
+    	assertTrue(lex.hasNext());
+    	checkTypeEasy(lex, "id : final int = 0 ; id : final bool");
+    	assertFalse(lex.hasNext());
+    }
+    
+    
 }

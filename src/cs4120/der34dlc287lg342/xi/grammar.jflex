@@ -105,6 +105,7 @@ IntegerLiteral    = {DecIntegerLiteral} | {NegIntegerLiteral}
 <YYINITIAL> "extends"            { return token(TokenType.EXTENDS); }
 <YYINITIAL> "this"               { return token(TokenType.THIS); }
 <YYINITIAL> "null"               { return token(TokenType.NULL); }
+<YYINITIAL> "final"				 { return token(TokenType.FINAL); }
 
 <YYINITIAL> {
   /* identifiers */ 

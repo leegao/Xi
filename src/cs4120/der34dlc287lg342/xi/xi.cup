@@ -12,6 +12,10 @@ import cs4120.der34dlc287lg342.xi.typechecker.XiType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import java.util.ArrayList;
 import java_cup.runtime.Symbol;
+import cs4120.der34dlc287lg342.xi.sym;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+import java.lang.reflect.Field;
 
 action code {:
 	public Position span(Position left, Position right){
@@ -20,12 +24,60 @@ action code {:
 :};
 
 parser code {:
+	//NOTE: the two error functions are mutually exclusive  since syntax_error() is throwing exception!
+	
 	public void syntax_error(Symbol cur_token){
 		Token t = (Token)cur_token.value;
-		if (t != null)
+		
+		if (t != null){
 			throw new CompilationException("Syntax Error: Not expecting token "+t.type()+"("+t.value()+")", t.position());
+		}
 		else
 			throw new CompilationException("Syntax Error: Not expecting EOF", new XiPosition(0,0,0,0));
+		
+		
+	}
+	
+	public void unrecovered_syntax_error(Symbol cur_token){
+		Token t = (Token)cur_token.value;
+		report_fatal_error("", t);	
+	}
+
+	public void report_fatal_error(String message, Object info){	
+		Token t = (Token)info;
+		if (t != null){
+			throw new CompilationException("Syntax Error: Not expecting token "+t.type()+"("+t.value()+")", t.position());
+		}
+		else
+			throw new CompilationException("Syntax Error: Not expecting EOF", new XiPosition(0,0,0,0));
+	}
+
+ 	public void debug_message(String mess) {	
+ 		try{
+		//modify default debug message to replace terminal id with token name
+	 		if(mess.contains("term #")){
+	 			Pattern p=Pattern.compile("([0-9]+)");
+		 		Matcher m=p.matcher(mess);
+		 		m.find();
+		 		int tokid=Integer.parseInt(m.group(0));
+		 		String tokname="debug mess error";
+		 		for(Field tid : sym.class.getFields()){
+		 			if(tid.getInt(tid)==tokid){
+		 				tokname=tid.getName();
+		 				break;
+		 			}
+		 		}
+				String bettermess=mess.replaceFirst("#[0-9]+",tokname);
+				System.err.println(bettermess);
+	 		}
+			else
+	 			System.err.println(mess);
+ 		}
+ 		catch(Exception e){
+ 			System.err.println(mess);
+ 		}
+		
+		//System.err.println(mess);
 	}
 :};
 
@@ -35,16 +87,17 @@ terminal Token STRING_LITERAL;
 terminal Token CHARACTER_LITERAL;
 terminal Token INTEGER_LITERAL;
 terminal Token TRUE, FALSE;
-terminal Token INT, BOOL;
+terminal Token INT, BOOL,FINAL;
 terminal UMINUS, UNOT;
 
 terminal Token IF, ELSE, WHILE, BREAK, RETURN, USE, LENGTH, PLUS, MINUS, TIMES,
   DIVIDE, MODULO, NOT, LT, LEQ, GT, GEQ, AND, OR, EQUAL, NOT_EQUAL, GETS,
   OPEN_BRACKET, CLOSE_BRACKET, OPEN_PAREN, CLOSE_PAREN, OPEN_BRACE, CLOSE_BRACE,
-  COLON, COMMA, SEMICOLON, UNDERSCORE, CLASS, EXTENDS, NEW, THIS, PERIOD, NULL;
+  COLON, COMMA, SEMICOLON, UNDERSCORE,CLASS,EXTENDS,NEW,THIS,PERIOD,NULL;
 
-nonterminal AbstractSyntaxTree program, use_list;
+nonterminal AbstractSyntaxNode program, use_list;
 // expr components
+<<<<<<< HEAD
 nonterminal AbstractSyntaxTree expr, uop, func_call, expr_subset, 
 	arr_index, arr_create, arr_elements, id, id_brackets, allowed_element_assign, usable_id;
 // statement components
@@ -62,6 +115,21 @@ nonterminal AbstractSyntaxTree bool_literal, attr;
 // top level
 nonterminal AbstractSyntaxTree func_decl, use_stmt;
 nonterminal AbstractSyntaxTree class_decl, varclass_decl, varclass_inst, gblvar_decl, gblvar_inst;
+=======
+nonterminal AbstractSyntaxNode expr, uop, func_call, 
+	arr_index, arr_create, arr_elements, id, id_brackets, allowed_element_assign;
+// statement components
+nonterminal AbstractSyntaxNode stmt, stmt_w_semi, if_stmt, while_stmt, return_stmt, return_list, 
+	block, stmt_list, block_stmt, stmt_or_block, var_decl,final_var_decl,final_var_init, var_inst, var_item, var_set;
+nonterminal AbstractSyntaxNode dimension;
+nonterminal String type, final_type;
+nonterminal ArrayList<XiPrimitiveType> types;
+nonterminal ArrayList<VisualizableTreeNode> bracket_list;
+nonterminal ArrayList<VisualizableTreeNode> var_list, func_list, func_callargs;
+nonterminal AbstractSyntaxNode bool_literal;
+// top level
+nonterminal AbstractSyntaxNode func_decl, use_stmt;
+>>>>>>> finals
 
 precedence nonassoc NEW;
 
@@ -91,6 +159,7 @@ id ::= IDENTIFIER:o
 	{:  Token id = (Token)o;
 		RESULT = new IdNode(id.value(), id.position());:};
 	
+<<<<<<< HEAD
 usable_id ::= id:id
 	{: RESULT = id; :}
 	| THIS:t
@@ -115,6 +184,8 @@ attr ::= func_call:a PERIOD id:b
 
 attr ::= expr:a PERIOD id:b
 	{: RESULT = new AttrNode(a, b, span(a.position(), b.position())); :};
+=======
+>>>>>>> finals
 
 expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
       ((BoolOpNode)RESULT).set(e1, e2, span(e1.position(), e2.position())); :}
@@ -187,10 +258,14 @@ expr ::= expr:e1 AND expr:e2 {: RESULT = new BoolOpNode("AND");
 	| arr_create:e
 	{: RESULT = e; :}
 	
+<<<<<<< HEAD
 	| NULL:t
 	{: RESULT = new NullNode(t.position());:}
 	
 	| usable_id:e
+=======
+	| id:e
+>>>>>>> finals
 	{: RESULT = e; :}
 	
 	| attr:attr
@@ -255,7 +330,9 @@ stmt ::= if_stmt:s
 	{: RESULT = new ProcedureCallNode(e); :}
 	| block:b
 	{: RESULT = b; :}
-	| var_decl:s
+	|  final_var_init:s
+	{: RESULT = s; :}
+	|  var_decl:s
 	{: RESULT = s; :}
 	| var_inst:s
 	{: RESULT = s; :}
@@ -300,7 +377,7 @@ return_list ::= expr:expr
 		r.add(expr); 
 		r.position = span(r.position, expr.position());
 		RESULT = r; :};
-
+/* a block of statemens*/
 block ::= OPEN_BRACE:t CLOSE_BRACE:e
 	{: RESULT = new BlockNode(span(t.position(), e.position())); :}
 	| OPEN_BRACE:t return_stmt:s CLOSE_BRACE:e
@@ -315,7 +392,9 @@ block ::= OPEN_BRACE:t CLOSE_BRACE:e
 		block.position = span(t.position(), e.position()); 
 		block.add(s);
 		RESULT = block; :};
+/*a statement ending with or without semicolon*/
 block_stmt ::= stmt:s {: RESULT = s; :} | stmt:s SEMICOLON {: RESULT = s; :};
+/*a list of statements*/
 stmt_list ::= block_stmt:s 
 	{:	BlockNode block = new BlockNode(null);
 		block.add(s);
@@ -325,15 +404,38 @@ stmt_list ::= block_stmt:s
 		block.add(s);
 		RESULT = block; :};
 
-type ::= INT:o {: RESULT = o.value(); :} | BOOL:o {: RESULT = o.value(); :}
-		| id:id {: RESULT = ((IdNode)id).id; :};
+type ::= INT:o {: RESULT = o.value(); :} 
+	| BOOL:o {: RESULT = o.value(); :};
+
 dimension ::= | expr:o {: RESULT = o; :};
 
 var_decl ::= id:id COLON type:t bracket_list:arr
 	{:	// check that arr is empty
 		DeclNode decl = new DeclNode((IdNode)id, t, arr, id.position());
 		RESULT = decl;:};
-	
+
+final_type ::= FINAL:token1 INT:token2 
+	{:RESULT= token1.value()+" "+token2.value();:}
+	| FINAL:token1 BOOL:token2
+	 {:RESULT= token1.value()+" "+token2.value();:};
+
+
+final_var_decl ::= id:id COLON final_type:t bracket_list:arr
+		{:DeclNode decl = new DeclNode((IdNode)id, t, arr,id.position());
+		  RESULT = decl; :};
+
+final_var_init ::= final_var_decl:fvd GETS expr:e
+		{:ArrayList<VisualizableTreeNode> list= new ArrayList<VisualizableTreeNode>();
+		  ((DeclNode)fvd).setInitialValue(e);
+		  list.add(fvd);
+		  InstNode inst = new InstNode(list, e, span(fvd.position(), e.position()));
+		  RESULT=inst; :}
+		| error 		
+		{: 
+		  RESULT= new ErrorNode(null);
+		:};
+
+		 
 bracket_list ::= 
 	{: RESULT = new ArrayList<VisualizableTreeNode>(); :}
 	| bracket_list:arr OPEN_BRACKET dimension:t CLOSE_BRACKET 
@@ -384,8 +486,11 @@ id_brackets ::= id:id OPEN_BRACKET expr:i CLOSE_BRACKET:t
 	   RESULT = new ListIndexNode(base, i, span(base.position(), t.position())); :};
 
 var_set ::= id:id GETS expr:expr
+<<<<<<< HEAD
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :}
 	| attr:id GETS expr:expr
+=======
+>>>>>>> finals
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :}
 	| id_brackets:id GETS expr:expr
 	{: RESULT = new AssignmentNode((ExpressionNode)id, expr, span(id.position(), expr.position())); :};
@@ -395,8 +500,9 @@ use_stmt ::= USE:t id:id
 	{: RESULT = new UseNode(id, span(t.position(), id.position()));:}
 	| USE:t id:id SEMICOLON
 	{: RESULT = new UseNode(id, span(t.position(), id.position()));:};
-	
-func_list ::= 
+
+/*function definition arguments*/	
+func_list ::= /* nothing */
 	{:	ArrayList<VisualizableTreeNode> list = new ArrayList<VisualizableTreeNode>();
 		RESULT = list; :}
 	| var_decl:s 
@@ -407,7 +513,12 @@ func_list ::=
 	{:	list.add(s);
 		RESULT = list; :};
 
+<<<<<<< HEAD
 types ::= {: RESULT = new ArrayList<XiType>(); :}
+=======
+types ::= /* nothing */ 
+	{: RESULT = new ArrayList<XiPrimitiveType>(); :}
+>>>>>>> finals
 	| COLON type:type bracket_list:dim
 	{: RESULT = new ArrayList<XiType>(); RESULT.add(new XiPrimitiveType(type, dim)); :}
 	| types:arr COMMA type:type bracket_list:dim
@@ -428,6 +539,7 @@ use_list ::= use_stmt:s
 		program.add(s);
 		RESULT = program; :};
 
+<<<<<<< HEAD
 varclass_decl ::= id:id COLON type:t bracket_list:arr
 	{:	// check that arr is empty
 		ClassDeclNode decl = new ClassDeclNode((IdNode)id, t, arr, id.position());
@@ -547,6 +659,8 @@ gblid_list ::= id:id1 COMMA id:id2
 		RESULT = list;
 	:};
 
+=======
+>>>>>>> finals
 program ::= use_list:p func_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
@@ -567,6 +681,7 @@ program ::= use_list:p func_decl:s
 	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
 		RESULT = program; :}
+<<<<<<< HEAD
 	| class_decl:s
 	{:	ProgramNode program = new ProgramNode(s.position());
 		program.add(s);
@@ -576,12 +691,9 @@ program ::= use_list:p func_decl:s
 		program.addAll(s);
 		program.position = span(p.position(), ((GblDeclNode)s.get(0)).position());
 		RESULT = program; :}
+=======
+>>>>>>> finals
 	| program:p func_decl:s
-	{:	ProgramNode program = (ProgramNode)p;
-		program.add(s);
-		program.position = span(p.position(), s.position());
-		RESULT = program; :}
-	| program:p class_decl:s
 	{:	ProgramNode program = (ProgramNode)p;
 		program.add(s);
 		program.position = span(p.position(), s.position());

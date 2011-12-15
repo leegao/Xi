@@ -45,6 +45,14 @@ public class InstNode extends AbstractSyntaxTree {
 		children.add(e);
 		this.position = position;
 	}
+	/*for place holder during parser errors*/
+	@SuppressWarnings("unchecked")
+	public InstNode(){
+		this.list = new ArrayList<VisualizableTreeNode>();
+		this.e = null;
+		children = new ArrayList<VisualizableTreeNode>();
+		this.position =null;
+	}
 	
 	@Override
 	public Position position() {
@@ -66,7 +74,13 @@ public class InstNode extends AbstractSyntaxTree {
 		if(list.size() == 1) {
 			XiType exprType = ((AbstractSyntaxTree)e).typecheck(stack);
 			XiType declType = ((AbstractSyntaxTree)list.get(0)).typecheck(stack);
-			
+			//set is_initialized since this is an instantiation node
+			if((declType instanceof XiPrimitiveType)){
+				if(((XiPrimitiveType)declType).is_final && !((XiPrimitiveType)declType).is_initialized){
+					((XiPrimitiveType)declType).setInitialized();
+				}
+			}
+				
 			if(list.get(0) instanceof DeclNode && declType.equals(XiPrimitiveType.UNIT)){
 				DeclNode decl = (DeclNode)list.get(0);
 				XiType t;

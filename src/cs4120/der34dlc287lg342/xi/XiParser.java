@@ -12,6 +12,8 @@ public class XiParser implements Parser {
 	
 	protected Reader reader;
 	protected String unit;
+	private boolean do_debug_parse;
+	
 	public XiParser(Reader reader, String unit){
 		this.reader = reader;
 		this.unit = unit;
@@ -21,6 +23,11 @@ public class XiParser implements Parser {
 		this(reader, "");
 	}
 	
+	//set whether the parse should be done in debug mode
+	public void setDoDebug(boolean mode){
+		do_debug_parse=mode;
+	}
+	
 	@Override
 	public AbstractSyntaxNode parse() throws CompilationException {
 		XiLexer lexer = new XiLexer(reader);
@@ -28,7 +35,12 @@ public class XiParser implements Parser {
 		Scanner cupScanner = new LexerAdapter(lexer, sym.class);
 		parser p = new parser(cupScanner);
 		try {
-			AbstractSyntaxNode node = (AbstractSyntaxNode) p.parse().value;
+			AbstractSyntaxNode node=null;
+			if(do_debug_parse)
+				node = (AbstractSyntaxNode) p.debug_parse().value;
+			else
+				node = (AbstractSyntaxNode) p.parse().value;
+			
 			return node;
 		} catch (CompilationException e){
 			throw e;

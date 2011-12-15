@@ -132,7 +132,7 @@ public class EqualityNode extends ExpressionNode {
 				value = lvalue >= rvalue;
 			} else if (op.equals("LT")){
 				value = lvalue < rvalue;
-			} else if (op.equals("LT")){
+			} else if (op.equals("GT")){ //fixed BUG, was LT
 				value = lvalue > rvalue;
 			}
 			

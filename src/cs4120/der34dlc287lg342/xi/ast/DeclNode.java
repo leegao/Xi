@@ -23,7 +23,7 @@ import cs4120.der34dlc287lg342.xi.typechecker.InvalidXiTypeException;
 import cs4120.der34dlc287lg342.xi.typechecker.XiObjectType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiPrimitiveType;
 import cs4120.der34dlc287lg342.xi.typechecker.XiType;
-
+import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
@@ -35,18 +35,26 @@ public class DeclNode extends AbstractSyntaxTree {
 	public IdNode id;
 	/**The base type of this variable declaration*/
 	public String type_name;
-	/**If this represents an array declaration than this field contains any dimension
+	/**If this represents an array declaration then this field contains any dimension
 	 * specifiers.*/
 	public ArrayList<VisualizableTreeNode> brackets;
 	public ArrayList<VisualizableTreeNode> children = new ArrayList<VisualizableTreeNode>();
-	
-	
+		
+	/**if this decl was part of an final var instantiation then this is its value else null*/
+	public AbstractSyntaxTree initial_value;
+	public boolean is_initialized;
 	public DeclNode(IdNode id, String type, ArrayList<VisualizableTreeNode> brackets, Position position){
 		this.id = id;
-		this.type_name = type;
+		this.type_name = type; //==e.g "final int" if is final type
 		this.brackets = brackets;
 		this.position = position;
 		children.add(id);
+		initial_value=null;
+	}
+	
+	/**called only when this decl is final var*/
+	public void setInitialValue(AbstractSyntaxNode v){
+		this.initial_value=(AbstractSyntaxTree)v;
 	}
 	
 	@Override
@@ -80,6 +88,7 @@ public class DeclNode extends AbstractSyntaxTree {
 				throw new CompilationException("Cannot declare arrays with non-integer dimension", position());
 		}
 		
+<<<<<<< HEAD
 		if (stack.klass != null){
 			XiObjectType arg_type = stack.top.classes.get(stack.klass.id.id);
 			
@@ -101,6 +110,24 @@ public class DeclNode extends AbstractSyntaxTree {
 					throw new CompilationException("Cannot match the type of the object to the declared type", position());
 			}
 			
+=======
+		//add the id and its type to the context stack
+		try {
+			//if this is a final type, the XiPrimitiveType constructor its is_final field
+			XiType t = new XiPrimitiveType(type_name, brackets);
+			
+			//setting in type initial value ensures that it is propagated since all typechecks 
+			//following this involve checking the Context stack
+			//if this is a final decl, set initial_value
+			if(((XiPrimitiveType)t).is_final) //only valid if force init at decl time with parser
+				((XiPrimitiveType)t).setInitialValue(this.initial_value);
+			
+			stack.add_id(id.id, t);
+			AbstractSyntaxTree temp=(AbstractSyntaxTree)id;
+			XiType temptype=temp.typecheck(stack);
+			if (! t.equals(temptype))
+				throw new CompilationException("Cannot match the type of the object to the declared type", position());
+>>>>>>> finals
 		} catch (InvalidXiTypeException e) {
 			throw new CompilationException(e.getMessage(), position());
 		}
@@ -227,4 +254,9 @@ public class DeclNode extends AbstractSyntaxTree {
 		
 		return new Eseq(base, seq);
 	}
+	
+	public String toString(){
+		return label()+"["+type_name+"]";
+	}
+	
 }

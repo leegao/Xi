@@ -30,11 +30,35 @@ import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
 import edu.cornell.cs.cs4120.xi.CompilationException;
 import edu.cornell.cs.cs4120.xi.Position;
-
+/**Represents an array index in the AST*/
 public class ListIndexNode extends ExpressionNode {
-
+	
 	protected Position position;
-	protected AbstractSyntaxTree expr, index;
+	/**expr is the expression that is is being indexed into for example :
+	/**.e.g if this==(true,false)[0] then expr=ARRAY(3)
+		(ARR-INDEX[bool]
+            (ARRAY(2)[bool[]]
+                    (true[bool])
+                        
+                    (false[bool])
+                        )
+                
+            (0[int])
+                )
+        )
+	 * 
+	 */
+	/**e.g if this=x[0] expr=ID(x)
+	  (ARR-INDEX[bool]
+	        (ID(x)[bool[]])
+	            
+	        (0[int])
+	            )
+	    )
+	 */
+	protected AbstractSyntaxTree expr;
+	/**The index into the array*/
+	protected AbstractSyntaxTree index;
 	protected ArrayList<VisualizableTreeNode> children;
 	public ListIndexNode(AbstractSyntaxNode expr, AbstractSyntaxNode index, Position position){
 		this.expr = (AbstractSyntaxTree) expr;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 import edu.cornell.cs.cs4120.xi.AbstractSyntaxNode;
+import cs4120.der34dlc287lg342.xi.ast.AbstractSyntaxTree;
 
 public class XiPrimitiveType implements XiType {
 	/**Represents a primitive type as a string
@@ -17,15 +18,53 @@ public class XiPrimitiveType implements XiType {
 	 * if they are specified in the declaration. */
 	ArrayList<Integer> static_dimension;
 	
+	/** is a constant primitive*/
+	public boolean is_final;
+	/**is final type and inital_value is set*/
+	public boolean is_initialized;
+	/**value set at declaration time*/
+	public AbstractSyntaxTree initial_value;
+	
 	public XiPrimitiveType(String type, ArrayList<VisualizableTreeNode> dimension){
-		this.type = type;
+		
+		//set is_final
+		this.setType(type);
+		
+		is_initialized=false;
 		this.dimension = dimension;
 		this.static_dimension = null;
+		this.initial_value=null;
+	}
+	
+	private void setType(String type){
+		//check whether this is final type and set is_final if it is
+		//otherwise set the type as usual
+		String temp[]=type.split(" ");
+		if(temp.length==2 && temp[0].equals("final")){
+			//this is a final type
+			this.type=temp[1]; //treat like normal prim type
+			is_final=true;
+		}
+		else{
+			this.type = type;
+			is_final=false;
+		}
+	}
+	
+	public void setInitialValue(AbstractSyntaxTree ival){
+		initial_value=ival;
+		setInitialized();
+	}
+	
+	public void setInitialized(){
+		is_initialized=true;
 	}
 	
 	public XiPrimitiveType(String type){
 		this(type, new ArrayList<VisualizableTreeNode>());
 	}
+	
+	
 	
 //	public ArrayList<Integer> staticDimension(){
 //		// check if dimension is static

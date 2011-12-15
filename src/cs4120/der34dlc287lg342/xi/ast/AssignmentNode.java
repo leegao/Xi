@@ -49,7 +49,23 @@ public class AssignmentNode extends AbstractSyntaxTree {
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException{
 		// push a new context frame onto the stack
+<<<<<<< HEAD
 		XiType t = ((AbstractSyntaxTree)id).typecheck(stack);
+=======
+		XiType idType = ((AbstractSyntaxTree)id).typecheck(stack);
+		
+		//dont allow assignments to final vars
+		if((idType instanceof XiPrimitiveType) && (id instanceof IdNode )){
+			//ADD LATER:
+			//allow an assiment after decl if the final val was not
+			//initialized yet. For now, parser forces init at decl time
+			if(((XiPrimitiveType)idType).is_final && ((XiPrimitiveType)idType).is_initialized){
+				//System.err.println(((XiPrimitiveType)idType).is_initialized); //should always be true for now.
+				throw new CompilationException("The final local variable "+ ((IdNode)id).id +" cannot be assigned- IT IS FINAL (aka CONSTANT)!.",this.position());
+			}
+		}
+		
+>>>>>>> finals
 		XiType exprType = ((AbstractSyntaxTree)expr).typecheck(stack);
 		
 		if (t instanceof XiObjectType){
