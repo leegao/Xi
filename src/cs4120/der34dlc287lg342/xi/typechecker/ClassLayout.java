@@ -72,6 +72,7 @@ public class ClassLayout {
 	
 	public ArrayList<String> method_dv(){
 		ArrayList<String> methods = new ArrayList<String>();
+		System.out.println(parent);
 		if (parent_type != null){
 			methods.addAll(parent_type.layout.method_dv());
 		}
