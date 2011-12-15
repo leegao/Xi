@@ -174,6 +174,8 @@ public class TestTiles extends TestCase{
 			}
 		}
 		
+		//System.out.println(stmt.prettyPrint());
+		
 		SeqTile tiles = (SeqTile)stmt.munch();
 		Assembler assembler = new Assembler((SeqTile) stmt.munch());
 		System.out.println(assembler.att());
