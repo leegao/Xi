@@ -14,10 +14,12 @@ public class Class extends Stmt {
 	public int size;
 	public boolean need_init = false;
 	public int need_methods;
+	public String id;
 	public Class(String string) {
 		vt_label = new Label("_I_vt_"+string);
 		size_label = new Label("_I_size_"+string);
 		vt = new ArrayList<String>();
+		id = string;
 	}
 
 	public void add(String mangle, int i) {
@@ -28,7 +30,7 @@ public class Class extends Stmt {
 	@Override
 	public Tile munch() {
 		//System.out.println("Class:munch not implemented yet");
-		ClassTile tile = new ClassTile(vt_label, size_label, vt, size, need_init, need_methods);
+		ClassTile tile = new ClassTile(id, vt_label, size_label, vt, size, need_init, need_methods);
 		return tile;
 	}
 	

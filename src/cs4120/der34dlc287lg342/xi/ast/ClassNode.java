@@ -62,6 +62,9 @@ public class ClassNode extends AbstractSyntaxTree{
 
 	@Override
 	public XiType typecheck(ContextList stack) throws CompilationException {
+		if (this.type != null)
+			return this.type;
+		
 		for (VisualizableTreeNode child : children){
 			if (child instanceof ClassDeclNode){
 				ClassDeclNode cdecl = (ClassDeclNode)child;

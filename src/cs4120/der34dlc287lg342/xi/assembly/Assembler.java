@@ -89,6 +89,14 @@ public class Assembler {
 			}
 		}
 		
+		att += ".section .ctors\n.align 8\n";
+		for (Tile tile : main.tiles){
+			if (tile instanceof ClassTile){
+				att += ("\t.quad _I_init_"+((ClassTile) tile).id+"\n");
+			}
+		}
+		att += ".text\n";
+		
 		return (".att_syntax prefix\n.text\n"+att);
 	}
 }

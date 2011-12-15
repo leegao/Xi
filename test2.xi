@@ -11,6 +11,11 @@ class Point{
 	}
 	
 	coords(): int, int{
+		//a:int[1] b:int[1]
+		//a[0] = 1
+		//b[0] = 2
+		//a[0] = b[0]
+		//println(unparseInt(a[0]));
 		return x,y
 	}
 	
@@ -36,6 +41,8 @@ class Point{
 class P2 extends Point{
 	z:int = 3
 	init(x0:int, y0:int): Point{
+		x = 2*x0
+		y = 3*y0
 		return this
 	}
 }

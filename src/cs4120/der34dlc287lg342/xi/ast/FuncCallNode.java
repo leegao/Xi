@@ -149,7 +149,7 @@ public class FuncCallNode extends ExpressionNode {
 			//System.out.println(this + " " +attr.prettyPrint());
 			Seq seq = (Seq)attr.stmts;
 			Move mov = (Move)seq.children.get(1);
-			Expr instance = ((Binop)(((Mem)mov.val).expr)).left;
+			Expr instance = ((Mem)((Binop)(((Mem)mov.val).expr)).left).expr;
 			call.add(instance);
 			
 			for (int i = 0; i < (args.size()); i++){

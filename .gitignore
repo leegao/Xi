@@ -1,6 +1,6 @@
 *.java~
 *.class
 *.s
-runtime/
+runtime
 bin/
 doc/

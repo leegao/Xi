@@ -13,14 +13,16 @@ public class ClassTile extends Tile {
 	int size;
 	boolean need_init;
 	int methods;
+	public String id;
 	
-	public ClassTile(Label vt_label, Label size_label, ArrayList<String> vt, int size, boolean init, int methods) {
+	public ClassTile(String id, Label vt_label, Label size_label, ArrayList<String> vt, int size, boolean init, int methods) {
 		this.vt_label = vt_label;
 		this.size_label = size_label;
 		this.vt = vt;
 		this.size = size;
 		this.need_init = init;
 		this.methods = methods;
+		this.id = id;
 	}
 
 	public ArrayList<Assembly> att(){

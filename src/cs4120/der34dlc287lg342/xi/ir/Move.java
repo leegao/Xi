@@ -83,10 +83,10 @@ public class Move extends Stmt {
 		// assembly = movq k(%r), %r
 		if (val instanceof Mem && ((Mem)val).expr instanceof Binop && 
 				((Binop)((Mem)val).expr).op == Binop.PLUS &&
-				((Binop)((Mem)val).expr).right instanceof Const) {
+				((Binop)((Mem)val).expr).right instanceof Const && !(dest instanceof Mem)) {
 			
 			long constant = ((Const)(((Binop)((Mem)val).expr).right)).value;
-			//System.out.println(constant);
+			//System.out.println(constant + " " + val.prettyPrint());
 			return new Move_Mem_Add_Const_Expr_Expr(constant, ((Binop)((Mem)val).expr).left.munch(), dest.munch());
 		}  // src = Mem( Add(Temp, Const) )
 			// dest = expr  
@@ -176,9 +176,10 @@ public class Move extends Stmt {
 		// This operation is not allowed, this will have to translate to:
 		// 		MOV reg, [address1]
 		//		MOV [address2], reg
-//		else if (dest instanceof Mem && val instanceof Mem) {
-//			return new Move_Mem_Expr_Mem_Expr((((Mem)val).expr).munch(), (((Mem)dest).expr).munch());
-//		}
+		else if (dest instanceof Mem && val instanceof Mem) {
+			
+			return new Move_Mem_Expr_Mem_Expr(((Mem)val).munch(), (((Mem)dest).expr).munch());
+		}
 		
 		// src = Mem(expr)
 		// dest = expr
