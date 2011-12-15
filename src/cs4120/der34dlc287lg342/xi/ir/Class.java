@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import cs4120.der34dlc287lg342.xi.ir.context.Label;
+import cs4120.der34dlc287lg342.xi.tiles.ClassTile;
 import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 public class Class extends Stmt {
@@ -25,8 +26,9 @@ public class Class extends Stmt {
 
 	@Override
 	public Tile munch() {
-		System.out.println("Not implemented yet!");
-		return null;
+		//System.out.println("Class:munch not implemented yet");
+		ClassTile tile = new ClassTile(vt_label, size_label, vt, size);
+		return tile;
 	}
 	
 }

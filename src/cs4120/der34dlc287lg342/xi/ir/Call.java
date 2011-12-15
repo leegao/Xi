@@ -2,7 +2,9 @@ package cs4120.der34dlc287lg342.xi.ir;
 
 import java.util.ArrayList;
 import cs4120.der34dlc287lg342.xi.ir.context.TempRegister;
+import cs4120.der34dlc287lg342.xi.tiles.CallArbitraryTile;
 import cs4120.der34dlc287lg342.xi.tiles.CallTile;
+import cs4120.der34dlc287lg342.xi.tiles.Tile;
 
 import edu.cornell.cs.cs4120.util.VisualizableTreeNode;
 
@@ -78,12 +80,22 @@ public class Call extends Expr {
 	
 	@Override
 	public CallTile munch() {
-		Name name = (Name)func;
-		CallTile tile = new CallTile(name.label);
-		tile.tuple = tuple;
-		for (Expr arg : args){
-			tile.add(arg.munch());
+		if (func instanceof Name){
+			Name name = (Name)func;
+			CallTile tile = new CallTile(name.label);
+			tile.tuple = tuple;
+			for (Expr arg : args){
+				tile.add(arg.munch());
+			}
+			return tile;
+		} else {
+			Tile t = func.munch();
+			CallTile tile = new CallArbitraryTile(t);
+			tile.tuple = tuple;
+			for (Expr arg : args){
+				tile.add(arg.munch());
+			}
+			return tile;
 		}
-		return tile;
 	}
 }
