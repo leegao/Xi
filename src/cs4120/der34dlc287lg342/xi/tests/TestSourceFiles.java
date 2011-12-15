@@ -174,7 +174,7 @@ public class TestSourceFiles extends TestCase{
 			String att = assembler.att();
 			System.out.println(att);
 		} catch (Exception ex) {
-			fail(ex.getMessage());
+			ex.printStackTrace();
 		}
 	
 	}
