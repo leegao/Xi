@@ -104,15 +104,15 @@ public class Driver {
 					AbstractSyntaxTree.PA3 = true;
 				}
 				i++;
-			} else if (args[i].equals("--dump_ir")) {
-				if (i+1 < args.length){
-					if(args[i+1].equals("initial") ) {
-						dump_ir_initial = true;
-					} else {
-						dump_ir_final = true;
-					}
-				}
-				i++;
+//			} else if (args[i].equals("--dump_ir")) {
+//				if (i+1 < args.length){
+//					if(args[i+1].equals("initial") ) {
+//						dump_ir_initial = true;
+//					} else {
+//						dump_ir_final = true;
+//					}
+//				}
+//				i++;
 			} else if (args[i].equals("--dump_cfg")) {
 				if (i+1 < args.length){
 					if(args[i+1].equals("initial") ) {
@@ -131,9 +131,11 @@ public class Driver {
 			}
 		}
 		
-		if (inputFile == null || outputFile == null){
+		if (inputFile == null) {
 			System.out.println("Usage: java -jar Driver.jar [OPTIONS] sourcefile.xi");
 			return;
+		} else if( outputFile == null) {
+			outputFile = inputFile.replace(".xi", ".s");
 		}
 		
 		try {
