@@ -1,8 +1,0 @@
-//test for illegal grammar: unexpected "int"
-
-main():int 
-{
-	x:int = int
-
-	return 0
-}

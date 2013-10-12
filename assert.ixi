@@ -1,2 +1,0 @@
-// Halts the program if the condition is false.  Otherwise, does nothing.
-assert(condition:bool)
